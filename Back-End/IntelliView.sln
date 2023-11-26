@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34310.174
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntelliView", "IntelliView.csproj", "{A07BB356-6569-4E81-A236-2B1E414A1F43}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A07BB356-6569-4E81-A236-2B1E414A1F43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A07BB356-6569-4E81-A236-2B1E414A1F43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A07BB356-6569-4E81-A236-2B1E414A1F43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A07BB356-6569-4E81-A236-2B1E414A1F43}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F614293B-772D-4F41-8655-BF2381FAE0BF}
+	EndGlobalSection
+EndGlobal

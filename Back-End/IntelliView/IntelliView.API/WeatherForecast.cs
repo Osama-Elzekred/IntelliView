@@ -1,4 +1,4 @@
-namespace IntelliView
+namespace IntelliView.API
 {
     public class WeatherForecast
     {

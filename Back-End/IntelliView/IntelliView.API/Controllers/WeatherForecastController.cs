@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace IntelliView.Controllers
+namespace IntelliView.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]

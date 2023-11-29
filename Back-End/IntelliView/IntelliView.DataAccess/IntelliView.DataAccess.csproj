@@ -19,4 +19,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\IntelliView.Models\IntelliView.Models.csproj" />
+    <ProjectReference Include="..\IntelliView.Utility\IntelliView.Utility.csproj" />
+  </ItemGroup>
+
 </Project>

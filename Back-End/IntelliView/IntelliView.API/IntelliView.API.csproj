@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\IntelliView.DataAccess\IntelliView.DataAccess.csproj" />
     <ProjectReference Include="..\IntelliView.Models\IntelliView.Models.csproj" />
+    <ProjectReference Include="..\IntelliView.Utility\IntelliView.Utility.csproj" />
   </ItemGroup>
 
 </Project>

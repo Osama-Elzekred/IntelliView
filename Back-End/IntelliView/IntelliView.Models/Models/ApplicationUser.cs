@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace IntelliView.Models.Models
 {
-    public abstract class ApplicationUser : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
-        //public string Address { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
     }
 }

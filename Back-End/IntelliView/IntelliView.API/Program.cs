@@ -21,7 +21,6 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Password.RequiredLength = 8;
 }).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -38,7 +37,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
         ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
         IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes
-        (builder.Configuration.GetSection("Jwt:Key").Value))
+        (builder.Configuration.GetSection("Jwt:Key").Value!))
     };
 });
 

@@ -7,6 +7,6 @@ namespace IntelliView.API.Services
         string GenerateTokenString(LoginDTO user);
         Task<bool> Login(LoginDTO user);
         Task<bool> RegisterUser(RegisterDTO user);
-        Task<List<string>> GetRolesByEmailAsync(string userEmail);
+        Task<List<string>?> GetRolesByEmailAsync(string userEmail);
     }
 }

@@ -8,7 +8,6 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -25,7 +24,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options=>
+}).AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -36,7 +35,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration.GetSection("Jwt:Issuer").Value,
         ValidAudience = builder.Configuration.GetSection("Jwt:Audience").Value,
-        IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes
         (builder.Configuration.GetSection("Jwt:Key").Value!))
     };
 });
@@ -59,12 +58,10 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
-
-
 builder.Services.AddAuthorization();
 
 //builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-    //.AddEntityFrameworkStores<ApplicationDbContext>();
+//.AddEntityFrameworkStores<ApplicationDbContext>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

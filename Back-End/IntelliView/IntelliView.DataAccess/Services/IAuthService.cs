@@ -4,9 +4,10 @@ namespace IntelliView.API.Services
 {
     public interface IAuthService
     {
-        string GenerateTokenString(LoginDTO user);
-        Task<bool> Login(LoginDTO user);
-        Task<bool> RegisterUser(RegisterDTO user);
-        Task<List<string>?> GetRolesByEmailAsync(string userEmail);
+        Task<AuthModel> RegisterAsync(RegisterDTO model);
+        Task<AuthModel> GetTokenAsync(TokenRequestModel model);
+        Task<string> AddRoleAsync(AddRoleModel model);
+        Task<AuthModel> RefreshTokenAsync(string token);
+        Task<bool> RevokeTokenAsync(string token);
     }
 }

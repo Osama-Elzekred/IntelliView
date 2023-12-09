@@ -1,5 +1,7 @@
 using InteliView.DataAccess.Data;
 using IntelliView.API.Services;
+using IntelliView.DataAccess.Repository;
+using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.Models.Models;
 using IntelliView.Utility.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {

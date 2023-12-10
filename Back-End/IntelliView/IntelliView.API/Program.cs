@@ -2,6 +2,7 @@ using InteliView.DataAccess.Data;
 using IntelliView.API.Services;
 using IntelliView.DataAccess.Repository;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.Models;
 using IntelliView.Utility.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

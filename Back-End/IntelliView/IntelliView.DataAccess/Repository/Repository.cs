@@ -1,50 +1,87 @@
 ﻿using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntelliView.DataAccess.Repository
 {
     public class Repository<T> : IRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
-        internal DbSet<T> dbSet;
+        internal DbSet<T> _dbSet;
         public Repository(ApplicationDbContext db)
         {
             _db = db;
-            this.dbSet = _db.Set<T>();
+            this._dbSet = _db.Set<T>();
         }
-        public void Add(T entity)
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            dbSet.Add(entity);
-        }
-
-        public T Get(Expression<Func<T, bool>> filter)
-        {
-            IQueryable<T> query = dbSet;
-            query = query.Where(filter);
-            return query.FirstOrDefault();
+            return await _dbSet.AsNoTracking().ToListAsync();
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, params Expression<Func<T, object>>[] properties)
         {
-            IQueryable<T> query = dbSet;
-            return query.ToList();
+            IQueryable<T> query = _dbSet;
+
+            if (properties != null)
+            {
+                query = properties.Aggregate(query, (current, property) => current.Include(property));
+            }
+
+            // Apply the filter and use ToListAsync directly
+            if (filter is null)
+            {
+                return await query.AsNoTracking().ToListAsync();
+            }
+            return await _dbSet.Where(filter).AsNoTracking().ToListAsync();
+        }
+        public async Task<T?> GetByIdAsync(int id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+        public Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] properties)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (properties != null)
+            {
+                query = properties.Aggregate(query, (current, property) => current.Include(property));
+            }
+
+            // Apply the filter and use FirstOrDefaultAsync directly
+            return query.FirstOrDefaultAsync(filter);
         }
 
-        public void Remove(T entity)
+        public Task AddAsync(T entity)
         {
-            dbSet.Remove(entity);
+            return Task.Run(() => _dbSet.AddAsync(entity));
         }
 
-        public void RemoveRange(IEnumerable<T> entity)
+        public async Task<bool> DeleteByIdAsync(int id)
         {
-            dbSet.RemoveRange(entity);
+            var entity = await _dbSet.FindAsync(id);
+            if (entity is not null)
+            {
+                _dbSet.Remove(entity);
+                return true;
+            }
+            return false;
+        }
+
+        public Task<bool> ExistsAsync(Expression<Func<T, bool>> filter)
+        {
+            return _dbSet.AnyAsync(filter);
+
+        }
+
+        public Task RemoveRangeAsync(IEnumerable<T> entities)
+        {
+            return Task.Run(() => _dbSet.RemoveRange(entities));
+        }
+
+        public Task RemoveAsync(T entities)
+        {
+            return Task.Run(() => _dbSet.Remove(entities));
         }
     }
 }

@@ -1,14 +1,13 @@
-﻿using Azure;
+﻿using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
 using IntelliView.Utility.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Owin;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -48,23 +47,12 @@ namespace IntelliView.API.Services
             if (await _userManager.FindByNameAsync(model.Username) is not null)
                 return new AuthModel { Message = "Username is already registered!" };
 
-            var user = new ApplicationUser
-            {
-                UserName = model.Username,
-                Email = model.Email,
-                FirstName = model.FirstName,
-                LastName = model.LastName
-            };
-
+            ApplicationUser user = CreateUserObject(model);
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
-                var errors = string.Empty;
-
-                foreach (var error in result.Errors)
-                    errors += $"{error.Description},";
-
+                var errors = string.Join(", ", result.Errors.Select(error => error.Description));
                 return new AuthModel { Message = errors };
             }
             var Role = model.Role;
@@ -81,28 +69,49 @@ namespace IntelliView.API.Services
                 Email = user.Email,
                 ExpiresOn = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
-                Roles = new List<string> { "User" },
+                Roles = new List<string> { Role },
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Username = user.UserName,
                 RefreshToken = refreshToken.Token,
                 RefreshTokenExpiration = refreshToken.ExpiresOn
             };
         }
+
+
+
+        private static ApplicationUser CreateUserObject(RegisterDTO model)
+        {
+            ApplicationUser user;
+
+            switch (model.Role.ToLower())
+            {
+                case SD.ROLE_COMPANY:
+                    user = new CompanyUser();
+                    break;
+                case SD.ROLE_USER:
+                    user = new IndividualUser();
+                    break;
+                default:
+                    user = new ApplicationUser();
+                    break;
+            }
+
+            user.UserName = model.Username;
+            user.Email = model.Email;
+
+            return user;
+        }
         public async Task<bool> Login(LoginDTO user)
         {
             var identityUser = await _userManager.FindByEmailAsync(user.Email);
-            if (identityUser is null)
-            {
-                return false;
-            }
-            return await _userManager.CheckPasswordAsync(identityUser, user.Password);
+
+            return identityUser is not null && await _userManager.CheckPasswordAsync(identityUser, user.Password);
         }
         public async Task<AuthModel> GetTokenAsync(TokenRequestModel model)
         {
             var authModel = new AuthModel();
 
             var user = await _userManager.FindByEmailAsync(model.Email);
-
             if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 authModel.Message = "Email or Password is incorrect!";
@@ -119,9 +128,10 @@ namespace IntelliView.API.Services
             authModel.ExpiresOn = jwtSecurityToken.ValidTo;
             authModel.Roles = rolesList.ToList();
 
-            if (user.RefreshTokens.Any(t => t.IsActive))
+            var activeRefreshToken = user.RefreshTokens?.FirstOrDefault(t => t.IsActive);
+
+            if (activeRefreshToken is not null)
             {
-                var activeRefreshToken = user.RefreshTokens.FirstOrDefault(t => t.IsActive);
                 authModel.RefreshToken = activeRefreshToken.Token;
                 authModel.RefreshTokenExpiration = activeRefreshToken.ExpiresOn;
             }
@@ -130,12 +140,16 @@ namespace IntelliView.API.Services
                 var refreshToken = GenerateRefreshToken();
                 authModel.RefreshToken = refreshToken.Token;
                 authModel.RefreshTokenExpiration = refreshToken.ExpiresOn;
+
+                user.RefreshTokens ??= new List<RefreshToken>();
                 user.RefreshTokens.Add(refreshToken);
+
                 await _userManager.UpdateAsync(user);
             }
 
             return authModel;
         }
+
         public async Task<string> AddRoleAsync(AddRoleModel model)
         {
             var user = await _userManager.FindByIdAsync(model.UserId);
@@ -154,10 +168,7 @@ namespace IntelliView.API.Services
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
-            var roleClaims = new List<Claim>();
-
-            foreach (var role in roles)
-                roleClaims.Add(new Claim("roles", role));
+            var roleClaims = roles.Select(role => new Claim("roles", role));
 
             var claims = new[]
             {
@@ -185,7 +196,9 @@ namespace IntelliView.API.Services
         {
             var authModel = new AuthModel();
 
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+            var user = await _userManager.Users
+            .Include(u => u.RefreshTokens)
+            .SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
 
             if (user == null)
             {
@@ -221,7 +234,9 @@ namespace IntelliView.API.Services
         }
         public async Task<bool> RevokeTokenAsync(string token)
         {
-            var user = await _userManager.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+            var user = await _userManager.Users
+              .Include(u => u.RefreshTokens)
+              .SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
 
             if (user == null)
                 return false;
@@ -252,102 +267,5 @@ namespace IntelliView.API.Services
                 CreatedOn = DateTime.UtcNow
             };
         }
-        //public async Task<bool> RegisterUser(RegisterDTO user)
-        //{
-        //    await CreateRolesAsync();
-        //    var identityUser = new IdentityUser
-        //    {
-        //        UserName = user.Email,
-        //        Email = user.Email
-        //    };
-        //    var Role = new IdentityRole
-        //    {
-        //        Name = user.Role
-        //    };
-
-        //    var result = await _userManager.CreateAsync(identityUser, user.Password);
-        //    if (result.Succeeded)
-        //    {
-        //        await _userManager.AddToRoleAsync(identityUser, user.Role);
-        //    }
-        //    return result.Succeeded;
-        //}
-
-
-
-        //public async Task<bool> Login(LoginDTO user)
-        //{
-        //    var identityUser = await _userManager.FindByEmailAsync(user.Email);
-        //    if (identityUser is null)
-        //    {
-        //        return false;
-        //    }
-        //    return await _userManager.CheckPasswordAsync(identityUser, user.Password);
-        //}
-
-        //public string GenerateTokenString(LoginDTO user)
-        //{
-        //    try
-        //    {
-        //        var userRoles = GetRolesByEmailAsync(user.Email).Result;
-        //        if (userRoles is null)
-        //        {
-        //            throw new InvalidOperationException("User roles not found");
-        //        }
-        //        var claims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.Email,user.Email),
-        //        new Claim(ClaimTypes.Role, userRoles.FirstOrDefault()!)
-        //    };
-
-        //        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection
-        //            ("Jwt:Key").Value!));
-
-
-        //        var signingcred = new SigningCredentials
-        //            (securityKey, SecurityAlgorithms.HmacSha256Signature);
-        //        var securityToken = new JwtSecurityToken(
-        //            claims: claims,
-        //            expires: DateTime.Now.ToLocalTime().AddMinutes(Convert.ToDouble(_config["Jwt:TokenExpiryInMinutes"])),
-        //            issuer: _config.GetSection("Jwt:Issuer").Value,
-        //            audience: _config.GetSection("Jwt:audience").Value,
-        //            signingCredentials: signingcred);
-        //        DateTime expirationTime = securityToken.ValidTo;
-
-        //        return new JwtSecurityTokenHandler().WriteToken(securityToken);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log the exception for troubleshooting
-        //        throw new InvalidOperationException("Error generating token", ex);
-        //    }
-        //}
-
-        //public async Task<List<string>?> GetRolesByEmailAsync(string userEmail)
-        //{
-        //    try
-        //    {
-        //        // Get the user by email
-        //        var user = await _userManager.FindByEmailAsync(userEmail);
-
-        //        if (user != null)
-        //        {
-        //            // Get the roles associated with the user
-        //            var roles = await _userManager.GetRolesAsync(user);
-
-        //            // convert to list of strings and return
-        //            return [.. roles];
-        //        }
-
-        //        // User not found
-        //        return null;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log the exception for troubleshooting
-        //        throw new InvalidOperationException("Error getting user roles", ex);
-        //    }
-        //}
-
     }
 }

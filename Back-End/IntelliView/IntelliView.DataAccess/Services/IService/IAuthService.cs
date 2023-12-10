@@ -1,6 +1,6 @@
 ﻿using IntelliView.Models.DTO;
 
-namespace IntelliView.API.Services
+namespace IntelliView.DataAccess.Services.IService
 {
     public interface IAuthService
     {

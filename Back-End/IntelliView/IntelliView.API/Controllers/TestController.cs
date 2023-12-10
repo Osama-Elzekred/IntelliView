@@ -6,7 +6,7 @@ namespace IntelliView.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = SD.ROLE_ADMIN)]
+    [Authorize(Roles = SD.ROLE_COMPANY)]
     public class TestController : ControllerBase
     {
         [HttpGet]

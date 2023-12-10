@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace IntelliView.DataAccess.Repository.IRepository
 {
     public interface IRepository<T> where T : class
     {
-        T Get(Expression<Func<T,bool>> filter);
-        IEnumerable<T> GetAll();
-        void Add(T entity);
-        void Remove(T entity);
-        void RemoveRange(IEnumerable<T> entity);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T?> GetByIdAsync(int id);
+        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, params Expression<Func<T, object>>[] properties);
+        Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] properties);
+        Task AddAsync(T entity);
+        Task<bool> DeleteByIdAsync(int id);
+        Task<bool> ExistsAsync(Expression<Func<T, bool>> filter);
+        Task RemoveRangeAsync(IEnumerable<T> entities);
+        Task RemoveAsync(T entities);
     }
 }

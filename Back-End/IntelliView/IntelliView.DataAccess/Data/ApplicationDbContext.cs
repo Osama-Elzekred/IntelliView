@@ -8,6 +8,9 @@ namespace InteliView.DataAccess.Data
     {
         DbSet<CompanyUser> companyUsers { get; set; }
         DbSet<IndividualUser> individualUsers { get; set; }
+        DbSet<InterviewQuestion> interviewQuestions { get; set; }
+        DbSet<InterviewApplication> interviewApplications { get; set; }
+        DbSet<InterviewSession> interviewSessions { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

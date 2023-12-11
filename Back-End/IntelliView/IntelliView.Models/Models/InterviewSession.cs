@@ -9,7 +9,7 @@ namespace IntelliView.Models.Models
         public int Id { get; set; }
 
         // Properties for InterviewSession
-        public string Position { get; set; }
+        public string Position { get; set; }=string.Empty;
         public DateOnly Date { get; set; }
         // Other properties...
         public InterviewSessionStatus Status { get; set; }

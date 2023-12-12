@@ -2,8 +2,12 @@
 {
     public interface IUnitOfWork
     {
-        ICompanyRepo CompanyRepo { get; }
-        IIndividualUserRepo IndividualUserRepo { get; }
+        ICompanyRepo Company { get; }
+        IIndividualUserRepo IndividualUser { get; }
+        IInterviewApplicationRepo InterviewApplication { get; }
+        IInterviewQuestionRepo InterviewQuestion { get; }
+        IInterviewSessionRepo InterviewSession { get; }
+
         void Save();
     }
 }

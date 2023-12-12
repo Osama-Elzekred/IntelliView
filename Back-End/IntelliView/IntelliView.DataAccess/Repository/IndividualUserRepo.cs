@@ -14,7 +14,7 @@ namespace IntelliView.DataAccess.Repository
 
         public void Update(IndividualUser User)
         {
-            throw new NotImplementedException();
+           
         }
     }
 }

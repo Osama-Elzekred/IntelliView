@@ -4,10 +4,10 @@ using IntelliView.Models.Models;
 
 namespace IntelliView.DataAccess.Repository
 {
-    public class CompanyRepo : Repository<CompanyUser>, ICompanyRepo
+    public class CompanyUserRepo : Repository<CompanyUser>, ICompanyUserRepo
     {
         private ApplicationDbContext _db;
-        public CompanyRepo(ApplicationDbContext db) : base(db)
+        public CompanyUserRepo(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }

@@ -2,7 +2,7 @@
 {
     public interface IUnitOfWork
     {
-        ICompanyRepo Company { get; }
+        ICompanyUserRepo CompanyUser { get; }
         IIndividualUserRepo IndividualUser { get; }
         IInterviewApplicationRepo InterviewApplication { get; }
         IInterviewQuestionRepo InterviewQuestion { get; }

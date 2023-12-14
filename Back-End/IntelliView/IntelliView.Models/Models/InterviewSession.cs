@@ -16,7 +16,7 @@ namespace IntelliView.Models.Models
         public Topic Topic { get; set; }
 
         // Foreign key to CompanyUser
-        public int CompanyUserId { get; set; }
+        public string CompanyUserId { get; set; }
 
         // Navigation property to CompanyUser
         [ForeignKey(nameof(CompanyUserId))]

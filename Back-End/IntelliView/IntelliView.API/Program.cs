@@ -66,7 +66,13 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UserOrCompany", policy =>
+    {
+        policy.RequireRole("User", "CompanyUser");
+    });
+});
 
 //builder.Services.AddIdentityApiEndpoints<IdentityUser>()
 //.AddEntityFrameworkStores<ApplicationDbContext>();

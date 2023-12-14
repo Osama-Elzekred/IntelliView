@@ -2,7 +2,7 @@
 
 namespace IntelliView.DataAccess.Repository.IRepository
 {
-    public interface ICompanyRepo : IRepository<CompanyUser>
+    public interface ICompanyUserRepo : IRepository<CompanyUser>
     {
         void Update(CompanyUser company);
     }

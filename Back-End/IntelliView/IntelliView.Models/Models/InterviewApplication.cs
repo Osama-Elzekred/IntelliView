@@ -9,7 +9,7 @@ namespace IntelliView.Models.Models
         public int Id { get; set; }
 
         // Properties for InterviewApplication
-        public int IndividualUserId { get; set; }
+        public string IndividualUserId { get; set; }
 
         // Foreign key to ApplicationUser (Normal User)
         [ForeignKey(nameof(IndividualUserId))]

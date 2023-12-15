@@ -9,10 +9,10 @@
         public string CompanyWebsite { get; set; } = string.Empty;
 
         // Navigation property for Applications created by the company
-        public virtual ICollection<InterviewApplication> Applications { get; set; }
+        //public virtual ICollection<InterviewApplication> Applications { get; set; }
 
 
-        // Navigation property for InterviewSessions created by the company
-        public virtual ICollection<InterviewSession> InterviewSessions { get; set; }
+        //// Navigation property for InterviewSessions created by the company
+        //public virtual ICollection<InterviewSession> InterviewSessions { get; set; }
     }
 }

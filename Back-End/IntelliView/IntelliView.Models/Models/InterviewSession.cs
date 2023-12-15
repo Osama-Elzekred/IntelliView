@@ -16,11 +16,11 @@ namespace IntelliView.Models.Models
         public Topic Topic { get; set; }
 
         // Foreign key to CompanyUser
-        public string CompanyUserId { get; set; }
+        //public string CompanyUserId { get; set; }
 
-        // Navigation property to CompanyUser
-        [ForeignKey(nameof(CompanyUserId))]
-        public virtual CompanyUser CompanyUser { get; set; }
+        //// Navigation property to CompanyUser
+        //[ForeignKey(nameof(CompanyUserId))]
+        //public virtual CompanyUser CompanyUser { get; set; }
 
         // Navigation property for Applications received for this session
         public virtual ICollection<InterviewApplication> Applications { get; set; }

@@ -4,6 +4,7 @@ using IntelliView.DataAccess.Repository;
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.Models;
+using IntelliView.Utility;
 using IntelliView.Utility.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -70,7 +71,7 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("UserOrCompany", policy =>
     {
-        policy.RequireRole("User", "CompanyUser");
+        policy.RequireRole(SD.ROLE_USER, SD.ROLE_COMPANY);
     });
 });
 

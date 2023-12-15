@@ -14,7 +14,7 @@ namespace IntelliView.API.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
-    [Authorize(Roles = SD.ROLE_USER)]
+    [Authorize(Policy = "UserOrCompany")]
     public class ProfileController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;

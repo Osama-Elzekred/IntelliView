@@ -8,6 +8,7 @@ namespace InteliView.DataAccess.Data
     {
         DbSet<CompanyUser> CompanyUsers { get; set; }
         DbSet<IndividualUser> IndividualUsers { get; set; }
+        DbSet<Jop> jops { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

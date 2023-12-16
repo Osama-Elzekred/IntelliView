@@ -6,12 +6,12 @@ namespace IntelliView.DataAccess.Repository
     public class UnitOfWork : IUnitOfWork
     {
         private ApplicationDbContext _db;
-        public ICompanyUserRepo CompanyUsers  { get; private set; }
+        public ICompanyUserRepo CompanyUsers { get; private set; }
         public IIndividualUserRepo IndividualUsers { get; private set; }
         public IInterviewApplicationRepo InterviewApplications { get; private set; }
         public IInterviewQuestionRepo InterviewQuestions { get; private set; }
         public IInterviewSessionRepo InterviewSessions { get; private set; }
-        public IJopRepo Jops { get; private set; }
+        public IJobRepo Jobs { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -20,11 +20,11 @@ namespace IntelliView.DataAccess.Repository
             InterviewApplications = new InterviewApplicationRepo(_db);
             InterviewQuestions = new InterviewQuestionRepo(_db);
             InterviewSessions = new InterviewSessionRepo(_db);
-            Jops = new JopRepo(_db);
+            Jobs = new JobRepo(_db);
         }
         public async Task SaveAsync()
         {
-           await _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
         }
     }
 }

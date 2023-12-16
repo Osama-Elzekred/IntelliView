@@ -50,6 +50,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

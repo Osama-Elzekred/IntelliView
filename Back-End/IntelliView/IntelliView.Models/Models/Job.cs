@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IntelliView.Models.Models
 {
-    public class Jop
+    public class Job
     {
         public int Id { get; set; }
 

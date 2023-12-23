@@ -1,4 +1,7 @@
-﻿using IntelliView.DataAccess.Services.IService;
+﻿using Azure.Core;
+using IntelliView.DataAccess.Services.IService;
+using IntelliView.Models.DTO;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,20 +14,25 @@ namespace IntelliView.DataAccess.Services
 {
     public class EmailSender : IEmailSender
     {
-        public Task SendEmailAsync(string email, string subject, string htmlMessage)
+        private readonly IConfiguration Configuration;
+        public EmailSender(IConfiguration configuration)
         {
-            var mailUsername = "fb5459f3e8339e";
+            Configuration = configuration;
+        }
+        Task IEmailSender.SendEmailAsync(EmailDTO req)
+        {
+            var mailUsername = Configuration.GetSection("EmailUsernamedev").Value;
             var mailFrom = "intelliview@intelliview.com";
-            var password = "e00e88351b49cd";
-            var client = new SmtpClient("sandbox.smtp.mailtrap.io", 587)
+            var password = Configuration.GetSection("EmailPassworddev").Value;
+            var client = new SmtpClient(Configuration.GetSection("EmailHostdev").Value , 587)
             {
                 Credentials = new NetworkCredential(mailUsername, password),
                 EnableSsl = true
             };
             return client.SendMailAsync(
-                               new MailMessage(mailFrom, email, subject, htmlMessage) { IsBodyHtml = true }
+                               new MailMessage(mailFrom, req.To, req.Subject, req.Body) { IsBodyHtml = true }
                                           );
-            //Console.WriteLine("done");
+            
         }
     }
 }

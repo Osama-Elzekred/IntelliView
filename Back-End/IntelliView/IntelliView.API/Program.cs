@@ -3,6 +3,7 @@ using IntelliView.API.Services;
 using IntelliView.DataAccess.Repository;
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.DataAccess.Services.IService;
+using IntelliView.DataAccess.Services;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
 using IntelliView.Utility.Settings;
@@ -50,6 +51,7 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);
 
 builder.Services.AddControllers();

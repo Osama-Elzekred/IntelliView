@@ -14,7 +14,7 @@ namespace IntelliView.API.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
-    [Authorize(Policy = "UserOrCompany")]
+    [Authorize(policy: "UserOrCompany")]
     public class ProfileController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -29,7 +29,7 @@ namespace IntelliView.API.Controllers
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim.Value;
-            var user = await _userManager.FindByNameAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
                 return Ok(user);
@@ -43,7 +43,7 @@ namespace IntelliView.API.Controllers
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim.Value;
-            var user = await _userManager.FindByNameAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
 
             if (user != null)
             {

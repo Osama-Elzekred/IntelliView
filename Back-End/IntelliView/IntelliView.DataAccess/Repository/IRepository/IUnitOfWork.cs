@@ -1,4 +1,6 @@
-﻿namespace IntelliView.DataAccess.Repository.IRepository
+﻿using IntelliView.Models.Models;
+
+namespace IntelliView.DataAccess.Repository.IRepository
 {
     public interface IUnitOfWork
     {
@@ -8,6 +10,7 @@
         IInterviewQuestionRepo InterviewQuestions { get; }
         IInterviewSessionRepo InterviewSessions { get; }
         IJobRepo Jobs { get; }
+        IApplyJobRepo ApplyJobs { get; }
         Task SaveAsync();
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IntelliView.Models.DTO
 {
-    public class AddJopDTO
+    public class AddJobDTO
     {
         public int Id { get; set; }
 
@@ -44,5 +44,6 @@ namespace IntelliView.Models.DTO
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime? EndedAt { get; set; } = DateTime.Now.AddDays(20);
     }
 }

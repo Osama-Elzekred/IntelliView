@@ -27,6 +27,84 @@ namespace IntelliView.API.Controllers
             var jobs = await _unitOfWork.Jobs.GetAllAsync();
             return Ok(jobs);
         }
+        [HttpPost("questions")]
+        public async Task<ActionResult<JobQuestion>> AddQuestion(int JobId, QuestionDTO questionDto)
+        {
+            // Validate questionDto...
+            questionDto.JobId = JobId;
+            QuestionType type = questionDto.Type.ToLower() switch
+            {
+                "Text" => QuestionType.Text,
+                "MCQ" => QuestionType.MCQ,
+                "TrueFalse" => QuestionType.TrueFalse,
+                _ => QuestionType.Text
+            };
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == questionDto.JobId && j.CompanyUserId == userId);
+
+            if (job == null)
+            {
+                return NotFound();
+            }
+
+            var jobquestion = new JobQuestion();
+
+            if(type == QuestionType.Text)
+            {
+                jobquestion = new JobQuestion
+                {
+                    Content = questionDto.Content,
+                    Type = QuestionType.Text,
+                    JobId = questionDto.JobId
+                };
+            }
+            else if(type == QuestionType.MCQ)
+            {
+                
+                jobquestion = new JobQuestion
+                {
+                Content = questionDto.Content,
+                    Type = QuestionType.MCQ,
+                    JobId = questionDto.JobId
+                };
+                questionDto.MCQOptions.ForEach(option =>
+                {
+                    jobquestion.MCQOptions.Add(new MCQOption
+                    {
+                        Content = option.ToString()
+                    }) ;
+                });
+            }
+            else if (type == QuestionType.TrueFalse)
+            {
+                jobquestion = new JobQuestion
+                {
+                    Content = questionDto.Content,
+                    Type = QuestionType.TrueFalse,
+                    JobId = questionDto.JobId
+                };
+            }
+            else
+            {
+                return BadRequest("Invalid question type");
+            }
+            await _unitOfWork.JobQuestions.AddAsync(jobquestion);
+            await _unitOfWork.SaveAsync();
+
+            return CreatedAtAction(nameof(GetJobQuestions), new { questionDto.JobId }, jobquestion);
+        }
+        [HttpGet("{jobId}/questions")]
+        public async Task<ActionResult<IEnumerable<JobQuestion>>> GetJobQuestions(int jobId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == jobId && j.CompanyUserId == userId);
+            if (job == null)
+            {
+                return NotFound();
+            }
+            var jobquestions = await _unitOfWork.JobQuestions.GetAllAsync(j => j.JobId == jobId);
+            return Ok(jobquestions);
+        }
 
         #region Company
         [HttpGet("{id}")]

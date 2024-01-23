@@ -58,6 +58,9 @@ namespace IntelliView.Models.Models
 
         //public virtual ICollection<InterviewSession> InterviewSessions { get; set; }
 
+        public virtual ICollection<JobQuestion> JobQuestions { get; set; }
+        public virtual ICollection<ApplyJob> ApplyJobs { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;

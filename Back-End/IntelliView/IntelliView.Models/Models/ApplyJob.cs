@@ -15,6 +15,7 @@ namespace IntelliView.Models.Models
 
         [ForeignKey(nameof(JobId))]
         public virtual Job Job { get; set; }
+        
         public string IndividualUserId { get; set; }
 
         [ForeignKey(nameof(IndividualUserId))]

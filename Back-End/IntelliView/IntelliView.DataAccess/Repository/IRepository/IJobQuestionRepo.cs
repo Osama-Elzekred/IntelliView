@@ -2,9 +2,9 @@
 
 namespace IntelliView.DataAccess.Repository.IRepository
 {
-    public interface IJobRepo : IRepository<Job>
+    public interface IJobQuestionRepo : IRepository<JobQuestion>
     {
-        public Task<Job> Update(Job job);
+        public Task<JobQuestion> Update(JobQuestion job);
         public Task AddQuestionToJob(int jobId, JobQuestion question);
     }
 }

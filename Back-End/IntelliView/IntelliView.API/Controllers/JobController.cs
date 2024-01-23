@@ -191,31 +191,5 @@ namespace IntelliView.API.Controllers
             return NoContent();
         }
         #endregion
-
-        #region User
-        [HttpPost("Apply")]
-        [Authorize(Roles = SD.ROLE_USER)]
-        public async Task<IActionResult> ApplyJob(ApplyJobDTO applyJobDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            applyJobDto.IndividualUserId = userId;
-            var applyJob = _mapper.Map<ApplyJob>(applyJobDto);
-            await _unitOfWork.ApplyJobs.AddAsync(applyJob);
-            await _unitOfWork.SaveAsync();
-            return CreatedAtAction(nameof(GetJobById), new { id = applyJob.Id }, applyJob);
-        }
-        [HttpGet("GetUserJobs")]
-        [Authorize(Roles = SD.ROLE_USER)]
-        public async Task<ActionResult<IEnumerable<Job>>> GetUserJobs()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var jobs = await _unitOfWork.ApplyJobs.GetAllAsync(j => j.IndividualUserId == userId);
-            return Ok(jobs);
-        }
-        #endregion
     }
 }

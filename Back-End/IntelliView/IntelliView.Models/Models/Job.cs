@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace IntelliView.Models.Models
@@ -57,7 +58,7 @@ namespace IntelliView.Models.Models
         //public virtual ICollection<InterviewApplication> JobApplications { get; set; }
 
         //public virtual ICollection<InterviewSession> InterviewSessions { get; set; }
-
+        [JsonIgnore]
         public virtual ICollection<JobQuestion> JobQuestions { get; set; }
         public virtual ICollection<ApplyJob> ApplyJobs { get; set; }
 

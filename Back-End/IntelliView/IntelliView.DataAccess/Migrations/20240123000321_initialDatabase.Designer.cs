@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntelliView.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240122045502_AddApplyJops")]
-    partial class AddApplyJops
+    [Migration("20240123000321_initialDatabase")]
+    partial class initialDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -196,7 +196,54 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("CompanyUserId");
 
-                    b.ToTable("jops");
+                    b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("IntelliView.Models.Models.JobQuestion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JobId");
+
+                    b.ToTable("JobQuestions");
+                });
+
+            modelBuilder.Entity("IntelliView.Models.Models.MCQOption", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("MCQOption");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -414,7 +461,7 @@ namespace IntelliView.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("IntelliView.Models.Models.Job", "Job")
-                        .WithMany()
+                        .WithMany("ApplyJobs")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -433,6 +480,28 @@ namespace IntelliView.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("CompanyUser");
+                });
+
+            modelBuilder.Entity("IntelliView.Models.Models.JobQuestion", b =>
+                {
+                    b.HasOne("IntelliView.Models.Models.Job", "Job")
+                        .WithMany("JobQuestions")
+                        .HasForeignKey("JobId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Job");
+                });
+
+            modelBuilder.Entity("IntelliView.Models.Models.MCQOption", b =>
+                {
+                    b.HasOne("IntelliView.Models.Models.JobQuestion", "JobQuestion")
+                        .WithMany("MCQOptions")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobQuestion");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -484,6 +553,18 @@ namespace IntelliView.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("IntelliView.Models.Models.Job", b =>
+                {
+                    b.Navigation("ApplyJobs");
+
+                    b.Navigation("JobQuestions");
+                });
+
+            modelBuilder.Entity("IntelliView.Models.Models.JobQuestion", b =>
+                {
+                    b.Navigation("MCQOptions");
                 });
 #pragma warning restore 612, 618
         }

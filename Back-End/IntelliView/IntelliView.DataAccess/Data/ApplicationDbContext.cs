@@ -8,8 +8,9 @@ namespace InteliView.DataAccess.Data
     {
         public DbSet<CompanyUser> CompanyUsers { get; set; }
         public DbSet<IndividualUser> IndividualUsers { get; set; }
-        public DbSet<Job> jops { get; set; }
+        public DbSet<Job> Jobs { get; set; }
         public DbSet<ApplyJob> ApplyJobs { get; set; }
+        public DbSet<JobQuestion> JobQuestions { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

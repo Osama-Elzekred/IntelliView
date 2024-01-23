@@ -11,6 +11,7 @@ namespace IntelliView.DataAccess.Repository.IRepository
         IInterviewSessionRepo InterviewSessions { get; }
         IJobRepo Jobs { get; }
         IApplyJobRepo ApplyJobs { get; }
+        IJobQuestionRepo JobQuestions { get; }
         Task SaveAsync();
     }
 }

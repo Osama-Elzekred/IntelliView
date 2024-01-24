@@ -54,62 +54,62 @@ namespace IntelliView.API.Controllers
         //}
         // POST: api/job-applications/apply
         [HttpPost("apply")]
-        public async Task<IActionResult> ApplyForJob([FromBody] JobApplicationDTO applicationDto)
-        {
-            // Validate DTO and perform necessary checks
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //public async Task<IActionResult> ApplyForJob([FromBody] JobApplicationDTO applicationDto)
+        //{
+        //    // Validate DTO and perform necessary checks
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            var job = await _unitOfWork.Jobs.GetByIdAsync(applicationDto.JobId);
-            if (job == null)
-            {
-                return NotFound("Job not found");
-            }
+        //    var job = await _unitOfWork.Jobs.GetByIdAsync(applicationDto.JobId);
+        //    if (job == null)
+        //    {
+        //        return NotFound("Job not found");
+        //    }
 
-            // You may want to check if the user is authorized to apply for this job
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Assuming you have authentication set up
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-            var existingApplication = await _unitOfWork.JobApplications
-                .GetByIdAsync(job.Id, userId);
+        //    // You may want to check if the user is authorized to apply for this job
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Assuming you have authentication set up
+        //    if (userId == null)
+        //    {
+        //        return Unauthorized();
+        //    }
+        //    var existingApplication = await _unitOfWork.JobApplications
+        //        .GetByIdAsync(job.Id, userId);
 
-            if (existingApplication != null)
-            {
-                return BadRequest("You have already applied for this job");
-            }
+        //    if (existingApplication != null)
+        //    {
+        //        return BadRequest("You have already applied for this job");
+        //    }
 
-            // Create a new user application
-            var userApplication = new JobApplication
-            {
-                JobId = job.Id,
-                UserId = userId,
-                UserAnswers = new List<UserJobAnswer>(),
-                ResumeURL = applicationDto.ResumeURL,
-                // Add other properties as needed
-            };
+        //    // Create a new user application
+        //    var userApplication = new JobApplication
+        //    {
+        //        JobId = job.Id,
+        //        UserId = userId,
+        //        UserAnswers = new List<UserJobAnswer>(),
+        //        ResumeURL = applicationDto.ResumeURL,
+        //        // Add other properties as needed
+        //    };
 
-            // Populate user answers based on the provided DTO
-            foreach (var answerDto in applicationDto.UserAnswers)
-            {
-                var userAnswer = new UserJobAnswer
-                {
-                    QuestionId = answerDto.QuestionId,
-                    Answer = answerDto.Answer,
-                };
+        //    // Populate user answers based on the provided DTO
+        //    foreach (var answerDto in applicationDto.UserAnswers)
+        //    {
+        //        var userAnswer = new UserJobAnswer
+        //        {
+        //            QuestionId = answerDto.QuestionId,
+        //            Answer = answerDto.Answer,
+        //        };
 
-                userApplication.UserAnswers.Add(userAnswer);
-            }
+        //        userApplication.UserAnswers.Add(userAnswer);
+        //    }
 
-            // Save user application to the database
-            await _unitOfWork.JobApplications.AddAsync(userApplication);
-            await _unitOfWork.SaveAsync();
+        //    // Save user application to the database
+        //    await _unitOfWork.JobApplications.AddAsync(userApplication);
+        //    await _unitOfWork.SaveAsync();
 
-            return Ok("Application submitted successfully");
-        }
+        //    return Ok("Application submitted successfully");
+        //}
 
 
 

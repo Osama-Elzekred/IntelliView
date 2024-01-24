@@ -13,5 +13,6 @@ namespace IntelliView.DataAccess.Repository.IRepository
         Task<bool> ExistsAsync(Expression<Func<T, bool>> filter);
         Task RemoveRangeAsync(IEnumerable<T> entities);
         Task RemoveAsync(T entities);
+        IQueryable<T> GetAsQueryable();
     }
 }

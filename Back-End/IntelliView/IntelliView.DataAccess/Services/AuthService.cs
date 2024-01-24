@@ -274,7 +274,7 @@ namespace IntelliView.API.Services
             
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null || user.VerificationToken!=token || user.VTExpiredAt<DateTime.UtcNow) 
+            if (user == null || user.VerificationToken!=token || user.VerifyExpiredAt<DateTime.UtcNow) 
                 return false;
 
             
@@ -295,19 +295,11 @@ namespace IntelliView.API.Services
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
                 return string.Empty;
-            user.VerificationToken = creatVerficationToken();
-            user.VTExpiredAt = DateTime.UtcNow.AddMinutes(20);
+            user.VerificationToken = GenerateRandomToken.createRandomToken();
+            user.VerifyExpiredAt = DateTime.UtcNow.AddMinutes(20);
             await _userManager.UpdateAsync(user);
             return user.VerificationToken;
         }
-        private string creatVerficationToken()
-        {
-            var token = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(token);
-            return Convert.ToBase64String(token);
-            
-
-        }
+        
     }
 }

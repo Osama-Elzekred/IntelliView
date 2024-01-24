@@ -25,6 +25,11 @@ namespace IntelliView.API.Controllers
 
             var result = await _authService.RegisterAsync(model);
 
+            if (result==null)
+            {
+                return BadRequest();
+            }
+
             if ( !result.IsAuthenticated)
                 return BadRequest(result.Message);
 

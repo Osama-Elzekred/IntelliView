@@ -49,7 +49,7 @@ namespace IntelliView.API.Controllers
 
             var jobquestion = new JobQuestion();
 
-            if(type == QuestionType.Text)
+            if (type == QuestionType.Text)
             {
                 jobquestion = new JobQuestion
                 {
@@ -58,12 +58,12 @@ namespace IntelliView.API.Controllers
                     JobId = questionDto.JobId
                 };
             }
-            else if(type == QuestionType.MCQ)
+            else if (type == QuestionType.MCQ)
             {
-                
+
                 jobquestion = new JobQuestion
                 {
-                Content = questionDto.Content,
+                    Content = questionDto.Content,
                     Type = QuestionType.MCQ,
                     JobId = questionDto.JobId
                 };
@@ -72,7 +72,7 @@ namespace IntelliView.API.Controllers
                     jobquestion.MCQOptions.Add(new MCQOption
                     {
                         Content = option.ToString()
-                    }) ;
+                    });
                 });
             }
             else if (type == QuestionType.TrueFalse)
@@ -106,6 +106,40 @@ namespace IntelliView.API.Controllers
             return Ok(jobquestions);
         }
 
+        //[HttpGet("GetCompanyJobs")]
+        //public async Task<ActionResult<IEnumerable<Job>>> GetCompanyJobs()
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var jobs = await _unitOfWork.Jobs.GetAllAsync(j => j.CompanyUserId == userId);
+        //    return Ok(jobs);
+        //}
+
+        [HttpGet]
+        public IActionResult Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string filter = "")
+        {
+            var query = _unitOfWork.Jobs.GetAsQueryable();
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                //query = query.Where(article => article.Title.Contains(filter) || article.Category.Contains(filter));
+            }
+
+            var totalCount = query.Count();
+            var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            query = query.Skip((page - 1) * pageSize).Take(pageSize);
+
+            var result = new
+            {
+                TotalCount = totalCount,
+                TotalPages = totalPages,
+                CurrentPage = page,
+                PageSize = pageSize,
+                Articles = query.ToList()
+            };
+
+            return Ok(result);
+        }
         #region Company
         [HttpGet("{id}")]
         [Authorize(Roles = SD.ROLE_COMPANY)]

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IntelliView.Models.Models
 {
@@ -15,12 +9,18 @@ namespace IntelliView.Models.Models
 
         [ForeignKey(nameof(JobId))]
         public virtual Job Job { get; set; }
-        
+
         public string IndividualUserId { get; set; }
 
         [ForeignKey(nameof(IndividualUserId))]
         public virtual IndividualUser IndividualUser { get; set; }
-        public string Status { get; set; }= "Pending";
+        public StatusType Status { get; set; } = StatusType.Pending;
 
+    }
+    public enum StatusType
+    {
+        Pending,
+        Accepted,
+        Rejected
     }
 }

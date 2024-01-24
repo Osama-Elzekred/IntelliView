@@ -35,9 +35,9 @@ namespace IntelliView.DataAccess.Repository
             }
             return await _dbSet.Where(filter).AsNoTracking().ToListAsync();
         }
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(params object[] keyValues)
         {
-            return await _dbSet.FindAsync(id);
+            return await _dbSet.FindAsync(keyValues);
         }
         public Task<T?> GetFirstOrDefaultAsync(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] properties)
         {
@@ -52,9 +52,13 @@ namespace IntelliView.DataAccess.Repository
             return query.FirstOrDefaultAsync(filter);
         }
 
-        public Task AddAsync(T entity)
+        //public Task AddAsync(T entity)
+        //{
+        //    return Task.Run(() => _dbSet.AddAsync(entity));
+        //}
+        public async Task AddAsync(T entity)
         {
-            return Task.Run(() => _dbSet.AddAsync(entity));
+            await _dbSet.AddAsync(entity);
         }
 
         public async Task<bool> DeleteByIdAsync(int id)
@@ -76,12 +80,18 @@ namespace IntelliView.DataAccess.Repository
 
         public Task RemoveRangeAsync(IEnumerable<T> entities)
         {
-            return Task.Run(() => _dbSet.RemoveRange(entities));
+            _dbSet.RemoveRange(entities);
+            return Task.CompletedTask;
         }
 
-        public Task RemoveAsync(T entities)
+        public Task RemoveAsync(T entity)
         {
-            return Task.Run(() => _dbSet.Remove(entities));
+            _dbSet.Remove(entity);
+            return Task.CompletedTask;
+        }
+        public IQueryable<T> GetAsQueryable()
+        {
+            return _dbSet.AsQueryable();
         }
     }
 }

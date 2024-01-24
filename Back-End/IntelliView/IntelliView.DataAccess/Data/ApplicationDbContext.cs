@@ -11,6 +11,8 @@ namespace InteliView.DataAccess.Data
         public DbSet<Job> Jobs { get; set; }
         public DbSet<ApplyJob> ApplyJobs { get; set; }
         public DbSet<JobQuestion> JobQuestions { get; set; }
+        public DbSet<JobApplication> JobApplications { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

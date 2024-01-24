@@ -1,6 +1,8 @@
-﻿using IntelliView.DataAccess.Services.IService;
+﻿using IntelliView.DataAccess.Services;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Cryptography;
 
 namespace IntelliView.API.Controllers
 {
@@ -9,9 +11,11 @@ namespace IntelliView.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly IEmailSender _emailSender;
+        public AuthController(IAuthService authService, IEmailSender emailSender)
         {
             _authService = authService;
+            _emailSender = emailSender;
         }
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO model)
@@ -21,13 +25,39 @@ namespace IntelliView.API.Controllers
 
             var result = await _authService.RegisterAsync(model);
 
-            if (!result.IsAuthenticated)
+            if ( !result.IsAuthenticated)
                 return BadRequest(result.Message);
 
-            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
+            //SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
+
+            string token = await _authService.CreateVerfiyTokenAsync(result.Id);
+            result.VerficationToken = token;
+            
+            await _emailSender.SendEmailAsync(new EmailDTO
+            {
+                To = result.Email,
+                Subject = "Verify your email",
+                Body = $"Please verify your email by clicking this link: <a href='https://localhost:44300/api/auth/verify/{result.Id}/{result.VerficationToken}'>Verify</a> " +
+                $"This Link Expire in 20 minutes"
+            });
 
             return Ok(result);
         }
+
+        
+
+        [HttpGet("verify/{userId}/{token}")]
+        public async Task<IActionResult> VerifyAsync(string userId,string token)
+        {
+            
+            var result = await _authService.VerifyEmailAsync(userId,token);
+            
+            if (!result)
+                return BadRequest("Verification failed");
+
+            return Ok("Verification successful");
+        }
+
         [HttpPost("token")]
         public async Task<IActionResult> GetTokenAsync([FromBody] TokenRequestModel model)
         {

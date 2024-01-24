@@ -49,7 +49,7 @@ namespace IntelliView.API.Controllers
 
             var jobquestion = new JobQuestion();
 
-            if(type == QuestionType.Text)
+            if (type == QuestionType.Text)
             {
                 jobquestion = new JobQuestion
                 {
@@ -58,12 +58,12 @@ namespace IntelliView.API.Controllers
                     JobId = questionDto.JobId
                 };
             }
-            else if(type == QuestionType.MCQ)
+            else if (type == QuestionType.MCQ)
             {
-                
+
                 jobquestion = new JobQuestion
                 {
-                Content = questionDto.Content,
+                    Content = questionDto.Content,
                     Type = QuestionType.MCQ,
                     JobId = questionDto.JobId
                 };
@@ -72,7 +72,7 @@ namespace IntelliView.API.Controllers
                     jobquestion.MCQOptions.Add(new MCQOption
                     {
                         Content = option.ToString()
-                    }) ;
+                    });
                 });
             }
             else if (type == QuestionType.TrueFalse)

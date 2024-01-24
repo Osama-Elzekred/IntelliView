@@ -83,5 +83,9 @@ namespace IntelliView.DataAccess.Repository
         {
             return Task.Run(() => _dbSet.Remove(entities));
         }
+        public IQueryable<T> GetAsQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
     }
 }

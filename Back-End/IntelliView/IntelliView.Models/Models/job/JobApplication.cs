@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IntelliView.Models.Models
 {
+    [PrimaryKey(nameof(JobId), nameof(UserId))]
     public class JobApplication
     {
 
         // Foreign key to the associated job
-        [Key, Column(Order = 0)]
+        [Column(Order = 0)]
         public int JobId { get; set; }
 
         // Navigation property to the associated job
@@ -15,7 +16,7 @@ namespace IntelliView.Models.Models
         public virtual Job Job { get; set; }
 
         // Foreign key to the associated user (applicant)
-        [Key, Column(Order = 1)]
+        [Column(Order = 1)]
         public string UserId { get; set; }
 
         // Navigation property to the associated user (applicant)

@@ -1,4 +1,5 @@
-﻿using IntelliView.DataAccess.Services.IService;
+﻿using IntelliView.DataAccess.Services;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
@@ -38,6 +39,33 @@ namespace IntelliView.API.Services
                 await _roleManager.CreateAsync(new IdentityRole(SD.ROLE_USER));
             }
         }
+        public async Task<bool> VerifyEmailAsync(string userId, string token)
+        {
+            //var user = await _userManager.Users.FirstOrDefaultAsync(u=>(token==u.VerificationToken && userId==u.Id ));
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                return false;
+            if (user.VerificationToken != token || user.VerifyExpiredAt < DateTime.UtcNow)
+                return false;
+
+
+            user.VerfiedAt = DateTime.UtcNow;
+            user.VerificationToken = string.Empty;
+            user.Verified = true;
+
+            // create jwt token
+
+            var jwtSecurityToken = await CreateJwtToken(user);
+            var refreshToken = JwtToken.GenerateRefreshToken();
+            user.RefreshTokens?.Add(refreshToken);
+
+            await _userManager.UpdateAsync(user);
+            return true;
+
+        }
+
         public async Task<AuthModel> RegisterAsync(RegisterDTO model)
         {
             await CreateRolesAsync();
@@ -60,7 +88,7 @@ namespace IntelliView.API.Services
 
             var jwtSecurityToken = await CreateJwtToken(user);
 
-            var refreshToken = GenerateRefreshToken();
+            var refreshToken = JwtToken.GenerateRefreshToken();
             user.RefreshTokens?.Add(refreshToken);
             await _userManager.UpdateAsync(user);
 
@@ -78,7 +106,33 @@ namespace IntelliView.API.Services
             };
         }
 
+        public async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
+        {
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            var roleClaims = roles.Select(role => new Claim("roles", role));
 
+            var claims = new[]
+            {
+
+                new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
+            }
+            .Union(userClaims)
+            .Union(roleClaims);
+
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
+            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+            var jwtSecurityToken = new JwtSecurityToken(
+                issuer: _jwt.Issuer,
+                audience: _jwt.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_jwt.DurationInMinutes),
+                signingCredentials: signingCredentials);
+
+            return jwtSecurityToken;
+        }
 
         private static ApplicationUser CreateUserObject(RegisterDTO model)
         {
@@ -138,7 +192,7 @@ namespace IntelliView.API.Services
             }
             else
             {
-                var refreshToken = GenerateRefreshToken();
+                var refreshToken = JwtToken.GenerateRefreshToken();
                 authModel.RefreshToken = refreshToken.Token;
                 authModel.RefreshTokenExpiration = refreshToken.ExpiresOn;
 
@@ -165,40 +219,14 @@ namespace IntelliView.API.Services
 
             return result.Succeeded ? string.Empty : "Something went wrong";
         }
-        private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
-        {
-            var userClaims = await _userManager.GetClaimsAsync(user);
-            var roles = await _userManager.GetRolesAsync(user);
-            var roleClaims = roles.Select(role => new Claim("roles", role));
-
-            var claims = new[]
-            {
-
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
-            }
-            .Union(userClaims)
-            .Union(roleClaims);
-
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
-            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-            var jwtSecurityToken = new JwtSecurityToken(
-                issuer: _jwt.Issuer,
-                audience: _jwt.Audience,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_jwt.DurationInMinutes),
-                signingCredentials: signingCredentials);
-
-            return jwtSecurityToken;
-        }
+        
         public async Task<AuthModel> RefreshTokenAsync(string token)
         {
             var authModel = new AuthModel();
 
             var user = await _userManager.Users
             .Include(u => u.RefreshTokens)
-            .SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+            .SingleOrDefaultAsync(u => u.RefreshTokens!.Any(t => t.Token == token));
 
             if (user == null)
             {
@@ -206,7 +234,7 @@ namespace IntelliView.API.Services
                 return authModel;
             }
 
-            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
+            var refreshToken = user.RefreshTokens!.Single(t => t.Token == token);
 
             if (!refreshToken.IsActive)
             {
@@ -216,8 +244,8 @@ namespace IntelliView.API.Services
 
             refreshToken.RevokedOn = DateTime.UtcNow;
 
-            var newRefreshToken = GenerateRefreshToken();
-            user.RefreshTokens.Add(newRefreshToken);
+            var newRefreshToken = JwtToken.GenerateRefreshToken();
+            user.RefreshTokens!.Add(newRefreshToken);
             await _userManager.UpdateAsync(user);
 
             var jwtToken = await CreateJwtToken(user);
@@ -236,12 +264,12 @@ namespace IntelliView.API.Services
         {
             var user = await _userManager.Users
               .Include(u => u.RefreshTokens)
-              .SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+              .SingleOrDefaultAsync(u => u.RefreshTokens!.Any(t => t.Token == token));
 
             if (user == null)
                 return false;
 
-            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
+            var refreshToken = user.RefreshTokens!.Single(t => t.Token == token);
 
             if (!refreshToken.IsActive)
                 return false;
@@ -251,59 +279,6 @@ namespace IntelliView.API.Services
             await _userManager.UpdateAsync(user);
 
             return true;
-        }
-        private RefreshToken GenerateRefreshToken()
-        {
-            var randomNumber = new byte[32];
-
-            using var generator = new RNGCryptoServiceProvider();
-
-            generator.GetBytes(randomNumber);
-
-            return new RefreshToken
-            {
-                Token = Convert.ToBase64String(randomNumber),
-                ExpiresOn = DateTime.UtcNow.AddDays(10),
-                CreatedOn = DateTime.UtcNow
-            };
-        }
-
-        public async Task<bool> VerifyEmailAsync(string userId, string token)
-        {
-            //var user = await _userManager.Users.FirstOrDefaultAsync(u=>(token==u.VerificationToken && userId==u.Id ));
-            
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null ) 
-                return false;
-            if(user.VerificationToken != token || user.VerifyExpiredAt < DateTime.UtcNow)
-                return false;
-
-            
-            user.VerfiedAt = DateTime.UtcNow;
-            user.VerificationToken = string.Empty;
-            user.Verified = true;
-            //D + gaf0 + ji74l / SY2q8dalFH9ha + zFvH3ob6GMSpzdUU =
-            //D + gaf0 + ji74l % 2FSY2q8dalFH9ha + zFvH3ob6GMSpzdUU =
-            // create jwt token
-            var jwtSecurityToken = await CreateJwtToken(user);
-            var refreshToken = GenerateRefreshToken();
-            user.RefreshTokens?.Add(refreshToken);
-
-            await _userManager.UpdateAsync(user);
-            return true;
-
-        }
-
-        public async Task<string> CreateVerfiyTokenAsync(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
-                return string.Empty;
-            user.VerificationToken = GenerateRandomToken.createRandomToken();
-            user.VerifyExpiredAt = DateTime.UtcNow.AddMinutes(20);
-            await _userManager.UpdateAsync(user);
-            return user.VerificationToken;
         }
         
     }

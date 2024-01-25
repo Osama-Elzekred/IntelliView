@@ -274,14 +274,17 @@ namespace IntelliView.API.Services
             
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null || user.VerificationToken!=token || user.VerifyExpiredAt<DateTime.UtcNow) 
+            if (user == null ) 
+                return false;
+            if(user.VerificationToken != token || user.VerifyExpiredAt < DateTime.UtcNow)
                 return false;
 
             
             user.VerfiedAt = DateTime.UtcNow;
             user.VerificationToken = string.Empty;
             user.Verified = true;
-
+            //D + gaf0 + ji74l / SY2q8dalFH9ha + zFvH3ob6GMSpzdUU =
+            //D + gaf0 + ji74l % 2FSY2q8dalFH9ha + zFvH3ob6GMSpzdUU =
             // create jwt token
             var jwtSecurityToken = await CreateJwtToken(user);
             var refreshToken = GenerateRefreshToken();

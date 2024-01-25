@@ -11,10 +11,17 @@ namespace IntelliView.Utility
     {
         public static string createRandomToken()
         {
-            var token = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(token);
-            return Convert.ToBase64String(token);
+            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+            var random = new Random();
+            var token = new char[32];
+
+            for (int i = 0; i < 32; i++)
+            {
+                token[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new string(token);
         }
     }
 }

@@ -41,5 +41,24 @@ namespace IntelliView.API.Controllers
 
             return Ok("Reset Password Link Sent to your Email");
         }
+        [HttpPost("reset-password/{userId}/{token}")]
+        public async Task<IActionResult> ResetPasswordAsync(string userId, string token, [FromBody] ResetPasswordDTO model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+            if (model.NewPassword!=model.ConfirmPassword)
+                return BadRequest("Passwords doesn't match");
+
+            model.UserId = userId;
+            model.Token = token;
+
+            var result = await _passwordService.ResetPasswordAsync(model);
+
+            if (!result)
+                return BadRequest("Reset Password Failed");
+
+            return Ok("Reset Password Successfully");
+        }
     }
+
 }

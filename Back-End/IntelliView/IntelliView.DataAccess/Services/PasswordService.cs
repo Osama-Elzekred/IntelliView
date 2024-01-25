@@ -1,4 +1,5 @@
 ﻿using IntelliView.DataAccess.Services.IService;
+using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
 using Microsoft.AspNetCore.Identity;
@@ -34,13 +35,27 @@ namespace IntelliView.DataAccess.Services
             if(user == null) { return "Error from server try send again :)"; }
             
             user.ResetPassExpiredAt = DateTime.UtcNow.AddMinutes(20);
-
+            user.ResetPassToken = token;
             await _userManager.UpdateAsync(user);
 
 
             string link = $"https://localhost:7049/api/password/reset-password/{user.Id}/{token}";
 
             return $"You can reset your password by clicking this link: <a href='{link}'>Reset Password</a> ";
+        }
+
+        public async Task<bool> ResetPasswordAsync(ResetPasswordDTO model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId!);
+            if(user == null || user.ResetPassExpiredAt < DateTime.UtcNow || user.ResetPassToken != model.Token)
+                 return false;
+
+            user.ResetPassToken = null!;
+            user.ResetPassExpiredAt = DateTime.UtcNow;
+            user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.NewPassword!);
+            await _userManager.UpdateAsync(user);
+
+            return true;
         }
     }
 }

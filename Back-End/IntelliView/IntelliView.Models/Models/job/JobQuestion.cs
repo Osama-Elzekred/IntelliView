@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace IntelliView.Models.Models
 {
@@ -27,7 +23,8 @@ namespace IntelliView.Models.Models
         public QuestionType Type { get; set; }
 
         // Options for MCQs (applicable only if the question type is MCQ)
-        public List<MCQOption> ?MCQOptions { get; set; }
+
+        public List<MCQOption>? MCQOptions { get; set; }
 
         // Foreign key to the associated job
         public int JobId { get; set; }
@@ -56,6 +53,7 @@ namespace IntelliView.Models.Models
         public int QuestionId { get; set; }
 
         // Navigation property to the associated question
+        [JsonIgnore]
         [ForeignKey(nameof(QuestionId))]
         public virtual JobQuestion JobQuestion { get; set; }
     }

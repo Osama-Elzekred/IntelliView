@@ -27,16 +27,16 @@ namespace IntelliView.API.Controllers
             var jobs = await _unitOfWork.Jobs.GetAllAsync();
             return Ok(jobs);
         }
-        [HttpPost("questions")]
+        [HttpPost("AddQuestions")]
         public async Task<ActionResult<JobQuestion>> AddQuestion(int JobId, QuestionDTO questionDto)
         {
             // Validate questionDto...
             questionDto.JobId = JobId;
             QuestionType type = questionDto.Type.ToLower() switch
             {
-                "Text" => QuestionType.Text,
-                "MCQ" => QuestionType.MCQ,
-                "TrueFalse" => QuestionType.TrueFalse,
+                "text" => QuestionType.Text,
+                "mcq" => QuestionType.MCQ,
+                "truefalse" => QuestionType.TrueFalse,
                 _ => QuestionType.Text
             };
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -47,43 +47,30 @@ namespace IntelliView.API.Controllers
                 return NotFound();
             }
 
-            var jobquestion = new JobQuestion();
+            var jobquestion = new JobQuestion
+            {
+                Content = questionDto.Content,
+                JobId = questionDto.JobId
+            };
 
             if (type == QuestionType.Text)
-            {
-                jobquestion = new JobQuestion
-                {
-                    Content = questionDto.Content,
-                    Type = QuestionType.Text,
-                    JobId = questionDto.JobId
-                };
-            }
+                jobquestion.Type = QuestionType.Text;
             else if (type == QuestionType.MCQ)
             {
 
-                jobquestion = new JobQuestion
-                {
-                    Content = questionDto.Content,
-                    Type = QuestionType.MCQ,
-                    JobId = questionDto.JobId
-                };
-                questionDto.MCQOptions.ForEach(option =>
+                jobquestion.Type = QuestionType.MCQ;
+                jobquestion.MCQOptions = new List<MCQOption>();
+                questionDto.MCQOptions?.ForEach(option =>
                 {
                     jobquestion.MCQOptions.Add(new MCQOption
                     {
+                        QuestionId = jobquestion.Id,
                         Content = option.ToString()
                     });
                 });
             }
             else if (type == QuestionType.TrueFalse)
-            {
-                jobquestion = new JobQuestion
-                {
-                    Content = questionDto.Content,
-                    Type = QuestionType.TrueFalse,
-                    JobId = questionDto.JobId
-                };
-            }
+                jobquestion.Type = QuestionType.TrueFalse;
             else
             {
                 return BadRequest("Invalid question type");
@@ -102,8 +89,11 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound();
             }
-            var jobquestions = await _unitOfWork.JobQuestions.GetAllAsync(j => j.JobId == jobId);
-            return Ok(jobquestions);
+            //var jobquestions = await _unitOfWork.JobQuestions.GetAllAsync(j => j.JobId == jobId, properties: q => q.MCQOptions);
+            //var jobquestions1 = await _unitOfWork.JobQuestions.GetByIdAsync(jobId);
+            var jobQuestions = await _unitOfWork.JobQuestions.GetJobQuestionsAsync(jobId);
+            var jq = jobQuestions.Select(jq => new { jq.Id, jq.Content, jq.Type, jq.MCQOptions });
+            return Ok(jq);
         }
 
         //[HttpGet("GetCompanyJobs")]

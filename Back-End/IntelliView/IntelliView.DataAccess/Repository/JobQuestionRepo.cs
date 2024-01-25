@@ -2,9 +2,10 @@
 using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.Models.Models;
+using Microsoft.EntityFrameworkCore;
 namespace IntelliView.DataAccess.Repository
 {
-    public class JobQuestionRepo : Repository<JobQuestion>, IJobQuestionRepo 
+    public class JobQuestionRepo : Repository<JobQuestion>, IJobQuestionRepo
     {
         private ApplicationDbContext _db;
         public JobQuestionRepo(ApplicationDbContext db) : base(db)
@@ -37,7 +38,22 @@ namespace IntelliView.DataAccess.Repository
 
 
         // Constructor and other methods...
+        public async Task<IEnumerable<JobQuestion>> GetJobQuestionsAsync(int jobId)
+        {
+            //var job = await _db.Jobs.FindAsync(jobId);
 
+            //if (job == null)
+            //{
+            //    // Handle job not found
+            //    return null;
+            //}
+
+            // Load the questions associated with the job
+            //await _db.Entry(job).Collection(j => j.JobQuestions).LoadAsync();
+            var questions = await _db.JobQuestions.Where(j => j.JobId == jobId).Include(j => j.MCQOptions).ToListAsync();
+
+            return questions;
+        }
         public async Task AddQuestionToJob(int jobId, JobQuestion question)
         {
             var job = await _db.Jobs.FindAsync(jobId);

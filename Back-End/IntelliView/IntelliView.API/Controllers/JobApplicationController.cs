@@ -118,7 +118,7 @@ namespace IntelliView.API.Controllers
         public async Task<ActionResult<IEnumerable<Job>>> GetUserJobs()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var jobs = await _unitOfWork.ApplyJobs.GetAllAsync(j => j.IndividualUserId == userId);
+            var jobs = await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
             return Ok(jobs);
         }
     }

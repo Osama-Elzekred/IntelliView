@@ -12,10 +12,12 @@ namespace IntelliView.API.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IEmailSender _emailSender;
-        public AuthController(IAuthService authService, IEmailSender emailSender)
+        private readonly IVerifyService _verifyService;
+        public AuthController(IAuthService authService, IEmailSender emailSender, IVerifyService verifyService)
         {
             _authService = authService;
             _emailSender = emailSender;
+            _verifyService = verifyService;
         }
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO model)
@@ -35,32 +37,18 @@ namespace IntelliView.API.Controllers
 
             //SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
-            string token = await _authService.CreateVerfiyTokenAsync(result.Id);
+            string token = await _verifyService.CreateVerfiyTokenAsync(result.Id!);
             result.VerficationToken = token;
             
             await _emailSender.SendEmailAsync(new EmailDTO
             {
-                To = result.Email,
+                To = result.Email!,
                 Subject = "Verify your email",
-                Body = $"Please verify your email by clicking this link: <a href='https://localhost:7049/api/auth/verify/{result.Id}/{result.VerficationToken}'>Verify</a> " +
+                Body = $"Please verify your email by clicking this link: <a href='https://localhost:7049/api/verify/{result.Id}/{result.VerficationToken}'>Verify</a> " +
                 $"This Link Expire in 20 minutes"
             });
 
             return Ok(result);
-        }
-
-        
-
-        [HttpGet("verify/{userId}/{token}")]
-        public async Task<IActionResult> VerifyAsync(string userId,string token)
-        {
-            
-            var result = await _authService.VerifyEmailAsync(userId,token);
-            
-            if (!result)
-                return BadRequest("Verification failed");
-
-            return Ok("Verification successful");
         }
 
         [HttpPost("token")]
@@ -102,7 +90,7 @@ namespace IntelliView.API.Controllers
             if (!result.IsAuthenticated)
                 return BadRequest(result);
 
-            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
+            SetRefreshTokenInCookie(result.RefreshToken!, result.RefreshTokenExpiration);
 
             return Ok(result);
         }

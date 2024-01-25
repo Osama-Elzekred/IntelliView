@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IntelliView.DataAccess.Services
 {
-    internal class PasswordService : IPasswordService
+    public class PasswordService : IPasswordService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;

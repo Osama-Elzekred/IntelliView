@@ -26,4 +26,9 @@
     <ProjectReference Include="..\IntelliView.Utility\IntelliView.Utility.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Assets\images\" />
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

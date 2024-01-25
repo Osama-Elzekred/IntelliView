@@ -8,12 +8,16 @@ namespace IntelliView.Models.Models
         public string ImageURl { get; set; } = string.Empty;
         public List<RefreshToken>? RefreshTokens { get; set; }
 
+        // verfication
         public String VerificationToken { get; set; } = string.Empty;
-        public DateTime VerifyExpiredAt { get; set; }
-        public DateTime VerfiedAt { get; set; }
+        public DateTime VerifyExpiredAt { get; set; } = DateTime.UtcNow;
+        public DateTime VerfiedAt { get; set; }  = DateTime.UtcNow;
+        public bool Verified { get; set; } = false;
 
-        public string? ResetPassToken { get; set; }
-        public DateTime ResetPassExpiredAt { get; set; }
+        // reset password
+        public string ResetPassToken { get; set; } = string.Empty;
+        public DateTime? ResetPassExpiredAt { get; set; } = DateTime.UtcNow;
+        public DateTime? PassChangedAt { get; set; } = DateTime.UtcNow;
 
     }
 }

@@ -18,5 +18,7 @@ namespace IntelliView.Models.DTO
 
         [MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
+
     }
 }

@@ -17,7 +17,7 @@ namespace IntelliView.DataAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -73,6 +73,12 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("ResetPassExpiredAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ResetPassToken")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -82,6 +88,16 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime>("VerfiedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("VerificationToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("VerifyExpiredAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -98,33 +114,6 @@ namespace IntelliView.DataAccess.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("ApplicationUser");
 
                     b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("IntelliView.Models.Models.ApplyJob", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("IndividualUserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("JobId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("IndividualUserId");
-
-                    b.HasIndex("JobId");
-
-                    b.ToTable("ApplyJobs");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.Job", b =>
@@ -198,10 +187,12 @@ namespace IntelliView.DataAccess.Migrations
             modelBuilder.Entity("IntelliView.Models.Models.JobApplication", b =>
                 {
                     b.Property<int>("JobId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
 
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnOrder(1);
 
                     b.Property<string>("ResumeURL")
                         .IsRequired()
@@ -277,6 +268,9 @@ namespace IntelliView.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("QuestionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserApplicationId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -498,25 +492,6 @@ namespace IntelliView.DataAccess.Migrations
                     b.Navigation("RefreshTokens");
                 });
 
-            modelBuilder.Entity("IntelliView.Models.Models.ApplyJob", b =>
-                {
-                    b.HasOne("IntelliView.Models.Models.IndividualUser", "IndividualUser")
-                        .WithMany()
-                        .HasForeignKey("IndividualUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("IntelliView.Models.Models.Job", "Job")
-                        .WithMany("ApplyJobs")
-                        .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IndividualUser");
-
-                    b.Navigation("Job");
-                });
-
             modelBuilder.Entity("IntelliView.Models.Models.Job", b =>
                 {
                     b.HasOne("IntelliView.Models.Models.CompanyUser", "CompanyUser")
@@ -536,7 +511,7 @@ namespace IntelliView.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("IntelliView.Models.Models.IndividualUser", "User")
+                    b.HasOne("IntelliView.Models.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -641,8 +616,6 @@ namespace IntelliView.DataAccess.Migrations
 
             modelBuilder.Entity("IntelliView.Models.Models.Job", b =>
                 {
-                    b.Navigation("ApplyJobs");
-
                     b.Navigation("JobQuestions");
                 });
 

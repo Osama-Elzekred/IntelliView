@@ -73,7 +73,8 @@ namespace IntelliView.API.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Username = user.UserName,
                 RefreshToken = refreshToken.Token,
-                RefreshTokenExpiration = refreshToken.ExpiresOn
+                RefreshTokenExpiration = refreshToken.ExpiresOn,
+                Id = user.Id
             };
         }
 
@@ -266,5 +267,39 @@ namespace IntelliView.API.Services
                 CreatedOn = DateTime.UtcNow
             };
         }
+
+        public async Task<bool> VerifyEmailAsync(string userId, string token)
+        {
+            //var user = await _userManager.Users.FirstOrDefaultAsync(u=>(token==u.VerificationToken && userId==u.Id ));
+            
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null || user.VerificationToken!=token || user.VerifyExpiredAt<DateTime.UtcNow) 
+                return false;
+
+            
+            user.VerfiedAt = DateTime.UtcNow;
+            user.VerificationToken = string.Empty;
+
+            // create jwt token
+            var jwtSecurityToken = await CreateJwtToken(user);
+            var refreshToken = GenerateRefreshToken();
+            user.RefreshTokens?.Add(refreshToken);
+            await _userManager.UpdateAsync(user);
+            return true;
+
+        }
+
+        public async Task<string> CreateVerfiyTokenAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return string.Empty;
+            user.VerificationToken = GenerateRandomToken.createRandomToken();
+            user.VerifyExpiredAt = DateTime.UtcNow.AddMinutes(20);
+            await _userManager.UpdateAsync(user);
+            return user.VerificationToken;
+        }
+        
     }
 }

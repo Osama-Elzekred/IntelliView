@@ -9,7 +9,6 @@
         IInterviewSessionRepo InterviewSessions { get; }
         IJobApplicationsRepo JobApplications { get; }
         IJobRepo Jobs { get; }
-        IApplyJobRepo ApplyJobs { get; }
         IJobQuestionRepo JobQuestions { get; }
         Task SaveAsync();
     }

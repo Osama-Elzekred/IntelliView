@@ -89,20 +89,10 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound();
             }
-            //var jobquestions = await _unitOfWork.JobQuestions.GetAllAsync(j => j.JobId == jobId, properties: q => q.MCQOptions);
-            //var jobquestions1 = await _unitOfWork.JobQuestions.GetByIdAsync(jobId);
             var jobQuestions = await _unitOfWork.JobQuestions.GetJobQuestionsAsync(jobId);
             var jq = jobQuestions.Select(jq => new { jq.Id, jq.Content, jq.Type, jq.MCQOptions });
             return Ok(jq);
         }
-
-        //[HttpGet("GetCompanyJobs")]
-        //public async Task<ActionResult<IEnumerable<Job>>> GetCompanyJobs()
-        //{
-        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    var jobs = await _unitOfWork.Jobs.GetAllAsync(j => j.CompanyUserId == userId);
-        //    return Ok(jobs);
-        //}
 
         [HttpGet]
         public IActionResult Get([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string filter = "")

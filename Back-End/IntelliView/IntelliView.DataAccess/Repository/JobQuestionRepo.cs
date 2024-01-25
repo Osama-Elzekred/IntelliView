@@ -40,16 +40,6 @@ namespace IntelliView.DataAccess.Repository
         // Constructor and other methods...
         public async Task<IEnumerable<JobQuestion>> GetJobQuestionsAsync(int jobId)
         {
-            //var job = await _db.Jobs.FindAsync(jobId);
-
-            //if (job == null)
-            //{
-            //    // Handle job not found
-            //    return null;
-            //}
-
-            // Load the questions associated with the job
-            //await _db.Entry(job).Collection(j => j.JobQuestions).LoadAsync();
             var questions = await _db.JobQuestions.Where(j => j.JobId == jobId).Include(j => j.MCQOptions).ToListAsync();
 
             return questions;

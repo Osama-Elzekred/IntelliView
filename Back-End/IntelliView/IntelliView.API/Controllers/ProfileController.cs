@@ -40,8 +40,44 @@ namespace IntelliView.API.Controllers
             return NotFound();
         }
 
+        private ProfileDTO updatedUser = new ProfileDTO();
+        
+        [HttpPost]
+        public Task Upload( IFormFile file )
+        {
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            var userId = userIdClaim.Value;
+
+                
+                
+                    string webRootPath = _webHostEnvironment.ContentRootPath;
+                    if (file != null)
+                    {
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        var imagePath = Path.Combine(webRootPath, @"wwwroot\Assets\images\");
+                        //var imagePath = Path.Combine(webRootPath, "assets", "images", fileName);
+
+                        if (!string.IsNullOrEmpty(updatedUser.ImageUrl))
+                        {
+                            //this is an edit and we need to remove old image
+                            var oldimagePath = Path.Combine(webRootPath, updatedUser.ImageUrl.TrimStart('\\'));
+                            if (System.IO.File.Exists(oldimagePath))
+                            {
+                                System.IO.File.Delete(oldimagePath);
+                            }
+                        }
+                        using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
+                        {
+                            file.CopyTo(fileStream);
+                        }
+                        updatedUser.ImageUrl = @"wwwroot\Assets\images\" + fileName;
+                    }
+            return Task.CompletedTask;       
+        }
+
         [HttpPut]
-        public async Task<IActionResult> UpdateProfile(ProfileDTO updatedUser, IFormFile? file)
+        public async Task<IActionResult> UpdateProfile(ProfileDTO updatedUser, IFormFile file)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim.Value;

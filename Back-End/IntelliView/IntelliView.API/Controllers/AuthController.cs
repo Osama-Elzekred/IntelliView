@@ -42,7 +42,7 @@ namespace IntelliView.API.Controllers
             {
                 To = result.Email,
                 Subject = "Verify your email",
-                Body = $"Please verify your email by clicking this link: <a href='https://localhost:44300/api/auth/verify/{result.Id}/{result.VerficationToken}'>Verify</a> " +
+                Body = $"Please verify your email by clicking this link: <a href='https://localhost:7049/api/auth/verify/{result.Id}/{result.VerficationToken}'>Verify</a> " +
                 $"This Link Expire in 20 minutes"
             });
 

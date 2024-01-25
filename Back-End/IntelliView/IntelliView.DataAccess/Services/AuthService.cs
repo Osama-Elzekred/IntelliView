@@ -280,11 +280,13 @@ namespace IntelliView.API.Services
             
             user.VerfiedAt = DateTime.UtcNow;
             user.VerificationToken = string.Empty;
+            user.Verified = true;
 
             // create jwt token
             var jwtSecurityToken = await CreateJwtToken(user);
             var refreshToken = GenerateRefreshToken();
             user.RefreshTokens?.Add(refreshToken);
+
             await _userManager.UpdateAsync(user);
             return true;
 

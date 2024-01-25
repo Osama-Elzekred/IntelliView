@@ -8,9 +8,19 @@ namespace IntelliView.Models.Models
         [Key]
         public int Id { get; set; }
 
+        // Foreign key to the associated user application
+        public int UserApplicationId { get; set; }
+
+        // Navigation property to the associated user application
+        [ForeignKey(nameof(UserApplicationId))]
+
+
         public int JobId { get; set; }
+
         public string UserId { get; set; }
 
+        // Navigation property to the associated job application
+        [ForeignKey($"{nameof(JobId)}, {nameof(UserId)}")]
         public virtual JobApplication UserApplication { get; set; }
 
         // Foreign key to the associated question
@@ -23,5 +33,4 @@ namespace IntelliView.Models.Models
         // User's answer content
         public string Answer { get; set; }
     }
-
 }

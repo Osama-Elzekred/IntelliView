@@ -20,10 +20,11 @@ namespace IntelliView.DataAccess.Services
             _userManager = userManager;
             _emailSender = emailSender;
         }
-        public async Task<bool> CheckEmailAsync(string email)
+        public async Task<string> CheckEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
-            return user != null;
+            if(user == null) { return string.Empty; }
+            return user.Id;
         }
 
         public async Task<string> CreateResetLink(string email)

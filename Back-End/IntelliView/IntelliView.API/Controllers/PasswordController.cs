@@ -26,7 +26,7 @@ namespace IntelliView.API.Controllers
 
             var result = await _passwordService.CheckEmailAsync(email);
 
-            if (!result)
+            if (result== string.Empty)
                 return BadRequest("Invalid Email");
 
             string body = await _passwordService.CreateResetLink(email);

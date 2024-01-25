@@ -37,7 +37,7 @@ namespace IntelliView.DataAccess.Services
             await _userManager.UpdateAsync(user);
 
 
-            string link = $"https://localhost:44300/api/password/reset-password/{user.Id}/{token}";
+            string link = $"https://localhost:7049/api/password/reset-password/{user.Id}/{token}";
 
             return $"You can reset your password by clicking this link: <a href='{link}'>Reset Password</a> ";
         }

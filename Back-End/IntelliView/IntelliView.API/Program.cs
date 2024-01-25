@@ -2,8 +2,8 @@ using InteliView.DataAccess.Data;
 using IntelliView.API.Services;
 using IntelliView.DataAccess.Repository;
 using IntelliView.DataAccess.Repository.IRepository;
-using IntelliView.DataAccess.Services.IService;
 using IntelliView.DataAccess.Services;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
 using IntelliView.Utility.Settings;
@@ -21,6 +21,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//{
+//    // Use In-Memory Database
+//    options.UseInMemoryDatabase("InMemoryDatabase");
+
+//    // If you still want to seed data, you can do it here
+//    // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
+//});
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -95,7 +103,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();

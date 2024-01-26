@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IntelliView.Models.DTO
 {
-    public class ProfileDTO : ApplicationUser
+    public class ProfileDTO
     {
         public string CompanyName { get; set; } = string.Empty;
         public string CompanyDescription { get; set; } = string.Empty;
@@ -18,7 +18,7 @@ namespace IntelliView.Models.DTO
 
         [MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
-        public string ImageUrl { get; set; } = string.Empty;
+        public string ImageURl { get; set; } = string.Empty;
 
     }
 }

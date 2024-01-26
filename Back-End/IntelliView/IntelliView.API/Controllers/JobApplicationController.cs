@@ -16,6 +16,11 @@ namespace IntelliView.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        public JobApplicationController(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<Job>> GetJobById(int id)
         {

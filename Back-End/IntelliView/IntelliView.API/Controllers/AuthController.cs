@@ -49,21 +49,7 @@ namespace IntelliView.API.Controllers
             return Ok(result);
         }
 
-
-
-        [HttpGet("verify/{userId}/{token}")]
-        public async Task<IActionResult> VerifyAsync(string userId, string token)
-        {
-
-            var result = await _authService.VerifyEmailAsync(userId, token);
-
-            if (!result)
-                return BadRequest("Verification failed");
-
-            return Ok("Verification successful");
-        }
-
-        [HttpPost("token")]
+        [HttpPost("login")]
         public async Task<IActionResult> GetTokenAsync([FromBody] TokenRequestModel model)
         {
             var result = await _authService.GetTokenAsync(model);

@@ -7,6 +7,7 @@ using IntelliView.Models.Models;
 using IntelliView.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -30,8 +31,8 @@ namespace IntelliView.API.Controllers
         public async Task<IActionResult> GetProfile()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            var userId = userIdClaim.Value;
-            var user = await _userManager.FindByIdAsync(userId);
+            var userId = userIdClaim?.Value;
+            var user = await _userManager.FindByIdAsync(userId!);
             if (user != null)
             {
                 return Ok(user);
@@ -39,113 +40,80 @@ namespace IntelliView.API.Controllers
 
             return NotFound();
         }
-
-        private ProfileDTO updatedUser = new ProfileDTO();
         
-        [HttpPost]
-        public Task Upload( IFormFile file )
+        private ApplicationUser updatedImage = new ApplicationUser();
+        [HttpPut("updatePicture")]
+        public async Task<IActionResult> updatePicture(IFormFile file)
         {
-
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            var userId = userIdClaim.Value;
+            var userId = userIdClaim?.Value;
 
-                
-                
+            if (file != null && userId != null)
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user != null)
+                {
                     string webRootPath = _webHostEnvironment.ContentRootPath;
-                    if (file != null)
-                    {
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        var imagePath = Path.Combine(webRootPath, @"wwwroot\Assets\images\");
-                        //var imagePath = Path.Combine(webRootPath, "assets", "images", fileName);
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string imagePath = Path.Combine(webRootPath, "wwwroot", "Assets", "images", fileName);
 
-                        if (!string.IsNullOrEmpty(updatedUser.ImageUrl))
+                    // Delete the old image if it exists
+                    if (!string.IsNullOrEmpty(user.ImageURl))
+                    {
+                        if(user.ImageURl != "wwwroot/Assets/images/7495e58b-b72b-4b87-8c12-c77a69b39cd3.jpg")
                         {
-                            //this is an edit and we need to remove old image
-                            var oldimagePath = Path.Combine(webRootPath, updatedUser.ImageUrl.TrimStart('\\'));
-                            if (System.IO.File.Exists(oldimagePath))
+                            var oldImagePath = Path.Combine(webRootPath, user.ImageURl.TrimStart('\\'));
+                            if (System.IO.File.Exists(oldImagePath))
                             {
-                                System.IO.File.Delete(oldimagePath);
+                                System.IO.File.Delete(oldImagePath);
                             }
                         }
-                        using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-                        updatedUser.ImageUrl = @"wwwroot\Assets\images\" + fileName;
                     }
-            return Task.CompletedTask;       
+
+                    using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+
+                    // Update the user's profile picture URL
+                    user.ImageURl = Path.Combine("wwwroot", "Assets", "images", fileName).Replace("\\", "/");
+                    await _userManager.UpdateAsync(user);
+
+                    return Ok(user.ImageURl); // Return the URL of the updated image
+                }
+            }
+
+            return BadRequest("No file or user found.");
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateProfile(ProfileDTO updatedUser, IFormFile file)
+        public async Task<IActionResult> UpdateProfile(ProfileDTO updatedUser)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            var userId = userIdClaim.Value;
-            var user = await _userManager.FindByIdAsync(userId);
-            try
-            {
-                if (updatedUser == null)
+            var userId = userIdClaim?.Value;
+            var user = await _userManager.FindByIdAsync(userId!);
+            
+                if (User.IsInRole(SD.ROLE_COMPANY) && user is CompanyUser companyUser)
                 {
-                    return BadRequest("Invalid input for updating profile.");
+                    companyUser.CompanyName = updatedUser.CompanyName;
+                    companyUser.CompanyDescription = updatedUser.CompanyDescription;
+                    companyUser.CompanyWebsite = updatedUser.CompanyWebsite;
+
+                    await _userManager.UpdateAsync(companyUser);
+
+                    return Ok(companyUser);
                 }
-                if (user != null)
+                else if (User.IsInRole(SD.ROLE_USER) && user is IndividualUser individualUser)
                 {
-                    string webRootPath = _webHostEnvironment.WebRootPath;
-                    if (file != null)
-                    {
-                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        var imagePath = Path.Combine(webRootPath, @"assets\images\");
-                        //var imagePath = Path.Combine(webRootPath, "assets", "images", fileName);
+                    individualUser.FirstName = updatedUser.FirstName;
+                    individualUser.LastName = updatedUser.LastName;
 
-                        if (!string.IsNullOrEmpty(updatedUser.ImageUrl))
-                        {
-                            //this is an edit and we need to remove old image
-                            var oldimagePath = Path.Combine(webRootPath, updatedUser.ImageUrl.TrimStart('\\'));
-                            if (System.IO.File.Exists(oldimagePath))
-                            {
-                                System.IO.File.Delete(oldimagePath);
-                            }
-                        }
-                        using (var fileStream = new FileStream(Path.Combine(imagePath, fileName), FileMode.Create))
-                        {
-                            file.CopyTo(fileStream);
-                        }
-                        updatedUser.ImageUrl = @"\assets\images\" + fileName;
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(updatedUser.ImageUrl))
-                        {
-                            updatedUser.ImageUrl = updatedUser.ImageUrl.TrimStart('\\');
-                        }
-                    }
-                    if (User.IsInRole(SD.ROLE_COMPANY) && user is CompanyUser companyUser)
-                    {
-                        companyUser.CompanyName = updatedUser.CompanyName;
-                        companyUser.CompanyDescription = updatedUser.CompanyDescription;
-                        companyUser.CompanyWebsite = updatedUser.CompanyWebsite;
+                    await _userManager.UpdateAsync(individualUser);
 
-                        await _userManager.UpdateAsync(companyUser);
-
-                        return Ok(companyUser);
-                    }
-                    else if (User.IsInRole(SD.ROLE_USER) && user is IndividualUser individualUser)
-                    {
-                        individualUser.FirstName = updatedUser.FirstName;
-                        individualUser.LastName = updatedUser.LastName;
-
-                        await _userManager.UpdateAsync(individualUser);
-
-                        return Ok(individualUser);
-                    }
+                    return Ok(individualUser);
                 }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                // Handle exceptions and return appropriate error response...
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
+               
+            return NotFound();
         }
        
     }

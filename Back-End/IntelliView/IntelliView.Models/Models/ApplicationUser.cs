@@ -5,7 +5,7 @@ namespace IntelliView.Models.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public string ImageURl { get; set; } = string.Empty;
+        public string ImageURl { get; set; } = @"wwwroot/Assets/images/7495e58b-b72b-4b87-8c12-c77a69b39cd3.jpg";
         public List<RefreshToken>? RefreshTokens { get; set; }
 
         // verfication

@@ -170,6 +170,13 @@ namespace IntelliView.API.Services
             if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 authModel.Message = "Email or Password is incorrect!";
+                authModel.IsAuthenticated = false;
+                return authModel;
+            }
+            if(user.Verified == false)
+            {
+                authModel.Message = "Email is not verified!";
+                authModel.IsAuthenticated = false;
                 return authModel;
             }
 
@@ -182,6 +189,7 @@ namespace IntelliView.API.Services
             authModel.Username = user.UserName;
             authModel.ExpiresOn = jwtSecurityToken.ValidTo;
             authModel.Roles = rolesList.ToList();
+            authModel.Id = user.Id;
 
             var activeRefreshToken = user.RefreshTokens?.FirstOrDefault(t => t.IsActive);
 

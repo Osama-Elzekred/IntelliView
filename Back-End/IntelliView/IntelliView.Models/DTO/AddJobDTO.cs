@@ -9,13 +9,13 @@ namespace IntelliView.Models.DTO
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; } = string.Empty;
 
-        public JobType? Jobtype { get; set; }
+        //public JobType? Jobtype { get; set; }
 
-        public JobTime? Jobtime { get; set; }
+        //public JobTime? Jobtime { get; set; }
 
-        public string? Location { get; set; } = string.Empty;
+        //public string? Location { get; set; } = string.Empty;
 
-        public string? MinimumExperience { get; set; } = string.Empty;
+        //public string? MinimumExperience { get; set; } = string.Empty;
 
         public string? Description { get; set; } = string.Empty;
 
@@ -28,7 +28,7 @@ namespace IntelliView.Models.DTO
         //public string? Notes { get; set; } = string.Empty;
 
         //[Range(0, double.MaxValue, ErrorMessage = "Salary must be a non-negative value")]
-        public double? Salary { get; set; }
+        //public double? Salary { get; set; }
 
         //public bool IsActive { get; set; } = true;
 

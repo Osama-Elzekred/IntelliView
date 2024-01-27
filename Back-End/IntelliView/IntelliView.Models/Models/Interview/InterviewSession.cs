@@ -26,7 +26,7 @@ namespace IntelliView.Models.Models
         public virtual ICollection<InterviewApplication> Applications { get; set; }
         public virtual ICollection<InterviewQuestion> Questions { get; set; }
     }
-    public enum Topic
+    public enum Categories
     {
         Technical,
         Behavioral,

@@ -9,13 +9,13 @@ namespace IntelliView.Models.DTO
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; } = string.Empty;
 
-        //public JobType? JobType { get; set; }
+        public JobType? Jobtype { get; set; }
 
-        //public JobTime? JobTime { get; set; }
+        public JobTime? Jobtime { get; set; }
 
-        //public string? Location { get; set; } = string.Empty;
+        public string? Location { get; set; } = string.Empty;
 
-        //public string? MinimumExperience { get; set; } = string.Empty;
+        public string? MinimumExperience { get; set; } = string.Empty;
 
         public string? Description { get; set; } = string.Empty;
 
@@ -28,7 +28,7 @@ namespace IntelliView.Models.DTO
         //public string? Notes { get; set; } = string.Empty;
 
         //[Range(0, double.MaxValue, ErrorMessage = "Salary must be a non-negative value")]
-        //public double? Salary { get; set; }
+        public double? Salary { get; set; }
 
         //public bool IsActive { get; set; } = true;
 
@@ -44,5 +44,18 @@ namespace IntelliView.Models.DTO
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public DateTime? EndedAt { get; set; } = DateTime.Now.AddDays(20);
+
+        public enum JobType
+        {
+            Remote,
+            OnSite,
+            Hybrid
+        }
+
+        public enum JobTime
+        {
+            FullTime,
+            PartTime
+        }
     }
 }

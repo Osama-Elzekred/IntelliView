@@ -171,10 +171,9 @@ namespace IntelliView.API.Controllers
             return CreatedAtAction(nameof(GetJobById), new { id = job.Id }, job);
         }
 
-
         [HttpPut("{id}")]
         [Authorize(Roles = SD.ROLE_COMPANY)]
-        public async Task<IActionResult> UpdateJob(int id, AddJobDTO jobDto)
+        public async Task<IActionResult> UpdateJob(int id, UpdateJobDTO jobDto)
         {
             if (!ModelState.IsValid)
             {
@@ -183,18 +182,25 @@ namespace IntelliView.API.Controllers
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (id != jobDto.Id || userId != jobDto.CompanyUserId)
+            // Retrieve the existing job
+            var existingJob = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId);
+
+            if (existingJob == null)
             {
-                return BadRequest("Invalid request");
+                return NotFound("Job not found or you do not have permission to update it");
             }
 
-            var job = _mapper.Map<Job>(jobDto);
-            await _unitOfWork.Jobs.Update(job);
+            // Update the existing job with the new information
+            //var job = _mapper.Map<Job>(jobDto);
+            _mapper.Map(jobDto, existingJob);
+            // Update other properties as needed
+
+            // Save changes to the database
+            await _unitOfWork.Jobs.Update(existingJob);
             await _unitOfWork.SaveAsync();
 
             return NoContent();
         }
-
 
         [HttpDelete("{id}")]
         [Authorize(Roles = SD.ROLE_COMPANY)]

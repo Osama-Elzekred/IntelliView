@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using IntelliView.Models.Models.job;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -60,6 +61,8 @@ namespace IntelliView.Models.Models
         //public virtual ICollection<InterviewSession> InterviewSessions { get; set; }
         [JsonIgnore]
         public virtual ICollection<JobQuestion> JobQuestions { get; set; }
+        public virtual ICollection<JobInterestedTopic> JobInterestedTopics { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;

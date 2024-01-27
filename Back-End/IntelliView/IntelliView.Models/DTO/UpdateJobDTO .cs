@@ -2,9 +2,9 @@
 
 namespace IntelliView.Models.DTO
 {
-    public class AddJobDTO
+    public class UpdateJobDTO
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; } = string.Empty;
@@ -31,17 +31,6 @@ namespace IntelliView.Models.DTO
         //public double? Salary { get; set; }
 
         //public bool IsActive { get; set; } = true;
-
-        //public bool IsDeleted { get; set; } = false;
-
-        //[Required(ErrorMessage = "CompanyUserId is required")]
-        public string? CompanyUserId { get; set; }
-
-        //[ForeignKey(nameof(CompanyUserId))]
-        //public virtual CompanyUser CompanyUser { get; set; }
-
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public DateTime? EndedAt { get; set; } = DateTime.Now.AddDays(20);
     }

@@ -19,19 +19,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // for database sql server
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // for database in memory
 
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//{
-//    // Use In-Memory Database
-//    options.UseInMemoryDatabase("InMemoryDatabase");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    // Use In-Memory Database
+    options.UseInMemoryDatabase("InMemoryDatabase");
 
-//    // If you still want to seed data, you can do it here
-//    // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
-//});
+    // If you still want to seed data, you can do it here
+    // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
+});
 
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -67,6 +67,7 @@ builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IVerifyService, VerifyService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IAiSearchService, AiSearchService>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);

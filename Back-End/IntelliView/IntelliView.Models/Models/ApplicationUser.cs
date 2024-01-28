@@ -11,7 +11,7 @@ namespace IntelliView.Models.Models
         // verfication
         public String VerificationToken { get; set; } = string.Empty;
         public DateTime VerifyExpiredAt { get; set; } = DateTime.UtcNow;
-        public DateTime VerfiedAt { get; set; }  = DateTime.UtcNow;
+        public DateTime VerfiedAt { get; set; } = DateTime.UtcNow;
         public bool Verified { get; set; } = false;
 
         // reset password

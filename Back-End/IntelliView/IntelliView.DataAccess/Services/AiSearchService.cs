@@ -1,27 +1,32 @@
 ﻿using IntelliView.DataAccess.Services.IService;
+using Microsoft.Extensions.Configuration;
 using OpenAI_API;
 using OpenAI_API.Completions;
 namespace IntelliView.DataAccess.Services
 {
     public class AiSearchService : IAiSearchService
     {
-        public AiSearchService() { }
+        private readonly IConfiguration Configuration;
+        public AiSearchService(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
         public async Task<string> GetAiBasedResult(string searchText)
         {
-            string APIkey = "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";
-            string result = "";
-            var openai = new OpenAIAPI(APIkey);
+            string apiKey = Configuration["OPENAI_API_KEY"]!;
 
-            CompletionRequest req = new CompletionRequest();
-            req.Prompt = searchText;
-            req.MaxTokens = 200;
-            req.Model = OpenAI_API.Models.Model.Davinci;
-            var completions = openai.Completions.CreateCompletionAsync(req);
-            foreach (var item in completions.Result.Completions)
-            {
-                result = item.Text;
-            }
-            return result;
+            var openai = new OpenAIAPI(apiKey);
+
+            var completions = await openai.Completions.CreateCompletionAsync(
+                new CompletionRequest
+                {
+                    Prompt = searchText,
+                    MaxTokens = Convert.ToInt32(Configuration["MAX_LEN_INPUT_OPENAI"]!),
+                    Model = OpenAI_API.Models.Model.Davinci
+                }
+            );
+
+            return completions.Completions[0].Text;
 
         }
     }

@@ -94,6 +94,16 @@ namespace IntelliView.API.Controllers
             return Ok(jq);
         }
 
+        [HttpGet("AllTopics")]
+        [Authorize(policy: "UserOrCompany")]
+        public async Task<ActionResult<IEnumerable<InterestedTopic>>> GetAllTopics()
+        {
+            var topics = await _unitOfWork.InterestedTopics.GetAllAsync();
+            return Ok(topics);
+        }
+
+
+
         //[HttpGet("GetCompanyJobs")]
         //public async Task<ActionResult<IEnumerable<Job>>> GetCompanyJobs()
         //{

@@ -13,7 +13,7 @@ namespace IntelliView.Models.Models
         public DateOnly Date { get; set; }
         // Other properties...
         public InterviewSessionStatus Status { get; set; }
-        public Topic Topic { get; set; }
+        public Categories Topic { get; set; }
 
         // Foreign key to CompanyUser
         //public string CompanyUserId { get; set; }

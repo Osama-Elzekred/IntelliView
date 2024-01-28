@@ -10,6 +10,7 @@
         IJobApplicationsRepo JobApplications { get; }
         IJobRepo Jobs { get; }
         IJobQuestionRepo JobQuestions { get; }
+        IInterestedTopicRepo InterestedTopics { get; }
         Task SaveAsync();
     }
 }

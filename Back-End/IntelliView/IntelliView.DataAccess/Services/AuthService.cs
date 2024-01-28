@@ -11,7 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using RefreshToken = IntelliView.Models.DTO.RefreshToken;
 
@@ -47,11 +46,11 @@ namespace IntelliView.API.Services
 
             if (user == null)
                 return false;
-            if (user.VerificationToken != token || user.VerifyExpiredAt < DateTime.UtcNow)
+            if (user.VerificationToken != token)
                 return false;
 
-
-            user.VerfiedAt = DateTime.UtcNow;
+            //|| user.VerifyExpiredAt < DateTime.UtcNow
+            //user.VerfiedAt = DateTime.UtcNow;
             user.VerificationToken = string.Empty;
             user.Verified = true;
 
@@ -173,7 +172,7 @@ namespace IntelliView.API.Services
                 authModel.IsAuthenticated = false;
                 return authModel;
             }
-            if(user.Verified == false)
+            if (user.Verified == false)
             {
                 authModel.Message = "Email is not verified!";
                 authModel.IsAuthenticated = false;
@@ -227,7 +226,7 @@ namespace IntelliView.API.Services
 
             return result.Succeeded ? string.Empty : "Something went wrong";
         }
-        
+
         public async Task<AuthModel> RefreshTokenAsync(string token)
         {
             var authModel = new AuthModel();
@@ -288,6 +287,6 @@ namespace IntelliView.API.Services
 
             return true;
         }
-        
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using IntelliView.DataAccess.Services.IService;
+using IntelliView.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IntelliView.API.Controllers
@@ -24,6 +25,11 @@ namespace IntelliView.API.Controllers
             var result = await _aiBasedSearchService.GetAiBasedResult(searchText);
             return Ok(result);
 
+        }
+        [HttpPost("AddMultibleDataForm")]
+        public Task<IActionResult> AddMultibleDataForm(MultibleFormDataDTO multibleFormDataDTO)
+        {
+            return Task.FromResult<IActionResult>(Ok(multibleFormDataDTO));
         }
     }
 }

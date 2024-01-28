@@ -8,7 +8,7 @@ namespace IntelliView.DataAccess.Services
         public AiSearchService() { }
         public async Task<string> GetAiBasedResult(string searchText)
         {
-            string APIkey = "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";
+            string APIkey = "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";
             string result = "";
             var openai = new OpenAIAPI(APIkey);
 

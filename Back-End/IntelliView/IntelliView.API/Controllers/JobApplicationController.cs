@@ -47,21 +47,7 @@ namespace IntelliView.API.Controllers
             var jobs = await _unitOfWork.Jobs.GetAllAsync();
             return Ok(jobs);
         }
-        //[HttpPost("Apply")]
-        //public async Task<IActionResult> ApplyJob(ApplyJobDTO applyJobDto)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        //    applyJobDto.IndividualUserId = userId;
-        //    var applyJob = _mapper.Map<ApplyJob>(applyJobDto);
-        //    await _unitOfWork.ApplyJobs.AddAsync(applyJob);
-        //    await _unitOfWork.SaveAsync();
-        //    return CreatedAtAction(nameof(GetJobById), new { id = applyJob.Id }, applyJob);
-        //}
-        // POST: api/job-applications/apply
+        
         [HttpPost("apply")]
         public async Task<IActionResult> ApplyForJob([FromBody] JobApplicationDTO applicationDto)
         {

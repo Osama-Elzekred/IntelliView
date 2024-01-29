@@ -86,6 +86,41 @@ namespace IntelliView.API.Controllers
             return BadRequest("No file or user found.");
         }
 
+        [HttpPut("updateCV")]
+        [Authorize(Roles = SD.ROLE_USER)]
+        public async Task<IActionResult> UploadCV(IFormFile file)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (file != null && userId != null)
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                var individualUser = (IndividualUser)user!;
+                if (individualUser != null)
+                {
+                    string webRootPath = _webHostEnvironment.ContentRootPath;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string CVPath = Path.Combine(webRootPath, "wwwroot", "Assets", "CVs", fileName);
+                    // Delete the old cv if it exists
+                    if (!string.IsNullOrEmpty(individualUser.CVURL))
+                    {
+                        var oldCVPath = Path.Combine(webRootPath, individualUser.CVURL.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldCVPath))
+                        {
+                            System.IO.File.Delete(oldCVPath);
+                        }
+                    }
+                    using (var fileStream = new FileStream(CVPath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                    // Update the user's CV URL
+                    individualUser.CVURL = Path.Combine("wwwroot", "Assets", "CVs", fileName).Replace("\\", "/");
+                    await _userManager.UpdateAsync(individualUser);
+                    return Ok(individualUser.CVURL); // Return the URL of the updated CV
+                }
+            }
+            return BadRequest("No file or user found.");
+        }
         [HttpPut]
         public async Task<IActionResult> UpdateProfile(ProfileDTO updatedUser)
         {

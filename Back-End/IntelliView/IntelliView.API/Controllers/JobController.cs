@@ -102,14 +102,25 @@ namespace IntelliView.API.Controllers
             return Ok(topics);
         }
 
-
-
-        //[HttpGet("GetCompanyJobs")]
-        //public async Task<ActionResult<IEnumerable<Job>>> GetCompanyJobs()
+        //[HttpPost("AddInterested")]
+        //public async Task<ActionResult<JobInterestedTopic>> AddInterestedTopic(int JobId, InterestedTopicDTO interestedTopicDto)
         //{
+        //    // Validate interestedTopicDto...
+        //    interestedTopicDto.JobId = JobId;
         //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    var jobs = await _unitOfWork.Jobs.GetAllAsync(j => j.CompanyUserId == userId);
-        //    return Ok(jobs);
+        //    var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == interestedTopicDto.JobId && j.CompanyUserId == userId);
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var interestedTopic = new JobInterestedTopic
+        //    {
+        //        InterestedTopicId = interestedTopicDto.InterestedTopicId,
+        //        JobId = interestedTopicDto.JobId
+        //    };
+        //    await _unitOfWork.JobInterestedTopics.AddAsync(interestedTopic);
+        //    await _unitOfWork.SaveAsync();
+        //    return CreatedAtAction(nameof(GetJobInterestedTopics), new { interestedTopicDto.JobId }, interestedTopic);
         //}
 
         [HttpGet("GetJobsByRange")]
@@ -173,7 +184,10 @@ namespace IntelliView.API.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             jobDto.CompanyUserId = userId;
-
+            jobDto.JobInterestedTopics.ForEach(topic =>
+            {
+                topic.JobId = jobDto.Id;
+            });
             var job = _mapper.Map<Job>(jobDto);
             await _unitOfWork.Jobs.AddAsync(job);
             await _unitOfWork.SaveAsync();

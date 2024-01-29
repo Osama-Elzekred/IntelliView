@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using IntelliView.Models.Models.job;
+using System.ComponentModel.DataAnnotations;
 
 namespace IntelliView.Models.DTO
 {
@@ -39,7 +40,7 @@ namespace IntelliView.Models.DTO
 
         //[ForeignKey(nameof(CompanyUserId))]
         //public virtual CompanyUser CompanyUser { get; set; }
-
+        public List<JobInterestedTopic> JobInterestedTopics { get; set; }= new List<JobInterestedTopic>();
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;

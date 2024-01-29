@@ -12,8 +12,8 @@ namespace IntelliView.Models.Models
     {
         public int Id { get; set; }
         public string Topic { get; set; }=string.Empty;
-        public virtual ICollection<UserInterestedTopic> UserInterestedTopics { get; set; } 
-        public virtual ICollection<JobInterestedTopic> JobInterestedTopics { get; set; } 
+        public virtual ICollection<UserInterestedTopic>? UserInterestedTopics { get; set; } 
+        public virtual ICollection<JobInterestedTopic>? JobInterestedTopics { get; set; } 
 
 
     }

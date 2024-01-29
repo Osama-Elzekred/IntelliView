@@ -4,6 +4,8 @@ using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -16,10 +18,12 @@ namespace IntelliView.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public JobApplicationController(IUnitOfWork unitOfWork, IMapper mapper)
+        public readonly IWebHostEnvironment _webHostEnvironment;
+        public JobApplicationController(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _webHostEnvironment = webHostEnvironment;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Job>> GetJobById(int id)
@@ -115,7 +119,43 @@ namespace IntelliView.API.Controllers
 
             return Ok("Application submitted successfully");
         }
+        [HttpPost("UploadCV")]
+        public async Task<IActionResult> UploadCV(IFormFile file)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (file != null && userId != null)
+            {
+                var user = await _unitOfWork.IndividualUsers.GetByIdAsync(userId);
+                if (user != null)
+                {
+                    string webRootPath = _webHostEnvironment.ContentRootPath;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string CVPath = Path.Combine(webRootPath, "wwwroot", "Assets", "CVs", fileName);
 
+                    // Delete the old cv if it exists
+                    if (!string.IsNullOrEmpty(user.CVURL))
+                    {
+                        var oldCVPath = Path.Combine(webRootPath, user.CVURL.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldCVPath))
+                        {
+                            System.IO.File.Delete(oldCVPath);
+                        }
+                    }
+
+                    using (var fileStream = new FileStream(CVPath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+
+                    // Update the user's CV URL
+                    user.CVURL = Path.Combine("wwwroot", "Assets", "CVs", fileName).Replace("\\", "/");
+                    await _unitOfWork.SaveAsync();
+
+                    return Ok(user.CVURL); // Return the URL of the updated CV
+                }
+            }
+            return BadRequest("No file or user found.");
+        }
 
 
 

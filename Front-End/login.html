@@ -123,7 +123,7 @@
           <div class="box" id="face">
       <div class="sign-up- upin">
           <p class="sign-up">sign up</p>
-          <form >
+          <form id="signup">
             <div class="sign-up_">
               <label for="username">user name</label><br>
               <div class="input-container"> 
@@ -131,7 +131,7 @@
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                 <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
               </svg>
-              <input type="text" id="username" oninput="checkInput(this)">
+              <input type="text" id="username1" oninput="checkInput(this)">
               </div><br>
               <label for="password-">password</label><br>
               <div class="input-container">
@@ -164,7 +164,7 @@
       </div>
       <div class="sign-in- upin">
          <p class="word">log in</p>
-          <form class="form2">
+          <form class="form2" id="login">
               <label for="username">user name</label><br>
               <div class="input-container">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle icon" viewBox="0 0 16 16">
@@ -188,7 +188,9 @@
               </div><br>
               <input type="checkbox" id="remember" class="checkbox">
               <label for="remember" class="remember">remember me</label><br>
-              <input type="button" value="log in" class="button2 button-h">
+              <div id="message" ></div>
+              <div id="messageOfWrong"></div>
+              <input type="submit" value="log in" class="button2 button-h">
           </form>
           <a href="#" class="forget-password">forget password?</a>
           <p class="create">Don't have an account? <button onclick="flipped_face()" class="sign-in button-h">sign up</button></p>
@@ -269,7 +271,7 @@
     <script src="js/bootstrap-select.min.js"></script>
     
     <script src="js/custom.js"></script>
-   <script src="js/f.js"></script>
+   <script src="js/api_code.js"></script>
    
      
   </body>

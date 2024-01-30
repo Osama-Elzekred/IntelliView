@@ -1,4 +1,5 @@
-﻿using IntelliView.DataAccess.Services.IService;
+﻿using IntelliView.DataAccess.Services;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
@@ -10,7 +11,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using RefreshToken = IntelliView.Models.DTO.RefreshToken;
 
@@ -38,6 +38,33 @@ namespace IntelliView.API.Services
                 await _roleManager.CreateAsync(new IdentityRole(SD.ROLE_USER));
             }
         }
+        public async Task<bool> VerifyEmailAsync(string userId, string token)
+        {
+            //var user = await _userManager.Users.FirstOrDefaultAsync(u=>(token==u.VerificationToken && userId==u.Id ));
+
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
+                return false;
+            if (user.VerificationToken != token)
+                return false;
+
+            //|| user.VerifyExpiredAt < DateTime.UtcNow
+            //user.VerfiedAt = DateTime.UtcNow;
+            user.VerificationToken = string.Empty;
+            user.Verified = true;
+
+            // create jwt token
+
+            var jwtSecurityToken = await CreateJwtToken(user);
+            var refreshToken = JwtToken.GenerateRefreshToken();
+            user.RefreshTokens?.Add(refreshToken);
+
+            await _userManager.UpdateAsync(user);
+            return true;
+
+        }
+
         public async Task<AuthModel> RegisterAsync(RegisterDTO model)
         {
             await CreateRolesAsync();
@@ -60,7 +87,7 @@ namespace IntelliView.API.Services
 
             var jwtSecurityToken = await CreateJwtToken(user);
 
-            var refreshToken = GenerateRefreshToken();
+            var refreshToken = JwtToken.GenerateRefreshToken();
             user.RefreshTokens?.Add(refreshToken);
             await _userManager.UpdateAsync(user);
 
@@ -73,11 +100,38 @@ namespace IntelliView.API.Services
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Username = user.UserName,
                 RefreshToken = refreshToken.Token,
-                RefreshTokenExpiration = refreshToken.ExpiresOn
+                RefreshTokenExpiration = refreshToken.ExpiresOn,
+                Id = user.Id
             };
         }
 
+        public async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
+        {
+            var userClaims = await _userManager.GetClaimsAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
+            var roleClaims = roles.Select(role => new Claim("roles", role));
 
+            var claims = new[]
+            {
+
+                new Claim(JwtRegisteredClaimNames.Email, user.Email!),
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
+            }
+            .Union(userClaims)
+            .Union(roleClaims);
+
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
+            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+
+            var jwtSecurityToken = new JwtSecurityToken(
+                issuer: _jwt.Issuer,
+                audience: _jwt.Audience,
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(_jwt.DurationInMinutes),
+                signingCredentials: signingCredentials);
+
+            return jwtSecurityToken;
+        }
 
         private static ApplicationUser CreateUserObject(RegisterDTO model)
         {
@@ -115,6 +169,13 @@ namespace IntelliView.API.Services
             if (user is null || !await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 authModel.Message = "Email or Password is incorrect!";
+                authModel.IsAuthenticated = false;
+                return authModel;
+            }
+            if (user.Verified == false)
+            {
+                authModel.Message = "Email is not verified!";
+                authModel.IsAuthenticated = false;
                 return authModel;
             }
 
@@ -127,6 +188,7 @@ namespace IntelliView.API.Services
             authModel.Username = user.UserName;
             authModel.ExpiresOn = jwtSecurityToken.ValidTo;
             authModel.Roles = rolesList.ToList();
+            authModel.Id = user.Id;
 
             var activeRefreshToken = user.RefreshTokens?.FirstOrDefault(t => t.IsActive);
 
@@ -137,7 +199,7 @@ namespace IntelliView.API.Services
             }
             else
             {
-                var refreshToken = GenerateRefreshToken();
+                var refreshToken = JwtToken.GenerateRefreshToken();
                 authModel.RefreshToken = refreshToken.Token;
                 authModel.RefreshTokenExpiration = refreshToken.ExpiresOn;
 
@@ -164,40 +226,14 @@ namespace IntelliView.API.Services
 
             return result.Succeeded ? string.Empty : "Something went wrong";
         }
-        private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)
-        {
-            var userClaims = await _userManager.GetClaimsAsync(user);
-            var roles = await _userManager.GetRolesAsync(user);
-            var roleClaims = roles.Select(role => new Claim("roles", role));
 
-            var claims = new[]
-            {
-
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
-            }
-            .Union(userClaims)
-            .Union(roleClaims);
-
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
-            var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-            var jwtSecurityToken = new JwtSecurityToken(
-                issuer: _jwt.Issuer,
-                audience: _jwt.Audience,
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_jwt.DurationInMinutes),
-                signingCredentials: signingCredentials);
-
-            return jwtSecurityToken;
-        }
         public async Task<AuthModel> RefreshTokenAsync(string token)
         {
             var authModel = new AuthModel();
 
             var user = await _userManager.Users
             .Include(u => u.RefreshTokens)
-            .SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+            .SingleOrDefaultAsync(u => u.RefreshTokens!.Any(t => t.Token == token));
 
             if (user == null)
             {
@@ -205,7 +241,7 @@ namespace IntelliView.API.Services
                 return authModel;
             }
 
-            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
+            var refreshToken = user.RefreshTokens!.Single(t => t.Token == token);
 
             if (!refreshToken.IsActive)
             {
@@ -215,8 +251,8 @@ namespace IntelliView.API.Services
 
             refreshToken.RevokedOn = DateTime.UtcNow;
 
-            var newRefreshToken = GenerateRefreshToken();
-            user.RefreshTokens.Add(newRefreshToken);
+            var newRefreshToken = JwtToken.GenerateRefreshToken();
+            user.RefreshTokens!.Add(newRefreshToken);
             await _userManager.UpdateAsync(user);
 
             var jwtToken = await CreateJwtToken(user);
@@ -235,12 +271,12 @@ namespace IntelliView.API.Services
         {
             var user = await _userManager.Users
               .Include(u => u.RefreshTokens)
-              .SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+              .SingleOrDefaultAsync(u => u.RefreshTokens!.Any(t => t.Token == token));
 
             if (user == null)
                 return false;
 
-            var refreshToken = user.RefreshTokens.Single(t => t.Token == token);
+            var refreshToken = user.RefreshTokens!.Single(t => t.Token == token);
 
             if (!refreshToken.IsActive)
                 return false;
@@ -251,20 +287,6 @@ namespace IntelliView.API.Services
 
             return true;
         }
-        private RefreshToken GenerateRefreshToken()
-        {
-            var randomNumber = new byte[32];
 
-            using var generator = new RNGCryptoServiceProvider();
-
-            generator.GetBytes(randomNumber);
-
-            return new RefreshToken
-            {
-                Token = Convert.ToBase64String(randomNumber),
-                ExpiresOn = DateTime.UtcNow.AddDays(10),
-                CreatedOn = DateTime.UtcNow
-            };
-        }
     }
 }

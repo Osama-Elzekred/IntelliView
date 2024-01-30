@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using IntelliView.Models.Models.job;
+using System.ComponentModel.DataAnnotations;
 
 namespace IntelliView.Models.Models
 {
@@ -9,5 +10,8 @@ namespace IntelliView.Models.Models
 
         [MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
+        public string CVURL { get; set; } = string.Empty;
+        public virtual ICollection<UserInterestedTopic> UserInterestedTopics { get; set; } 
+
     }
 }

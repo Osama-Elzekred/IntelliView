@@ -34,7 +34,15 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
 });
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -109,7 +117,7 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.MapIdentityApi<IdentityUser>();
-
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

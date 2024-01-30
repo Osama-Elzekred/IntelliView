@@ -1,14 +1,14 @@
 //functions of sigin and signup view
 
 function flipped_face() {
-  var face_ = document.getElementById("face");
-  face_.classList.toggle("flipped");
+  var face_ = document.getElementById('face');
+  face_.classList.toggle('flipped');
 }
 
 function checkInput(input) {
-  const icon = input.parentElement.querySelector(".icon");
+  const icon = input.parentElement.querySelector('.icon');
 
-  if (input.value.trim() === "") {
+  if (input.value.trim() === '') {
     // Show the icon if the input is empty
     icon.style.opacity = 0.5;
   } else {
@@ -18,12 +18,12 @@ function checkInput(input) {
 }
 
 function togglePassword_() {
-  var passwordField = document.getElementById("passwordField");
+  var passwordField = document.getElementById('passwordField');
 
-  var eyeIcon = document.querySelector(".eye-slash");
+  var eyeIcon = document.querySelector('.eye-slash');
 
-  if (passwordField.type === "password") {
-    passwordField.type = "text";
+  if (passwordField.type === 'password') {
+    passwordField.type = 'text';
     // Switch to the eye-fill icon when password is visible
     eyeIcon.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
@@ -32,7 +32,7 @@ function togglePassword_() {
         </svg>
       `;
   } else {
-    passwordField.type = "password";
+    passwordField.type = 'password';
     // Switch back to the eye-slash-fill icon when password is hidden
     eyeIcon.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
@@ -43,12 +43,12 @@ function togglePassword_() {
   }
 }
 function togglePassword() {
-  var passwordField_ = document.getElementById("password-");
+  var passwordField_ = document.getElementById('password-');
 
-  var eyeIcon = document.querySelector(".eye-fill-");
+  var eyeIcon = document.querySelector('.eye-fill-');
 
-  if (passwordField_.type === "password") {
-    passwordField_.type = "text";
+  if (passwordField_.type === 'password') {
+    passwordField_.type = 'text';
     // Switch to the eye-fill icon when password is visible
     eyeIcon.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
@@ -57,7 +57,7 @@ function togglePassword() {
         </svg>
       `;
   } else {
-    passwordField_.type = "password";
+    passwordField_.type = 'password';
     // Switch back to the eye-slash-fill icon when password is hidden
     eyeIcon.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
@@ -70,12 +70,12 @@ function togglePassword() {
 
 //api code ان شاء الله
 
-let signupForm = document.getElementById("signup");
-let loginForm = document.getElementById("login");
-let signupbtn = document.getElementById("signupbtn");
-let signinbtn = document.getElementById("signinbtn");
-let message = document.getElementById("message");
-let textOfEmpty = document.createTextNode("please enter username and password");
+let signupForm = document.getElementById('signup');
+let loginForm = document.getElementById('login');
+let signupbtn = document.getElementById('signupbtn');
+let signinbtn = document.getElementById('signinbtn');
+let message = document.getElementById('message');
+let textOfEmpty = document.createTextNode('please enter username and password');
 message.appendChild(textOfEmpty);
 message.style.cssText = `
           font-style: italic;
@@ -84,10 +84,10 @@ message.style.cssText = `
           font-size : 24 ; 
           font-weight : bold ;
           `;
-message.style.display = "none";
+message.style.display = 'none';
 
-let messageOfWrong = document.getElementById("messageOfWrong");
-let textOfWrong = document.createTextNode("Wrong Password or Username");
+let messageOfWrong = document.getElementById('messageOfWrong');
+let textOfWrong = document.createTextNode('Wrong Password or Username');
 messageOfWrong.appendChild(textOfWrong);
 messageOfWrong.style.cssText = `
           font-style: italic;
@@ -96,31 +96,31 @@ messageOfWrong.style.cssText = `
           text-align : center ;
           font-weight : bold ;  
           `;
-messageOfWrong.style.display = "none";
+messageOfWrong.style.display = 'none';
 
-loginForm.addEventListener("submit", function (e) {
+loginForm.addEventListener('submit', function (e) {
   e.preventDefault();
-  messageOfWrong.style.display = "none";
+  messageOfWrong.style.display = 'none';
 
   let loginData = new FormData(loginForm);
-  let username = loginData.get("username");
-  let password = loginData.get("password");
+  let username = loginData.get('username');
+  let password = loginData.get('password');
   // if (typeof username !== "string" || typeof password !== "string") {
   //   console.error("Username and password must be strings.");
   //   return;
   // }
-  if (username === "" || password === "") {
-    message.style.display = "block";
+  if (username === '' || password === '') {
+    message.style.display = 'block';
   } else {
-    message.style.display = "none";
-    fetch("https://jsonplaceholder.typicode.com/posts", {
-      method: "POST",
+    message.style.display = 'none';
+    fetch('https://localhost:7049/api/Auth/login', {
+      method: 'POST',
       body: JSON.stringify({
-        username,
+        email: username,
         password,
       }),
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
+        'Content-type': 'application/json; charset=UTF-8',
       },
       // mode: 'no-cors', // Comment out or remove this line
     })
@@ -128,18 +128,18 @@ loginForm.addEventListener("submit", function (e) {
         return response.json();
       })
       .then((data) => {
-        if (data.id) {
+        if (data) {
           window.location.href = `profile.html?username=${username}`;
           console.log(data);
         } else {
-          messageOfWrong.style.display = "block";
+          messageOfWrong.style.display = 'block';
         }
         console.log(data.username);
       })
       .catch((error) => {
-        console.log("Error:", error);
+        console.log('Error:', error);
         if (error.response) {
-          console.log("Response details:", error.response);
+          console.log('Response details:', error.response);
         }
       });
   }

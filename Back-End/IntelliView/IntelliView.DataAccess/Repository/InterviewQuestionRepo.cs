@@ -13,7 +13,7 @@ namespace IntelliView.DataAccess.Repository
     public class InterviewQuestionRepo : Repository<InterviewQuestionRepo>, IInterviewQuestionRepo
     {
         private readonly ApplicationDbContext _db;
-        internal DbSet<InterviewQuestionRepo> _dbSet;
+        internal new DbSet<InterviewQuestionRepo> _dbSet;
         public InterviewQuestionRepo(ApplicationDbContext db):base(db)
         {
             _db = db;

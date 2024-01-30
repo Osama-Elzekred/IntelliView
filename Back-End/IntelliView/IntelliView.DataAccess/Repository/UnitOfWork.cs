@@ -12,6 +12,9 @@ namespace IntelliView.DataAccess.Repository
         public IInterviewQuestionRepo InterviewQuestions { get; private set; }
         public IInterviewSessionRepo InterviewSessions { get; private set; }
         public IJobRepo Jobs { get; private set; }
+        public IJobQuestionRepo JobQuestions { get; private set; }
+        public IJobApplicationsRepo JobApplications { get; private set; }
+        public IInterestedTopicRepo InterestedTopics { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -21,6 +24,9 @@ namespace IntelliView.DataAccess.Repository
             InterviewQuestions = new InterviewQuestionRepo(_db);
             InterviewSessions = new InterviewSessionRepo(_db);
             Jobs = new JobRepo(_db);
+            JobQuestions = new JobQuestionRepo(_db);
+            JobApplications = new JobApplicationsRepo(_db);
+            InterestedTopics = new InterestedTopicRepo(_db);
         }
         public async Task SaveAsync()
         {

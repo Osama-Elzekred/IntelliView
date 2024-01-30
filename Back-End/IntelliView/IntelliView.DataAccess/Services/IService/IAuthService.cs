@@ -9,5 +9,8 @@ namespace IntelliView.DataAccess.Services.IService
         Task<string> AddRoleAsync(AddRoleModel model);
         Task<AuthModel> RefreshTokenAsync(string token);
         Task<bool> RevokeTokenAsync(string token);
+
+        Task<bool> VerifyEmailAsync(string userId, string token);
+
     }
 }

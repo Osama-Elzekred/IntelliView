@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IntelliView.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Inital : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,6 +31,11 @@ namespace IntelliView.DataAccess.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ImageURl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VerificationToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VerifyExpiredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    VerfiedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ResetPassToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ResetPassExpiredAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CompanyDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -164,7 +169,7 @@ namespace IntelliView.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "jops",
+                name: "Jobs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -184,13 +189,14 @@ namespace IntelliView.DataAccess.Migrations
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     CompanyUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_jops", x => x.Id);
+                    table.PrimaryKey("PK_Jobs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_jops_AspNetUsers_CompanyUserId",
+                        name: "FK_Jobs_AspNetUsers_CompanyUserId",
                         column: x => x.CompanyUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -218,6 +224,101 @@ namespace IntelliView.DataAccess.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JobApplications",
+                columns: table => new
+                {
+                    JobId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ResumeURL = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobApplications", x => new { x.JobId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_JobApplications_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JobApplications_Jobs_JobId",
+                        column: x => x.JobId,
+                        principalTable: "Jobs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JobQuestions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    JobId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobQuestions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_JobQuestions_Jobs_JobId",
+                        column: x => x.JobId,
+                        principalTable: "Jobs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MCQOption",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    QuestionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MCQOption", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MCQOption_JobQuestions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "JobQuestions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserJobAnswer",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserApplicationId = table.Column<int>(type: "int", nullable: false),
+                    JobId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    QuestionId = table.Column<int>(type: "int", nullable: false),
+                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserJobAnswer", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserJobAnswer_JobApplications_JobId_UserId",
+                        columns: x => new { x.JobId, x.UserId },
+                        principalTable: "JobApplications",
+                        principalColumns: new[] { "JobId", "UserId" },
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserJobAnswer_JobQuestions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "JobQuestions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
@@ -260,9 +361,34 @@ namespace IntelliView.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_jops_CompanyUserId",
-                table: "jops",
+                name: "IX_JobApplications_UserId",
+                table: "JobApplications",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JobQuestions_JobId",
+                table: "JobQuestions",
+                column: "JobId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Jobs_CompanyUserId",
+                table: "Jobs",
                 column: "CompanyUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MCQOption_QuestionId",
+                table: "MCQOption",
+                column: "QuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserJobAnswer_JobId_UserId",
+                table: "UserJobAnswer",
+                columns: new[] { "JobId", "UserId" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserJobAnswer_QuestionId",
+                table: "UserJobAnswer",
+                column: "QuestionId");
         }
 
         /// <inheritdoc />
@@ -284,13 +410,25 @@ namespace IntelliView.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "jops");
+                name: "MCQOption");
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
 
             migrationBuilder.DropTable(
+                name: "UserJobAnswer");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "JobApplications");
+
+            migrationBuilder.DropTable(
+                name: "JobQuestions");
+
+            migrationBuilder.DropTable(
+                name: "Jobs");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

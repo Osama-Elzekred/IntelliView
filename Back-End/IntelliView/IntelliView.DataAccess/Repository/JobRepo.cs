@@ -4,7 +4,7 @@ using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.Models.Models;
 namespace IntelliView.DataAccess.Repository
 {
-    public class JobRepo : Repository<Job>, IJobRepo
+    public class JobRepo : Repository<Job>, IJobRepo 
     {
         private ApplicationDbContext _db;
         public JobRepo(ApplicationDbContext db) : base(db)
@@ -15,7 +15,7 @@ namespace IntelliView.DataAccess.Repository
         {
             IMapper _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Job, Job>()).CreateMapper();
 
-            Job? jp = await _db.jops.FindAsync(job.Id);
+            Job? jp = await _db.Jobs.FindAsync(job.Id);
             if (jp is null)
             {
                 throw new InvalidOperationException("jop not found.");
@@ -34,5 +34,26 @@ namespace IntelliView.DataAccess.Repository
         //    }
         //    return job;
         //}
+
+
+        // Constructor and other methods...
+
+        public async Task AddQuestionToJob(int jobId, JobQuestion question)
+        {
+            var job = await _db.Jobs.FindAsync(jobId);
+
+            if (job == null)
+            {
+                // Handle job not found
+                return;
+            }
+
+            // Associate the question with the job
+            job.JobQuestions ??= new List<JobQuestion>();
+            job.JobQuestions.Add(question);
+
+            // Save changes to the database
+            //await _db.SaveChangesAsync();
+        }
     }
 }

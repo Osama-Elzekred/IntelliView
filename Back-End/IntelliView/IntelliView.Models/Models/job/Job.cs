@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using IntelliView.Models.Models.job;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace IntelliView.Models.Models
@@ -57,10 +59,14 @@ namespace IntelliView.Models.Models
         //public virtual ICollection<InterviewApplication> JobApplications { get; set; }
 
         //public virtual ICollection<InterviewSession> InterviewSessions { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<JobQuestion> JobQuestions { get; set; }
+        public virtual ICollection<JobInterestedTopic> JobInterestedTopics { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime? EndedAt { get; set; } = DateTime.Now.AddDays(20);
     }
 
     public enum JobType

@@ -20,15 +20,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Owin" Version="4.2.2" />
+    <PackageReference Include="OpenAI" Version="1.10.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\IntelliView.Models\IntelliView.Models.csproj" />
     <ProjectReference Include="..\IntelliView.Utility\IntelliView.Utility.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

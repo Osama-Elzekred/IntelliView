@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IntelliView.Models.Models
 {
@@ -9,11 +8,11 @@ namespace IntelliView.Models.Models
         public int Id { get; set; }
 
         // Properties for InterviewSession
-        public string Position { get; set; }=string.Empty;
+        public string Position { get; set; } = string.Empty;
         public DateOnly Date { get; set; }
         // Other properties...
         public InterviewSessionStatus Status { get; set; }
-        public Topic Topic { get; set; }
+        public Categories Topic { get; set; }
 
         // Foreign key to CompanyUser
         //public string CompanyUserId { get; set; }
@@ -26,7 +25,7 @@ namespace IntelliView.Models.Models
         public virtual ICollection<InterviewApplication> Applications { get; set; }
         public virtual ICollection<InterviewQuestion> Questions { get; set; }
     }
-    public enum Topic
+    public enum Categories
     {
         Technical,
         Behavioral,

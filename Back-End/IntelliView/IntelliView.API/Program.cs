@@ -2,6 +2,7 @@ using InteliView.DataAccess.Data;
 using IntelliView.API.Services;
 using IntelliView.DataAccess.Repository;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Services;
 using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
@@ -17,9 +18,23 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+// for database sql server
+
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// for database in memory
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+{
+    // Use In-Memory Database
+    options.UseInMemoryDatabase("InMemoryDatabase");
+
+    // If you still want to seed data, you can do it here
+    // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
+});
+
+
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -50,6 +65,12 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IVerifyService, VerifyService>();
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IAiSearchService, AiSearchService>();
+builder.Services.AddScoped<IJwtToken, JwtToken>();
+
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);
 
 builder.Services.AddControllers();
@@ -93,7 +114,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseStaticFiles();
 app.MapControllers();
 
 app.Run();

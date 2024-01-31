@@ -1,4 +1,5 @@
 using InteliView.DataAccess.Data;
+using IntelliView.API.Infrastructure;
 using IntelliView.API.Services;
 using IntelliView.DataAccess.Repository;
 using IntelliView.DataAccess.Repository.IRepository;
@@ -33,6 +34,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     // If you still want to seed data, you can do it here
     // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
 });
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddCors(options =>
 {
@@ -81,7 +85,7 @@ builder.Services.AddScoped<IJwtToken, JwtToken>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -119,6 +123,9 @@ if (app.Environment.IsDevelopment())
 //app.MapIdentityApi<IdentityUser>();
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
+
+
+app.UseExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -42,7 +42,7 @@ namespace IntelliView.API.Controllers
         }
         
         private ApplicationUser updatedImage = new ApplicationUser();
-        [HttpPut("updatePicture")]
+        [HttpPatch("updatePicture")]
         public async Task<IActionResult> updatePicture(IFormFile file)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
@@ -86,7 +86,7 @@ namespace IntelliView.API.Controllers
             return BadRequest("No file or user found.");
         }
 
-        [HttpPut("updateCV")]
+        [HttpPatch("updateCV")]
         [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> UploadCV(IFormFile file)
         {
@@ -122,7 +122,7 @@ namespace IntelliView.API.Controllers
             return BadRequest("No file or user found.");
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateProfile(ProfileDTO updatedUser)
+        public async Task<IActionResult> UpdateProfile([FromForm]ProfileDTO updatedUser)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim?.Value;

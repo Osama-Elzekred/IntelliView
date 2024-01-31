@@ -41,7 +41,7 @@ namespace IntelliView.API.Controllers
             return NotFound();
         }
         
-        private ApplicationUser updatedImage = new ApplicationUser();
+        //private ApplicationUser updatedImage = new ApplicationUser();
         [HttpPatch("updatePicture")]
         public async Task<IActionResult> updatePicture(IFormFile file)
         {

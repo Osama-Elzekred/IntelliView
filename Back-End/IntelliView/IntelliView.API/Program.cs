@@ -1,4 +1,5 @@
 using InteliView.DataAccess.Data;
+using IntelliView.API.Infrastructure;
 using IntelliView.API.Services;
 using IntelliView.DataAccess.Repository;
 using IntelliView.DataAccess.Repository.IRepository;
@@ -34,7 +35,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
 });
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -73,7 +85,7 @@ builder.Services.AddScoped<IJwtToken, JwtToken>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -109,8 +121,11 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.MapIdentityApi<IdentityUser>();
-
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
+
+
+app.UseExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();

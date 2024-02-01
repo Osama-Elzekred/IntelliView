@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace IntelliView.API.Infrastructure
 {
@@ -16,13 +17,18 @@ namespace IntelliView.API.Infrastructure
             Exception exception,
             CancellationToken cancellationToken)
         {
+            var (statusCode, Message) = MapException(exception);
             _logger.LogError(exception, "Exception occurred: {Message}", exception.Message);
 
             var problemDetails = new ProblemDetails
             {
-                Title = "Server Error",
-                Status = StatusCodes.Status500InternalServerError,
-                Detail = exception.Message
+                Title = Message,
+                Status = statusCode,
+                Extensions =
+                {
+                    ["traceId"] = Activity.Current?.Id ?? httpContext?.TraceIdentifier
+                }
+
             };
 
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
@@ -30,6 +36,18 @@ namespace IntelliView.API.Infrastructure
             await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
             return true;
+        }
+
+        private (int statusCode, string Message) MapException(Exception exception)
+        {
+            return exception switch
+            {
+                InvalidOperationException => (StatusCodes.Status400BadRequest, exception.Message),
+                KeyNotFoundException => (StatusCodes.Status404NotFound, exception.Message),
+                ArgumentOutOfRangeException => (StatusCodes.Status400BadRequest, exception.Message),
+
+                _ => (StatusCodes.Status500InternalServerError, "Server Error ya 3amenaa")
+            };
         }
     }
 }

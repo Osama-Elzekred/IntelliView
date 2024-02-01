@@ -1,4 +1,6 @@
-﻿using IntelliView.DataAccess.Services.IService;
+﻿using IntelliView.API.Errors;
+using IntelliView.API.Infrastructure;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +21,18 @@ namespace IntelliView.API.Controllers
         {
             return "you hit me";
         }
+        [HttpGet("TestExceptionErrror")]
+        public Task<IActionResult> TestExceptionErrror()
+        {
+            throw new Exception("Test Exception");
+        }
+        [HttpGet("TestResult")]
+        public Result<int> TestResult()
+        {
+            return Result<int>.Failure(TestErrors.AlreadyRegistered);
+        }
+
+
         [HttpGet("GetAiBasedResult")]
         public async Task<IActionResult> GetAiBasedResult(string searchText)
         {

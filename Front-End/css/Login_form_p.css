@@ -2,46 +2,36 @@
     box-sizing: border-box;
     margin: 0;
 }
-
 .form{
     display: grid;
  grid-template-columns: repeat(3,1fr);
  grid-template-areas: ". form .";
- grid-template-rows: 600px;
+ grid-template-rows: 630px;
  
 }
 .sign-up-,.sign-in-{
     text-transform: capitalize;
     width: 535px;
-   
     display: flex;
     flex-direction: column;
     justify-content: center;
-  
     align-items: center;
     position: absolute;
-
-   
 }
 .sign-up_{
     position: relative;
-    bottom: 20px;
+    top: -8px;
 }
-
-
 form input
-{
-   
+{  
     width: 340px;
     position: relative;
    right: 20px;
-    font-size: 17px;
-   
+    font-size: 17px;  
     background-color: #96989c18;
     margin-bottom: 20px;
     outline: 0;
     border: .5px solid #828c7f1a;
-    
 }
 #password-{
     position: relative;
@@ -54,9 +44,10 @@ form input
     position: absolute;
     top: 30px;
    text-shadow: 2px 2px #7f848c;
- opacity: .5;
-  
-  
+   opacity: .5;
+}
+.word{
+    top:43px ;
 }
 form
 {
@@ -71,16 +62,14 @@ label{
 }
 .button1{
     position: absolute;
-    top:315px;
+    top:308px;
     left: 9.5px;
     width: 340px;
     text-transform: capitalize;
     font-size: 23px;
     background-color: #89ba16;
     border: transparent;
-    
     font-family: 'Sarala', sans-serif;
-  
 }
 .checkbox{
    width: fit-content;
@@ -89,7 +78,7 @@ label{
 }
 .already{
     position: absolute;
-    bottom:10px;
+    bottom:5px;
     right: 87px;
     margin-top: 10px;
     font-family: 'Archivo', sans-serif;
@@ -113,7 +102,6 @@ label{
     color: black;
     font-family: 'Sarala', sans-serif;
     font-size: 13px;
-   
 }
 .container_{
    grid-area: form;
@@ -159,33 +147,28 @@ label{
 }
 .button2{
     text-transform: capitalize;
-   
     font-size: 23px;
     background-color: #89ba16;
     border: transparent;
-    
-   
     position: relative;
     top: 35px;  
     left: 10px; 
     font-family: 'Sarala', sans-serif;
-    
 }
 .forget-password{
     text-decoration: underline  ;
     position: relative;
-    right: 7px;
-    top:55px;
+    right: 4px;
+    top:65px;
     margin: 5px 0;
    color: #7f848c;
     padding: 5px 10px;
     font-family: 'Archivo', sans-serif;
     font-weight: 600;
-
 }
 .create{
     position: relative;
-    top:55px;
+    top:70px;
     right: 3px;
     font-family: 'Archivo', sans-serif;
     font-weight: 600;
@@ -226,6 +209,30 @@ label{
     position: absolute;
     left: 320px;
     bottom: 2px;
+}
+.c-p{
+   display: flex;
+   width: 250px;
+   position: relative;
+   top: -5px;
+   left: 16px;
+}
+.c-p input.person.active,
+.c-p input.company.active {
+    background-color: #89ba16;
+    color: white;
+    border-color: #89ba16;
+}
+.c-p input {
+    cursor: pointer;
+    border: 2px solid #ccc;
+    background-color: #fff; 
+}
+.c-p .person{
+    border-right: none;
+}
+.c-p .company {
+border-left: none;
 }
 
 

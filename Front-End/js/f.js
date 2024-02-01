@@ -67,4 +67,14 @@ function checkInput(input) {
     }
   }
 
+  function toggleButton(buttonType) {
+    // Remove 'active' class from all buttons
+    const buttons = document.querySelectorAll('.c-p input');
+    buttons.forEach(button => {
+        button.classList.remove('active');
+    });
 
+    // Add 'active' class to the clicked button
+    const clickedButton = document.querySelector(`.c-p input.${buttonType}`);
+    clickedButton.classList.add('active');
+}

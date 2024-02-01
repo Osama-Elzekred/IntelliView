@@ -5,8 +5,7 @@
     <title>JobBoard &mdash; Website Template by Colorlib</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
-    
+
     <link rel="stylesheet" href="css/custom-bs.css">
     <link rel="stylesheet" href="css/jquery.fancybox.min.css">
     <link rel="stylesheet" href="css/bootstrap-select.min.css">
@@ -25,24 +24,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@100&display=swap" rel="stylesheet">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sarala&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarala&display=swap" rel="stylesheet">
     <!-- MAIN CSS -->
     <link rel="stylesheet" href="css/style.css">  
     <link rel="stylesheet" href="css/Login_form_p.css">  
   </head>
   <body id="top">
-
   <div id="overlayer"></div>
   <div class="loader">
     <div class="spinner-border text-primary" role="status">
       <span class="sr-only">Loading...</span>
     </div>
   </div>
-    
-
 <div class="site-wrap">
-
     <div class="site-mobile-menu site-navbar-target">
       <div class="site-mobile-menu-header">
         <div class="site-mobile-menu-close mt-3">
@@ -51,14 +46,11 @@
       </div>
       <div class="site-mobile-menu-body"></div>
     </div> <!-- .site-mobile-menu -->
-    
-
     <!-- NAVBAR -->
     <header class="site-navbar mt-3">
       <div class="container-fluid">
         <div class="row align-items-center">
           <div class="site-logo col-6"><a href="index.html">intelliview</a></div>
-
           <nav class="mx-auto site-navigation">
             <ul class="site-menu js-clone-nav d-none d-xl-block ml-0 pl-0">
               <li><a href="index.html" class="nav-link">Home</a></li>
@@ -89,7 +81,6 @@
               <li class="d-lg-none"><a href="login.html">Log In</a></li>
             </ul>
           </nav>
-          
           <div class="right-cta-menu text-right d-flex aligin-items-center col-6">
             <div class="ml-auto">
               <a href="post-job.html" class="btn btn-outline-white border-width-2 d-none d-lg-inline-block"><span class="mr-2 icon-add"></span>Post a Job</a>
@@ -97,11 +88,9 @@
             </div>
             <a href="#" class="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3"><span class="icon-menu h3 m-0 p-0 mt-2"></span></a>
           </div>
-
         </div>
       </div>
     </header>
-
     <!-- HOME -->
     <section class="section-hero overlay inner-page bg-image" style="background-image: url('images/ai-background-business-technology-digital-transformation.jpg');" id="home-section">
       <div class="container">
@@ -116,13 +105,17 @@
         </div>
       </div>
     </section>
-
     <div class="form">
       <div class="container_">
-      
           <div class="box" id="face">
       <div class="sign-up- upin">
           <p class="sign-up">sign up</p>
+          <div class="base-p-c">
+            <form class="c-p">
+              <input type="button" class="person active" value="Personal" onclick="toggleButton('person')">
+              <input type="button" class="company" value="Company" onclick="toggleButton('company')">
+          </form>
+            </div>
           <form >
             <div class="sign-up_">
               <label for="username">user name</label><br>
@@ -139,7 +132,6 @@
                 <path d="M8 5a1 1 0 0 1 1 1v1H7V6a1 1 0 0 1 1-1m2 2.076V6a2 2 0 1 0-4 0v1.076c-.54.166-1 .597-1 1.224v2.4c0 .816.781 1.3 1.5 1.3h3c.719 0 1.5-.484 1.5-1.3V8.3c0-.627-.46-1.058-1-1.224"/>
                 <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
               </svg>
-              
               <input type="password" id="password-" oninput="checkInput(this)">
               <div class="eye-fill-" onclick="togglePassword()">
                <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill"  viewBox="0 0 16 16">
@@ -147,7 +139,6 @@
                 <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
               </svg>
               </div>
-              
               </div><br>
               <label for="confirm">confirm password</label><br>
               <div class="input-container">
@@ -165,13 +156,13 @@
       <div class="sign-in- upin">
          <p class="word">log in</p>
           <form class="form2">
-              <label for="username">user name</label><br>
+              <label for="username_">user name</label><br>
               <div class="input-container">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle icon" viewBox="0 0 16 16">
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                 <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
               </svg>
-               <input type="text" id="username" oninput="checkInput(this)">
+               <input type="text" id="username_" oninput="checkInput(this)">
                </div><br>
               <label for="passwordField">password</label><br>
               <div class="input-container"> 
@@ -195,16 +186,12 @@
       </div>
           </div>
       </div>
-    
     </div>
   </div>
-    
     <footer class="site-footer">
-
       <a href="#top" class="smoothscroll scroll-top">
         <span class="icon-keyboard_arrow_up"></span>
       </a>
-
       <div class="container">
         <div class="row mb-5">
           <div class="col-6 col-md-3 mb-4 mb-md-0">
@@ -245,13 +232,9 @@
             </div>
           </div>
         </div>
-
-       
       </div>
     </footer>
-  
   </div>
-
     <!-- SCRIPTS -->
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
@@ -259,18 +242,12 @@
     <script src="js/stickyfill.min.js"></script>
     <script src="js/jquery.fancybox.min.js"></script>
     <script src="js/jquery.easing.1.3.js"></script>
-    
     <script src="js/jquery.waypoints.min.js"></script>
     <script src="js/jquery.animateNumber.min.js"></script>
     <script src="js/owl.carousel.min.js"></script>
     <script src="js/quill.min.js"></script>
-    
-    
     <script src="js/bootstrap-select.min.js"></script>
-    
     <script src="js/custom.js"></script>
-   <script src="js/f.js"></script>
-   
-     
+    <script src="js/f.js"></script>
   </body>
 </html>

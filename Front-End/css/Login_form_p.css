@@ -6,7 +6,7 @@
     display: grid;
  grid-template-columns: repeat(3,1fr);
  grid-template-areas: ". form .";
- grid-template-rows: 630px;
+ grid-template-rows:630px;
  
 }
 .sign-up-,.sign-in-{
@@ -17,10 +17,13 @@
     justify-content: center;
     align-items: center;
     position: absolute;
+   
+
 }
 .sign-up_{
     position: relative;
-    top: -8px;
+    bottom: 15px;
+    
 }
 form input
 {  
@@ -32,6 +35,8 @@ form input
     margin-bottom: 20px;
     outline: 0;
     border: .5px solid #828c7f1a;
+    
+    
 }
 #password-{
     position: relative;
@@ -47,22 +52,17 @@ form input
    opacity: .5;
 }
 .word{
-    top:43px ;
+    top:45px ;
+    font-size:34px ;
 }
 form
 {
     position: relative;
 }
-label{
-    font-size: 19px;
-    position: relative;
-    left: 4.5px;
-   font-family: 'Archivo', sans-serif;
-   font-weight: 600; 
-}
+
 .button1{
     position: absolute;
-    top:308px;
+    top:245px;
     left: 9.5px;
     width: 340px;
     text-transform: capitalize;
@@ -78,7 +78,7 @@ label{
 }
 .already{
     position: absolute;
-    bottom:5px;
+    bottom:38px;
     right: 87px;
     margin-top: 10px;
     font-family: 'Archivo', sans-serif;
@@ -90,6 +90,7 @@ label{
     font-weight: 600;
     position: relative;
     left: 8px;
+    font-family: 'Archivo', sans-serif;
 }
 .sign-in{
     background-color:#89ba16;
@@ -151,7 +152,7 @@ label{
     background-color: #89ba16;
     border: transparent;
     position: relative;
-    top: 35px;  
+    top: 50px;  
     left: 10px; 
     font-family: 'Sarala', sans-serif;
 }
@@ -159,7 +160,7 @@ label{
     text-decoration: underline  ;
     position: relative;
     right: 4px;
-    top:65px;
+    top:75px;
     margin: 5px 0;
    color: #7f848c;
     padding: 5px 10px;
@@ -168,7 +169,7 @@ label{
 }
 .create{
     position: relative;
-    top:70px;
+    top:75px;
     right: 3px;
     font-family: 'Archivo', sans-serif;
     font-weight: 600;
@@ -184,18 +185,13 @@ label{
     outline: none;
 }
 
-.bi-file-lock2{
+.bi-file-lock2,.bi-person-circle,.bi-envelope{
     color: #89ba16;
     position: relative;
     left: 10px;
     opacity: .5;
 }
-.bi-person-circle{
-    position: relative;
-    left: 10px;
-    color: #89ba16;
-    opacity: .5;
-}
+
 #password-{
     position: relative;
     right: 20px;
@@ -214,7 +210,8 @@ label{
    display: flex;
    width: 250px;
    position: relative;
-   top: -5px;
+   top: -33px;
+
    left: 16px;
 }
 .c-p input.person.active,
@@ -235,7 +232,12 @@ label{
 border-left: none;
 }
 
-
+::placeholder{
+    position: relative;
+    left: 30px;
+    font-family: 'Archivo', sans-serif; 
+    text-transform: capitalize;
+}
 
 
 

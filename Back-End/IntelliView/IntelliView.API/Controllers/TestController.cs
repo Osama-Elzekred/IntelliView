@@ -27,9 +27,10 @@ namespace IntelliView.API.Controllers
             throw new Exception("Test Exception");
         }
         [HttpGet("TestResult")]
-        public Result<int> TestResult()
+        public Result<string> TestResult()
         {
-            return Result<int>.Failure(TestErrors.AlreadyRegistered);
+
+            return Result<string>.Failure(TestErrors.AlreadyRegistered);
         }
 
 

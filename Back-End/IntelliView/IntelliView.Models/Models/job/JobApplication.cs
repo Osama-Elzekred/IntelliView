@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IntelliView.Models.Models
@@ -29,5 +28,12 @@ namespace IntelliView.Models.Models
 
         // Documents uploaded by the user (e.g., resume)
         public virtual string ResumeURL { get; set; }
+        public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
+    }
+    public enum ApplicationStatus
+    {
+        Pending,
+        Accepted,
+        Rejected
     }
 }

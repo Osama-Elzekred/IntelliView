@@ -10,7 +10,7 @@ namespace IntelliView.DataAccess.Repository.IRepository
 
         Task<IEnumerable<JobApplication>> GetApplicationsByJobIdAsync(int jobId);
 
-        void UpdateUserApplicationAsync(JobApplication userApplication);
+        void Update(JobApplication userApplication);
 
         Task RemoveUserApplicationAsync(int jobId, string userId);
     }

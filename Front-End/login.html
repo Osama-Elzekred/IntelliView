@@ -110,13 +110,13 @@
           <div class="box" id="face">
       <div class="sign-up- upin">
           <p class="sign-up">sign up</p>
-          <div class="base-p-c">
-            <form class="c-p">
-              <input type="button" class="person active" value="Personal" onclick="toggleButton('person')">
-              <input type="button" class="company" value="Company" onclick="toggleButton('company')">
+          <div class="base-p-c  ">
+            <form class="c-p" id="role">
+              <input type="button" class="person active" id="person" value="Personal" onclick="toggleButton('person');  ">
+              <input type="button" class="company" id="company" value="Company" onclick="toggleButton('company');  ">
           </form>
             </div>
-          <form >
+          <form id="signup" >
             <div class="sign-up_">
               
               <div class="input-container"> 
@@ -124,14 +124,14 @@
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                 <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
               </svg>
-              <input type="text" id="username" oninput="checkInput(this)" placeholder="user name">
+              <input type="text" id="username" name="username" oninput="checkInput(this)" placeholder="user name">
               </div><br>
              
               <div class="input-container"> 
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-envelope icon" viewBox="0 0 16 16">
                   <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
                 </svg>
-              <input type="email" id="E-mail"  oninput="checkInput(this)" placeholder="E-mail">
+              <input type="email" id="E-mail" name="email" oninput="checkInput(this)" placeholder="E-mail">
               </div><br>
               
 
@@ -140,7 +140,7 @@
                 <path d="M8 5a1 1 0 0 1 1 1v1H7V6a1 1 0 0 1 1-1m2 2.076V6a2 2 0 1 0-4 0v1.076c-.54.166-1 .597-1 1.224v2.4c0 .816.781 1.3 1.5 1.3h3c.719 0 1.5-.484 1.5-1.3V8.3c0-.627-.46-1.058-1-1.224"/>
                 <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
               </svg>
-              <input type="password" id="password-" oninput="checkInput(this)" placeholder="password">
+              <input type="password" id="password-" name="password" oninput="checkInput(this)" placeholder="password">
               <div class="eye-fill-" onclick="togglePassword()">
                <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill"  viewBox="0 0 16 16">
                 <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
@@ -154,23 +154,25 @@
                 <path d="M8 5a1 1 0 0 1 1 1v1H7V6a1 1 0 0 1 1-1m2 2.076V6a2 2 0 1 0-4 0v1.076c-.54.166-1 .597-1 1.224v2.4c0 .816.781 1.3 1.5 1.3h3c.719 0 1.5-.484 1.5-1.3V8.3c0-.627-.46-1.058-1-1.224"/>
                 <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
               </svg>
-               <input type="password" id="confirm" oninput="checkInput(this)" placeholder="confirm password">
+               <input type="password" id="confirm"  name="password-confirm" oninput="checkInput(this)" placeholder="confirm password">
               </div><br>
             </div>
-              <input type="button" value="sign up" class="button1 button-h">
+            <div id="messageOfEmptyUp" ></div>
+              <div id="messageOfNotMatchPass"></div>
+              <input type="submit" value="sign up" class="button1 button-h">
           </form>
           <p class="already"> already have an account? <button onclick="flipped_face()" class="sign-in button-h">log in</button>
       </div>
       <div class="sign-in- upin">
          <p class="word">log in</p>
-          <form class="form2">
+          <form class="form2" id="login">
              
               <div class="input-container">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle icon" viewBox="0 0 16 16">
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                 <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
               </svg>
-               <input type="text" id="username_" oninput="checkInput(this)" placeholder="user name">
+               <input type="text" id="username_" name="username" oninput="checkInput(this)" placeholder="user name">
                </div><br>
               
               <div class="input-container"> 
@@ -178,7 +180,7 @@
                 <path d="M8 5a1 1 0 0 1 1 1v1H7V6a1 1 0 0 1 1-1m2 2.076V6a2 2 0 1 0-4 0v1.076c-.54.166-1 .597-1 1.224v2.4c0 .816.781 1.3 1.5 1.3h3c.719 0 1.5-.484 1.5-1.3V8.3c0-.627-.46-1.058-1-1.224"/>
                 <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
               </svg>
-               <input type="password" id="passwordField" oninput="checkInput(this)" placeholder="password">
+               <input type="password" id="passwordField" name="password" oninput="checkInput(this)" placeholder="password">
                <div class="eye-slash" onclick="togglePassword_()" >
                 <svg  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill"  viewBox="0 0 16 16">
                 <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
@@ -187,8 +189,10 @@
               </div><br>
               <input type="checkbox" id="remember" class="checkbox" >
               <label for="remember" class="remember">remember me</label><br>
-              <input type="button" value="log in" class="button2 button-h">
-          </form>
+              <input type="submit" value="log in" class="">
+              <div id="messageOfEmpty" ></div>
+              <div id="messageOfWrong"></div>
+            </form>
           <a href="#" class="forget-password">forget password?</a>
           <p class="create">Don't have an account? <button onclick="flipped_face()" class="sign-in button-h">sign up</button></p>
       </div>
@@ -256,6 +260,6 @@
     <script src="js/quill.min.js"></script>
     <script src="js/bootstrap-select.min.js"></script>
     <script src="js/custom.js"></script>
-    <script src="js/f.js"></script>
+    <script src="js/forms_api_code.js"></script>
   </body>
 </html>

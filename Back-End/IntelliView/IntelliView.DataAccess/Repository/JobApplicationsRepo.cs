@@ -35,7 +35,7 @@ namespace IntelliView.DataAccess.Repository
         }
 
 
-        public void UpdateUserApplicationAsync(JobApplication userApplication)
+        public void Update(JobApplication userApplication)
         {
             _db.JobApplications.Update(userApplication);
         }

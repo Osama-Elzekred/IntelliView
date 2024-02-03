@@ -243,6 +243,63 @@ namespace IntelliView.API.Controllers
 
             return NoContent();
         }
+        #region NotTested
+        // get all job applications for a job
+        [HttpGet("{jobId}/applications")]
+        [Authorize(Roles = SD.ROLE_COMPANY)]
+        public async Task<ActionResult<IEnumerable<JobApplication>>> GetJobApplications(int jobId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == jobId && j.CompanyUserId == userId);
+            if (job == null)
+            {
+                return NotFound("Invalid job ");
+            }
+            var jobApplications = await _unitOfWork.JobApplications.GetApplicationsByJobIdAsync(jobId);
+            return Ok(jobApplications);
+        }
+        // allow company to view a specific job application
+        [HttpGet("{jobId}/applications/{applicationId}")]
+        [Authorize(Roles = SD.ROLE_COMPANY)]
+        public async Task<ActionResult<JobApplication>> GetJobApplication(int jobId, int applicationId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == jobId && j.CompanyUserId == userId);
+            if (job == null)
+            {
+                return NotFound("Invalid job ");
+            }
+            var jobApplication = await _unitOfWork.JobApplications.GetByIdAsync(applicationId, jobId);
+            if (jobApplication == null)
+            {
+                return NotFound("Invalid application ");
+            }
+            return Ok(jobApplication);
+        }
+        //allow company to Reject a job application
+        [HttpPut("{jobId}/applications/{applicationId}/Reject")]
+        [Authorize(Roles = SD.ROLE_COMPANY)]
+        public async Task<IActionResult> RejectJobApplication(int jobId, int applicationId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == jobId && j.CompanyUserId == userId);
+            if (job == null)
+            {
+                return NotFound("Invalid job ");
+            }
+            var jobApplication = await _unitOfWork.JobApplications.GetByIdAsync(applicationId, jobId);
+            if (jobApplication == null)
+            {
+                return NotFound("Invalid application ");
+            }
+            jobApplication.Status = ApplicationStatus.Rejected;
+            _unitOfWork.JobApplications.Update(jobApplication);
+            await _unitOfWork.SaveAsync();
+            return NoContent();
+        }
+
+        #endregion
+
         #endregion
     }
 }

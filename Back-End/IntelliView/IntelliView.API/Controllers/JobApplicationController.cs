@@ -4,8 +4,6 @@ using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -41,13 +39,13 @@ namespace IntelliView.API.Controllers
 
 
 
-        [HttpGet("GetAll")]
+        [HttpGet("AllJobs")]
         public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
         {
             var jobs = await _unitOfWork.Jobs.GetAllAsync();
             return Ok(jobs);
         }
-        
+
         [HttpPost("apply")]
         public async Task<IActionResult> ApplyForJob([FromBody] JobApplicationDTO applicationDto)
         {
@@ -143,8 +141,6 @@ namespace IntelliView.API.Controllers
             return BadRequest("No file or user found.");
         }
 
-
-
         [HttpGet("GetUserJobs")]
         public async Task<ActionResult<IEnumerable<Job>>> GetUserJobs()
         {
@@ -152,5 +148,27 @@ namespace IntelliView.API.Controllers
             var jobs = await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
             return Ok(jobs);
         }
+        // view all applications for a job
+        [HttpGet("JobApplications/{jobId}")]
+        public async Task<ActionResult<IEnumerable<JobApplication>>> GetJobApplications(int jobId)
+        {
+            var job = await _unitOfWork.Jobs.GetByIdAsync(jobId);
+            if (job == null)
+            {
+                return NotFound("Job not found");
+            }
+
+            var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.JobId == jobId);
+            return Ok(applications);
+        }
+        // view all applications for a user
+        [HttpGet("UserApplications")]
+        public async Task<ActionResult<IEnumerable<JobApplication>>> GetUserApplications()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
+            return Ok(applications);
+        }
+
     }
 }

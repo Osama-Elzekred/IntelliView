@@ -45,6 +45,7 @@ namespace IntelliView.API.Infrastructure
     {
         public Result(bool IsSuccess, Error error)
         {
+
             if (IsSuccess && error != Error.None || !IsSuccess && error == Error.None)
             {
                 throw new InvalidOperationException();
@@ -66,7 +67,7 @@ namespace IntelliView.API.Infrastructure
             _Value = value;
         }
         private T? _Value { get; }
-        public T Value => IsSuccess ? _Value! : throw new InvalidOperationException("The value of a failure result can not be accessed");
+        //public T Value => IsSuccess ? _Value! : throw new InvalidOperationException("The value of a failure result can not be accessed");
         public new static Result<T> Failure(Error error) => new(false, default!, error);
 
         public static Result<T> Success(T value) => new(true, value, Error.None);

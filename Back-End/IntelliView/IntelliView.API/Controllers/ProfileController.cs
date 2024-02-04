@@ -133,6 +133,11 @@ namespace IntelliView.API.Controllers
                     companyUser.CompanyName = updatedUser.CompanyName;
                     companyUser.CompanyDescription = updatedUser.CompanyDescription;
                     companyUser.CompanyWebsite = updatedUser.CompanyWebsite;
+                    companyUser.CompanyOverview = updatedUser.CompanyOverview;
+                    companyUser.CompanySize = updatedUser.CompanySize;
+                    companyUser.CompanyType = updatedUser.CompanyType;
+                    companyUser.CompanyFounded = updatedUser.CompanyFounded;
+                    companyUser.CompanySpeciaties = updatedUser.CompanySpeciaties;
 
                     await _userManager.UpdateAsync(companyUser);
 
@@ -142,6 +147,7 @@ namespace IntelliView.API.Controllers
                 {
                     individualUser.FirstName = updatedUser.FirstName;
                     individualUser.LastName = updatedUser.LastName;
+                    individualUser.CVURL = updatedUser.CVURL;
 
                     await _userManager.UpdateAsync(individualUser);
 

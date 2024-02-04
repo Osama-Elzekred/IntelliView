@@ -1,4 +1,10 @@
+let signupForm = document.getElementById("signup");
+let loginForm = document.getElementById("login");
+let signupbtn = document.getElementById("signupbtn");
+let signinbtn = document.getElementById("signinbtn");
 function flipped_face() {
+  signupForm.reset(); 
+  loginForm.reset(); 
   var face_ = document.getElementById("face");
   face_.classList.toggle("flipped");
 }
@@ -78,27 +84,9 @@ function toggleButton(buttonType) {
   clickedButton.classList.add("active");
 }
 
-let signupForm = document.getElementById("signup");
-let loginForm = document.getElementById("login");
-let signupbtn = document.getElementById("signupbtn");
-let signinbtn = document.getElementById("signinbtn");
-
 // code of login 
 let message = document.getElementById("messageOfEmpty");
-let textOfEmpty = document.createTextNode("please enter username and password");
-message.appendChild(textOfEmpty);
-message.style.cssText = `
-        font-style: italic;
-        color: red;
-        text-align : center ;
-        font-size : 24 ; 
-        font-weight : bold ;
-        `;
-message.style.display = "none";
-
 let messageOfWrong = document.getElementById("messageOfWrong");
-let textOfWrong = document.createTextNode("Wrong Password or Username");
-messageOfWrong.appendChild(textOfWrong);
 messageOfWrong.style.cssText = `
         font-style: italic;
         color: blue;
@@ -106,8 +94,7 @@ messageOfWrong.style.cssText = `
         text-align : center ;
         font-weight : bold ;  
         `;
-messageOfWrong.style.display = "none";
-
+messageOfWrong.style.display = "block";
 loginForm.addEventListener("submit", function (e) {
   e.preventDefault();
   messageOfWrong.style.display = "none";
@@ -120,10 +107,10 @@ loginForm.addEventListener("submit", function (e) {
     return;
   }
   if (username === "" || password === "") {
-    console.log("message");
-    message.style.display = "block";
+    messageOfWrong.textContent = "Please Enter E-mail and Password"; 
+    messageOfWrong.style.display = "block";
   } else {
-    message.style.display = "none";
+    messageOfWrong.style.display = "none"; 
     fetch("https://localhost:7049/api/Auth/login", {
       method: "POST",
       body: JSON.stringify({
@@ -133,64 +120,47 @@ loginForm.addEventListener("submit", function (e) {
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
-      // mode: 'no-cors', // Comment out or remove this line
     })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        if (data.status === 200) {
-          document.cookie = `authToken = ${data.token} expires=Thu, 01 Jan 2025 00:00:00 UTC; path=/`;
-          // window.location.href = `profile.html?username=${username}`;
+        if (data.token) {
+          document.cookie = `authToken = ${data.token} path=/`;
+          window.location.href = `profile.html?username=${username}`;
           console.log(data);
-        } else {
-          console.log(data.errors.Email[0]);
-          messageOfWrong.style.display = "block";
         }
-        console.log(data.token);
+        else if (data.message){
+        messageOfWrong.textContent = `${data.message}`; 
+        messageOfWrong.style.display = "block"; 
+        }
       })
       .catch((error) => {
-        console.log("Error:", error);
-        if (error.response) {
-          console.log("Response details:", error.response);
+        if (error) {
+        messageOfWrong.textContent = "Sorry ... The Server can not be reach now ... please try later "; 
+        messageOfWrong.style.display = "block"; 
+        console.log("Response details:", error.response);
         }
       });
   }
 });
-
 //sign-up code 
-let messageOfEmptyFields = document.getElementById("messageOfEmptyUp");
-let messageOfNotMatchPass = document.getElementById("messageOfEmptyUp");
-let textOfEmptyFields = document.createTextNode("Please Fill all fields "); 
-let textOfNotMatch = document.createTextNode("Password does not match  "); 
-
-messageOfEmptyFields.appendChild(textOfEmptyFields); 
-messageOfNotMatchPass.appendChild(textOfNotMatch); 
-
-messageOfEmptyFields.style.cssText = `
+let messageFromServer = document.getElementById("messageFromServer"); 
+messageFromServer.style.cssText = `
         font-style: italic;
-        color: red;
+        color: blue;
         text-align : center ;
         font-size : 24 ; 
         font-weight : bold ;
-      
+        position : relative ; 
+        bottom : 30px ; 
         `;
-messageOfEmptyFields.style.display = "none";
-
-
-messageOfNotMatchPass.style.cssText = `
-        font-style: italic;
-        color: red;
-        text-align : center ;
-        font-size : 24 ; 
-        font-weight : bold ;
-        `;
-messageOfNotMatchPass.style.display = "none";
+messageFromServer.style.display = "none";
 //get role value
 let roleForm = document.getElementById("role");
 let personBtn = document.getElementById("person");
 let companyBtn = document.getElementById("company");
-var role = "Personal";
+var role = "User";
 localStorage.setItem("role", role);
 roleForm.addEventListener("click", function (e) {
   var clickedBtn = e.target;
@@ -206,8 +176,7 @@ roleForm.addEventListener("click", function (e) {
 //get the data and post it to the server
 signupForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  messageOfNotMatchPass.style.display = "none";
-  messageOfEmptyFields.style.display = "none";
+  messageFromServer.style.display = "none"; 
   
   let signupData = new FormData(signupForm);
   let username = signupData.get("username");
@@ -234,16 +203,14 @@ signupForm.addEventListener("submit", function (e) {
     password_confirm === "" ||
     email === ""
   ) {
-    messageOfEmptyFields.style.display = "block";
+    messageFromServer.textContent = "Please Fill All Fields"; 
+    messageFromServer.style.display = "block";
   } else if (password != password_confirm) {
-    console.log("Password dose not match ");
-    messageOfNotMatchPass.style.display = "block";
-  } else {
-    messageOfEmptyFields.style.display = "none";
-    messageOfNotMatchPass.style.display = "none";
+    messageFromServer.textContent = "Password dosen't match ";  
+    messageFromServer.style.display = "block";
+  } else { 
     fetch("https://localhost:7049/api/Auth/register", {
       method: "POST",
-      // body: signupData ,
       body: JSON.stringify({
         email: email,
         username: username,
@@ -253,26 +220,29 @@ signupForm.addEventListener("submit", function (e) {
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
-      // mode: 'no-cors', // Comment out or remove this line
     })
       .then((response) => {
         return response.json();
       })
       .then((data) => {
-        if (!data.ok) {
-          messageOfWrong.style.display = "block";
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        } else {
+        if (data.token ) {
+          document.cookie = `authToken = ${data.token} path=/`; 
+          localStorage.setItem("roleFromServer" , data.roles); 
           window.location.href = `profile.html?username=${username}`;
-          console.log(data);
         }
-        console.log(data.username);
+        else if (data.message){
+        messageFromServer.textContent = `${data.message}`; 
+          messageFromServer.style.display = "block";
+        }
+        else {
+       messageFromServer.textContent = "An error occurred"; 
+      messageFromServer.style.display = "block";
+        }
       })
       .catch((error) => {
-        console.log("Error:", error);
-        if (error.response) {
-          console.log("Response details:", error.response);
-        }
-      });
+        if (error) {
+          messageFromServer.textContent = "Connection Error ... Please Try Later"; 
+          messageFromServer.style.display = "block";
+        }})
   }
 });

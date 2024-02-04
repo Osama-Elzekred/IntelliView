@@ -19,6 +19,12 @@ namespace IntelliView.Models.DTO
         [MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
         public string ImageURl { get; set; } = string.Empty;
+        public string CVURL { get; set; } = string.Empty;
+        public string CompanyOverview { get; set; } = string.Empty;
+        public int CompanySize { get; set; } = 0;
+        public string CompanyType { get; set; } = string.Empty;
+        public string CompanyFounded { get; set; } = string.Empty;
+        public string CompanySpeciaties { get; set; } = string.Empty;
 
     }
 }

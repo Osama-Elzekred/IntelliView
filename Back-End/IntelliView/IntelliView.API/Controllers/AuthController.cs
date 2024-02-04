@@ -31,7 +31,7 @@ namespace IntelliView.API.Controllers
             }
 
             if (!result.IsAuthenticated)
-                return BadRequest(result.Message);
+                return BadRequest(new { result.Message });
 
             //SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
@@ -45,7 +45,6 @@ namespace IntelliView.API.Controllers
                 Body = $"Please verify your email by clicking this link: <a href='https://localhost:7049/api/verify/{result.Id}/{result.VerficationToken}'>Verify</a> " +
                 $"This Link Expire in 20 minutes"
             });
-
             return Ok(result);
         }
 
@@ -55,7 +54,7 @@ namespace IntelliView.API.Controllers
             var result = await _authService.GetTokenAsync(model);
 
             if (!result.IsAuthenticated)
-                return BadRequest(result.Message);
+                return BadRequest(new { result.Message });
 
             if (!string.IsNullOrEmpty(result.RefreshToken))
                 SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);

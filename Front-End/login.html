@@ -112,7 +112,7 @@
           <p class="sign-up">sign up</p>
           <div class="base-p-c  ">
             <form class="c-p" id="role">
-              <input type="button" class="person active" id="person" value="Personal" onclick="toggleButton('person');  ">
+              <input type="button" class="person active" id="person" value="User" onclick="toggleButton('person');  ">
               <input type="button" class="company" id="company" value="Company" onclick="toggleButton('company');  ">
           </form>
             </div>
@@ -158,7 +158,8 @@
               </div><br>
             </div>
             <div id="messageOfEmptyUp" ></div>
-              <div id="messageOfNotMatchPass"></div>
+              <div id="messageOfNotMatch"></div>
+              <div id="messageFromServer"></div>
               <input type="submit" value="sign up" class="button1 button-h">
           </form>
           <p class="already"> already have an account? <button onclick="flipped_face()" class="sign-in button-h">log in</button>
@@ -189,9 +190,8 @@
               </div><br>
               <input type="checkbox" id="remember" class="checkbox" >
               <label for="remember" class="remember">remember me</label><br>
-              <input type="submit" value="log in" class="">
-              <div id="messageOfEmpty" ></div>
               <div id="messageOfWrong"></div>
+              <input type="submit" value="log in" class="button2 button-h">
             </form>
           <a href="#" class="forget-password">forget password?</a>
           <p class="create">Don't have an account? <button onclick="flipped_face()" class="sign-in button-h">sign up</button></p>

@@ -60,5 +60,4 @@ namespace IntelliView.API.Controllers
             return Ok("Reset Password Successfully");
         }
     }
-
 }

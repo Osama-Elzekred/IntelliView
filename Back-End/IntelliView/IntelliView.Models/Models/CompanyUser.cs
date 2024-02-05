@@ -5,13 +5,12 @@
 
         // Properties for CompanyUser
         public string CompanyName { get; set; } = string.Empty;
-        public string CompanyDescription { get; set; } = string.Empty;
         public string CompanyWebsite { get; set; } = string.Empty;
         public string CompanyOverview { get; set; } = string.Empty;
-        public int CompanySize { get; set; } = 0;
+        public string CompanySize { get; set; } = string.Empty;
         public string CompanyType { get; set; } = string.Empty;
         public string CompanyFounded{ get; set; } = string.Empty;
-        public string CompanySpeciaties { get; set; } = string.Empty;
+        public string CompanySpecialties { get; set; } = string.Empty;
 
         // Navigation property for Applications created by the company
         //public virtual ICollection<InterviewApplication> Applications { get; set; }

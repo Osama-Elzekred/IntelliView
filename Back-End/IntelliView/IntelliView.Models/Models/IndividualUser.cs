@@ -10,6 +10,7 @@ namespace IntelliView.Models.Models
 
         [MaxLength(50)]
         public string LastName { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
         public string CVURL { get; set; } = string.Empty;
         public virtual ICollection<UserInterestedTopic> UserInterestedTopics { get; set; } 
 

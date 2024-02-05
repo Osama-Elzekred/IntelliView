@@ -131,13 +131,13 @@ namespace IntelliView.API.Controllers
                 if (User.IsInRole(SD.ROLE_COMPANY) && user is CompanyUser companyUser)
                 {
                     companyUser.CompanyName = updatedUser.CompanyName;
-                    companyUser.CompanyDescription = updatedUser.CompanyDescription;
                     companyUser.CompanyWebsite = updatedUser.CompanyWebsite;
                     companyUser.CompanyOverview = updatedUser.CompanyOverview;
                     companyUser.CompanySize = updatedUser.CompanySize;
                     companyUser.CompanyType = updatedUser.CompanyType;
                     companyUser.CompanyFounded = updatedUser.CompanyFounded;
-                    companyUser.CompanySpeciaties = updatedUser.CompanySpeciaties;
+                    companyUser.CompanySpecialties = updatedUser.CompanySpecialties;
+                    companyUser.PhoneNumber = updatedUser.PhoneNumber;
 
                     await _userManager.UpdateAsync(companyUser);
 
@@ -147,8 +147,8 @@ namespace IntelliView.API.Controllers
                 {
                     individualUser.FirstName = updatedUser.FirstName;
                     individualUser.LastName = updatedUser.LastName;
-                    individualUser.CVURL = updatedUser.CVURL;
-
+                    individualUser.Title = updatedUser.Title;
+                    individualUser.PhoneNumber = updatedUser.PhoneNumber;
                     await _userManager.UpdateAsync(individualUser);
 
                     return Ok(individualUser);

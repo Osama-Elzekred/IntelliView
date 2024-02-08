@@ -38,13 +38,13 @@ namespace IntelliView.API.Controllers
             string token = await _verifyService.CreateVerfiyTokenAsync(result.Id!);
             result.VerficationToken = token;
 
-            await _emailSender.SendEmailAsync(new EmailDTO
-            {
-                To = result.Email!,
-                Subject = "Verify your email",
-                Body = $"Please verify your email by clicking this link: <a href='https://localhost:7049/api/verify/{result.Id}/{result.VerficationToken}'>Verify</a> " +
-                $"This Link Expire in 20 minutes"
-            });
+            //await _emailSender.SendEmailAsync(new EmailDTO
+            //{
+            //    To = result.Email!,
+            //    Subject = "Verify your email",
+            //    Body = $"Please verify your email by clicking this link: <a href='https://localhost:7049/api/verify/{result.Id}/{result.VerficationToken}'>Verify</a> " +
+            //    $"This Link Expire in 20 minutes"
+            //});
             return Ok(result);
         }
 

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Recording</title>
+  </head>
+  <body>
+    <video id="videoElement" autoplay></video>
+    <button id="startButton">Start Recording</button>
+    <button id="stopButton">Stop Recording</button>
+
+    <script>
+      const videoElement = document.getElementById('videoElement');
+      const startButton = document.getElementById('startButton');
+      const stopButton = document.getElementById('stopButton');
+      let mediaRecorder;
+      let recordedChunks = [];
+
+      startButton.addEventListener('click', async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+          });
+          videoElement.srcObject = stream;
+          mediaRecorder = new MediaRecorder(stream);
+
+          mediaRecorder.ondataavailable = (e) => {
+            recordedChunks.push(ae.dat);
+          };
+
+          mediaRecorder.start();
+        } catch (err) {
+          console.error('Error accessing camera:', err);
+        }
+      });
+
+      stopButton.addEventListener('click', () => {
+        mediaRecorder.stop();
+        const blob = new Blob(recordedChunks, { type:'video/webm' });
+        sendData(blob);
+      });
+
+      async function sendData(blob) {
+        try {
+          const formData = new FormData();
+          formData.append('video', blob, 'recordedVideo.webm');
+          const response = await fetch(
+            'https://localhost:7049/api/Test/upload-video',
+            {
+              method: 'POST',
+              body: formData,
+            }
+          );
+          const responseData = await response.json();
+          console.log(responseData);
+        } catch (err) {
+          console.error('Error sending data:', err);
+        }
+      }
+    </script>
+  </body>
+</html>

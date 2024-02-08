@@ -5,6 +5,7 @@ using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
+using IntelliView.Utility.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -53,6 +54,15 @@ namespace IntelliView.API.Controllers
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user != null)
                 {
+                    if(file.Length > FileSettings.MAxFileSizeInBytes)
+                    {
+                        
+                        return BadRequest(new { message="File size should not be more than 5MB!" });
+                    }
+                    if (!FileSettings.AllowedExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
+                    {
+                        return BadRequest(new { message = "This file extension is not allowed!" });
+                    }
                     string webRootPath = _webHostEnvironment.ContentRootPath;
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string imagePath = Path.Combine(webRootPath, "wwwroot", "Assets", "images", fileName);
@@ -97,6 +107,14 @@ namespace IntelliView.API.Controllers
                 var individualUser = (IndividualUser)user!;
                 if (individualUser != null)
                 {
+                    if (file.Length > FileSettings.MAxFileSizeInBytes)
+                    {
+                        return BadRequest(new { message = "File size should not be more than 5MB!" });
+                    }
+                    if (!FileSettings.AllowedCVExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
+                    {
+                        return BadRequest(new { message = "This file extension is not allowed!" });
+                    }
                     string webRootPath = _webHostEnvironment.ContentRootPath;
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string CVPath = Path.Combine(webRootPath, "wwwroot", "Assets", "CVs", fileName);
@@ -131,13 +149,13 @@ namespace IntelliView.API.Controllers
                 if (User.IsInRole(SD.ROLE_COMPANY) && user is CompanyUser companyUser)
                 {
                     companyUser.CompanyName = updatedUser.CompanyName;
-                    companyUser.CompanyDescription = updatedUser.CompanyDescription;
                     companyUser.CompanyWebsite = updatedUser.CompanyWebsite;
                     companyUser.CompanyOverview = updatedUser.CompanyOverview;
                     companyUser.CompanySize = updatedUser.CompanySize;
                     companyUser.CompanyType = updatedUser.CompanyType;
                     companyUser.CompanyFounded = updatedUser.CompanyFounded;
-                    companyUser.CompanySpeciaties = updatedUser.CompanySpeciaties;
+                    companyUser.CompanySpecialties = updatedUser.CompanySpecialties;
+                    companyUser.PhoneNumber = updatedUser.PhoneNumber;
 
                     await _userManager.UpdateAsync(companyUser);
 
@@ -147,8 +165,8 @@ namespace IntelliView.API.Controllers
                 {
                     individualUser.FirstName = updatedUser.FirstName;
                     individualUser.LastName = updatedUser.LastName;
-                    individualUser.CVURL = updatedUser.CVURL;
-
+                    individualUser.Title = updatedUser.Title;
+                    individualUser.PhoneNumber = updatedUser.PhoneNumber;
                     await _userManager.UpdateAsync(individualUser);
 
                     return Ok(individualUser);
@@ -156,6 +174,8 @@ namespace IntelliView.API.Controllers
                
             return NotFound();
         }
+
+
        
     }
 }

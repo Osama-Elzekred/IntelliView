@@ -9,13 +9,11 @@ namespace IntelliView.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize(Roles = SD.ROLE_COMPANY)]
-    public class TestController : ControllerBase
+    public class TestController(IAiSearchService aiBasedSearchService, IWebHostEnvironment _webHostEnvironment) : ControllerBase
     {
-        private readonly IAiSearchService _aiBasedSearchService;
-        public TestController(IAiSearchService aiBasedSearchService)
-        {
-            _aiBasedSearchService = aiBasedSearchService;
-        }
+        private readonly IAiSearchService _aiBasedSearchService = aiBasedSearchService;
+        public readonly IWebHostEnvironment _webHostEnvironment = _webHostEnvironment;
+
         [HttpGet]
         public string Get()
         {
@@ -46,5 +44,39 @@ namespace IntelliView.API.Controllers
         {
             return Task.FromResult<IActionResult>(Ok(multibleFormDataDTO));
         }
+
+        // Controller Action to handle video upload
+        [HttpPost("upload-video")]
+        public async Task<IActionResult> UploadVideo(IFormFile video)
+        {
+            if (video == null || video.Length == 0)
+            {
+                return BadRequest("No video file provided");
+            }
+
+            try
+            {
+                // Save the uploaded video file to a specific directory on the server
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                var filePath = Path.Combine(uploadsFolder, video.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await video.CopyToAsync(stream);
+                }
+
+                return Ok(new { message = "Video uploaded successfully", filePath });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
+        }
+
+
     }
 }

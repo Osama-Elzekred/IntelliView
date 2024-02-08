@@ -14,7 +14,7 @@ namespace IntelliView.Models.DTO
         public int Id { get; set; }
         public string Content { get; set; }
         public string Type { get; set; }
-        public List<string> ?MCQOptions { get; set; }
+        public virtual List<string> ?MCQOptions { get; set; }
         [JsonIgnore]
         public int JobId { get; set; }
     }

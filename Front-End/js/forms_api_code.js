@@ -126,7 +126,9 @@ loginForm.addEventListener("submit", function (e) {
       })
       .then((data) => {
         if (data.token) {
-          document.cookie = `authToken = ${data.token} path=/`;
+          document.cookie = `authToken=${data.token};path=/`;
+          document.cookie = `user_id=${data.id};path=/`; 
+          localStorage.setItem("roleFromServer",data.roles); 
           window.location.href = `profile.html?username=${username}`;
           console.log(data);
         }
@@ -225,8 +227,9 @@ signupForm.addEventListener("submit", function (e) {
         return response.json();
       })
       .then((data) => {
-        if (data.token ) {
-          document.cookie = `authToken = ${data.token} path=/`; 
+        if (data.token) {
+          document.cookie = `authToken=${data.token};path=/`; 
+          document.cookie = `user_id=${data.id};path=/`; 
           localStorage.setItem("roleFromServer" , data.roles); 
           window.location.href = `profile.html?username=${username}`;
         }
@@ -235,7 +238,7 @@ signupForm.addEventListener("submit", function (e) {
           messageFromServer.style.display = "block";
         }
         else {
-       messageFromServer.textContent = "An error occurred"; 
+      messageFromServer.textContent = "An error occurred"; 
       messageFromServer.style.display = "block";
         }
       })

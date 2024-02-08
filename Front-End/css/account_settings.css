@@ -1,0 +1,111 @@
+
+.ui-w-80 {
+    width: 200px !important;
+    height: 200px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+
+.btn-default {
+    border-color: rgba(24,28,33,0.1);
+    background: rgba(0,0,0,0);
+    color: #4E5155;
+}
+
+label.btn {
+    margin-bottom: 0;
+}
+
+
+
+.btn {
+    cursor: pointer;
+}
+
+.text-light {
+    color: #babbbc !important;
+}
+
+.btn-facebook {
+    border-color: rgba(0,0,0,0);
+    background: #3B5998;
+    color: #fff;
+}
+
+.btn-instagram {
+    border-color: rgba(0,0,0,0);
+    background: #000;
+    color: #fff;
+}
+
+.card {
+    background-clip: padding-box;
+    box-shadow: 0 1px 4px rgba(24,28,33,0.012);
+}
+
+.row-bordered {
+    overflow: hidden;
+}
+
+.account-settings-fileinput {
+    position: absolute;
+    visibility: hidden;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+
+.account-settings-multiselect ~ .select2-container {
+    width: 100% !important;
+}
+.light-style{
+   margin-top: 50px;
+   margin-bottom: 50px;
+}
+
+.name{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 450px;
+}
+.user{
+    text-transform: capitalize;
+
+}
+.form_{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 450px;
+   
+}
+.phone,.title{
+    position: relative;
+    left: 11px;
+}
+.cv{
+    position: relative;
+    left:11px ;
+    text-transform: uppercase;
+    
+}
+.cv_{
+    width: 500px;
+    height: 100px;
+
+}
+ input,.cv_
+{  
+    font-size: 17px;  
+    margin-bottom: 20px;
+    outline: 0;
+    border: .5px solid #828c7f6c;
+}
+label{
+    font-weight: bold;
+}

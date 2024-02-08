@@ -9,6 +9,7 @@
  grid-template-rows:630px;
  
 }
+
 .sign-up-,.sign-in-{
     text-transform: capitalize;
     width: 535px;
@@ -38,6 +39,10 @@ form input
     
     
 }
+#passwordField{
+    position: relative;
+    top: 15px;
+}
 #password-{
     position: relative;
     right: 14px;
@@ -52,7 +57,9 @@ form input
    opacity: .5;
 }
 .word{
-    top:45px ;
+    position: absolute;
+   top: 55px;
+    
     font-size:34px ;
 }
 form
@@ -70,11 +77,13 @@ form
     background-color: #89ba16;
     border: transparent;
     font-family: 'Sarala', sans-serif;
+   
 }
 .checkbox{
    width: fit-content;
    position: relative;
    left: 4px;
+   top: 10px
 }
 .already{
     position: absolute;
@@ -91,6 +100,8 @@ form
     position: relative;
     left: 8px;
     font-family: 'Archivo', sans-serif;
+    position: relative;
+    top: 10px;
 }
 .sign-in{
     background-color:#89ba16;
@@ -152,7 +163,7 @@ form
     background-color: #89ba16;
     border: transparent;
     position: relative;
-    top: 50px;  
+    top: 63px;  
     left: 10px; 
     font-family: 'Sarala', sans-serif;
 }
@@ -160,7 +171,7 @@ form
     text-decoration: underline  ;
     position: relative;
     right: 4px;
-    top:75px;
+    top:88px;
     margin: 5px 0;
    color: #7f848c;
     padding: 5px 10px;
@@ -169,7 +180,7 @@ form
 }
 .create{
     position: relative;
-    top:75px;
+    top:88px;
     right: 3px;
     font-family: 'Archivo', sans-serif;
     font-weight: 600;
@@ -191,6 +202,10 @@ form
     left: 10px;
     opacity: .5;
 }
+#lock-in{
+    position: relative;
+    top: 15px;
+}
 
 #password-{
     position: relative;
@@ -206,12 +221,16 @@ form
     left: 320px;
     bottom: 2px;
 }
+.eye-fill{
+    position: relative ;
+top: 15px;
+}
+
 .c-p{
    display: flex;
    width: 250px;
    position: relative;
    top: -33px;
-
    left: 16px;
 }
 .c-p input.person.active,

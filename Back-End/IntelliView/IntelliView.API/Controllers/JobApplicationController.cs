@@ -3,6 +3,7 @@ using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
+using IntelliView.Utility.Settings;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -112,6 +113,14 @@ namespace IntelliView.API.Controllers
                 var user = await _unitOfWork.IndividualUsers.GetByIdAsync(userId);
                 if (user != null)
                 {
+                    if (file.Length > FileSettings.MAxFileSizeInBytes)
+                    {
+                        return BadRequest(new { message = "File size should not be more than 5MB!" });
+                    }
+                    if (!FileSettings.AllowedCVExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
+                    {
+                        return BadRequest(new { message = "This file extension is not allowed!" });
+                    }
                     string webRootPath = _webHostEnvironment.ContentRootPath;
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
                     string CVPath = Path.Combine(webRootPath, "wwwroot", "Assets", "CVs", fileName);

@@ -6,6 +6,22 @@
     <title>Document</title>
 </head>
 <body>
-    <P>hossam</P>
+    <P id="user">hossam</P>
+    <p id="Company">Company</p>
+
+    <script>
+       let profileUser = document.getElementById("user");
+       let profileCompany = document.getElementById("Company");
+        if (localStorage.getItem("roleFromServer") === "company" || localStorage.getItem("roleFromServer") === "Company"){
+            profileCompany.style.display = "block"; 
+            profileUser.style.display = "none"; 
+        }else if (localStorage.getItem("roleFromServer") === "User" || localStorage.getItem("roleFromServer") === "user"){
+            profileCompany.style.display = "none"; 
+            profileUser.style.display = "block"; 
+        }
+        profileUser.addEventListener("click" ,function(){
+            window.location.href = "acc.html";
+        })
+    </script>
 </body>
 </html>

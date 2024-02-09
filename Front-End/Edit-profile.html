@@ -129,16 +129,16 @@
       </div>
       <hr class="border-light m-0">
       <div class="card-body">
-      <form class="user">
+      <form class="user" id="userForm">
           <div class="form_">
           <div class="name">
               <div class="first_name">
           <label for="first">First name</label><br>
-          <input id="first" type="text">
+          <input id="first" type="text" name="firstName">
               </div>
               <div class="last_name">
           <label for="last">last name</label><br>
-          <input id="last" type="text">
+          <input id="last" type="text" name="lastName">
           </div>
           </div>
           <div class="cv">
@@ -147,7 +147,7 @@
           </div>
           <div class="title">
               <label for="title">title</label><br>
-              <input type="text" id="title">
+              <input type="text" id="title" name="title">
           </div>
           <div class="phone">
               <label for="phone">phone number</label><br>
@@ -329,12 +329,13 @@
       </div>
       </div>
       </div>
+      <div id="message"></div>
       </div>
       </div>
       </div>
       </div>
       <div class="text-right mt-3">
-      <button type="button" class="btn btn-primary">Save changes</button>&nbsp;
+      <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>&nbsp;
       <button type="button" class="btn btn-default">Cancel</button>
       </div>
       </div>

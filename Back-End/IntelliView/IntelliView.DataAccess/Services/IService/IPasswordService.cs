@@ -11,7 +11,7 @@ namespace IntelliView.DataAccess.Services.IService
     {
         Task<string> CheckEmailAsync(string email);
         Task<string> CreateResetLink(string email);
-
+        Task<bool> ChangePasswordAsync(ChangePasswordDTO model);
         Task<bool> ResetPasswordAsync(ResetPasswordDTO model);
     }
 }

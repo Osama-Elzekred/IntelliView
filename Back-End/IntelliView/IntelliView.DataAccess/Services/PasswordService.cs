@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,19 @@ namespace IntelliView.DataAccess.Services
             _userManager = userManager;
             _emailSender = emailSender;
         }
+
+        public async Task<bool> ChangePasswordAsync(ChangePasswordDTO model)
+        {
+
+            var user = await _userManager.FindByIdAsync("Ay 7aga now");
+
+            if (user == null)return false;
+
+            // Change password
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            return changePasswordResult.Succeeded;
+        }
+
         public async Task<string> CheckEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);

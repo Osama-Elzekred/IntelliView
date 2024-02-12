@@ -66,16 +66,49 @@ label.btn {
    margin-top: 50px;
    margin-bottom: 50px;
 }
-
+.cssbuttons-io-button {
+    display: flex;
+    align-items: center;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 0.8em 1.5em 0.8em 1.2em;
+    color: white;
+    background: linear-gradient(0deg ,rgba(118, 212, 56, 0.774) 0%, #a5d438 100%);
+    border: none;
+    outline: none;
+    box-shadow: 0 0.7em 1.5em -0.5em rgb(190, 255, 146);
+    letter-spacing: 0.05em;
+    border-radius: 20em;
+    text-transform: uppercase;
+    
+    
+    
+  }
+  
+  .cssbuttons-io-button svg {
+    margin-right: 8px;
+  }
+  
+  .cssbuttons-io-button:hover {
+    box-shadow: 0 0.5em 1.5em -0.5em gray;
+  }
+  
+  .cssbuttons-io-button:active {
+    box-shadow: 0 0.3em 1em -0.5em gray;
+  }
+  .cssbuttons-io-button:focus{
+    border: none;
+    outline: none;
+  }
 .name{
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-    width: 450px;
+    justify-content: space-between;
+    width: 505px;
 }
-.user{
+.user,.Company{
     text-transform: capitalize;
-
 }
 .form_{
     display: flex;
@@ -84,18 +117,23 @@ label.btn {
     height: 450px;
    
 }
-.phone,.title{
-    position: relative;
-    left: 11px;
+
+#title,#phone{
+    width:505px;
+}
+
+
+.iti--separate-dial-code .iti__selected-flag {
+    background-color: #a5d438;
+    color: black;
 }
 .cv{
-    position: relative;
-    left:11px ;
+   
     text-transform: uppercase;
     
 }
 .cv_{
-    width: 500px;
+    width: 500px !important;
     height: 100px;
 
 }
@@ -104,8 +142,44 @@ label.btn {
     font-size: 17px;  
     margin-bottom: 20px;
     outline: 0;
-    border: .5px solid #828c7f6c;
+    border: 2px solid #828c7f6c;
+    
 }
 label{
     font-weight: bold;
+    font-size: 18px;
 }
+input:focus{
+    border-color: #a5d438;
+    box-shadow:  0px 0px 7px #a5d438 ;
+    outline: none;
+}
+.overview_:focus{
+    border-color: #a5d438;
+    box-shadow:  0px 0px 7px #a5d438 ;
+    outline: none;
+}
+.name-type,.size-founded{
+    display: flex;
+    justify-content: space-between;
+    width: 505px;
+}
+.size-founded{
+    position: relative;
+    top: 17px;
+}
+
+.overview_{
+ width: 505px;  
+ outline: 0;
+ border: 2px solid #828c7f6c;
+ height: 200px;
+}
+#website_,#phone_{
+    width: 505px;
+}
+#size_{
+    width: 138px;
+    
+}
+

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntelliView.DataAccess.Repository
+namespace IntelliView.DataAccess.Repository.Repos
 {
     public class InterestedTopicRepo : Repository<InterestedTopic>, IInterestedTopicRepo
     {

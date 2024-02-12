@@ -1,4 +1,7 @@
-﻿namespace IntelliView.DataAccess.Repository.IRepository
+﻿using IntelliView.DataAccess.Repository.IRepository.InterviewRepo;
+using IntelliView.DataAccess.Repository.IRepository.IUserRepo;
+
+namespace IntelliView.DataAccess.Repository.IRepository
 {
     public interface IUnitOfWork
     {

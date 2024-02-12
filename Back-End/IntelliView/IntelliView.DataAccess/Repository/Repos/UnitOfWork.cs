@@ -1,7 +1,10 @@
 ﻿using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.IRepository.IJobRepo;
+using IntelliView.DataAccess.Repository.IRepository.InterviewRepo;
+using IntelliView.DataAccess.Repository.IRepository.IUserRepo;
 
-namespace IntelliView.DataAccess.Repository
+namespace IntelliView.DataAccess.Repository.Repos
 {
     public class UnitOfWork : IUnitOfWork
     {

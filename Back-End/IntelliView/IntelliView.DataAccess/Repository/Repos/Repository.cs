@@ -3,7 +3,7 @@ using IntelliView.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace IntelliView.DataAccess.Repository
+namespace IntelliView.DataAccess.Repository.Repos
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -12,7 +12,7 @@ namespace IntelliView.DataAccess.Repository
         public Repository(ApplicationDbContext db)
         {
             _db = db;
-            this._dbSet = _db.Set<T>();
+            _dbSet = _db.Set<T>();
         }
         public async Task<IEnumerable<T>> GetAllAsync()
         {

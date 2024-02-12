@@ -1,27 +1,26 @@
 ﻿using AutoMapper;
 using InteliView.DataAccess.Data;
-using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.IRepository.IJobRepo;
 using IntelliView.Models.Models;
-using Microsoft.EntityFrameworkCore;
-namespace IntelliView.DataAccess.Repository
+namespace IntelliView.DataAccess.Repository.Repos.JobRepo
 {
-    public class JobQuestionRepo : Repository<JobQuestion>, IJobQuestionRepo
+    public class JobRepo : Repository<Job>, IJobRepo
     {
         private ApplicationDbContext _db;
-        public JobQuestionRepo(ApplicationDbContext db) : base(db)
+        public JobRepo(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
-        public async Task<JobQuestion> Update(JobQuestion jobquestion)
+        public async Task<Job> Update(Job job)
         {
-            IMapper _mapper = new MapperConfiguration(cfg => cfg.CreateMap<JobQuestion, JobQuestion>()).CreateMapper();
+            IMapper _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Job, Job>()).CreateMapper();
 
-            JobQuestion? jp = await _db.JobQuestions.FindAsync(jobquestion.Id);
+            Job? jp = await _db.Jobs.FindAsync(job.Id);
             if (jp is null)
             {
                 throw new InvalidOperationException("jop not found.");
             }
-            _mapper.Map(jobquestion, jp);
+            _mapper.Map(job, jp);
             return jp;
         }
         //public async Task<Job> UpdateAsync(AddJopDTO jopDTO)
@@ -38,12 +37,7 @@ namespace IntelliView.DataAccess.Repository
 
 
         // Constructor and other methods...
-        public async Task<IEnumerable<JobQuestion>> GetJobQuestionsAsync(int jobId)
-        {
-            var questions = await _db.JobQuestions.Where(j => j.JobId == jobId).Include(j => j.MCQOptions).ToListAsync();
 
-            return questions;
-        }
         public async Task AddQuestionToJob(int jobId, JobQuestion question)
         {
             var job = await _db.Jobs.FindAsync(jobId);

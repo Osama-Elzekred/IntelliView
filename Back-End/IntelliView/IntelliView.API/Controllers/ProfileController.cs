@@ -29,17 +29,42 @@ namespace IntelliView.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetProfile()
+        public async Task<ActionResult<ProfileDTO>> GetProfile()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim?.Value;
             var user = await _userManager.FindByIdAsync(userId!);
-            if (user != null)
+            if (user == null)
             {
-                return Ok(user);
+                return NotFound();
             }
-
-            return NotFound();
+            if (user is CompanyUser companyUser)
+            {
+                return Ok(new ProfileDTO
+                {
+                    CompanyName = companyUser.CompanyName,
+                    CompanyWebsite = companyUser.CompanyWebsite,
+                    CompanyOverview = companyUser.CompanyOverview,
+                    CompanySize = companyUser.CompanySize,
+                    CompanyType = companyUser.CompanyType,
+                    CompanyFounded = companyUser.CompanyFounded,
+                    ImageURl = companyUser.ImageURl,
+                    PhoneNumber = companyUser.PhoneNumber!
+                });
+            }
+            else if (user is IndividualUser individualUser)
+            {
+                return Ok(new ProfileDTO
+                {
+                    FirstName = individualUser.FirstName,
+                    LastName = individualUser.LastName,
+                    Title = individualUser.Title,
+                    ImageURl = individualUser.ImageURl,
+                    PhoneNumber = individualUser.PhoneNumber!,
+                    CVURL = individualUser.CVURL
+                });
+            }
+            return BadRequest();
         }
         
         //private ApplicationUser updatedImage = new ApplicationUser();

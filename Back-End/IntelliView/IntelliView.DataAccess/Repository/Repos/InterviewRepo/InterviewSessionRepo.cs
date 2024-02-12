@@ -1,5 +1,5 @@
 ﻿using InteliView.DataAccess.Data;
-using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.IRepository.InterviewRepo;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,16 +8,16 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace IntelliView.DataAccess.Repository
+namespace IntelliView.DataAccess.Repository.Repos.InterviewRepo
 {
     public class InterviewSessionRepo : Repository<InterviewSessionRepo>, IInterviewSessionRepo
     {
         private readonly ApplicationDbContext _db;
         internal new DbSet<InterviewSessionRepo> _dbSet;
-        public InterviewSessionRepo(ApplicationDbContext db):base(db)
+        public InterviewSessionRepo(ApplicationDbContext db) : base(db)
         {
             _db = db;
-            this._dbSet = _db.Set<InterviewSessionRepo>();
+            _dbSet = _db.Set<InterviewSessionRepo>();
         }
 
         public void Update(InterviewSessionRepo interviewSession)

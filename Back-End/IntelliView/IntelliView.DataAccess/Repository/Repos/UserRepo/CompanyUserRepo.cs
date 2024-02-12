@@ -1,8 +1,8 @@
 ﻿using InteliView.DataAccess.Data;
-using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.IRepository.IUserRepo;
 using IntelliView.Models.Models;
 
-namespace IntelliView.DataAccess.Repository
+namespace IntelliView.DataAccess.Repository.Repos.UserRepo
 {
     public class CompanyUserRepo : Repository<CompanyUser>, ICompanyUserRepo
     {

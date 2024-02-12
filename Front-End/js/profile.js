@@ -8,7 +8,8 @@ $(document).ready(function () {
       "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.12/js/utils.js",
   });
 });
-
+// profile data api 
+// show if the role (user or company) to decide which form to display 
 if (
   localStorage.getItem("roleFromServer") === "user" ||
   localStorage.getItem("roleFromServer") === "User"
@@ -39,10 +40,7 @@ display : none ;
     // If not found, return null
     return null;
   }
-
-  // Usage
   const authToken = getCookie("authToken");
-
   saveChanges.addEventListener("click", function (e) {
     e.preventDefault();
     message.style.display = "none";
@@ -56,7 +54,7 @@ display : none ;
       method: "PUT",
       headers: {
         "Content-type": "application/json; charset=UTF-8",
-        Authorization: `Bearer ${authToken}`,
+        "Authorization": `Bearer ${authToken}`,
       },
       body: JSON.stringify({
         firstname: firstName,
@@ -81,8 +79,41 @@ display : none ;
         }
       });
   });
-}else{
+}
+// the other type of forms . 
+else{
   // let companyForm = document.getElementById("companyForm"); 
   // userForm.style.display ="block"; 
   // companyFrom.style.display = "none"; 
 }
+
+// profile photo api  
+
+let profileImage = document.getElementById("profileImage");
+let inputFile = document.getElementById("inputFile"); 
+
+inputFile.onchange = function(){
+  let imageFile = inputFile.files[0]; 
+  profileImage.src = URL.createObjectURL(imageFile); 
+  let formData = new FormData(); 
+  formData.append("profileImage" , imageFile); 
+  fetch ("https://localhost:7049/api/Profile/updatePicture" , {
+    method : "PATCH",
+    headers : {"Content-type": "multipart/form-data",
+    "Authorization": `Bearer ${authToken}`,},
+    body : formData,
+  }).then((response)=> {
+    return response.json(); 
+  }).then((data) =>{
+    if (data) {
+      message.textContent = "Profile photo uploaded successfully" ; 
+      message.style.display = "block"; 
+    }
+    else{
+      message.textContent = "Failed to upload profile photo" ; 
+      message.style.display = "block"; 
+    }
+  }).catch((error) => {
+    console.log(error); 
+  }) 
+};

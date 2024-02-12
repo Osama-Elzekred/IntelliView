@@ -172,7 +172,7 @@ roleForm.addEventListener("click", function (e) {
   } else {
     role = companyBtn.value;
   }
-  localStorage.setItem("role", role);
+  localStorage.setItem("roleToServer", role);
 });
 
 //get the data and post it to the server

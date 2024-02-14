@@ -114,19 +114,19 @@
       </div>
       </div>
       <div class="col-md-9">
-      <div class="tab-content">
-      <div class="tab-pane fade active show" id="account-general">
-      <div class="card-body media align-items-center">
-      <img src="images/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt class="d-block ui-w-80" id="profileImage">
-      <div class="media-body ml-4">
-      <label class="btn btn-outline-primary">
-      Upload new photo
-      <input type="file" class="account-settings-fileinput" id="inputFile">
+        <div class="tab-content">
+          <div class="tab-pane fade active show" id="account-general">
+        <div class="card-body media align-items-center">
+        <img src="images/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt class="d-block ui-w-80" id="profileImage">
+        <div class="media-body ml-4">
+        <label class="btn btn-outline-primary" for="inputFile">
+        Upload new photo
       </label> &nbsp;
-      <button type="button" class="btn btn-default md-btn-flat">Reset</button>
-      <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
-      </div>
-      </div>
+      <input type="file" class="account-settings-fileinput" id="inputFile">
+        <button type="button" class="btn btn-default md-btn-flat">Reset</button>
+        <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
+        </div>
+        </div>
       <hr class="border-light m-0">
       <div class="card-body">
       <form class="user" id="userForm">
@@ -134,11 +134,11 @@
           <div class="name">
               <div class="first_name">
           <label for="first">First name</label><br>
-          <input id="first" type="text" name="firstName">
+          <input id="firstName" type="text" name="firstName">
               </div>
               <div class="last_name">
           <label for="last">last name</label><br>
-          <input id="last" type="text" name="lastName">
+          <input id="lastName" type="text" name="lastName">
           </div>
           </div>
           <div class="cv">
@@ -173,15 +173,15 @@
       <div class="card-body pb-2">
       <div class="form-group-">
       <label class="form-label-">Current password</label>
-      <input type="password" class="form-control">
+      <input type="password" class="form-control" id="oldPassword">
       </div>
       <div class="form-group-">
       <label class="form-label">New password</label>
-      <input type="password" class="form-control">
+      <input type="password" class="form-control" id="newPassword">
       </div>
       <div class="form-group-">
       <label class="form-label-">Repeat new password</label>
-      <input type="password" class="form-control">
+      <input type="password" class="form-control" id="newPasswordConfirm">
       </div>
       </div>
       </div>

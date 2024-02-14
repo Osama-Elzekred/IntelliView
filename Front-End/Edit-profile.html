@@ -117,11 +117,11 @@
       <div class="tab-content">
       <div class="tab-pane fade active show" id="account-general">
       <div class="card-body media align-items-center">
-      <img src="images/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt class="d-block ui-w-80" id="profileImage">
+      <img src="images/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt class="d-block ui-w-80">
       <div class="media-body ml-4">
       <label class="btn btn-outline-primary">
       Upload new photo
-      <input type="file" class="account-settings-fileinput" id="inputFile">
+      <input type="file" class="account-settings-fileinput">
       </label> &nbsp;
       <button type="button" class="btn btn-default md-btn-flat">Reset</button>
       <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
@@ -129,44 +129,40 @@
       </div>
       <hr class="border-light m-0">
       <div class="card-body">
-      <form class="user" id="userForm">
+      <form class="user">
           <div class="form_">
           <div class="name">
               <div class="first_name">
           <label for="first">First name</label><br>
-          <input id="first" type="text" name="firstName">
+          <input id="first" type="text">
               </div>
               <div class="last_name">
           <label for="last">last name</label><br>
-          <input id="last" type="text" name="lastName">
+          <input id="last" type="text">
           </div>
           </div>
           <div class="cv">
-              <label for="cv">cv</label><br>
-              <button class="cssbuttons-io-button">
-                <svg viewBox="0 0 640 512" fill="white" height="1em" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
-                </svg>
-                 <span>Upload your CV</span>
-               </button>
+            <label for="cv-upload">CV</label>
+            <label for="cv_upload" class="cssbuttons-io-button">
+              <svg viewBox="0 0 640 512" fill="white" height="1em" xmlns="http://www.w3.org/2000/svg">
+                <path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"></path>
+              </svg>
+              <span>Upload your CV</span>
+            </label>
+            <input id="cv_upload" type="file" >
+            
+            
           </div>
           <div class="title">
               <label for="title">title</label><br>
-              <input type="text" id="title" name="title">
+              <input type="text" id="title">
           </div>
           <div class="phone">
               <label for="phone">phone number</label><br>
               <input type="tel" id="phone" name="phone" >
           </div>
-          
           </div>
-      
-          
-              
-         
-          
       </form>
-      
       </div>
       </div>
       <div class="tab-pane fade" id="account-change-password">
@@ -334,13 +330,12 @@
       </div>
       </div>
       </div>
-      <div id="message"></div>
       </div>
       </div>
       </div>
       </div>
       <div class="text-right mt-3">
-      <button type="button" class="btn btn-primary" id="saveChanges">Save changes</button>&nbsp;
+      <button type="button" class="btn btn-primary">Save changes</button>&nbsp;
       <button type="button" class="btn btn-default">Cancel</button>
       </div>
       </div>

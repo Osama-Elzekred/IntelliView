@@ -1,9 +1,9 @@
 ﻿using InteliView.DataAccess.Data;
-using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
 using IntelliView.Models.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace IntelliView.DataAccess.Repository
+namespace IntelliView.DataAccess.Repository.Repos.JobRepos
 {
     public class JobApplicationsRepo : Repository<JobApplication>, IJobApplicationsRepo
     {

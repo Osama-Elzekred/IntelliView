@@ -1,8 +1,8 @@
 ﻿using InteliView.DataAccess.Data;
-using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.IRepository.IUserRepo;
 using IntelliView.Models.Models;
 
-namespace IntelliView.DataAccess.Repository
+namespace IntelliView.DataAccess.Repository.Repos.UserRepos
 {
     public class IndividualUserRepo : Repository<IndividualUser>, IIndividualUserRepo
     {
@@ -14,7 +14,7 @@ namespace IntelliView.DataAccess.Repository
 
         public void Update(IndividualUser User)
         {
-           
+
         }
     }
 }

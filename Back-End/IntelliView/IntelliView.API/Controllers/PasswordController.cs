@@ -1,11 +1,8 @@
 ﻿using IntelliView.DataAccess.Services.IService;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using IntelliView.Models.DTO;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 using IntelliView.Models.Models;
-using RestSharp;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IntelliView.API.Controllers
 {
@@ -16,7 +13,7 @@ namespace IntelliView.API.Controllers
         private readonly IPasswordService _passwordService;
         private readonly IEmailSender _emailSender;
         private readonly UserManager<ApplicationUser> _userManager;
-        public PasswordController(IPasswordService passwordService , IEmailSender emailSender, UserManager<ApplicationUser> userManager)
+        public PasswordController(IPasswordService passwordService, IEmailSender emailSender, UserManager<ApplicationUser> userManager)
         {
             _passwordService = passwordService;
             _emailSender = emailSender;
@@ -31,7 +28,7 @@ namespace IntelliView.API.Controllers
 
             var result = await _passwordService.CheckEmailAsync(email);
 
-            if (result== string.Empty)
+            if (result == string.Empty)
                 return BadRequest("Invalid Email");
 
             string body = await _passwordService.CreateResetLink(email);
@@ -53,7 +50,7 @@ namespace IntelliView.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (model.NewPassword!=model.ConfirmPassword)
+            if (model.NewPassword != model.ConfirmPassword)
                 return BadRequest("Passwords doesn't match");
 
             model.UserId = userId;
@@ -74,13 +71,13 @@ namespace IntelliView.API.Controllers
             var user = await _userManager.FindByIdAsync(model.UserId);
 
             if (user == null)
-                return NotFound(new {message = "User not found." });
+                return NotFound(new { message = "User not found." });
 
             // Change password
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if (!changePasswordResult.Succeeded)
             {
-                return BadRequest(new { message="Failed to change password." });
+                return BadRequest(new { message = "Failed to change password." });
             }
 
             return Ok(new { message = "Password Changed Succesfully" });

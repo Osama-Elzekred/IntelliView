@@ -1,26 +1,27 @@
 ﻿using AutoMapper;
 using InteliView.DataAccess.Data;
-using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
 using IntelliView.Models.Models;
-namespace IntelliView.DataAccess.Repository
+using Microsoft.EntityFrameworkCore;
+namespace IntelliView.DataAccess.Repository.Repos.JobRepos
 {
-    public class JobRepo : Repository<Job>, IJobRepo 
+    public class JobQuestionRepo : Repository<JobQuestion>, IJobQuestionRepo
     {
         private ApplicationDbContext _db;
-        public JobRepo(ApplicationDbContext db) : base(db)
+        public JobQuestionRepo(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
-        public async Task<Job> Update(Job job)
+        public async Task<JobQuestion> Update(JobQuestion jobquestion)
         {
-            IMapper _mapper = new MapperConfiguration(cfg => cfg.CreateMap<Job, Job>()).CreateMapper();
+            IMapper _mapper = new MapperConfiguration(cfg => cfg.CreateMap<JobQuestion, JobQuestion>()).CreateMapper();
 
-            Job? jp = await _db.Jobs.FindAsync(job.Id);
+            JobQuestion? jp = await _db.JobQuestions.FindAsync(jobquestion.Id);
             if (jp is null)
             {
                 throw new InvalidOperationException("jop not found.");
             }
-            _mapper.Map(job, jp);
+            _mapper.Map(jobquestion, jp);
             return jp;
         }
         //public async Task<Job> UpdateAsync(AddJopDTO jopDTO)
@@ -37,7 +38,12 @@ namespace IntelliView.DataAccess.Repository
 
 
         // Constructor and other methods...
+        public async Task<IEnumerable<JobQuestion>> GetJobQuestionsAsync(int jobId)
+        {
+            var questions = await _db.JobQuestions.Where(j => j.JobId == jobId).Include(j => j.MCQOptions).ToListAsync();
 
+            return questions;
+        }
         public async Task AddQuestionToJob(int jobId, JobQuestion question)
         {
             var job = await _db.Jobs.FindAsync(jobId);

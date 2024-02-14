@@ -1,6 +1,6 @@
 ﻿using IntelliView.Models.Models;
 
-namespace IntelliView.DataAccess.Repository.IRepository
+namespace IntelliView.DataAccess.Repository.IRepository.IJobRepos
 {
     public interface IJobApplicationsRepo : IRepository<JobApplication>
     {

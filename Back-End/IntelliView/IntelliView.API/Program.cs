@@ -1,8 +1,8 @@
 using InteliView.DataAccess.Data;
 using IntelliView.API.Infrastructure;
 using IntelliView.API.Services;
-using IntelliView.DataAccess.Repository;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.Repos;
 using IntelliView.DataAccess.Services;
 using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.Models;

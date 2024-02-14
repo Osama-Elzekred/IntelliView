@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using InteliView.DataAccess.Data;
-using IntelliView.DataAccess.Repository.IRepository.IJobRepo;
+using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
 using IntelliView.Models.Models;
-namespace IntelliView.DataAccess.Repository.Repos.JobRepo
+namespace IntelliView.DataAccess.Repository.Repos.JobRepos
 {
     public class JobRepo : Repository<Job>, IJobRepo
     {

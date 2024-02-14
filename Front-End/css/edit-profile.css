@@ -44,6 +44,7 @@ label.btn {
 .card {
     background-clip: padding-box;
     box-shadow: 0 1px 4px rgba(24,28,33,0.012);
+    
 }
 
 .row-bordered {
@@ -81,7 +82,7 @@ label.btn {
     letter-spacing: 0.05em;
     border-radius: 20em;
     text-transform: uppercase;
-    
+    cursor: pointer;
     
     
   }
@@ -105,10 +106,14 @@ label.btn {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 505px;
+    width: 450px;
 }
 .user,.Company{
     text-transform: capitalize;
+    height: 500px;
+}
+.Company{
+    height: 750px;
 }
 .form_{
     display: flex;
@@ -116,6 +121,12 @@ label.btn {
     justify-content: space-around;
     height: 450px;
    
+}
+.form-company{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 730px
 }
 
 #title,#phone{
@@ -127,17 +138,8 @@ label.btn {
     background-color: #a5d438;
     color: black;
 }
-.cv{
-   
-    text-transform: uppercase;
-    
-}
-.cv_{
-    width: 500px !important;
-    height: 100px;
 
-}
- input,.cv_
+ input
 {  
     font-size: 17px;  
     margin-bottom: 20px;
@@ -162,7 +164,10 @@ input:focus{
 .name-type,.size-founded{
     display: flex;
     justify-content: space-between;
-    width: 505px;
+    width: 600px;
+}
+.name-type{
+    width: 500px;
 }
 .size-founded{
     position: relative;
@@ -170,16 +175,26 @@ input:focus{
 }
 
 .overview_{
- width: 505px;  
+ width: 600px;  
  outline: 0;
  border: 2px solid #828c7f6c;
  height: 200px;
 }
 #website_,#phone_{
-    width: 505px;
+    width: 600px;
 }
 #size_{
     width: 138px;
+    
+}
+#cv_upload{
+    display: none;
+
+}
+
+.cv{
+    width: 230px;
+    
     
 }
 

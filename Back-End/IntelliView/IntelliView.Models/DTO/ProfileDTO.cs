@@ -1,15 +1,10 @@
-﻿using IntelliView.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace IntelliView.Models.DTO
 {
     public class ProfileDTO
     {
+        public bool IsCompany { get; set; }
         public string CompanyName { get; set; } = string.Empty;
         public string CompanyWebsite { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;

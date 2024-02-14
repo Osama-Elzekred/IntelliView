@@ -14,13 +14,11 @@ emailForm.addEventListener('submit', function(event) {
         headers : {
             "Content-type": "application/json; charset=UTF-8",
     },
-    body : JSON.stringify({
-        email , 
-    }),
+    body : email ,
     }).then((response)=> {
         return response.json(); 
     }).then((data) => {
-        if (data.status === 400){
+        if (data){
             messageError.textContent = "invalid email "; 
             messageError.style.display = "block"; 
         }

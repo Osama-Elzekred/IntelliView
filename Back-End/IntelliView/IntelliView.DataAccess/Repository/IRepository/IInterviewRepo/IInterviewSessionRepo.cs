@@ -1,12 +1,6 @@
-﻿using IntelliView.DataAccess.Repository.Repos.InterviewRepo;
-using IntelliView.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using IntelliView.DataAccess.Repository.Repos.InterviewRepos;
 
-namespace IntelliView.DataAccess.Repository.IRepository.InterviewRepo
+namespace IntelliView.DataAccess.Repository.IRepository.InterviewRepos
 {
     public interface IInterviewSessionRepo : IRepository<InterviewSessionRepo>
     {

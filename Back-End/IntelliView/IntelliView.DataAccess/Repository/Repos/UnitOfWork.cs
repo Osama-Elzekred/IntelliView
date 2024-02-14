@@ -1,8 +1,11 @@
 ﻿using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository;
-using IntelliView.DataAccess.Repository.IRepository.IJobRepo;
-using IntelliView.DataAccess.Repository.IRepository.InterviewRepo;
+using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
+using IntelliView.DataAccess.Repository.IRepository.InterviewRepos;
 using IntelliView.DataAccess.Repository.IRepository.IUserRepo;
+using IntelliView.DataAccess.Repository.Repos.InterviewRepos;
+using IntelliView.DataAccess.Repository.Repos.JobRepos;
+using IntelliView.DataAccess.Repository.Repos.UserRepos;
 
 namespace IntelliView.DataAccess.Repository.Repos
 {

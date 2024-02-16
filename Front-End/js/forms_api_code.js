@@ -3,8 +3,8 @@ let loginForm = document.getElementById("login");
 let signupbtn = document.getElementById("signupbtn");
 let signinbtn = document.getElementById("signinbtn");
 function flipped_face() {
-  signupForm.reset(); 
-  loginForm.reset(); 
+  signupForm.reset();
+  loginForm.reset();
   var face_ = document.getElementById("face");
   face_.classList.toggle("flipped");
 }
@@ -84,7 +84,7 @@ function toggleButton(buttonType) {
   clickedButton.classList.add("active");
 }
 
-// code of login 
+// code of login
 let message = document.getElementById("messageOfEmpty");
 let messageOfWrong = document.getElementById("messageOfWrong");
 messageOfWrong.style.cssText = `
@@ -107,10 +107,10 @@ loginForm.addEventListener("submit", function (e) {
     return;
   }
   if (username === "" || password === "") {
-    messageOfWrong.textContent = "Please Enter E-mail and Password"; 
+    messageOfWrong.textContent = "Please Enter E-mail and Password";
     messageOfWrong.style.display = "block";
   } else {
-    messageOfWrong.style.display = "none"; 
+    messageOfWrong.style.display = "none";
     fetch("https://localhost:7049/api/Auth/login", {
       method: "POST",
       body: JSON.stringify({
@@ -127,27 +127,32 @@ loginForm.addEventListener("submit", function (e) {
       .then((data) => {
         if (data.token) {
           document.cookie = `authToken=${data.token};path=/`;
-          document.cookie = `user_id=${data.id};path=/`; 
-          localStorage.setItem("roleFromServer",data.roles); 
-          window.location.href = `profile.html?username=${username}`;
-          console.log(data);
-        }
-        else if (data.message){
-        messageOfWrong.textContent = `${data.message}`; 
-        messageOfWrong.style.display = "block"; 
+          document.cookie = `user_id=${data.id};path=/`;
+          localStorage.setItem("roleFromServer", data.roles);
+          if(data.roles === "user" || data.roles === "User"){
+            window.location.href = "user-profile.html"; 
+          }
+          else{
+            window.location.href = "company-profile.html";
+          }
+          
+        } else if (data.message) {
+          messageOfWrong.textContent = `${data.message}`;
+          messageOfWrong.style.display = "block";
         }
       })
       .catch((error) => {
         if (error) {
-        messageOfWrong.textContent = "Sorry ... The Server can not be reach now ... please try later "; 
-        messageOfWrong.style.display = "block"; 
-        console.log("Response details:", error.response);
+          messageOfWrong.textContent =
+            "Sorry ... The Server can not be reach now ... please try later ";
+          messageOfWrong.style.display = "block";
+          console.log("Response details:", error.response);
         }
       });
   }
 });
-//sign-up code 
-let messageFromServer = document.getElementById("messageFromServer"); 
+//sign-up code
+let messageFromServer = document.getElementById("messageFromServer");
 messageFromServer.style.cssText = `
         font-style: italic;
         color: blue;
@@ -178,8 +183,8 @@ roleForm.addEventListener("click", function (e) {
 //get the data and post it to the server
 signupForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  messageFromServer.style.display = "none"; 
-  
+  messageFromServer.style.display = "none";
+
   let signupData = new FormData(signupForm);
   let username = signupData.get("username");
   let email = signupData.get("email");
@@ -205,19 +210,19 @@ signupForm.addEventListener("submit", function (e) {
     password_confirm === "" ||
     email === ""
   ) {
-    messageFromServer.textContent = "Please Fill All Fields"; 
+    messageFromServer.textContent = "Please Fill All Fields";
     messageFromServer.style.display = "block";
   } else if (password != password_confirm) {
-    messageFromServer.textContent = "Password dosen't match ";  
+    messageFromServer.textContent = "Password dosen't match ";
     messageFromServer.style.display = "block";
-  } else { 
+  } else {
     fetch("https://localhost:7049/api/Auth/register", {
       method: "POST",
       body: JSON.stringify({
         email: email,
         username: username,
         password,
-        role: localStorage.getItem("role"),
+        role: localStorage.getItem("roleToServer"),
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -228,24 +233,28 @@ signupForm.addEventListener("submit", function (e) {
       })
       .then((data) => {
         if (data.token) {
-          document.cookie = `authToken=${data.token};path=/`; 
-          document.cookie = `user_id=${data.id};path=/`; 
-          localStorage.setItem("roleFromServer" , data.roles); 
-          window.location.href = `profile.html?username=${username}`;
-        }
-        else if (data.message){
-        messageFromServer.textContent = `${data.message}`; 
+          document.cookie = `authToken=${data.token};path=/`;
+          document.cookie = `user_id=${data.id};path=/`;
+          localStorage.setItem("roleFromServer", data.roles);
+            if(data.roles === "user" || data.roles === "User")
+            window.location.href = "user-profile.html";
+          else{
+            window.location.href = "company-profile.html";
+          }
+        } else if (data.message) {
+          messageFromServer.textContent = `${data.message}`;
           messageFromServer.style.display = "block";
-        }
-        else {
-      messageFromServer.textContent = "An error occurred"; 
-      messageFromServer.style.display = "block";
+        } else {
+          messageFromServer.textContent = "An error occurred";
+          messageFromServer.style.display = "block";
         }
       })
       .catch((error) => {
         if (error) {
-          messageFromServer.textContent = "Connection Error ... Please Try Later"; 
+          messageFromServer.textContent =
+            "Connection Error ... Please Try Later";
           messageFromServer.style.display = "block";
-        }})
+        }
+      });
   }
 });

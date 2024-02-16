@@ -96,7 +96,7 @@ $(document).ready(function () {
           firstname: firstName,
           lastname: lastName,
           title: title,
-          phone: phone,
+          phoneNumber: phone,
         }),
       })
         .then((response) => {
@@ -171,7 +171,6 @@ lastName.value = data.lastName;
 title.value = data.title ; 
 phone.value = data.phoneNumber; 
 profileImage.src = ` ./../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
-  console.log("Profile data:", data.firstName);
 })
 .catch((error) => {
   // Handle any errors that occurred during the fetch operation
@@ -179,3 +178,33 @@ profileImage.src = ` ./../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
 });
 
 })
+// cv upload 
+
+var cv = document.getElementById("cv"); 
+let uploadCv = document.getElementById("uploadCv"); 
+uploadCv.addEventListener("click" , function(e){
+  e.preventDefault(); 
+  cv.click(); 
+  console.log("btn")
+})
+cv.addEventListener("click",function(e){
+  e.stopPropagation(); 
+})
+cv.addEventListener("change" ,function(e){ 
+  let cvFile = cv.files[0]; 
+  let cvFormData = new FormData(); 
+  cvFormData.append("file" , cvFile); 
+  fetch ("https://localhost:7049/api/Profile/updateCV" , {
+    method : "PATCH",
+    headers : {
+    Authorization: `Bearer ${authToken}`,},
+    body : cvFormData,
+  })
+  
+  .then((response) =>{
+    return response.json(); 
+    }).catch((error) => {
+    console.log(error); 
+  }) 
+});
+

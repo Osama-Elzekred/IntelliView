@@ -21,21 +21,21 @@ namespace IntelliView.API.Controllers
         }
 
         [HttpPost("forget-password")]
-        public async Task<IActionResult> ForgetPasswordAsync([FromBody] string email)
+        public async Task<IActionResult> ForgetPasswordAsync([FromBody] ForgetPassEmailDTO email)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _passwordService.CheckEmailAsync(email);
+            var result = await _passwordService.CheckEmailAsync(email.Email!);
 
             if (result == string.Empty)
                 return BadRequest("Invalid Email");
 
-            string body = await _passwordService.CreateResetLink(email);
+            string body = await _passwordService.CreateResetLink(email.Email!);
 
             await _emailSender.SendEmailAsync(new EmailDTO
             {
-                To = email,
+                To = email.Email!,
                 Subject = "Reset your Password",
                 Body = body
 

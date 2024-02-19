@@ -9,6 +9,10 @@ env:
   RESOURCE_GROUP: managedEnvResourceGroup
   CONTAINER_REGISTRY_NAME: inteliviewregistrycontainer
   CONTAINER_REGISTRY_LOGIN_SERVER: inteliviewregistrycontainer.azurecr.io
+  # clientSecret: "******"
+  # subscriptionId:  "******"
+  # tenantId:  "******"
+  # clientId:  "******"
 jobs:
   BuildAndDeployContainerApp:
     runs-on: ubuntu-latest

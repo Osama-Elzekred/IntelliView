@@ -9,14 +9,14 @@ namespace IntelliView.Utility
 {
     public class GenerateRandomToken
     {
-        public static string createRandomToken()
+        public static string createRandomToken(int size)
         {
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
             var random = new Random();
-            var token = new char[32];
+            var token = new char[size];
 
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < size; i++)
             {
                 token[i] = chars[random.Next(chars.Length)];
             }

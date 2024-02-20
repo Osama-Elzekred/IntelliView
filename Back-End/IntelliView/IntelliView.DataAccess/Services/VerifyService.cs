@@ -24,7 +24,7 @@ namespace IntelliView.DataAccess.Services
         public async Task<string> CreateVerfiyTokenAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            user!.VerificationToken = GenerateRandomToken.createRandomToken();
+            user!.VerificationToken = GenerateRandomToken.createRandomToken(32);
             user.VerifyExpiredAt = DateTime.UtcNow.AddMinutes(20);
             await _userManager.UpdateAsync(user);
             return user.VerificationToken;

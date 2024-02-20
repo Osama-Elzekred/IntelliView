@@ -44,7 +44,7 @@ namespace IntelliView.DataAccess.Services
 
         public async Task<string> CreateResetLink(string email)
         {
-            string token = GenerateRandomToken.createRandomToken();
+            string token = GenerateRandomToken.createRandomToken(5);
             var user = await _userManager.FindByEmailAsync(email);
             if(user == null) { return "Error from server try send again :)"; }
             
@@ -52,15 +52,12 @@ namespace IntelliView.DataAccess.Services
             user.ResetPassToken = token;
             await _userManager.UpdateAsync(user);
 
-
-            string link = $"https://localhost:7049/api/password/reset-password/{user.Id}/{token}";
-
-            return $"You can reset your password by clicking this link: <a href='{link}'>Reset Password</a> ";
+            return $"Your reset password code is : {token} ";
         }
 
         public async Task<bool> ResetPasswordAsync(ResetPasswordDTO model)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId!);
+            var user = await _userManager.FindByEmailAsync(model.Email!);
             if(user == null || user.ResetPassExpiredAt < DateTime.UtcNow || user.ResetPassToken != model.Token)
                  return false;
 

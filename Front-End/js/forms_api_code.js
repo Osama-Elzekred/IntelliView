@@ -129,10 +129,10 @@ loginForm.addEventListener("submit", function (e) {
           document.cookie = `authToken=${data.token};path=/`;
           document.cookie = `user_id=${data.id};path=/`;
           localStorage.setItem("roleFromServer", data.roles);
-          if(data.roles === "user" || data.roles === "User"){
+          if(localStorage.getItem("roleFromServer") === "user" || localStorage.getItem("roleFromServer") ==="User"){
             window.location.href = "user-profile.html"; 
           }
-          else{
+          else if(localStorage.getItem("roleFromServer")  ==="company" || localStorage.getItem("roleFromServer") === "Company" ){
             window.location.href = "company-profile.html";
           }
           
@@ -219,10 +219,10 @@ signupForm.addEventListener("submit", function (e) {
     fetch("https://localhost:7049/api/Auth/register", {
       method: "POST",
       body: JSON.stringify({
-        email: email,
-        username: username,
-        password,
-        role: localStorage.getItem("roleToServer"),
+        "email": email,
+        "username": username,
+        "password" :password,
+        "role": localStorage.getItem("roleToServer"),
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -236,9 +236,9 @@ signupForm.addEventListener("submit", function (e) {
           document.cookie = `authToken=${data.token};path=/`;
           document.cookie = `user_id=${data.id};path=/`;
           localStorage.setItem("roleFromServer", data.roles);
-            if(data.roles === "user" || data.roles === "User")
+            if(localStorage.getItem("roleFromServer")  === "user" || localStorage.getItem("roleFromServer")  === "User")
             window.location.href = "user-profile.html";
-          else{
+          else if( localStorage.getItem("roleFromServer")  ==="company" || localStorage.getItem("roleFromServer")  ==="Company"){
             window.location.href = "company-profile.html";
           }
         } else if (data.message) {

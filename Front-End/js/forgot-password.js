@@ -14,19 +14,24 @@ emailForm.addEventListener('submit', function(event) {
         headers : {
             "Content-type": "application/json; charset=UTF-8",
     },
-    body : email ,
-    }).then((response)=> {
-        return response.json(); 
-    }).then((data) => {
-        if (data){
+    body : JSON.stringify({
+        "email" :email , 
+    })
+    }).then((response) => {
+        if (!response.ok){
             messageError.textContent = "invalid email "; 
             messageError.style.display = "block"; 
         }
         else {
-        // Hide the form
-        document.getElementById('forgotPasswordForm').style.display = 'none';
-        // Display the message
-        document.getElementById('message').style.display = 'block';
+            document.querySelector(".container2").style.display = "block"; 
+            document.querySelector(".container").style.display = "none"; 
+            document.querySelector("#verfiy").append(message); 
+            message.textContent = "check your email inbox"; 
+            message.style.display = "block"; 
+            setTimeout(() => {
+                message.style.display = "none"; 
+            }, 5000);
         }
     })
 });
+

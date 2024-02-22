@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Mailosaur" Version="8.7.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.0" />

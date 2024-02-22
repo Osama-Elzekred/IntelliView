@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-    - main
+    - deploy-container-app
 env:
   DOTNET_CORE_VERSION: 7.0.x
   CONTAINER_APP_NAME: intelliview.api-container-app

@@ -7,6 +7,10 @@
       "type": "mssql",
       "connectionId": "ConnectionStrings:DefaultConnection",
       "dynamicId": null
+    },
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "DefaultConnectionprod"
     }
   }
 }

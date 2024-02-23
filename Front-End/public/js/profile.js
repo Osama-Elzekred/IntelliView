@@ -1,13 +1,14 @@
+import { DOMAIN_NAME } from "../../config";
 
 if (
-  localStorage.getItem('roleFromServer') === 'user' ||
-  localStorage.getItem('roleFromServer') === 'User'
+  localStorage.getItem("roleFromServer") === "user" ||
+  localStorage.getItem("roleFromServer") === "User"
 ) {
-  let userForm = document.getElementById('userForm');
+  let userForm = document.getElementById("userForm");
   // userForm.style.display ="block";
   // companyFrom.style.display = "none";
-  let saveChanges = document.getElementById('saveChanges');
-  let message = document.getElementById('message');
+  let saveChanges = document.getElementById("saveChanges");
+  let message = document.getElementById("message");
   message.style.cssText = `
   color: green;
   font-size: 18px;
@@ -17,11 +18,11 @@ if (
   display : none ; 
   `;
   function getCookie(name) {
-    const cookies = document.cookie.split(';');
+    const cookies = document.cookie.split(";");
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim();
       // Check if this cookie is the one we're looking for
-      if (cookie.startsWith(name + '=')) {
+      if (cookie.startsWith(name + "=")) {
         // If found, return the value of the cookie
         return cookie.substring(name.length + 1);
       }
@@ -31,28 +32,28 @@ if (
   }
 
   // Usage
-  var authToken = getCookie('authToken');
-  let userID = getCookie('user_id');
-  let oldPassword = document.getElementById('oldPassword');
-  let newPassword = document.getElementById('newPassword');
-  let newPasswordConfirm = document.getElementById('newPasswordConfirm');
+  var authToken = getCookie("authToken");
+  let userID = getCookie("user_id");
+  let oldPassword = document.getElementById("oldPassword");
+  let newPassword = document.getElementById("newPassword");
+  let newPasswordConfirm = document.getElementById("newPasswordConfirm");
   if (saveChanges) {
-    saveChanges.addEventListener('click', function (e) {
+    saveChanges.addEventListener("click", function (e) {
       e.preventDefault();
-      message.style.display = 'none';
+      message.style.display = "none";
       if (
-        oldPassword.value != '' &&
-        newPassword.value != '' &&
-        newPasswordConfirm != ''
+        oldPassword.value != "" &&
+        newPassword.value != "" &&
+        newPasswordConfirm != ""
       ) {
         console.log(oldPassword.value);
         console.log(newPassword.value);
         console.log(newPasswordConfirm.value);
         if (newPassword.value === newPasswordConfirm.value) {
-          fetch('https://localhost:7049/api/Password/change-password', {
-            method: 'POST',
+          fetch(`https://${DOMAIN_NAME}/api/Password/change-password`, {
+            method: "POST",
             headers: {
-              'Content-type': 'application/json; charset=UTF-8',
+              "Content-type": "application/json; charset=UTF-8",
             },
             body: JSON.stringify({
               userID: userID,
@@ -65,25 +66,25 @@ if (
             })
             .then((data) => {
               if (data.ok) {
-                message.textContent = 'password change successfully';
-                message.style.display = 'block';
+                message.textContent = "password change successfully";
+                message.style.display = "block";
               }
             });
         } else {
-          message.textContent = 'Password not Match ';
-          message.style.display = 'block';
+          message.textContent = "Password not Match ";
+          message.style.display = "block";
         }
       } else {
         let userFormData = new FormData(userForm);
-        let firstName = userFormData.get('firstName');
-        let lastName = userFormData.get('lastName');
-        let title = userFormData.get('title');
-        let phone = userFormData.get('phone');
+        let firstName = userFormData.get("firstName");
+        let lastName = userFormData.get("lastName");
+        let title = userFormData.get("title");
+        let phone = userFormData.get("phone");
 
-        fetch('https://localhost:7049/api/Profile', {
-          method: 'PUT',
+        fetch(`https://${DOMAIN_NAME}/api/Profile`, {
+          method: "PUT",
           headers: {
-            'Content-type': 'application/json; charset=UTF-8',
+            "Content-type": "application/json; charset=UTF-8",
             Authorization: `Bearer ${authToken}`,
           },
           body: JSON.stringify({
@@ -98,12 +99,12 @@ if (
           })
           .then((data) => {
             if (data) {
-              message.textContent = 'Data Changed';
-              message.style.display = 'block';
+              message.textContent = "Data Changed";
+              message.style.display = "block";
             } else {
-              message.textContent = 'Data Not Changed';
-              message.style.color = 'red';
-              message.style.display = 'block';
+              message.textContent = "Data Not Changed";
+              message.style.color = "red";
+              message.style.display = "block";
             }
           });
       }
@@ -116,14 +117,14 @@ if (
 }
 
 // profile photo api
-let inputFile = document.getElementById('inputFile');
+let inputFile = document.getElementById("inputFile");
 if (inputFile) {
-  inputFile.addEventListener('change', function (e) {
+  inputFile.addEventListener("change", function (e) {
     let imageFile = inputFile.files[0];
     let formData = new FormData();
-    formData.append('file', imageFile);
-    fetch('https://localhost:7049/api/Profile/updatePicture', {
-      method: 'PATCH',
+    formData.append("file", imageFile);
+    fetch(`https://${DOMAIN_NAME}/api/Profile/updatePicture`, {
+      method: "PATCH",
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
@@ -137,14 +138,14 @@ if (inputFile) {
       });
   });
 }
-let firstName = document.getElementById('firstName');
-let lastName = document.getElementById('lastName');
-let title = document.getElementById('title');
-let phone = document.getElementById('phone');
-document.addEventListener('DOMContentLoaded', function (e) {
+let firstName = document.getElementById("firstName");
+let lastName = document.getElementById("lastName");
+let title = document.getElementById("title");
+let phone = document.getElementById("phone");
+document.addEventListener("DOMContentLoaded", function (e) {
   // Make the Fetch API GET request
-  fetch('https://localhost:7049/api/Profile', {
-    method: 'GET',
+  fetch(`https://${DOMAIN_NAME}/api/Profile`, {
+    method: "GET",
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
@@ -156,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function (e) {
         return response.json();
       } else {
         // If the response status is not OK, throw an error
-        throw new Error('Failed to fetch profile data');
+        throw new Error("Failed to fetch profile data");
       }
     })
     .then((data) => {
@@ -166,10 +167,10 @@ document.addEventListener('DOMContentLoaded', function (e) {
       title.value = data.title;
       phone.value = data.phoneNumber;
       profileImage.src = ` ./../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
-      console.log('Profile data:', data.firstName);
+      console.log("Profile data:", data.firstName);
     })
     .catch((error) => {
       // Handle any errors that occurred during the fetch operation
-      console.error('Error fetching profile data:', error);
+      console.error("Error fetching profile data:", error);
     });
 });

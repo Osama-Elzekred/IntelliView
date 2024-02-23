@@ -1,0 +1,270 @@
+/* *{
+    box-sizing: border-box;
+    margin: 0;
+} */
+.form{
+    display: grid;
+ grid-template-columns: repeat(3,1fr);
+ grid-template-areas: ". form .";
+ grid-template-rows:630px;
+ 
+}
+
+.sign-up-,.sign-in-{
+    text-transform: capitalize;
+    width: 535px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+   
+
+}
+.sign-up_{
+    position: relative;
+    bottom: 15px;
+    
+}
+form input
+{  
+    width: 340px;
+    position: relative;
+   right: 20px;
+    font-size: 17px;  
+    background-color: #96989c18;
+    margin-bottom: 20px;
+    outline: 0;
+    border: .5px solid #828c7f1a;
+    
+    
+}
+#passwordField{
+    position: relative;
+    top: 15px;
+}
+#password-{
+    position: relative;
+    right: 14px;
+}
+
+.sign-up,.word{
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 30px;
+    position: absolute;
+    top: 30px;
+   text-shadow: 2px 2px #7f848c;
+   opacity: .5;
+}
+.word{
+    position: absolute;
+   top: 55px;
+    
+    font-size:34px ;
+}
+form
+{
+    position: relative;
+}
+
+.button1{
+    position: absolute;
+    top:245px;
+    left: 9.5px;
+    width: 340px;
+    text-transform: capitalize;
+    font-size: 23px;
+    background-color: #89ba16;
+    border: transparent;
+    font-family: 'Sarala', sans-serif;
+   
+}
+.checkbox{
+   width: fit-content;
+   position: relative;
+   left: 4px;
+   top: 10px
+}
+.already{
+    position: absolute;
+    bottom:38px;
+    right: 87px;
+    margin-top: 10px;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+}
+.remember{
+    font-size: 15px;
+    font-weight: 600;
+    position: relative;
+    left: 8px;
+    font-family: 'Archivo', sans-serif;
+    position: relative;
+    top: 10px;
+}
+.sign-in{
+    background-color:#89ba16;
+    border: 1px solid rgba(92, 186, 199, 0.39);
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
+    color: black;
+    font-family: 'Sarala', sans-serif;
+    font-size: 13px;
+}
+.container_{
+   grid-area: form;
+   border-radius: 30px;
+   -webkit-border-radius: 30px;
+   -moz-border-radius: 30px;
+   -ms-border-radius: 30px;
+   -o-border-radius: 30px;
+   border: 1.5px solid #7f848c ;
+   margin: 28px;
+}
+.box{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: 1s all;
+    -webkit-transition: 1s all;
+    -moz-transition: 1s all;
+    -ms-transition: 1s all;
+    -o-transition: 1s all;
+}
+.box .upin{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+.box .sign-in-{
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg); 
+}
+.box.flipped{
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+}
+.button2{
+    text-transform: capitalize;
+    font-size: 23px;
+    background-color: #89ba16;
+    border: transparent;
+    position: relative;
+    top: 63px;  
+    left: 10px; 
+    font-family: 'Sarala', sans-serif;
+}
+.forget-password{
+    text-decoration: underline  ;
+    position: relative;
+    right: 4px;
+    top:88px;
+    margin: 5px 0;
+   color: #7f848c;
+    padding: 5px 10px;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 600;
+}
+.create{
+    position: relative;
+    top:88px;
+    right: 3px;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 600;
+}
+.form2{
+    position: relative;
+    top: 37px;
+}
+.button-h:hover{
+    background-color:#cbdf99;
+}
+.button-h:focus{
+    outline: none;
+}
+
+.bi-file-lock2,.bi-person-circle,.bi-envelope{
+    color: #89ba16;
+    position: relative;
+    left: 10px;
+    opacity: .5;
+}
+#lock-in{
+    position: relative;
+    top: 15px;
+}
+
+#password-{
+    position: relative;
+    right: 20px;
+}
+.input-container{
+    position: relative;
+    width: fit-content;
+    height: 32.85px;
+}
+.eye-slash,.eye-fill-{
+    position: absolute;
+    left: 320px;
+    bottom: 2px;
+}
+.eye-fill{
+    position: relative ;
+top: 15px;
+}
+
+.c-p{
+   display: flex;
+   width: 250px;
+   position: relative;
+   top: -33px;
+   left: 16px;
+}
+.c-p input.person.active,
+.c-p input.company.active {
+    background-color: #89ba16;
+    color: white;
+    border-color: #89ba16;
+}
+.c-p input {
+    cursor: pointer;
+    border: 2px solid #ccc;
+    background-color: #fff; 
+}
+.c-p .person{
+    border-right: none;
+}
+.c-p .company {
+border-left: none;
+}
+
+::placeholder{
+    position: relative;
+    left: 30px;
+    font-family: 'Archivo', sans-serif; 
+    text-transform: capitalize;
+}
+
+
+
+
+
+
+
+
+ 
+
+

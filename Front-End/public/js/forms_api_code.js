@@ -1,20 +1,22 @@
+import { DOMAIN_NAME } from "../../config";
+
 // const { default: login } = require("@/app/login/page");
 
-let signupForm = document.getElementById('signup');
-let loginForm = document.getElementById('login');
-let signupbtn = document.getElementById('signupbtn');
-let signinbtn = document.getElementById('signinbtn');
+let signupForm = document.getElementById("signup");
+let loginForm = document.getElementById("login");
+let signupbtn = document.getElementById("signupbtn");
+let signinbtn = document.getElementById("signinbtn");
 function flipped_face() {
   signupForm.reset();
   loginForm.reset();
-  var face_ = document.getElementById('face');
-  face_.classList.toggle('flipped');
+  var face_ = document.getElementById("face");
+  face_.classList.toggle("flipped");
 }
 
 function checkInput(input) {
-  const icon = input.parentElement.querySelector('.icon');
+  const icon = input.parentElement.querySelector(".icon");
 
-  if (input.value.trim() === '') {
+  if (input.value.trim() === "") {
     // Show the icon if the input is empty
     icon.style.opacity = 0.5;
   } else {
@@ -24,12 +26,12 @@ function checkInput(input) {
 }
 
 function togglePassword_() {
-  var passwordField = document.getElementById('passwordField');
+  var passwordField = document.getElementById("passwordField");
 
-  var eyeIcon = document.querySelector('.eye-slash');
+  var eyeIcon = document.querySelector(".eye-slash");
 
-  if (passwordField.type === 'password') {
-    passwordField.type = 'text';
+  if (passwordField.type === "password") {
+    passwordField.type = "text";
     // Switch to the eye-fill icon when password is visible
     eyeIcon.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
@@ -38,7 +40,7 @@ function togglePassword_() {
         </svg>
       `;
   } else {
-    passwordField.type = 'password';
+    passwordField.type = "password";
     // Switch back to the eye-slash-fill icon when password is hidden
     eyeIcon.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
@@ -49,12 +51,12 @@ function togglePassword_() {
   }
 }
 function togglePassword() {
-  var passwordField_ = document.getElementById('password-');
+  var passwordField_ = document.getElementById("password-");
 
-  var eyeIcon = document.querySelector('.eye-fill-');
+  var eyeIcon = document.querySelector(".eye-fill-");
 
-  if (passwordField_.type === 'password') {
-    passwordField_.type = 'text';
+  if (passwordField_.type === "password") {
+    passwordField_.type = "text";
     // Switch to the eye-fill icon when password is visible
     eyeIcon.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
@@ -63,7 +65,7 @@ function togglePassword() {
         </svg>
       `;
   } else {
-    passwordField_.type = 'password';
+    passwordField_.type = "password";
     // Switch back to the eye-slash-fill icon when password is hidden
     eyeIcon.innerHTML = `
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
@@ -76,19 +78,19 @@ function togglePassword() {
 
 function toggleButton(buttonType) {
   // Remove 'active' class from all buttons
-  const buttons = document.querySelectorAll('.c-p input');
+  const buttons = document.querySelectorAll(".c-p input");
   buttons.forEach((button) => {
-    button.classList.remove('active');
+    button.classList.remove("active");
   });
 
   // Add 'active' class to the clicked button
   const clickedButton = document.querySelector(`.c-p input.${buttonType}`);
-  clickedButton.classList.add('active');
+  clickedButton.classList.add("active");
 }
 
 // code of login
-let message = document.getElementById('messageOfEmpty');
-let messageOfWrong = document.getElementById('messageOfWrong');
+let message = document.getElementById("messageOfEmpty");
+let messageOfWrong = document.getElementById("messageOfWrong");
 if (messageOfWrong) {
   messageOfWrong.style.cssText = `
         font-style: italic;
@@ -97,32 +99,37 @@ if (messageOfWrong) {
         text-align : center ;
         font-weight : bold ;  
         `;
-  messageOfWrong.style.display = 'block';
+  messageOfWrong.style.display = "block";
 }
+<<<<<<< HEAD
   loginForm.addEventListener('submit', function (e) {
+=======
+if (loginForm) {
+  loginForm.addEventListener("submit", function (e) {
+>>>>>>> 2fee7deac33085c37a9202ba6650e869d366b8d5
     e.preventDefault();
-    messageOfWrong.style.display = 'none';
+    messageOfWrong.style.display = "none";
 
     let loginData = new FormData(loginForm);
-    let username = loginData.get('username');
-    let password = loginData.get('password');
-    if (typeof username !== 'string' || typeof password !== 'string') {
-      console.error('Username and password must be strings.');
+    let username = loginData.get("username");
+    let password = loginData.get("password");
+    if (typeof username !== "string" || typeof password !== "string") {
+      console.error("Username and password must be strings.");
       return;
     }
-    if (username === '' || password === '') {
-      messageOfWrong.textContent = 'Please Enter E-mail and Password';
-      messageOfWrong.style.display = 'block';
+    if (username === "" || password === "") {
+      messageOfWrong.textContent = "Please Enter E-mail and Password";
+      messageOfWrong.style.display = "block";
     } else {
-      messageOfWrong.style.display = 'none';
-      fetch('https://localhost:7049/api/Auth/login', {
-        method: 'POST',
+      messageOfWrong.style.display = "none";
+      fetch(`https://${DOMAIN_NAME}/api/Auth/login`, {
+        method: "POST",
         body: JSON.stringify({
           email: username,
           password: password,
         }),
         headers: {
-          'Content-type': 'application/json; charset=UTF-8',
+          "Content-type": "application/json; charset=UTF-8",
         },
       })
         .then((response) => {
@@ -132,26 +139,26 @@ if (messageOfWrong) {
           if (data.token) {
             document.cookie = `authToken=${data.token};path=/`;
             document.cookie = `user_id=${data.id};path=/`;
-            localStorage.setItem('roleFromServer', data.roles);
+            localStorage.setItem("roleFromServer", data.roles);
             window.location.href = `profile.html?username=${username}`;
             console.log(data);
           } else if (data.message) {
             messageOfWrong.textContent = `${data.message}`;
-            messageOfWrong.style.display = 'block';
+            messageOfWrong.style.display = "block";
           }
         })
         .catch((error) => {
           if (error) {
             messageOfWrong.textContent =
-              'Sorry ... The Server can not be reach now ... please try later ';
-            messageOfWrong.style.display = 'block';
-            console.log('Response details:', error.response);
+              "Sorry ... The Server can not be reach now ... please try later ";
+            messageOfWrong.style.display = "block";
+            console.log("Response details:", error.response);
           }
         });
     }
   });
 //sign-up code
-let messageFromServer = document.getElementById('messageFromServer');
+let messageFromServer = document.getElementById("messageFromServer");
 if (messageFromServer) {
   messageFromServer.style.cssText = `
         font-style: italic;
@@ -162,16 +169,16 @@ if (messageFromServer) {
         position : relative ; 
         bottom : 30px ; 
         `;
-  messageFromServer.style.display = 'none';
+  messageFromServer.style.display = "none";
 }
 //get role value
-let roleForm = document.getElementById('role');
-let personBtn = document.getElementById('person');
-let companyBtn = document.getElementById('company');
-var role = 'User';
-localStorage.setItem('role', role);
+let roleForm = document.getElementById("role");
+let personBtn = document.getElementById("person");
+let companyBtn = document.getElementById("company");
+var role = "User";
+localStorage.setItem("role", role);
 if (roleForm) {
-  roleForm.addEventListener('click', function (e) {
+  roleForm.addEventListener("click", function (e) {
     var clickedBtn = e.target;
 
     if (clickedBtn === personBtn) {
@@ -179,25 +186,30 @@ if (roleForm) {
     } else {
       role = companyBtn.value;
     }
-    localStorage.setItem('roleToServer', role);
+    localStorage.setItem("roleToServer", role);
   });
 }
 //get the data and post it to the server
+<<<<<<< HEAD
   signupForm.addEventListener('submit', function (e) {
+=======
+if (signupbtn) {
+  signupForm.addEventListener("submit", function (e) {
+>>>>>>> 2fee7deac33085c37a9202ba6650e869d366b8d5
     e.preventDefault();
-    messageFromServer.style.display = 'none';
+    messageFromServer.style.display = "none";
 
     let signupData = new FormData(signupForm);
-    let username = signupData.get('username');
-    let email = signupData.get('email');
-    let password = signupData.get('password');
-    let password_confirm = signupData.get('password-confirm');
+    let username = signupData.get("username");
+    let email = signupData.get("email");
+    let password = signupData.get("password");
+    let password_confirm = signupData.get("password-confirm");
     if (
-      typeof username !== 'string' ||
-      typeof password !== 'string' ||
-      typeof password_confirm !== 'string'
+      typeof username !== "string" ||
+      typeof password !== "string" ||
+      typeof password_confirm !== "string"
     ) {
-      console.error('Username and password must be strings.');
+      console.error("Username and password must be strings.");
       console.log(typeof username);
       console.log(typeof password);
       console.log(typeof password_confirm);
@@ -207,27 +219,27 @@ if (roleForm) {
 
     // message of empty field
     if (
-      username === '' ||
-      password === '' ||
-      password_confirm === '' ||
-      email === ''
+      username === "" ||
+      password === "" ||
+      password_confirm === "" ||
+      email === ""
     ) {
-      messageFromServer.textContent = 'Please Fill All Fields';
-      messageFromServer.style.display = 'block';
+      messageFromServer.textContent = "Please Fill All Fields";
+      messageFromServer.style.display = "block";
     } else if (password != password_confirm) {
       messageFromServer.textContent = "Password dosen't match ";
-      messageFromServer.style.display = 'block';
+      messageFromServer.style.display = "block";
     } else {
-      fetch('https://localhost:7049/api/Auth/register', {
-        method: 'POST',
+      fetch(`https://${DOMAIN_NAME}/api/Auth/register`, {
+        method: "POST",
         body: JSON.stringify({
           email: email,
           username: username,
           password,
-          role: localStorage.getItem('role'),
+          role: localStorage.getItem("role"),
         }),
         headers: {
-          'Content-type': 'application/json; charset=UTF-8',
+          "Content-type": "application/json; charset=UTF-8",
         },
       })
         .then((response) => {
@@ -237,21 +249,21 @@ if (roleForm) {
           if (data.token) {
             document.cookie = `authToken=${data.token};path=/`;
             document.cookie = `user_id=${data.id};path=/`;
-            localStorage.setItem('roleFromServer', data.roles);
+            localStorage.setItem("roleFromServer", data.roles);
             window.location.href = `profile.html?username=${username}`;
           } else if (data.message) {
             messageFromServer.textContent = `${data.message}`;
-            messageFromServer.style.display = 'block';
+            messageFromServer.style.display = "block";
           } else {
-            messageFromServer.textContent = 'An error occurred';
-            messageFromServer.style.display = 'block';
+            messageFromServer.textContent = "An error occurred";
+            messageFromServer.style.display = "block";
           }
         })
         .catch((error) => {
           if (error) {
             messageFromServer.textContent =
-              'Connection Error ... Please Try Later';
-            messageFromServer.style.display = 'block';
+              "Connection Error ... Please Try Later";
+            messageFromServer.style.display = "block";
           }
         });
     }

@@ -11,13 +11,15 @@
     <button id="stopButton">Stop Recording</button>
 
     <script>
-      const videoElement = document.getElementById('videoElement');
-      const startButton = document.getElementById('startButton');
-      const stopButton = document.getElementById('stopButton');
+      import { DOMAIN_NAME } from "../../config";
+
+      const videoElement = document.getElementById("videoElement");
+      const startButton = document.getElementById("startButton");
+      const stopButton = document.getElementById("stopButton");
       let mediaRecorder;
       let recordedChunks = [];
 
-      startButton.addEventListener('click', async () => {
+      startButton.addEventListener("click", async () => {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
             video: true,
@@ -31,31 +33,31 @@
 
           mediaRecorder.start();
         } catch (err) {
-          console.error('Error accessing camera:', err);
+          console.error("Error accessing camera:", err);
         }
       });
 
-      stopButton.addEventListener('click', () => {
+      stopButton.addEventListener("click", () => {
         mediaRecorder.stop();
-        const blob = new Blob(recordedChunks, { type:'video/webm' });
+        const blob = new Blob(recordedChunks, { type: "video/webm" });
         sendData(blob);
       });
 
       async function sendData(blob) {
         try {
           const formData = new FormData();
-          formData.append('video', blob, 'recordedVideo.webm');
+          formData.append("video", blob, "recordedVideo.webm");
           const response = await fetch(
-            'https://localhost:7049/api/Test/upload-video',
+            `https://${DOMAIN_NAME}/api/Test/upload-video`,
             {
-              method: 'POST',
+              method: "POST",
               body: formData,
             }
           );
           const responseData = await response.json();
           console.log(responseData);
         } catch (err) {
-          console.error('Error sending data:', err);
+          console.error("Error sending data:", err);
         }
       }
     </script>

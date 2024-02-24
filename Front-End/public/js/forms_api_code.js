@@ -1,4 +1,4 @@
-import { DOMAIN_NAME } from "../../config";
+// import { DOMAIN_NAME } from "../../config";
 
 // const { default: login } = require("@/app/login/page");
 
@@ -101,12 +101,7 @@ if (messageOfWrong) {
         `;
   messageOfWrong.style.display = "block";
 }
-<<<<<<< HEAD
   loginForm.addEventListener('submit', function (e) {
-=======
-if (loginForm) {
-  loginForm.addEventListener("submit", function (e) {
->>>>>>> 2fee7deac33085c37a9202ba6650e869d366b8d5
     e.preventDefault();
     messageOfWrong.style.display = "none";
 
@@ -190,12 +185,7 @@ if (roleForm) {
   });
 }
 //get the data and post it to the server
-<<<<<<< HEAD
   signupForm.addEventListener('submit', function (e) {
-=======
-if (signupbtn) {
-  signupForm.addEventListener("submit", function (e) {
->>>>>>> 2fee7deac33085c37a9202ba6650e869d366b8d5
     e.preventDefault();
     messageFromServer.style.display = "none";
 

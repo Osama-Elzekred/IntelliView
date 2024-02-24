@@ -125,7 +125,7 @@ app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 
 
-app.UseExceptionHandler();
+//app.UseExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();

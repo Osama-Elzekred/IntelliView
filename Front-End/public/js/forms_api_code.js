@@ -99,7 +99,6 @@ if (messageOfWrong) {
         `;
   messageOfWrong.style.display = 'block';
 }
-if (loginForm) {
   loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
     messageOfWrong.style.display = 'none';
@@ -151,7 +150,6 @@ if (loginForm) {
         });
     }
   });
-}
 //sign-up code
 let messageFromServer = document.getElementById('messageFromServer');
 if (messageFromServer) {
@@ -185,7 +183,6 @@ if (roleForm) {
   });
 }
 //get the data and post it to the server
-if (signupbtn) {
   signupForm.addEventListener('submit', function (e) {
     e.preventDefault();
     messageFromServer.style.display = 'none';
@@ -259,4 +256,4 @@ if (signupbtn) {
         });
     }
   });
-}
+

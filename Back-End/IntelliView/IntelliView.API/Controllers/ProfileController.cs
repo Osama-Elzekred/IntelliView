@@ -113,7 +113,7 @@ namespace IntelliView.API.Controllers
                     user.ImageURl = Path.Combine("wwwroot", "Assets", "images", fileName).Replace("\\", "/");
                     await _userManager.UpdateAsync(user);
 
-                    return Ok(user.ImageURl); // Return the URL of the updated image
+                    return Ok(new { user.ImageURl }); // Return the URL of the updated image
                 }
             }
 

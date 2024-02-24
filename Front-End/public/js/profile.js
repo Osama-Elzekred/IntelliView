@@ -1,5 +1,5 @@
 let profileImage = document.getElementById('profileImage');
-import { DOMAIN_NAME } from "../../config";
+// import { DOMAIN_NAME } from "../../config";
 
 if (
   localStorage.getItem("roleFromServer") === "user" ||

@@ -35,7 +35,7 @@ export default function login() {
             className="section-hero overlay inner-page bg-image"
             style={{
               backgroundImage:
-                'url("images/ai-background-business-technology-digital-transformation.jpg")',
+                'url("/images/ai-background-business-technology-digital-transformation.jpg")',
             }}
             id="home-section"
           >
@@ -297,6 +297,7 @@ export default function login() {
           </div>
         </div>
       </Layout>
+      <Script src="/js/forms_api_code.js"></Script>
     </>
   );
 }

@@ -1,8 +1,7 @@
-
 import Layout from '../../components/Layout';
 import Phone from '../../components/Phone';
 import Script from 'next/script';
-const User_profile=()=> {
+const User_profile = () => {
   return (
     <Layout>
       <>
@@ -157,9 +156,9 @@ const User_profile=()=> {
                               </div>
                             </div>
                             <div className="cv">
-                              <label htmlFor="cv">cv</label>
+                              <label htmlFor="inputFile">cv</label>
                               <br />
-                              <button
+                              <div
                                 className="cssbuttons-io-button"
                                 id="uploadCv"
                               >
@@ -174,12 +173,14 @@ const User_profile=()=> {
                                 <input
                                   type="file"
                                   name="cv"
-                                  id="cv"
+                                  id="CVfile"
                                   // htmlFor="inputFile"
                                   style={{ display: 'none' }}
                                 />
-                                <span>Upload your CV</span>
-                              </button>
+                                <label className="" htmlFor="CVfile">
+                                  Upload your CV
+                                </label>
+                              </div>
                             </div>
                             <div className="title">
                               <label htmlFor="title">title</label>
@@ -189,7 +190,7 @@ const User_profile=()=> {
                             <div className="phone">
                               <label htmlFor="phone">phone number</label>
                               <br />
-                              <Phone/>
+                              <Phone />
                             </div>
                           </div>
                         </form>
@@ -483,5 +484,5 @@ const User_profile=()=> {
       </>
     </Layout>
   );
-}
+};
 export default User_profile;

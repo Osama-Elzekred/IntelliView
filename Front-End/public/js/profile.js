@@ -1,5 +1,7 @@
-let profileImage = document.getElementById('profileImage');
 // import { DOMAIN_NAME } from "../../config";
+const DOMAIN_NAME = "localhost:7049";
+
+let profileImage = document.getElementById("profileImage");
 
 if (
   localStorage.getItem("roleFromServer") === "user" ||
@@ -89,10 +91,10 @@ if (
             Authorization: `Bearer ${authToken}`,
           },
           body: JSON.stringify({
-            'firstname': firstName,
-            'lastname': lastName,
-            'title': title,
-            'phoneNumber': phone,
+            firstname: firstName,
+            lastname: lastName,
+            title: title,
+            phoneNumber: phone,
           }),
         })
           .then((response) => {
@@ -133,9 +135,10 @@ if (inputFile) {
     })
       .then((response) => {
         // Handle any errors that occurred during the fetch operation
-      // profileImage.src = `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
+        // profileImage.src = `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
         return response.json();
-      }).then((data) => {
+      })
+      .then((data) => {
         profileImage.src = `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
       })
       .catch((error) => {
@@ -143,46 +146,44 @@ if (inputFile) {
       });
   });
 }
-let firstName = document.getElementById('firstName');
-let lastName = document.getElementById('lastName');
-let title = document.getElementById('title');
-let phone = document.getElementById('phone');
-if (document.readyState === 'loading') {
+let firstName = document.getElementById("firstName");
+let lastName = document.getElementById("lastName");
+let title = document.getElementById("title");
+let phone = document.getElementById("phone");
+if (document.readyState === "loading") {
   // Loading hasn't finished yet
- 
 } else {
   // `DOMContentLoaded` has already fired
   // Your code here
   // document.addEventListener('DOMContentLoaded', function (e) {
-    // Make the Fetch API GET request
-    fetch('https://localhost:7049/api/Profile', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
+  // Make the Fetch API GET request
+  fetch("https://localhost:7049/api/Profile", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+  })
+    .then((response) => {
+      // Check if the response status is OK (200)
+      if (response.ok) {
+        // Parse the JSON response
+        return response.json();
+      } else {
+        // If the response status is not OK, throw an error
+        throw new Error("Failed to fetch profile data");
+      }
     })
-      .then((response) => {
-        // Check if the response status is OK (200)
-        if (response.ok) {
-          // Parse the JSON response
-          return response.json();
-        } else {
-          // If the response status is not OK, throw an error
-          throw new Error('Failed to fetch profile data');
-        }
-      })
-      .then((data) => {
-        // Handle the profile data received from the server
-        firstName.value = data.firstName;
-        lastName.value = data.lastName;
-        title.value = data.title;
-        phone.value = data.phoneNumber;
-        profileImage.src = `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
-        console.log('Profile data:', data.firstName);
-      })
-      .catch((error) => {
-        // Handle any errors that occurred during the fetch operation
-        console.error('Error fetching profile data:', error);
-      });
-  ;
+    .then((data) => {
+      // Handle the profile data received from the server
+      firstName.value = data.firstName;
+      lastName.value = data.lastName;
+      title.value = data.title;
+      phone.value = data.phoneNumber;
+      profileImage.src = `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
+      console.log("Profile data:", data.firstName);
+    })
+    .catch((error) => {
+      // Handle any errors that occurred during the fetch operation
+      console.error("Error fetching profile data:", error);
+    });
 }

@@ -1,6 +1,7 @@
-let profileImage = document.getElementById('profileImage');
 // import { DOMAIN_NAME } from "../../config";
-// Separate.js
+const DOMAIN_NAME = 'localhost:7049';
+
+let profileImage = document.getElementById('profileImage');
 
 if (
   localStorage.getItem('roleFromServer') === 'user' ||
@@ -127,7 +128,7 @@ if (inputFile) {
     let imageFile = inputFile.files[0];
     let formData = new FormData();
     formData.append('file', imageFile);
-    fetch(`https://localhost:7049/api/Profile/updatePicture`, {
+    fetch(`https://${DOMAIN_NAME}/api/Profile/updatePicture`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -160,7 +161,7 @@ if (document.readyState === 'loading') {
   // Your code here
   // document.addEventListener('DOMContentLoaded', function (e) {
   // Make the Fetch API GET request
-  fetch('https://localhost:7049/api/Profile', {
+  fetch(`https://${DOMAIN_NAME}/api/Profile`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${authToken}`,

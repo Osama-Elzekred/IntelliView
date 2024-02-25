@@ -1,9 +1,8 @@
 
-
 import Layout from '../../components/Layout';
 import Phone from '../../components/Phone';
 import Script from 'next/script';
-export default function User_profile() {
+const User_profile=()=> {
   return (
     <Layout>
       <>
@@ -190,7 +189,7 @@ export default function User_profile() {
                             <div className="phone">
                               <label htmlFor="phone">phone number</label>
                               <br />
-                              < Phone />
+                              <Phone/>
                             </div>
                           </div>
                         </form>
@@ -485,3 +484,4 @@ export default function User_profile() {
     </Layout>
   );
 }
+export default User_profile;

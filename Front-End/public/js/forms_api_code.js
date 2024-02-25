@@ -117,7 +117,7 @@ if (messageOfWrong) {
       messageOfWrong.style.display = "block";
     } else {
       messageOfWrong.style.display = "none";
-      fetch(`https://${DOMAIN_NAME}/api/Auth/login`, {
+      fetch(`https://localhost:7049/api/Auth/login`, {
         method: "POST",
         body: JSON.stringify({
           email: username,
@@ -220,7 +220,7 @@ if (roleForm) {
       messageFromServer.textContent = "Password dosen't match ";
       messageFromServer.style.display = "block";
     } else {
-      fetch(`https://${DOMAIN_NAME}/api/Auth/register`, {
+      fetch(`https://localhost:7049/api/Auth/register`, {
         method: "POST",
         body: JSON.stringify({
           email: email,

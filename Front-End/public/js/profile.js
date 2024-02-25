@@ -148,6 +148,34 @@ if (inputFile) {
       });
   });
 }
+
+let CVFile = document.getElementById('CVfile');
+if (CVFile) {
+  CVFile.addEventListener('change', function (e) {
+    let CV = CVFile.files[0];
+    let formData = new FormData();
+    formData.append('file', CV);
+    fetch(`https://${DOMAIN_NAME}/api/Profile/updateCV`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: formData,
+    })
+      .then((response) => {
+        // Handle any errors that occurred during the fetch operation
+        // profileImage.src = `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
+        return response.json();
+      })
+      .then((data) => {
+        // profileImage.src = `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
+}
+
 let firstName = document.getElementById('firstName');
 let lastName = document.getElementById('lastName');
 let title = document.getElementById('title');

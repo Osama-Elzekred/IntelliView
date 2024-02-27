@@ -1,4 +1,6 @@
 import Script from 'next/script';
+import Link from 'next/link';
+
 const Forget_password = () => (
   <><>
     <meta charSet="UTF-8" />
@@ -22,7 +24,8 @@ const Forget_password = () => (
         </div>
         <div className="footer">
           <p>
-            Remember your password? <a href="login.html">Login here</a>
+            Remember your password? 
+            <Link href="/login">Login here</Link>
           </p>
         </div>
         <div id="error" />

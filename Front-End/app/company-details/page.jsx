@@ -1,6 +1,7 @@
 // components/CompanyDetails.js
 import React from 'react';
 import Layout from '../components/Layout';
+import Link from 'next/link';
 
 const CompanyDetails = () => {
   return (
@@ -33,7 +34,8 @@ const CompanyDetails = () => {
               <div className="col-md-7">
                 <h1 className="text-white font-weight-bold">Company Details</h1>
                 <div className="custom-breadcrumbs">
-                  <a href="#">Home</a> <span className="mx-2 slash">/</span>
+                  <Link href="/job">Home</Link>
+                  <span className="mx-2 slash">/</span>
                   <span className="text-white"><strong>Company Details</strong></span>
                 </div>
               </div>
@@ -63,7 +65,9 @@ const CompanyDetails = () => {
                     {/* Company website */}
                     <div className="website">
                       <label htmlFor="company-website">Website</label><br />
-                      <a href="#" id="company-website">www.example.com</a>
+                      <Link href="company-details" id="company-website">
+                        www.example.com
+                      </Link>
                     </div>
                     {/* Company phone number */}
                     <div className="phone">

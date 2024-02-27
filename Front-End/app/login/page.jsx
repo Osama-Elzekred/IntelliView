@@ -4,6 +4,7 @@ import Head from 'next/head';
 import React from 'react';
 import Script from 'next/script';
 import Layout from '.././components/Layout';
+import Link from 'next/link';
 
 // import  '../public/scss/styles.scss';
 // import '../public/scss/style.scss';
@@ -279,9 +280,9 @@ export default function login() {
                       className="button2 button-h"
                     />
                   </form>
-                  <a href="forgot-password.html" className="forget-password">
-                    forget password?
-                  </a>
+                  <Link href="/forgot-password/forget" className="forget-password">
+                    forget password
+                  </Link>
                   <p className="create">
                     Don't have an account?{' '}
                     <button

@@ -1,100 +1,99 @@
+import Link from "next/link";
+
 export default function Header() {
   return (
     <header className="site-navbar mt-3" id="top">
       <div className="container-fluid">
         <div className="row align-items-center">
           <div className="site-logo col-6">
-            <a href="index.html">intelliview</a>
+            <Link href="/job">intelliview</Link>
           </div>
           <nav className="mx-auto site-navigation">
             <ul className="site-menu js-clone-nav d-none d-xl-block ml-0 pl-0">
               <li>
-                <a href="index.html" className="nav-link">
-                  Home
-                </a>
+                <Link href="/job">Home</Link>
               </li>
               <li>
-                <a href="about.html">About</a>
+                <Link href="/about">About</Link>
               </li>
               <li className="has-children">
-                <a href="job-listings.html">Job Listings</a>
+                <Link href="/job-listings">Job Listings</Link>
                 <ul className="dropdown">
                   <li>
-                    <a href="job-single.html">Job Single</a>
+                    <Link href="/id">Job Single</Link>
                   </li>
                   <li>
-                    <a href="post-job.html">Post a Job</a>
+                    <Link href="/post">Post a Job</Link>
                   </li>
                 </ul>
               </li>
               <li className="has-children">
-                <a href="services.html">Pages</a>
+                <Link href="/service">Pages</Link>
                 <ul className="dropdown">
                   <li>
-                    <a href="services.html">Services</a>
+                    <Link href="/service">Services</Link>
                   </li>
                   <li>
-                    <a href="service-single.html">Service Single</a>
+                    <Link href="/service-single">Service Single</Link>
                   </li>
                   <li>
-                    <a href="blog-single.html">Blog Single</a>
+                    <Link href="/blog-single">Blog Single</Link>
                   </li>
                   <li>
-                    <a href="portfolio.html">Portfolio</a>
+                    <Link href="/portfolio">Portfolio</Link>
                   </li>
                   <li>
-                    <a href="portfolio-single.html">Portfolio Single</a>
+                    <Link href="/portfolio-single">Portfolio Single</Link>
                   </li>
                   <li>
-                    <a href="testimonials.html">Testimonials</a>
+                    <Link href="/testimonials">Testimonials</Link>
                   </li>
                   <li>
-                    <a href="faq.html">Frequently Ask Questions</a>
+                    <Link href="/faq">Frequently Ask Questions</Link>
                   </li>
                   <li>
-                    <a href="gallery.html">Gallery</a>
+                    <Link href="/gallery">Gallery</Link>
                   </li>
                 </ul>
               </li>
               <li>
-                <a href="blog.html">Blog</a>
+                <Link href="/blog">Blog</Link>
               </li>
               <li>
-                <a href="contact.html">Contact</a>
+                <Link href="/contact">Contact</Link>
               </li>
               <li className="d-lg-none">
-                <a href="post-job.html">
-                  <span className="mr-2">+</span> Post a Job
-                </a>
+                <Link href="/post">
+                  <span className="mr-2">+</span>
+                </Link>
               </li>
               <li className="d-lg-none">
-                <a href="login.html">Log In</a>
+                <Link href="/login">Log In</Link>
               </li>
             </ul>
           </nav>
           <div className="right-cta-menu text-right d-flex aligin-items-center col-6">
             <div className="ml-auto">
-              <a
-                href="post-job.html"
-                className="btn btn-outline-white border-width-2 d-none d-lg-inline-block"
-              >
-                <span className="mr-2 icon-add" />
+              <Link href="/post"
+                className="btn btn-outline-white border-width-2 d-none d-lg-inline-block">
+                  <span className="mr-2 icon-add" />
                 Post a Job
-              </a>
-              <a
-                href="login.html"
-                className="btn btn-primary border-width-2 d-none d-lg-inline-block"
-              >
-                <span className="mr-2 icon-lock_outline" />
+              </Link>
+              <Link href="/login"
+                className="btn btn-primary border-width-2 d-none d-lg-inline-block">
+                  <span className="mr-2 icon-lock_outline" />
                 Log In
-              </a>
+              </Link>
             </div>
-            <a
+            {/* <a
               href="#"
               className="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3"
             >
               <span className="icon-menu h3 m-0 p-0 mt-2" />
-            </a>
+            </a> */}
+            <Link href="" className="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3">
+              <span className="icon-menu h3 m-0 p-0 mt-2" />
+            </Link>
           </div>
         </div>
       </div>

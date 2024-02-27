@@ -1,5 +1,7 @@
 // import { useNavigation } from 'next/navigation';
 import Layout from '../../components/Layout';
+import Link from 'next/link';
+
 export default function Job_details({ params }) {
   console.log(parseInt(params.id));
   return (
@@ -273,7 +275,7 @@ export default function Job_details({ params }) {
               </div>
               <ul className="job-listings mb-5">
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_1.jpg"
@@ -295,7 +297,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_2.jpg"
@@ -317,7 +319,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_3.jpg"
@@ -339,7 +341,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_4.jpg"
@@ -361,7 +363,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_5.jpg"
@@ -383,7 +385,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_1.jpg"
@@ -405,7 +407,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_2.jpg"

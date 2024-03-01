@@ -86,19 +86,19 @@ export default function Jobs() {
                         <h3>Trending Keywords:</h3>
                         <ul className="keywords list-unstyled m-0 p-0">
                           <li>
-                            <a href="#" className="">
+                            <Link href="#" className="">
                               UI Designer
-                            </a>
+                            </Link>
                           </li>
                           <li>
-                            <a href="#" className="">
+                            <Link href="#" className="">
                               Python
-                            </a>
+                            </Link>
                           </li>
                           <li>
-                            <a href="#" className="">
+                            <Link href="#" className="">
                               Developer
-                            </a>
+                            </Link>
                           </li>
                         </ul>
                       </div>
@@ -107,9 +107,9 @@ export default function Jobs() {
                 </div>
               </div>
             </div>
-            <a href="#next" className="scroll-button smoothscroll">
+            <Link href="#next" className="scroll-button smoothscroll">
+            </Link>
               <span className=" icon-keyboard_arrow_down" />
-            </a>
           </section>
           <section className="site-section" id="next">
             <div className="container">
@@ -118,7 +118,7 @@ export default function Jobs() {
                   <h2 className="section-title mb-2">43,167 Job Listed</h2>
                 </div>
               </div>
-              <ul className="job-listings mb-5" id="jobListings">
+              <ul className="job mb-5" id="jobListings">
                 {/* Job listings will be dynamically added here */}
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
                 <Link href="/job/id"></Link>

@@ -1,5 +1,5 @@
 import Layout from '../../components/Layout';
-
+import Link from 'next/link';
 export default function Post_job() {
   return (
     <Layout>
@@ -31,8 +31,8 @@ export default function Post_job() {
               <div className="col-md-7">
                 <h1 className="text-white font-weight-bold">Post A Job</h1>
                 <div className="custom-breadcrumbs">
-                  <a href="#">Home</a> <span className="mx-2 slash">/</span>
-                  <a href="#">Job</a> <span className="mx-2 slash">/</span>
+                  <Link href="#">Home</Link> <span className="mx-2 slash">/</span>
+                  <Link href="#">Job</Link> <span className="mx-2 slash">/</span>
                   <span className="text-white">
                     <strong>Post a Job</strong>
                   </span>
@@ -54,15 +54,15 @@ export default function Post_job() {
               <div className="col-lg-4">
                 <div className="row">
                   <div className="col-6">
-                    <a href="#" className="btn btn-block btn-light btn-md">
+                    <Link href="#" className="btn btn-block btn-light btn-md">
                       <span className="icon-open_in_new mr-2" />
                       Preview
-                    </a>
+                    </Link>
                   </div>
                   <div className="col-6">
-                    <a href="#" className="btn btn-block btn-primary btn-md">
+                    <Link href="#" className="btn btn-block btn-primary btn-md">
                       Save Job
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -164,15 +164,15 @@ export default function Post_job() {
               <div className="col-lg-4 ml-auto">
                 <div className="row">
                   <div className="col-6">
-                    <a href="#" className="btn btn-block btn-light btn-md">
+                    <Link href="#" className="btn btn-block btn-light btn-md">
                       <span className="icon-open_in_new mr-2" />
                       Preview
-                    </a>
+                    </Link>
                   </div>
                   <div className="col-6">
-                    <a href="#" className="btn btn-block btn-primary btn-md">
+                    <Link href="#" className="btn btn-block btn-primary btn-md">
                       Save Job
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>

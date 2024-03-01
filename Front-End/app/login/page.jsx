@@ -3,7 +3,8 @@ import Image from 'next/image';
 import Head from 'next/head';
 import React from 'react';
 import Script from 'next/script';
-import Layout from '.././components/Layout';
+import Layout from '../components/Layout';
+import Link from 'next/link';
 
 // import  '../public/scss/styles.scss';
 // import '../public/scss/style.scss';
@@ -44,7 +45,7 @@ export default function login() {
                 <div className="col-md-7">
                   <h1 className="text-white font-weight-bold">Sign Up/Login</h1>
                   <div className="custom-breadcrumbs">
-                    <a href="#">Home</a> <span className="mx-2 slash">/</span>
+                    <Link href="#">Home</Link> <span className="mx-2 slash">/</span>
                     <span className="text-white">
                       <strong>Log In</strong>
                     </span>
@@ -279,9 +280,9 @@ export default function login() {
                       className="button2 button-h"
                     />
                   </form>
-                  <a href="forgot-password.html" className="forget-password">
-                    forget password?
-                  </a>
+                  <Link href="/forget-password/forget" className="forget-password">
+                    forget password
+                  </Link>
                   <p className="create">
                     Don't have an account?{' '}
                     <button

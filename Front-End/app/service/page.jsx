@@ -1,4 +1,5 @@
 // import React from 'react'
+import Link from 'next/link';
 import Layout from '../components/Layout'
 import Script from 'next/script';
 export default function Service(){
@@ -33,7 +34,7 @@ export default function Service(){
               <div className="col-md-7">
                 <h1 className="text-white font-weight-bold">Services</h1>
                 <div className="custom-breadcrumbs">
-                  <a href="#">Home</a> <span className="mx-2 slash">/</span>
+                  <Link href="#">Home</Link> <span className="mx-2 slash">/</span>
                   <span className="text-white">
                     <strong>Services</strong>
                   </span>
@@ -49,10 +50,8 @@ export default function Service(){
           <div className="container">
             <div className="row">
               <div className="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
-                <a
-                  href="service-single.html"
-                  className="block__16443 text-center d-block"
-                >
+                <Link href="/service-single"
+                  className="block__16443 text-center d-block">
                   <span className="custom-icon mx-auto">
                     <span className="icon-magnet d-block" />
                   </span>
@@ -61,13 +60,12 @@ export default function Service(){
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                     Fugit facilis, pariatur harum labore aperiam assumenda.
                   </p>
-                </a>
+                </Link>
               </div>
               <div className="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
-                <a
-                  href="service-single.html"
-                  className="block__16443 text-center d-block"
-                >
+
+                <Link href="/service-single"
+                  className="block__16443 text-center d-block">
                   <span className="custom-icon mx-auto">
                     <span className="icon-trophy d-block" />
                   </span>
@@ -76,14 +74,14 @@ export default function Service(){
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                     Fugit facilis, pariatur harum labore aperiam assumenda.
                   </p>
-                </a>
+                </Link>
+
               </div>
               <div className="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
-                <a
-                  href="service-single.html"
-                  className="block__16443 text-center d-block"
-                >
-                  <span className="custom-icon mx-auto">
+
+                <Link href="/service-single"
+                  className="block__16443 text-center d-block">
+                 <span className="custom-icon mx-auto">
                     <span className="icon-laptop d-block" />
                   </span>
                   <h3>Web Design</h3>
@@ -91,14 +89,14 @@ export default function Service(){
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                     Fugit facilis, pariatur harum labore aperiam assumenda.
                   </p>
-                </a>
+                </Link>
+
               </div>
               <div className="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
-                <a
-                  href="service-single.html"
-                  className="block__16443 text-center d-block"
-                >
-                  <span className="custom-icon mx-auto">
+
+                <Link href="/service-single"
+                  className="block__16443 text-center d-block">
+                 <span className="custom-icon mx-auto">
                     <span className="icon-search d-block" />
                   </span>
                   <h3>SEO</h3>
@@ -106,14 +104,14 @@ export default function Service(){
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                     Fugit facilis, pariatur harum labore aperiam assumenda.
                   </p>
-                </a>
+                </Link>
+
               </div>
               <div className="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
-                <a
-                  href="service-single.html"
-                  className="block__16443 text-center d-block"
-                >
-                  <span className="custom-icon mx-auto">
+
+                <Link href="/service-single"
+                  className="block__16443 text-center d-block">
+                <span className="custom-icon mx-auto">
                     <span className="icon-paper-plane d-block" />
                   </span>
                   <h3>Market Leading </h3>
@@ -121,14 +119,13 @@ export default function Service(){
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                     Fugit facilis, pariatur harum labore aperiam assumenda.
                   </p>
-                </a>
+                </Link>
               </div>
               <div className="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
-                <a
-                  href="service-single.html"
-                  className="block__16443 text-center d-block"
-                >
-                  <span className="custom-icon mx-auto">
+
+                <Link href="/service-single"
+                  className="block__16443 text-center d-block">
+                <span className="custom-icon mx-auto">
                     <span className="icon-plug d-block" />
                   </span>
                   <h3>Pixel Perfect Design</h3>
@@ -136,7 +133,7 @@ export default function Service(){
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
                     Fugit facilis, pariatur harum labore aperiam assumenda.
                   </p>
-                </a>
+                </Link>
               </div>
             </div>
           </div>

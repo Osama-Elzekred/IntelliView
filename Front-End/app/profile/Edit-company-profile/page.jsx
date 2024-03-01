@@ -1,8 +1,194 @@
-import Link from 'next/link';
-import Layout from '../../components/Layout';
-import Phone from '../../components/Phone';
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import Layout from "../../components/Layout";
+import Phone from "../../components/Phone";
+import Cookies from "js-cookie";
+import Link from "next/link";
+export default function EditProfile() {
+  let [message,setMessage] = useState(""); 
+  let [color,setColor] = useState(""); 
+  const [authToken, setAuthToken] = useState("");
+  // const [userId ,setUserId] = useState("")
+  const [formData, setFormData] = useState({
+    companyName: "",
+    type: "",
+    overview: "",
+    website: "",
+    size: "",
+    founded: "",
+    phoneNumber: "",
+  });
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    newPasswordConfirm: "",
+  });
+  const [imageURL, setPhotoUrl] = useState(null);
+  const phoneInputGfgRef = useRef();
 
-export default function Edit_profile() {
+  // Function to retrieve the phone number value
+  const getPhoneNumberValue = () => {
+    if (phoneInputGfgRef.current) {
+      return phoneInputGfgRef.current.getPhoneInputValue();
+    }
+    return "";
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const authTokenCookie = Cookies.get("authToken");
+        if (authTokenCookie) {
+          setAuthToken(authTokenCookie);
+          const response = await fetch("https://localhost:7049/api/Profile", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authTokenCookie}`,
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setFormData({
+              companyName: data.companyName,
+              type: data.type,
+              overview: data.overview,
+              website: data.website,
+              phoneNumber: data.phoneNumber,
+              size: data.size,
+              founded: data.founded,
+            });
+            setPhotoUrl(
+              `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
+            );
+          } else {
+            console.error("Failed to fetch user data");
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const handleDataSubmit = async () => {
+    // to make the post of form user data
+    const phoneNumber = getPhoneNumberValue();
+    setFormData((FormData) => ({
+      ...FormData,
+      phoneNumber: phoneNumber,
+    }));
+
+    try {
+      const response = await fetch("https://localhost:7049/api/Profile", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        console.log("Profile updated successfully");
+      } else {
+        console.error("Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
+  //change password here
+  const handlePasswordChange = (field, value) => {
+    setPasswordForm({ ...passwordForm, [field]: value });
+  };
+  const handlePasswordSubmit = async () => {
+    console.log("password part here ");
+    if (
+      passwordForm.currentPassword === "" ||
+      passwordForm.newPassword === "" ||
+      passwordForm.newPasswordConfirm === ""
+    ) {
+      setColor("red");
+      setMessage("Fill All Fields");
+      
+    } else if (passwordForm.newPassword != passwordForm.newPasswordConfirm) {
+      setColor("blue");
+      setMessage("Password not match"); 
+      
+    } else {
+      const userId = Cookies.get("user_id");
+      try {
+        const response = await fetch(
+          "https://localhost:7049/api/Password/change-password",
+          {
+            method: "POST",
+            headers: {
+              Authoriazation: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: userId,
+              oldPassword: passwordForm.currentPassword,
+              newPassword: passwordForm.newPassword,
+            }),
+          }
+        );
+        if (response.ok) {
+          setColor("green"); 
+          setMessage( "Password Changed Successfully");
+          
+        } else {
+          setColor("red");
+          setMessage ("Password Not Change");
+        }
+      } catch (error) {
+        setColor("red");
+        setMessage (error);
+        console.error("error", error);
+      }
+    }
+  };
+  const [file, setFile] = useState(null);
+  const handleFileChange = async (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Create a new FormData object
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // Send the POST request to the server
+    try {
+      const response = await fetch(
+        "https://localhost:7049/api/Profile/updatePicture",
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData,
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+
+        setPhotoUrl(
+          `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
+        );
+        console.log("Photo uploaded successfully");
+      } else {
+        console.error("Failed to upload photo");
+      }
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+    }
+  };
   return (
     <Layout>
       <link rel="stylesheet" href="/css/edit-profile.css" />
@@ -20,7 +206,7 @@ export default function Edit_profile() {
             </div>
           </div>
           <div className="site-mobile-menu-body" />
-        </div>{' '}
+        </div>{" "}
         {/* .site-mobile-menu */}
         {/* NAVBAR */}
         <header className="site-navbar mt-3">
@@ -32,7 +218,7 @@ export default function Edit_profile() {
               <nav className="mx-auto site-navigation">
                 <ul className="site-menu js-clone-nav d-none d-xl-block ml-0 pl-0">
                   <li>
-                  <Link href="/job">Home</Link>
+                    <Link href="/job">Home</Link>
                   </li>
                   <li>
                     <Link href="/about">About</Link>
@@ -49,70 +235,77 @@ export default function Edit_profile() {
                     </ul>
                   </li>
                   <li className="has-children">
-                  <Link href="/service">Pages</Link>
+                    <Link href="/service">Pages</Link>
                     <ul className="dropdown">
                       <li>
-                      <Link href="/service">Services</Link>
+                        <Link href="/service">Services</Link>
                       </li>
                       <li>
-                      <Link href="/service-single">Service Single</Link>
+                        <Link href="/service-single">Service Single</Link>
                       </li>
                       <li>
-                      <Link href="/blog-single">Blog Single</Link>
+                        <Link href="/blog-single">Blog Single</Link>
                       </li>
                       <li>
-                      <Link href="/portfolio">Portfolio</Link>
+                        <Link href="/portfolio">Portfolio</Link>
                       </li>
                       <li>
-                      <Link href="/portfolio-single">Portfolio Single</Link>
+                        <Link href="/portfolio-single">Portfolio Single</Link>
                       </li>
                       <li>
-                      <Link href="/testimonials">Testimonials</Link>
+                        <Link href="/testimonials">Testimonials</Link>
                       </li>
                       <li>
-                      <Link href="/faq">Frequently Ask Questions</Link>
+                        <Link href="/faq">Frequently Ask Questions</Link>
                       </li>
                       <li>
-                      <Link href="/gallery">Gallery</Link>
+                        <Link href="/gallery">Gallery</Link>
                       </li>
                     </ul>
                   </li>
                   <li>
-                  <Link href="/blog">Blog</Link>
+                    <Link href="/blog">Blog</Link>
                   </li>
                   <li>
-                  <Link href="/contact">Contact</Link>
+                    <Link href="/contact">Contact</Link>
                   </li>
                   <li className="d-lg-none">
-                  <Link href="/post">
-                    <span className="mr-2">+</span>
-                   </Link>
+                    <Link href="/post">
+                      <span className="mr-2">+</span>
+                    </Link>
                   </li>
                   <li className="d-lg-none">
-                  <Link href="/login">Log In</Link>
+                    <Link href="/login">Log In</Link>
                   </li>
                 </ul>
               </nav>
               <div className="right-cta-menu text-right d-flex aligin-items-center col-6">
                 <div className="ml-auto">
-                  <Link href="/post"
-                  className="btn btn-outline-white border-width-2 d-none d-lg-inline-block">
+                  <Link
+                    href="/post"
+                    className="btn btn-outline-white border-width-2 d-none d-lg-inline-block"
+                  >
                     <span className="mr-2 icon-add" />
-                  Post a Job
+                    Post a Job
                   </Link>
-                  <Link href="/login"
-                     className="btn btn-primary border-width-2 d-none d-lg-inline-block">
-                       <span className="mr-2 icon-lock_outline" />
-                     Log In
-                 </Link>
+                  <Link
+                    href="/login"
+                    className="btn btn-primary border-width-2 d-none d-lg-inline-block"
+                  >
+                    <span className="mr-2 icon-lock_outline" />
+                    Log In
+                  </Link>
                 </div>
-                    {/* <a
+                {/* <a
                   href="#"
                   className="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3"
                 >
                   <span className="icon-menu h3 m-0 p-0 mt-2" />
                 </a> */}
-                <Link href="" className="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3">
+                <Link
+                  href=""
+                  className="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3"
+                >
                   <span className="icon-menu h3 m-0 p-0 mt-2" />
                 </Link>
               </div>
@@ -198,19 +391,16 @@ export default function Edit_profile() {
                     id="account-general"
                   >
                     <div className="card-body media align-items-center">
-                      <img
-                        src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
-                        alt=""
-                        className="d-block ui-w-80"
-                      />
+                      <img src={imageURL} alt="" className="d-block ui-w-80" />
                       <div className="media-body ml-4">
                         <label className="btn btn-outline-primary">
                           Upload new photo
                           <input
                             type="file"
                             className="account-settings-fileinput"
+                            onChange={handleFileChange}
                           />
-                        </label>{' '}
+                        </label>{" "}
                         &nbsp;
                         <button
                           type="button"
@@ -231,61 +421,176 @@ export default function Edit_profile() {
                             <div className="company-name">
                               <label htmlFor="company-name">name</label>
                               <br />
-                              <input id="company-name" type="text" />
+                              <input
+                                id="company-name"
+                                type="text"
+                                value={formData.companyName}
+                                onChange={(e) =>
+                                  handleChange("companyName", e.target.value)
+                                }
+                              />
                             </div>
                             <div className="type_">
                               <label htmlFor="type_">type</label>
                               <br />
-                              <input type="text" id="type_" />
+                              <input
+                                type="text"
+                                id="type_"
+                                value={formData.type}
+                                onChange={(e) =>
+                                  handleChange("type", e.target.value)
+                                }
+                              />
                             </div>
                           </div>
                           <div className="overview">
                             <label htmlFor="overview">overview</label>
                             <br />
-                            <textarea className="overview_" defaultValue={''} />
+                            <textarea
+                              className="overview_"
+                              defaultValue={""}
+                              value={formData.overview}
+                              onChange={(e) =>
+                                handleChange("overview", e.target.value)
+                              }
+                            />
                           </div>
                           <div className="website_">
                             <label htmlFor="website_">Website</label>
                             <br />
-                            <input type="text" id="website_" />
+                            <input
+                              type="text"
+                              id="website_"
+                              value={formData.website}
+                              onChange={(e) =>
+                                handleChange("website", e.target.value)
+                              }
+                            />
                           </div>
                           {/* <div className="phone-company"> */}
                           <label htmlFor="phone">phone number</label>
-                          <br />
-                          <Phone />
+
+                          <Phone
+                            value={formData.phoneNumber}
+                            // onChange={(e) =>
+                            //   handleChange("phoneNumber", e.target.value)
+                            // }
+                          />
                           {/* </div> */}
                           <div className="size-founded">
                             <div className="size_">
                               <label htmlFor="size_">size</label>
                               <br />
-                              <input type="text" id="size_" />
+                              <input
+                                type="text"
+                                id="size_"
+                                value={formData.size}
+                                onChange={(e) =>
+                                  handleChange("size", e.target.value)
+                                }
+                              />
                             </div>
                             <div className="founded_">
                               <label htmlFor="founded_">founded</label>
                               <br />
-                              <input type="month" id="founded_" />
+                              <input
+                                type="year"
+                                id="founded_"
+                                value={formData.founded}
+                                onChange={(e) =>
+                                  handleChange("founded", e.target.value)
+                                }
+                              />
                             </div>
                           </div>
+                        </div>
+                        <div className="text-right mt-3">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleDataSubmit}
+                          >
+                            Save Changes
+                          </button>
+                          &nbsp;
+                          <button type="button" className="btn btn-default">
+                            Cancel
+                          </button>
                         </div>
                       </form>
                     </div>
                   </div>
                   <div className="tab-pane fade" id="account-change-password">
                     <div className="card-body pb-2">
-                      <div className="form-group-">
-                        <label className="form-label-">Current password</label>
-                        <input type="password" className="form-control" />
-                      </div>
-                      <div className="form-group-">
-                        <label className="form-label">New password</label>
-                        <input type="password" className="form-control" />
-                      </div>
-                      <div className="form-group-">
-                        <label className="form-label-">
-                          Repeat new password
-                        </label>
-                        <input type="password" className="form-control" />
-                      </div>
+                      <form>
+                        <div className="form-group-">
+                          <label className="form-label-">
+                            Current password
+                          </label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            onChange={(e) =>
+                              handlePasswordChange(
+                                "currentPassword",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label">New password</label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            onChange={(e) =>
+                              handlePasswordChange(
+                                "newPassword",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label-">
+                            Repeat new password
+                          </label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            onChange={(e) =>
+                              handlePasswordChange(
+                                "newPasswordConfirm",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="text-right mt-3">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handlePasswordSubmit}
+                          >
+                            Change Password
+                          </button>
+                          &nbsp;
+                          <button type="button" className="btn btn-default">
+                            Cancel
+                          </button>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: color,
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {message}
+                        </div>
+                      </form>
                     </div>
                   </div>
                   <div className="tab-pane fade" id="account-info">
@@ -296,7 +601,7 @@ export default function Edit_profile() {
                           className="form-control"
                           rows={5}
                           defaultValue={
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus.'
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus."
                           }
                         />
                       </div>
@@ -524,15 +829,6 @@ export default function Edit_profile() {
               </div>
             </div>
           </div>
-          <div className="text-right mt-3">
-            <button type="button" className="btn btn-primary">
-              Save changes
-            </button>
-            &nbsp;
-            <button type="button" className="btn btn-default">
-              Cancel
-            </button>
-          </div>
         </div>
         <footer className="site-footer">
           <a href="#top" className="smoothscroll scroll-top">
@@ -615,7 +911,6 @@ export default function Edit_profile() {
           </div>
         </footer>
       </div>
-
     </Layout>
   );
 }

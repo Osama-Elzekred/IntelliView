@@ -8,6 +8,7 @@ let signinbtn = document.getElementById("signinbtn");
 function flipped_face() {
   signupForm.reset();
   loginForm.reset();
+  messageOfWrong.style.display = "none";
   var face_ = document.getElementById("face");
   face_.classList.toggle("flipped");
 }
@@ -134,7 +135,7 @@ loginForm.addEventListener("submit", function (e) {
           document.cookie = `authToken=${data.token};path=/`;
           document.cookie = `user_id=${data.id};path=/`;
           localStorage.setItem("roleFromServer", data.roles);
-          window.location.href = `profile.html?username=${username}`;
+          // window.location.href = `profile.html?username=${username}`;
           console.log(data);
         } else if (data.message) {
           messageOfWrong.textContent = `${data.message}`;
@@ -170,7 +171,7 @@ let roleForm = document.getElementById("role");
 let personBtn = document.getElementById("person");
 let companyBtn = document.getElementById("company");
 var role = "User";
-localStorage.setItem("role", role);
+localStorage.setItem("roleToServer", role);
 if (roleForm) {
   roleForm.addEventListener("click", function (e) {
     var clickedBtn = e.target;
@@ -225,7 +226,7 @@ signupForm.addEventListener("submit", function (e) {
         email: email,
         username: username,
         password,
-        role: localStorage.getItem("role"),
+        role: localStorage.getItem("roleToServer"),
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
@@ -239,7 +240,8 @@ signupForm.addEventListener("submit", function (e) {
           document.cookie = `authToken=${data.token};path=/`;
           document.cookie = `user_id=${data.id};path=/`;
           localStorage.setItem("roleFromServer", data.roles);
-          window.location.href = `profile.html?username=${username}`;
+          signupForm.reset(); 
+          // window.location.href = `profile.html?username=${username}`;
         } else if (data.message) {
           messageFromServer.textContent = `${data.message}`;
           messageFromServer.style.display = "block";

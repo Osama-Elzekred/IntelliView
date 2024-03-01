@@ -280,7 +280,7 @@ export default function login() {
                       className="button2 button-h"
                     />
                   </form>
-                  <Link href="/forgot-password/forget" className="forget-password">
+                  <Link href="/forget-password/forget" className="forget-password">
                     forget password
                   </Link>
                   <p className="create">

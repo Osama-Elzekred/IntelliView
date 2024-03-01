@@ -1,5 +1,7 @@
 // import { useNavigation } from 'next/navigation';
 import Layout from '../../components/Layout';
+import Link from 'next/link';
+
 export default function Job_details({ params }) {
   console.log(parseInt(params.id));
   return (
@@ -35,8 +37,8 @@ export default function Job_details({ params }) {
                 <div className="col-md-7">
                   <h1 className="text-white font-weight-bold" />
                   <div className="custom-breadcrumbs">
-                    <a href="#">Home</a> <span className="mx-2 slash">/</span>
-                    <a href="#">Job</a> <span className="mx-2 slash">/</span>
+                    <Link href="#">Home</Link> <span className="mx-2 slash">/</span>
+                    <Link href="#">Job</Link> <span className="mx-2 slash">/</span>
                     <span className="text-white">
                       <strong />
                     </span>
@@ -75,15 +77,15 @@ export default function Job_details({ params }) {
                 <div className="col-lg-4">
                   <div className="row">
                     <div className="col-6">
-                      <a href="#" className="btn btn-block btn-light btn-md">
+                      <Link href="#" className="btn btn-block btn-light btn-md">
                         <span className="icon-heart-o mr-2 text-danger" />
                         Save Job
-                      </a>
+                      </Link>
                     </div>
                     <div className="col-6">
-                      <a href="#" className="btn btn-block btn-primary btn-md">
+                      <Link href="#" className="btn btn-block btn-primary btn-md">
                         Apply Now
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -189,15 +191,15 @@ export default function Job_details({ params }) {
                   </div>
                   <div className="row mb-5">
                     <div className="col-6">
-                      <a href="#" className="btn btn-block btn-light btn-md">
+                      <Link href="#" className="btn btn-block btn-light btn-md">
                         <span className="icon-heart-o mr-2 text-danger" />
                         Save Job
-                      </a>
+                      </Link>
                     </div>
                     <div className="col-6">
-                      <a href="#" className="btn btn-block btn-primary btn-md">
+                      <Link href="#" className="btn btn-block btn-primary btn-md">
                         Apply Now
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -246,18 +248,18 @@ export default function Job_details({ params }) {
                   <div className="bg-light p-3 border rounded">
                     <h3 className="text-primary  mt-3 h5 pl-3 mb-3 ">Share</h3>
                     <div className="px-3">
-                      <a href="#" className="pt-3 pb-3 pr-3 pl-0">
+                      <Link href="#" className="pt-3 pb-3 pr-3 pl-0">
                         <span className="icon-facebook" />
-                      </a>
-                      <a href="#" className="pt-3 pb-3 pr-3 pl-0">
+                      </Link>
+                      <Link href="#" className="pt-3 pb-3 pr-3 pl-0">
                         <span className="icon-twitter" />
-                      </a>
-                      <a href="#" className="pt-3 pb-3 pr-3 pl-0">
+                      </Link>
+                      <Link href="#" className="pt-3 pb-3 pr-3 pl-0">
                         <span className="icon-linkedin" />
-                      </a>
-                      <a href="#" className="pt-3 pb-3 pr-3 pl-0">
+                      </Link>
+                      <Link href="#" className="pt-3 pb-3 pr-3 pl-0">
                         <span className="icon-pinterest" />
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -271,9 +273,9 @@ export default function Job_details({ params }) {
                   <h2 className="section-title mb-2">22,392 Related Jobs</h2>
                 </div>
               </div>
-              <ul className="job-listings mb-5">
+              <ul className="job mb-5">
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_1.jpg"
@@ -295,7 +297,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_2.jpg"
@@ -317,7 +319,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_3.jpg"
@@ -339,7 +341,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_4.jpg"
@@ -361,7 +363,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_5.jpg"
@@ -383,7 +385,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_1.jpg"
@@ -405,7 +407,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_2.jpg"
@@ -433,20 +435,20 @@ export default function Job_details({ params }) {
                 </div>
                 <div className="col-md-6 text-center text-md-right">
                   <div className="custom-pagination ml-auto">
-                    <a href="#" className="prev">
+                    <Link href="#" className="prev">
                       Prev
-                    </a>
+                    </Link>
                     <div className="d-inline-block">
-                      <a href="#" className="active">
+                      <Link href="#" className="active">
                         1
-                      </a>
-                      <a href="#">2</a>
-                      <a href="#">3</a>
-                      <a href="#">4</a>
+                      </Link>
+                      <Link href="#">2</Link>
+                      <Link href="#">3</Link>
+                      <Link href="#">4</Link>
                     </div>
-                    <a href="#" className="next">
+                    <Link href="#" className="next">
                       Next
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -517,20 +519,21 @@ export default function Job_details({ params }) {
                     tempora adipisci impedit.
                   </p>
                   <p className="mb-0">
-                    <a
+                    <Link
                       href="#"
                       className="btn btn-dark btn-md px-4 border-width-2"
                     >
-                      <span className="icon-apple mr-3" />
+                    <span className="icon-apple mr-3" />
                       App Store
-                    </a>
-                    <a
+                    </Link>
+                    <span> </span>
+                    <Link
                       href="#"
                       className="btn btn-dark btn-md px-4 border-width-2"
                     >
                       <span className="icon-android mr-3" />
                       Play Store
-                    </a>
+                    </Link>
                   </p>
                 </div>
                 <div className="col-md-6 ml-auto align-self-end">

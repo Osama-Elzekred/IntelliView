@@ -1,14 +1,16 @@
 import Layout from '../components/Layout';
+import Link from 'next/link';
+
 export default function Jobs() {
   return (
     <Layout>
       <>
-        <div id="overlayer" />
-        <div className="loader">
+        {/* <div id="overlayer" /> */}
+        {/* <div className="loader">
           <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
           </div>
-        </div>
+        </div> */}
         <div className="site-wrap">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">
@@ -84,19 +86,19 @@ export default function Jobs() {
                         <h3>Trending Keywords:</h3>
                         <ul className="keywords list-unstyled m-0 p-0">
                           <li>
-                            <a href="#" className="">
+                            <Link href="#" className="">
                               UI Designer
-                            </a>
+                            </Link>
                           </li>
                           <li>
-                            <a href="#" className="">
+                            <Link href="#" className="">
                               Python
-                            </a>
+                            </Link>
                           </li>
                           <li>
-                            <a href="#" className="">
+                            <Link href="#" className="">
                               Developer
-                            </a>
+                            </Link>
                           </li>
                         </ul>
                       </div>
@@ -105,9 +107,9 @@ export default function Jobs() {
                 </div>
               </div>
             </div>
-            <a href="#next" className="scroll-button smoothscroll">
+            <Link href="#next" className="scroll-button smoothscroll">
+            </Link>
               <span className=" icon-keyboard_arrow_down" />
-            </a>
           </section>
           <section className="site-section" id="next">
             <div className="container">
@@ -116,10 +118,10 @@ export default function Jobs() {
                   <h2 className="section-title mb-2">43,167 Job Listed</h2>
                 </div>
               </div>
-              <ul className="job-listings mb-5" id="jobListings">
+              <ul className="job mb-5" id="jobListings">
                 {/* Job listings will be dynamically added here */}
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="images/job_logo_1.jpg"
@@ -141,7 +143,7 @@ export default function Jobs() {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="images/job_logo_2.jpg"
@@ -186,12 +188,10 @@ export default function Jobs() {
                   <p className="mb-0 text-white lead"> Find your dream job.</p>
                 </div>
                 <div className="col-md-3 ml-auto">
-                  <a
-                    href="login.html"
-                    className="btn btn-warning btn-block btn-lg"
-                  >
+                  <Link href="/login"
+                    className="btn btn-warning btn-block btn-lg">
                     Sign Up
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

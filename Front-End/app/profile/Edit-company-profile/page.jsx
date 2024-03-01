@@ -224,7 +224,7 @@ export default function EditProfile() {
                     <Link href="/about">About</Link>
                   </li>
                   <li className="has-children">
-                    <Link href="/job/job-listings">Job Listings</Link>
+                    <Link href="/job/job">Job Listings</Link>
                     <ul className="dropdown">
                       <li>
                         <Link href="/job/id">Job Single</Link>
@@ -326,7 +326,7 @@ export default function EditProfile() {
               <div className="col-md-7">
                 <h1 className="text-white font-weight-bold">Edit Profile</h1>
                 <div className="custom-breadcrumbs">
-                  <a href="#">Home</a> <span className="mx-2 slash">/</span>
+                  <Link href="#">Home</Link> <span className="mx-2 slash">/</span>
                   <span className="text-white">
                     <strong>Edit Peofile</strong>
                   </span>
@@ -340,48 +340,48 @@ export default function EditProfile() {
             <div className="row no-gutters row-bordered row-border-light">
               <div className="col-md-3 pt-0">
                 <div className="list-group list-group-flush account-settings-links">
-                  <a
+                  <Link
                     className="list-group-item list-group-item-action active"
                     data-toggle="list"
                     href="#account-general"
                   >
                     General
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-change-password"
                   >
                     Change password
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-info"
                   >
                     Info
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-social-links"
                   >
                     Social links
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-connections"
                   >
                     Connections
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-notifications"
                   >
                     Notifications
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="col-md-9">
@@ -698,22 +698,22 @@ export default function EditProfile() {
                     <hr className="border-light m-0" />
                     <div className="card-body">
                       <h5 className="mb-2">
-                        <a
+                        <Link
                           href="javascript:void(0)"
                           className="float-right text-muted text-tiny"
                         >
                           <i className="ion ion-md-close" /> Remove
-                        </a>
+                        </Link>
                         <i className="ion ion-logo-google text-google" />
                         You are connected to Google:
                       </h5>
-                      <a
+                      <Link
                         href="/cdn-cgi/l/email-protection"
                         className="__cf_email__"
                         data-cfemail="523c3f332a25373e3e123f333b3e7c313d3f"
                       >
                         [email&nbsp;protected]
-                      </a>
+                      </Link>
                     </div>
                     <hr className="border-light m-0" />
                     <div className="card-body">
@@ -831,31 +831,31 @@ export default function EditProfile() {
           </div>
         </div>
         <footer className="site-footer">
-          <a href="#top" className="smoothscroll scroll-top">
+          <Link href="#top" className="smoothscroll scroll-top">
             <span className="icon-keyboard_arrow_up" />
-          </a>
+          </Link>
           <div className="container">
             <div className="row mb-5">
               <div className="col-6 col-md-3 mb-4 mb-md-0">
                 <h3>Search Trending</h3>
                 <ul className="list-unstyled">
                   <li>
-                    <a href="#">Web Design</a>
+                    <Link href="#">Web Design</Link>
                   </li>
                   <li>
-                    <a href="#">Graphic Design</a>
+                    <Link href="#">Graphic Design</Link>
                   </li>
                   <li>
-                    <a href="#">Web Developers</a>
+                    <Link href="#">Web Developers</Link>
                   </li>
                   <li>
-                    <a href="#">Python</a>
+                    <Link href="#">Python</Link>
                   </li>
                   <li>
-                    <a href="#">HTML5</a>
+                    <Link href="#">HTML5</Link>
                   </li>
                   <li>
-                    <a href="#">CSS3</a>
+                    <Link href="#">CSS3</Link>
                   </li>
                 </ul>
               </div>
@@ -863,16 +863,16 @@ export default function EditProfile() {
                 <h3>Company</h3>
                 <ul className="list-unstyled">
                   <li>
-                    <a href="#">About Us</a>
+                    <Link href="#">About Us</Link>
                   </li>
                   <li>
-                    <a href="#">Career</a>
+                    <Link href="#">Career</Link>
                   </li>
                   <li>
-                    <a href="#">Blog</a>
+                    <Link href="#">Blog</Link>
                   </li>
                   <li>
-                    <a href="#">Resources</a>
+                    <Link href="#">Resources</Link>
                   </li>
                 </ul>
               </div>
@@ -880,31 +880,31 @@ export default function EditProfile() {
                 <h3>Support</h3>
                 <ul className="list-unstyled">
                   <li>
-                    <a href="#">Support</a>
+                    <Link href="#">Support</Link>
                   </li>
                   <li>
-                    <a href="#">Privacy</a>
+                    <Link href="#">Privacy</Link>
                   </li>
                   <li>
-                    <a href="#">Terms of Service</a>
+                    <Link href="#">Terms of Service</Link>
                   </li>
                 </ul>
               </div>
               <div className="col-6 col-md-3 mb-4 mb-md-0">
                 <h3>Contact Us</h3>
                 <div className="footer-social">
-                  <a href="#">
+                  <Link href="#">
                     <span className="icon-facebook" />
-                  </a>
-                  <a href="#">
+                  </Link>
+                  <Link href="#">
                     <span className="icon-twitter" />
-                  </a>
-                  <a href="#">
+                  </Link>
+                  <Link href="#">
                     <span className="icon-instagram" />
-                  </a>
-                  <a href="#">
+                  </Link>
+                  <Link href="#">
                     <span className="icon-linkedin" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

@@ -17,7 +17,7 @@ export default function Header() {
                 <Link href="/about">About</Link>
               </li>
               <li className="has-children">
-                <Link href="/job-listings">Job Listings</Link>
+                <Link href="/job">Jobs</Link>
                 <ul className="dropdown">
                   <li>
                     <Link href="/id">Job Single</Link>
@@ -25,6 +25,10 @@ export default function Header() {
                   <li>
                     <Link href="/post">Post a Job</Link>
                   </li>
+                  <li>
+                    <Link href="/job/job-company">Job of Company</Link>
+                  </li>
+                  
                 </ul>
               </li>
               <li className="has-children">

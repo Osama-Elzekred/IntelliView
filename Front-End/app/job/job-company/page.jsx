@@ -48,9 +48,6 @@ export default function JobList() {
           </div>{' '}
           {/* .site-mobile-menu */}
           {/* NAVBAR */}
-          <header className="site-navbar mt-3">
-            <div id="header-content" />
-          </header>
           {/* HOME */}
           <section
             className="section-hero home-section overlay inner-page bg-image"

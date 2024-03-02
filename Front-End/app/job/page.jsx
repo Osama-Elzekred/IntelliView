@@ -22,9 +22,6 @@ export default function Jobs() {
           </div>{' '}
           {/* .site-mobile-menu */}
           {/* NAVBAR */}
-          <header className="site-navbar mt-3">
-            <div id="header-content" />
-          </header>
           {/* HOME */}
           <section
             className="section-hero home-section overlay inner-page bg-image"
@@ -107,9 +104,8 @@ export default function Jobs() {
                 </div>
               </div>
             </div>
-            <Link href="#next" className="scroll-button smoothscroll">
-            </Link>
-              <span className=" icon-keyboard_arrow_down" />
+            <Link href="#next" className="scroll-button smoothscroll"></Link>
+            <span className=" icon-keyboard_arrow_down" />
           </section>
           <section className="site-section" id="next">
             <div className="container">
@@ -121,7 +117,7 @@ export default function Jobs() {
               <ul className="job mb-5" id="jobListings">
                 {/* Job listings will be dynamically added here */}
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                <Link href="/job/id"></Link>
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="images/job_logo_1.jpg"
@@ -143,10 +139,10 @@ export default function Jobs() {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                <Link href="/job/id"></Link>
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
-                      src="images/job_logo_2.jpg"
+                      src="/images/job_logo_2.jpg"
                       alt="Image"
                       className="img-fluid"
                     />
@@ -179,7 +175,7 @@ export default function Jobs() {
           </section>
           <section
             className="py-5 bg-image overlay-primary fixed overlay"
-            style={{ backgroundImage: 'url("images/background.jpg")' }}
+            style={{ backgroundImage: 'url("/images/background.jpg")' }}
           >
             <div className="container">
               <div className="row align-items-center">
@@ -188,8 +184,10 @@ export default function Jobs() {
                   <p className="mb-0 text-white lead"> Find your dream job.</p>
                 </div>
                 <div className="col-md-3 ml-auto">
-                  <Link href="/login"
-                    className="btn btn-warning btn-block btn-lg">
+                  <Link
+                    href="/login"
+                    className="btn btn-warning btn-block btn-lg"
+                  >
                     Sign Up
                   </Link>
                 </div>

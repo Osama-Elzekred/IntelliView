@@ -24,9 +24,6 @@ const CompanyDetails = () => {
           <div className="site-mobile-menu-body"></div>
         </div> {/* .site-mobile-menu */}
         {/* NAVBAR */}
-        <header className="site-navbar mt-3">
-          <div id="header-content"></div>
-        </header>
         {/* HOME */}
         <section className="section-hero overlay inner-page bg-image" style={{ backgroundImage: "url('/images/ai-background-business-technology-digital-transformation.jpg')" }} id="home-section">
           <div className="container">

@@ -12,6 +12,7 @@ namespace ANWAAR.CORE
             //CreateMap<ProductCategory, ProductVM>().ReverseMap();
             //CreateMap<Product, ProductVM>();
             CreateMap<Job, AddJobDTO>().ReverseMap();
+            CreateMap<Job, JobDTO>().ReverseMap();
             CreateMap<UpdateJobDTO, Job>().ReverseMap();
             CreateMap<CompanyUser, ProfileDTO>().ReverseMap();
             CreateMap<IndividualUser, ProfileDTO>().ReverseMap();

@@ -183,6 +183,7 @@ namespace IntelliView.API.Controllers
                 return NotFound("Company not found");
             }
             JobDto.ImageURl = company.ImageURl;
+            JobDto.companyName = company.CompanyName;
             return Ok(JobDto);
         }
         [HttpGet("CompanyJobs")]

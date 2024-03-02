@@ -26,6 +26,8 @@ namespace IntelliView.Models.DTO
 
         public string? Benefits { get; set; } = string.Empty;
 
+        public string? companyName { get; set;}=string.Empty;
+
         public string? Notes { get; set; } = string.Empty;
 
         //[Range(0, double.MaxValue, ErrorMessage = "Salary must be a non-negative value")]

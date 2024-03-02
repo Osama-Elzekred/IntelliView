@@ -94,7 +94,7 @@ export default function Header() {
           <div className="right-cta-menu text-right d-flex aligin-items-center col-6">
             <div className="ml-auto">
               <Link
-                href="/post"
+                href="job/post"
                 className="btn btn-outline-white border-width-2 d-none d-lg-inline-block"
                 replace
               >

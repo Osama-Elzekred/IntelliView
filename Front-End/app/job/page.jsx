@@ -1,18 +1,18 @@
-"use client";
-import Layout from "../components/Layout";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+'use client';
+import Layout from '../components/Layout';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 
 export default function Jobs() {
-  const imageSrc= "images/job_logo_1.jpg"; 
+  const imageSrc = 'images/job_logo_1.jpg';
   const [jobListings, setJobListings] = useState([]);
   useEffect(() => {
     const fetchJobs = async () => {
-      const authToken = Cookies.get("authToken");
+      const authToken = Cookies.get('authToken');
       try {
-        const response = await fetch("https://localhost:7049/api/Job/GetAll", {
-          method: "GET",
+        const response = await fetch('https://localhost:7049/api/Job/GetAll', {
+          method: 'GET',
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
@@ -22,7 +22,7 @@ export default function Jobs() {
           setJobListings(jobs);
         }
       } catch (error) {
-        console.log("error : ", error);
+        console.log('error : ', error);
       }
     };
     fetchJobs();
@@ -38,12 +38,9 @@ export default function Jobs() {
               </div>
             </div>
             <div className="site-mobile-menu-body" />
-          </div>{" "}
+          </div>{' '}
           {/* .site-mobile-menu */}
           {/* NAVBAR */}
-          <header className="site-navbar mt-3">
-            <div id="header-content" />
-          </header>
           {/* HOME */}
           <section
             className="section-hero home-section overlay inner-page bg-image"
@@ -154,9 +151,9 @@ export default function Jobs() {
                         <div className="job-listing-meta">
                           <span
                             className={`badge ${
-                              job.type === "Part-time"
-                                ? "badge-danger"
-                                : "badge-success"
+                              job.type === 'Part-time'
+                                ? 'badge-danger'
+                                : 'badge-success'
                             }`}
                           >
                             {job.type}
@@ -181,7 +178,7 @@ export default function Jobs() {
           </section>
           <section
             className="py-5 bg-image overlay-primary fixed overlay"
-            style={{ backgroundImage: 'url("images/background.jpg")' }}
+            style={{ backgroundImage: 'url("/images/background.jpg")' }}
           >
             <div className="container">
               <div className="row align-items-center">

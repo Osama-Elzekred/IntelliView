@@ -1,9 +1,39 @@
 // import { useNavigation } from 'next/navigation';
+"use client";
 import Layout from '../../components/Layout';
 import Link from 'next/link';
+import { useEffect ,useState} from 'react';
+
+const DOMAIN_NAME = "localhost:7049";
 
 export default function Job_details({ params }) {
   console.log(parseInt(params.id));
+
+  // const resp =[{item: 'aaaa'
+  // }]
+    const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`https://${DOMAIN_NAME}/api/job/`+ params.id);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  // useEffect(()=>{
+  //   const response = ()=>{
+  //     setData(resp)
+  //   }
+  //   response()
+  // },[])
   return (
     <Layout>
       <>
@@ -104,6 +134,7 @@ export default function Job_details({ params }) {
                       <span className="icon-align-left mr-3" />
                       Job Description
                     </h3>
+                    {/* {data.description} */}
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -111,27 +142,13 @@ export default function Job_details({ params }) {
                       Responsibilities
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      <li className="d-flex align-items-start mb-2">
+                    {data.map((item, index) => (
+                      <li key={index} className="d-flex align-items-start mb-2">
                         <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
+                        <span>{item.item}</span> {/* Assuming each item is a string */}
                       </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                    </ul>
+                    ))}
+                  </ul>
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -139,27 +156,13 @@ export default function Job_details({ params }) {
                       Education + Experience
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      <li className="d-flex align-items-start mb-2">
+                    {data.map((item, index) => (
+                      <li key={index} className="d-flex align-items-start mb-2">
                         <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
+                        <span>{item.item}</span> {/* Assuming each item is a string */}
                       </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                    </ul>
+                    ))}
+                  </ul>
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -167,27 +170,13 @@ export default function Job_details({ params }) {
                       Other Benifits
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      <li className="d-flex align-items-start mb-2">
+                    {data.map((item, index) => (
+                      <li key={index} className="d-flex align-items-start mb-2">
                         <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
+                        <span>{item.item}</span> {/* Assuming each item is a string */}
                       </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                    </ul>
+                    ))}
+                  </ul>
                   </div>
                   <div className="row mb-5">
                     <div className="col-6">

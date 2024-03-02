@@ -1,16 +1,35 @@
-import Layout from '../components/Layout';
-import Link from 'next/link';
+"use client";
+import Layout from "../components/Layout";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 export default function Jobs() {
+  const imageSrc= "images/job_logo_1.jpg"; 
+  const [jobListings, setJobListings] = useState([]);
+  useEffect(() => {
+    const fetchJobs = async () => {
+      const authToken = Cookies.get("authToken");
+      try {
+        const response = await fetch("https://localhost:7049/api/Job/GetAll", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        if (response.ok) {
+          const jobs = await response.json();
+          setJobListings(jobs);
+        }
+      } catch (error) {
+        console.log("error : ", error);
+      }
+    };
+    fetchJobs();
+  }, []);
   return (
     <Layout>
       <>
-        {/* <div id="overlayer" /> */}
-        {/* <div className="loader">
-          <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div> */}
         <div className="site-wrap">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">
@@ -19,7 +38,7 @@ export default function Jobs() {
               </div>
             </div>
             <div className="site-mobile-menu-body" />
-          </div>{' '}
+          </div>{" "}
           {/* .site-mobile-menu */}
           {/* NAVBAR */}
           <header className="site-navbar mt-3">
@@ -107,9 +126,8 @@ export default function Jobs() {
                 </div>
               </div>
             </div>
-            <Link href="#next" className="scroll-button smoothscroll">
-            </Link>
-              <span className=" icon-keyboard_arrow_down" />
+            <Link href="#next" className="scroll-button smoothscroll"></Link>
+            <span className=" icon-keyboard_arrow_down" />
           </section>
           <section className="site-section" id="next">
             <div className="container">
@@ -119,51 +137,35 @@ export default function Jobs() {
                 </div>
               </div>
               <ul className="job mb-5" id="jobListings">
-                {/* Job listings will be dynamically added here */}
-                <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                <Link href="/job/id"></Link>
-                  <div className="job-listing-logo">
-                    <img
-                      src="images/job_logo_1.jpg"
-                      alt="Image"
-                      className="img-fluid"
-                    />
-                  </div>
-                  <div className="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
-                    <div className="job-listing-position custom-width w-50 mb-3 mb-sm-0">
-                      <h2>Product Designer</h2>
-                      <strong>Adidas</strong>
-                    </div>
-                    <div className="job-listing-location mb-3 mb-sm-0 custom-width w-25">
-                      <span className="icon-room" /> New York, New York
-                    </div>
-                    <div className="job-listing-meta">
-                      <span className="badge badge-danger">Part Time</span>
-                    </div>
-                  </div>
-                </li>
-                <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                <Link href="/job/id"></Link>
-                  <div className="job-listing-logo">
-                    <img
-                      src="images/job_logo_2.jpg"
-                      alt="Image"
-                      className="img-fluid"
-                    />
-                  </div>
-                  <div className="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
-                    <div className="job-listing-position custom-width w-50 mb-3 mb-sm-0">
-                      <h2>Digital Marketing Director</h2>
-                      <strong>Sprint</strong>
-                    </div>
-                    <div className="job-listing-location mb-3 mb-sm-0 custom-width w-25">
-                      <span className="icon-room" /> Overland Park, Kansas
-                    </div>
-                    <div className="job-listing-meta">
-                      <span className="badge badge-success">Full Time</span>
-                    </div>
-                  </div>
-                </li>
+                {jobListings.map((job, index) => (
+                  <Link key={index} href={`/job/${job.id}`}>
+                    <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+                      <div className="job-listing-logo">
+                        <img src={imageSrc} alt="Image" className="img-fluid" />
+                      </div>
+                      <div className="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+                        <div className="job-listing-position custom-width w-50 mb-3 mb-sm-0">
+                          <h2>{job.title}</h2>
+                          <strong>{job.company}</strong>
+                        </div>
+                        <div className="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                          <span className="icon-room" /> {job.location}
+                        </div>
+                        <div className="job-listing-meta">
+                          <span
+                            className={`badge ${
+                              job.type === "Part-time"
+                                ? "badge-danger"
+                                : "badge-success"
+                            }`}
+                          >
+                            {job.type}
+                          </span>
+                        </div>
+                      </div>
+                    </li>
+                  </Link>
+                ))}
               </ul>
               <div className="row pagination-wrap">
                 <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
@@ -188,8 +190,10 @@ export default function Jobs() {
                   <p className="mb-0 text-white lead"> Find your dream job.</p>
                 </div>
                 <div className="col-md-3 ml-auto">
-                  <Link href="/login"
-                    className="btn btn-warning btn-block btn-lg">
+                  <Link
+                    href="/login"
+                    className="btn btn-warning btn-block btn-lg"
+                  >
                     Sign Up
                   </Link>
                 </div>

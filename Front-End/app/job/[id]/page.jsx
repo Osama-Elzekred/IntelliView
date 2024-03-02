@@ -98,7 +98,7 @@ export default function Job_details({ params }) {
                       <div>
                         <span className="ml-0 mr-2 mb-2">
                           <span className="icon-briefcase mr-2" />
-                          Puma
+                          {data.comopanyName}
                         </span>
                         <span className="m-2">
                           <span className="icon-room mr-2" />
@@ -387,7 +387,7 @@ export default function Job_details({ params }) {
                   <div className="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
                     <div className="job-listing-position custom-width w-50 mb-3 mb-sm-0">
                       <h2>Product Designer</h2>
-                      <strong>Puma</strong>
+                      <strong>{data.companyName}</strong>
                     </div>
                     <div className="job-listing-location mb-3 mb-sm-0 custom-width w-25">
                       <span className="icon-room" /> San Mateo, CA

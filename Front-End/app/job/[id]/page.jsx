@@ -1,39 +1,43 @@
 // import { useNavigation } from 'next/navigation';
 "use client";
-import Layout from '../../components/Layout';
-import Link from 'next/link';
-import { useEffect ,useState} from 'react';
+import Cookies from "js-cookie";
+import Layout from "../../components/Layout";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const DOMAIN_NAME = "localhost:7049";
 
 export default function Job_details({ params }) {
   console.log(parseInt(params.id));
-
-  // const resp =[{item: 'aaaa'
-  // }]
-    const [data, setData] = useState([]);
+  const authToken = Cookies.get("authToken");
+  const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`https://${DOMAIN_NAME}/api/job/`+ params.id);
+        const response = await fetch(
+          `https://${DOMAIN_NAME}/api/job/` + params.id,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const result = await response.json();
         setData(result);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
   }, []);
-  // useEffect(()=>{
-  //   const response = ()=>{
-  //     setData(resp)
-  //   }
-  //   response()
-  // },[])
+
+  const dataArray = Object.keys(data).length > 0 ? [data] : [];
+  console.log(dataArray); 
   return (
     <Layout>
       <>
@@ -51,14 +55,13 @@ export default function Job_details({ params }) {
               </div>
             </div>
             <div className="site-mobile-menu-body" />
-          </div>{' '}
+          </div>{" "}
           {/* .site-mobile-menu */}
           {/* HOME */}
           <section
             className="section-hero overlay inner-page bg-image"
             style={{
-              backgroundImage:
-                'url("/images/hero_1.jpg")',
+              backgroundImage: 'url("/images/hero_1.jpg")',
             }}
             id="home-section"
           >
@@ -67,8 +70,10 @@ export default function Job_details({ params }) {
                 <div className="col-md-7">
                   <h1 className="text-white font-weight-bold" />
                   <div className="custom-breadcrumbs">
-                    <Link href="#">Home</Link> <span className="mx-2 slash">/</span>
-                    <Link href="#">Job</Link> <span className="mx-2 slash">/</span>
+                    <Link href="#">Home</Link>{" "}
+                    <span className="mx-2 slash">/</span>
+                    <Link href="#">Job</Link>{" "}
+                    <span className="mx-2 slash">/</span>
                     <span className="text-white">
                       <strong />
                     </span>
@@ -86,7 +91,10 @@ export default function Job_details({ params }) {
                       <img src="/images/job_logo_5.jpg" alt="Image" />
                     </div>
                     <div>
-                      <h2>Product Designer</h2>
+                      {dataArray.map((item) => (
+                        
+                        <h2>{item.title}</h2>
+                      ))}
                       <div>
                         <span className="ml-0 mr-2 mb-2">
                           <span className="icon-briefcase mr-2" />
@@ -113,7 +121,10 @@ export default function Job_details({ params }) {
                       </Link>
                     </div>
                     <div className="col-6">
-                      <Link href="#" className="btn btn-block btn-primary btn-md">
+                      <Link
+                        href="#"
+                        className="btn btn-block btn-primary btn-md"
+                      >
                         Apply Now
                       </Link>
                     </div>
@@ -134,7 +145,9 @@ export default function Job_details({ params }) {
                       <span className="icon-align-left mr-3" />
                       Job Description
                     </h3>
-                    {/* {data.description} */}
+                  {dataArray.map((item) => (
+                    <span>{item.description}</span>
+                  ))}
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -142,13 +155,17 @@ export default function Job_details({ params }) {
                       Responsibilities
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                    {data.map((item, index) => (
-                      <li key={index} className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span>{item.item}</span> {/* Assuming each item is a string */}
-                      </li>
-                    ))}
-                  </ul>
+                      {dataArray.map((item) => (
+                        <li
+                          key={item}
+                          className="d-flex align-items-start mb-2"
+                        >
+                          <span className="icon-check_circle mr-2 text-muted" />
+                          <span>{item.title}</span>{" "}
+                          {/* Assuming each item is a string */}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -156,13 +173,17 @@ export default function Job_details({ params }) {
                       Education + Experience
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                    {data.map((item, index) => (
-                      <li key={index} className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span>{item.item}</span> {/* Assuming each item is a string */}
-                      </li>
-                    ))}
-                  </ul>
+                      {dataArray.map((item) => (
+                        <li
+                          key={item}
+                          className="d-flex align-items-start mb-2"
+                        >
+                          <span className="icon-check_circle mr-2 text-muted" />
+                          <span>Requirements : {item.requirements}</span>{" "}
+                          {/* Assuming each item is a string */}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -170,13 +191,17 @@ export default function Job_details({ params }) {
                       Other Benifits
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                    {data.map((item, index) => (
-                      <li key={index} className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span>{item.item}</span> {/* Assuming each item is a string */}
-                      </li>
-                    ))}
-                  </ul>
+                      {dataArray.map((item) => (
+                        <li
+                          key={item}
+                          className="d-flex align-items-start mb-2"
+                        >
+                          <span className="icon-check_circle mr-2 text-muted" />
+                          <span>{item.item}</span>{" "}
+                          {/* Assuming each item is a string */}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                   <div className="row mb-5">
                     <div className="col-6">
@@ -186,7 +211,10 @@ export default function Job_details({ params }) {
                       </Link>
                     </div>
                     <div className="col-6">
-                      <Link href="#" className="btn btn-block btn-primary btn-md">
+                      <Link
+                        href="#"
+                        className="btn btn-block btn-primary btn-md"
+                      >
                         Apply Now
                       </Link>
                     </div>
@@ -199,7 +227,7 @@ export default function Job_details({ params }) {
                     </h3>
                     <ul className="list-unstyled pl-3 mb-0">
                       <li className="mb-2">
-                        <strong className="text-black">Published on:</strong>{' '}
+                        <strong className="text-black">Published on:</strong>{" "}
                         April 14, 2019
                       </li>
                       <li className="mb-2">
@@ -208,7 +236,7 @@ export default function Job_details({ params }) {
                       <li className="mb-2">
                         <strong className="text-black">
                           Employment Status:
-                        </strong>{' '}
+                        </strong>{" "}
                         Full-time
                       </li>
                       <li className="mb-2">
@@ -216,7 +244,7 @@ export default function Job_details({ params }) {
                         3 year(s)
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">Job Location:</strong>{' '}
+                        <strong className="text-black">Job Location:</strong>{" "}
                         New ork City
                       </li>
                       <li className="mb-2">
@@ -229,7 +257,7 @@ export default function Job_details({ params }) {
                       <li className="mb-2">
                         <strong className="text-black">
                           Application Deadline:
-                        </strong>{' '}
+                        </strong>{" "}
                         April 28, 2019
                       </li>
                     </ul>
@@ -286,7 +314,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                <Link href="/job/id"></Link>
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_2.jpg"
@@ -308,7 +336,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                <Link href="/job/id"></Link>
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_3.jpg"
@@ -330,7 +358,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                <Link href="/job/id"></Link>
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_4.jpg"
@@ -352,7 +380,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                <Link href="/job/id"></Link>
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_5.jpg"
@@ -374,7 +402,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                <Link href="/job/id"></Link>
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_1.jpg"
@@ -396,7 +424,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                <Link href="/job/id"></Link>
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_2.jpg"
@@ -512,7 +540,7 @@ export default function Job_details({ params }) {
                       href="#"
                       className="btn btn-dark btn-md px-4 border-width-2"
                     >
-                    <span className="icon-apple mr-3" />
+                      <span className="icon-apple mr-3" />
                       App Store
                     </Link>
                     <span> </span>

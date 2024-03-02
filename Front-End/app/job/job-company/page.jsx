@@ -31,12 +31,12 @@ export default function JobList() {
   return (
     <Layout>
       <>
-        <div id="overlayer" />
+        {/* <div id="overlayer" />
         <div className="loader">
           <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
           </div>
-        </div>
+        </div> */}
         <div className="site-wrap">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">

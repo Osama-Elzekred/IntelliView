@@ -225,10 +225,11 @@ export default function Job_details({ params }) {
                       Job Summary
                     </h3>
                     <ul className="list-unstyled pl-3 mb-0">
-                      <li className="mb-2">
+                    <li className="mb-2">
                         <strong className="text-black">Published on:</strong>{" "}
-                        {data.createdAt}
-                      </li>
+                        {new Date(data.createdAt).toLocaleString('en-US', 
+                        { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </li>
                       {/* <li className="mb-2">
                         <strong className="text-black">Vacancy:</strong> 20
                       </li> */}
@@ -251,11 +252,10 @@ export default function Job_details({ params }) {
                         {data.salary}
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">
-                          Application Deadline:
-                        </strong>{" "}
-                        {data.endedAt}
-                      </li>
+                        <strong className="text-black">Application DeadLine:</strong>{" "}
+                        {new Date(data.endedAt).toLocaleString('en-US', 
+                        { year: 'numeric', month: 'short', day: 'numeric' })}
+                    </li>
                     </ul>
                   </div>
                   <div className="bg-light p-3 border rounded">

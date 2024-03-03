@@ -7,6 +7,32 @@ import { useEffect, useState } from "react";
 
 const DOMAIN_NAME = "localhost:7049";
 
+// const jobData = 
+//   {
+//     id: 1,
+//     title: "Front End",
+//     jobType: "remote",
+//     jobTime: "full time",
+//     location: "Cairo",
+//     description: "ay klam ",
+//     requirements: "bla bla ",
+//     responsibilities: null,
+//     companyName: "Inteliview",
+//     notes: "",
+//     salary: "7000$",
+//     imageURl: "images/job_logo_1.jpg",
+//     isActive: true,
+//     isDeleted: false,
+//     companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+//     companyUser: null,
+//     jobQuestions: null,
+//     jobInterestedTopics: null,
+//     createdAt: "2024-03-02T14:43:33.796Z",
+//     updatedAt: "2024-03-02T14:43:33.796Z",
+//     endedAt: "2024-03-02T14:43:33.796Z",
+//   }
+// ;
+
 export default function Job_details({ params }) {
   console.log(parseInt(params.id));
   const authToken = Cookies.get("authToken");
@@ -36,8 +62,16 @@ export default function Job_details({ params }) {
     fetchData();
   }, []);
 
-  const dataArray = Object.keys(data).length > 0 ? [data] : [];
-  console.log(dataArray); 
+  //const jobData = Object.keys(data).length > 0 ? [data] : [];
+  //console.log(jobData); 
+
+  const date = new Date(data.createdAt);
+   const options = {year: 'numeric', month: 'short', day: 'numeric' };
+   const formattedDate = date.toLocaleDateString('en-US', options);
+  //console.log(jobData[0].createdAt);
+  const date1 = new Date(data.endedAt);
+   const options1 = {year: 'numeric', month: 'short', day: 'numeric' };
+   const formattedDate1 = date1.toLocaleDateString('en-US', options1);
   return (
     <Layout>
       <>
@@ -91,7 +125,7 @@ export default function Job_details({ params }) {
                       <img src="/images/job_logo_5.jpg" alt="Image" />
                     </div>
                     <div>
-                      {dataArray.map((item) => (
+                      {data.map((item) => (
                         
                         <h2>{item.title}</h2>
                       ))}
@@ -144,7 +178,7 @@ export default function Job_details({ params }) {
                       <span className="icon-align-left mr-3" />
                       Job Description
                     </h3>
-                  {dataArray.map((item) => (
+                  {data.map((item) => (
                     <span>{item.description}</span>
                   ))}
                   </div>
@@ -154,7 +188,7 @@ export default function Job_details({ params }) {
                       Responsibilities
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {dataArray.map((item) => (
+                      {data.map((item) => (
                         <li
                           key={item}
                           className="d-flex align-items-start mb-2"
@@ -172,7 +206,7 @@ export default function Job_details({ params }) {
                       Education + Experience
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {dataArray.map((item) => (
+                      {data.map((item) => (
                         <li
                           key={item}
                           className="d-flex align-items-start mb-2"
@@ -190,7 +224,7 @@ export default function Job_details({ params }) {
                       Other Benifits
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {dataArray.map((item) => (
+                      {data.map((item) => (
                         <li
                           key={item}
                           className="d-flex align-items-start mb-2"
@@ -227,8 +261,7 @@ export default function Job_details({ params }) {
                     <ul className="list-unstyled pl-3 mb-0">
                     <li className="mb-2">
                         <strong className="text-black">Published on:</strong>{" "}
-                        {new Date(data.createdAt).toLocaleString('en-US', 
-                        { year: 'numeric', month: 'short', day: 'numeric' })}
+                        {formattedDate}
                     </li>
                       {/* <li className="mb-2">
                         <strong className="text-black">Vacancy:</strong> 20
@@ -253,8 +286,7 @@ export default function Job_details({ params }) {
                       </li>
                       <li className="mb-2">
                         <strong className="text-black">Application DeadLine:</strong>{" "}
-                        {new Date(data.endedAt).toLocaleString('en-US', 
-                        { year: 'numeric', month: 'short', day: 'numeric' })}
+                        {formattedDate1}
                     </li>
                     </ul>
                   </div>

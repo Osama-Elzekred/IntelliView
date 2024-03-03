@@ -42,11 +42,11 @@ export default function Job_details({ params }) {
     <Layout>
       <>
         {/* <div id="overlayer" /> */}
-        <div className="loader">
+        {/* <div className="loader">
           <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
           </div>
-        </div>
+        </div> */}
         <div className="site-wrap">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">
@@ -98,11 +98,11 @@ export default function Job_details({ params }) {
                       <div>
                         <span className="ml-0 mr-2 mb-2">
                           <span className="icon-briefcase mr-2" />
-                          Puma
+                          {data.comopanyName}
                         </span>
                         <span className="m-2">
                           <span className="icon-room mr-2" />
-                          New York City
+                          {data.location}
                         </span>
                         <span className="m-2">
                           <span className="icon-clock-o mr-2" />
@@ -122,9 +122,8 @@ export default function Job_details({ params }) {
                     </div>
                     <div className="col-6">
                       <Link
-                        href="#"
-                        className="btn btn-block btn-primary btn-md"
-                      >
+                        href="/job/${id}/apply"
+                        className="btn btn-block btn-primary btn-md">
                         Apply Now
                       </Link>
                     </div>
@@ -161,7 +160,7 @@ export default function Job_details({ params }) {
                           className="d-flex align-items-start mb-2"
                         >
                           <span className="icon-check_circle mr-2 text-muted" />
-                          <span>{item.title}</span>{" "}
+                          <span>{item.responsibilities}</span>{" "}
                           {/* Assuming each item is a string */}
                         </li>
                       ))}
@@ -212,7 +211,7 @@ export default function Job_details({ params }) {
                     </div>
                     <div className="col-6">
                       <Link
-                        href="#"
+                        href="/job/${id}/apply"
                         className="btn btn-block btn-primary btn-md"
                       >
                         Apply Now
@@ -228,37 +227,34 @@ export default function Job_details({ params }) {
                     <ul className="list-unstyled pl-3 mb-0">
                       <li className="mb-2">
                         <strong className="text-black">Published on:</strong>{" "}
-                        April 14, 2019
+                        {data.createdAt}
                       </li>
-                      <li className="mb-2">
+                      {/* <li className="mb-2">
                         <strong className="text-black">Vacancy:</strong> 20
-                      </li>
+                      </li> */}
                       <li className="mb-2">
                         <strong className="text-black">
                           Employment Status:
                         </strong>{" "}
-                        Full-time
+                        {data.jobTime}
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">Experience:</strong> 2 to
-                        3 year(s)
+                        <strong className="text-black">Experience:</strong>
+                        {data.minimumExperience}
                       </li>
                       <li className="mb-2">
                         <strong className="text-black">Job Location:</strong>{" "}
-                        New ork City
+                        {data.location}
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">Salary:</strong> $60k -
-                        $100k
-                      </li>
-                      <li className="mb-2">
-                        <strong className="text-black">Gender:</strong> Any
+                        <strong className="text-black">Salary:</strong>
+                        {data.salary}
                       </li>
                       <li className="mb-2">
                         <strong className="text-black">
                           Application Deadline:
                         </strong>{" "}
-                        April 28, 2019
+                        {data.endedAt}
                       </li>
                     </ul>
                   </div>
@@ -391,7 +387,7 @@ export default function Job_details({ params }) {
                   <div className="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
                     <div className="job-listing-position custom-width w-50 mb-3 mb-sm-0">
                       <h2>Product Designer</h2>
-                      <strong>Puma</strong>
+                      <strong>{data.companyName}</strong>
                     </div>
                     <div className="job-listing-location mb-3 mb-sm-0 custom-width w-25">
                       <span className="icon-room" /> San Mateo, CA

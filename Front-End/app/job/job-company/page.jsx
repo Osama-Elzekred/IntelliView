@@ -2,8 +2,8 @@
 'use client';
 import Link from 'next/link';
 import Layout from '../../components/Layout';
+import Modal from '../../components/Modal';
 import React, { useState, useEffect } from 'react';
-
 export default function JobList() {
   const [jobs, setJobs] = useState([]);
 
@@ -12,7 +12,7 @@ export default function JobList() {
     const fetchJobsData = async () => {
       try {
         // Assuming you have an endpoint to fetch job data
-        const response = await fetch(`https://${DOMAIN_NAME}/CompanyJobs`);
+        const response = await fetch(`https://${DOMAIN_NAME}/Job/CompanyJobs`);
         if (!response.ok) {
           throw new Error('Failed to fetch job data');
         }
@@ -26,7 +26,21 @@ export default function JobList() {
     // Call the fetch function
     fetchJobsData();
   }, []); // Empty dependency array means this effect will run once on component mount
-
+  const handleRemoveJob = async (id) => {
+    try {
+      // Assuming you have an endpoint to delete a job by ID
+      const response = await fetch(`https://${DOMAIN_NAME}/Job/delete/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete job');
+      }
+      // Update the jobs state to remove the deleted job
+      setJobs(jobs.filter(job => job.id !== id));
+    } catch (error) {
+      console.error('Error deleting job:', error);
+    }
+  };
 
   return (
     <Layout>
@@ -116,30 +130,33 @@ export default function JobList() {
       <div className="container">
         <div className="row mb-5 justify-content-center">
           <div className="col-md-7 text-center">
-            <h2 className="section-title mb-2">Job Applicants</h2>
+            <h2 className="section-title mb-2">Jobs</h2>
           </div>
         </div>
         <ul className="list-group">
-                {jobs.map((job, index) => (
-                  <li key={index} className="list-group-item">
-                    <div className="row">
-                      <div className="col-md-8">
-                        <h5 className="mb-0">{job.title}</h5>
-                        <p>{job.companyName}</p>
-                        <p>{job.location}</p>
-                        <p>Job Type: {job.jobType}</p>
-                        <p>Job Time: {job.jobTime}</p>
-                        {/* You can add more job details here */}
-                      </div>
-                      <div className="col-md-4 text-right">
-                        <Link href={`/job/${job.id}`}>
-                          <a className="btn btn-primary">View Details</a>
-                        </Link>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+          {jobs.map((job, index) => (
+            <Link href={`/job/${job.id}`} key={index}>
+              <a className="list-group-item list-group-item-action">
+                <div className="row">
+                  <div className="col-md-8">
+                    <h5 className="mb-0">{job.title}</h5>
+                    <p>{job.companyName}</p>
+                    <p>{job.location}</p>
+                    <p>Job Type: {job.jobType}</p>
+                    <p>Job Time: {job.jobTime}</p>
+                    {/* You can add more job details here */}
+                  </div>
+                  <div className="col-md-4 text-right">
+                    <Link href={`/job/${job.id}`}>
+                      <a className="btn btn-primary mr-2">Edit</a>
+                    </Link>
+                    <Modal handleDelete={() => handleRemoveJob(job.id)} />
+                  </div>
+                </div>
+              </a>
+            </Link>
+          ))}
+        </ul>
         <div className="row pagination-wrap">
           <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
             <span id="paginationInfo">Showing {jobs.length} Applicants</span>

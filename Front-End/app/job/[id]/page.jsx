@@ -160,7 +160,7 @@ export default function Job_details({ params }) {
                           className="d-flex align-items-start mb-2"
                         >
                           <span className="icon-check_circle mr-2 text-muted" />
-                          <span>{item.title}</span>{" "}
+                          <span>{item.responsibilities}</span>{" "}
                           {/* Assuming each item is a string */}
                         </li>
                       ))}

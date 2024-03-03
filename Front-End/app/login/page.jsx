@@ -267,6 +267,7 @@ export default function login() {
                       </div>
                     </div>
                     <br />
+                    <br />
                     <input type="checkbox" id="remember" className="checkbox" />
                     <label htmlFor="remember" className="remember">
                       remember me

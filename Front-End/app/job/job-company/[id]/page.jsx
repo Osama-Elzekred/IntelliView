@@ -3,6 +3,11 @@
 import Link from 'next/link';
 import Layout from '../../../components/Layout';
 import React, { useState, useEffect } from 'react';
+import { Tabs } from 'flowbite-react';
+import { HiAdjustments, HiClipboardList, HiUserCircle } from 'react-icons/hi';
+import { MdDashboard } from 'react-icons/md';
+
+
 
 export default function JobApplicants() {
   const [applicants, setApplicants] = useState([]);
@@ -108,7 +113,9 @@ export default function JobApplicants() {
               <span className=" icon-keyboard_arrow_down" />
             </Link>
           </section>
-          <section className="site-section" id="next">
+          <section className="site-section p-2" id="next">
+          <Tabs aria-label="Tabs with icons" style="underline">
+      <Tabs.Item active title="All applicants" icon={HiUserCircle}>
       <div className="container">
         <div className="row mb-5 justify-content-center">
           <div className="col-md-7 text-center">
@@ -140,6 +147,41 @@ export default function JobApplicants() {
           </div>
         </div>
       </div>
+      </Tabs.Item>
+      <Tabs.Item title="Approved applicants" icon={MdDashboard}>
+      <div className="container">
+        <div className="row mb-5 justify-content-center">
+          <div className="col-md-7 text-center">
+            <h2 className="section-title mb-2">Job Applicants</h2>
+          </div>
+        </div>
+        <ul className="applicant-listings mb-5" id="applicantListings">
+          {/* Applicant listings will be dynamically added here */}
+          {applicants.map((applicant, index) => (
+            <li key={index} className="applicant-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+              <div className="applicant-details d-sm-flex custom-width w-100 justify-content-between mx-4">
+                <div className="applicant-info custom-width w-50 mb-3 mb-sm-0">
+                  <h2>{applicant.name}</h2>
+                  <strong>{applicant.company}</strong>
+                </div>
+                <div className="applicant-location mb-3 mb-sm-0 custom-width w-25">
+                  <span className="icon-room" /> {applicant.location}
+                </div>
+                <div className="applicant-meta">
+                  <span className="badge badge-primary">{applicant.status}</span>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <div className="row pagination-wrap">
+          <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
+            <span id="paginationInfo">Showing {applicants.length} Applicants</span>
+          </div>
+        </div>
+      </div>
+      </Tabs.Item>
+    </Tabs>
     </section>
           <section
             className="py-5 bg-image overlay-primary fixed overlay"

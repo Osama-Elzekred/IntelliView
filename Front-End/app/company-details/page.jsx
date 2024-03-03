@@ -10,11 +10,12 @@ const CompanyDetails = () => {
     <link rel="stylesheet" href="/css/style.css"/>  
     <link rel="stylesheet" href="/css/edit-profile.css"/>
     
-    <div className="loader">
+    {/* <div className="loader">
       <div className="spinner-border text-primary" role="status">
         <span className="sr-only">Loading...</span>
       </div>
-    </div><div className="site-wrap">
+    </div> */}
+    <div className="site-wrap">
         <div className="site-mobile-menu site-navbar-target">
           <div className="site-mobile-menu-header">
             <div className="site-mobile-menu-close mt-3">

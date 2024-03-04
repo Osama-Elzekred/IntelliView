@@ -63,16 +63,16 @@ export default function Footer() {
           <div className="col-6 col-md-3 mb-4 mb-md-0">
             <h3>Contact Us</h3>
             <div className="footer-social">
-              <a href="#">
+              <a href="#" className="mr-1">
                 <span className="icon-facebook" />
               </a>
-              <a href="#">
+              <a href="#" className="mr-1">
                 <span className="icon-twitter" />
               </a>
-              <a href="#">
+              <a href="#" className="mr-1">
                 <span className="icon-instagram" />
               </a>
-              <a href="#">
+              <a href="#" className="mr-1">
                 <span className="icon-linkedin" />
               </a>
             </div>

@@ -5,7 +5,7 @@
 
 // import IndexPage from './components/test';
 import Login from './login/page';
-import IndexPage from './index/page';
+import IndexPage from './Home/page';
 // import Layout from './components/Layout';
 // import Phone from './components/Phone';
 // import Job_details from './job/[id]/page.jsx';

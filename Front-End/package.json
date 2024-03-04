@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "flowbite": "^2.3.0",
+    "flowbite-react": "^0.7.2",
+    "js-cookie": "^3.0.5",
     "next": "^14.1.0",
     "react": "^18",
     "react-dom": "^18",
@@ -17,6 +20,7 @@
     "scss": "^0.2.4"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "20.11.20",
     "@types/react": "18.2.58",
     "autoprefixer": "^10.0.1",

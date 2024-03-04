@@ -1,6 +1,5 @@
-import { DOMAIN_NAME } from "../../config";
-
-// const { default: login } = require("@/app/login/page");
+// import { DOMAIN_NAME } from "../../config";
+const DOMAIN_NAME = "localhost:7049";
 
 let signupForm = document.getElementById("signup");
 let loginForm = document.getElementById("login");
@@ -9,6 +8,7 @@ let signinbtn = document.getElementById("signinbtn");
 function flipped_face() {
   signupForm.reset();
   loginForm.reset();
+  messageOfWrong.style.display = "none";
   var face_ = document.getElementById("face");
   face_.classList.toggle("flipped");
 }
@@ -101,59 +101,57 @@ if (messageOfWrong) {
         `;
   messageOfWrong.style.display = "block";
 }
-if (loginForm) {
-  loginForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    messageOfWrong.style.display = "none";
+loginForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  messageOfWrong.style.display = "none";
 
-    let loginData = new FormData(loginForm);
-    let username = loginData.get("username");
-    let password = loginData.get("password");
-    if (typeof username !== "string" || typeof password !== "string") {
-      console.error("Username and password must be strings.");
-      return;
-    }
-    if (username === "" || password === "") {
-      messageOfWrong.textContent = "Please Enter E-mail and Password";
-      messageOfWrong.style.display = "block";
-    } else {
-      messageOfWrong.style.display = "none";
-      fetch(`https://${DOMAIN_NAME}/api/Auth/login`, {
-        method: "POST",
-        body: JSON.stringify({
-          email: username,
-          password: password,
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
+  let loginData = new FormData(loginForm);
+  let username = loginData.get("username");
+  let password = loginData.get("password");
+  if (typeof username !== "string" || typeof password !== "string") {
+    console.error("Username and password must be strings.");
+    return;
+  }
+  if (username === "" || password === "") {
+    messageOfWrong.textContent = "Please Enter E-mail and Password";
+    messageOfWrong.style.display = "block";
+  } else {
+    messageOfWrong.style.display = "none";
+    fetch(`https://${DOMAIN_NAME}/api/Auth/login`, {
+      method: "POST",
+      body: JSON.stringify({
+        email: username,
+        password: password,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => {
+        return response.json();
       })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.token) {
-            document.cookie = `authToken=${data.token};path=/`;
-            document.cookie = `user_id=${data.id};path=/`;
-            localStorage.setItem("roleFromServer", data.roles);
-            window.location.href = `profile.html?username=${username}`;
-            console.log(data);
-          } else if (data.message) {
-            messageOfWrong.textContent = `${data.message}`;
-            messageOfWrong.style.display = "block";
-          }
-        })
-        .catch((error) => {
-          if (error) {
-            messageOfWrong.textContent =
-              "Sorry ... The Server can not be reach now ... please try later ";
-            messageOfWrong.style.display = "block";
-            console.log("Response details:", error.response);
-          }
-        });
-    }
-  });
-}
+      .then((data) => {
+        if (data.token) {
+          document.cookie = `authToken=${data.token};path=/`;
+          document.cookie = `user_id=${data.id};path=/`;
+          localStorage.setItem("roleFromServer", data.roles);
+          // window.location.href = `profile.html?username=${username}`;
+          console.log(data);
+        } else if (data.message) {
+          messageOfWrong.textContent = `${data.message}`;
+          messageOfWrong.style.display = "block";
+        }
+      })
+      .catch((error) => {
+        if (error) {
+          messageOfWrong.textContent =
+            "Sorry ... The Server can not be reach now ... please try later ";
+          messageOfWrong.style.display = "block";
+          console.log("Response details:", error.response);
+        }
+      });
+  }
+});
 //sign-up code
 let messageFromServer = document.getElementById("messageFromServer");
 if (messageFromServer) {
@@ -173,7 +171,7 @@ let roleForm = document.getElementById("role");
 let personBtn = document.getElementById("person");
 let companyBtn = document.getElementById("company");
 var role = "User";
-localStorage.setItem("role", role);
+localStorage.setItem("roleToServer", role);
 if (roleForm) {
   roleForm.addEventListener("click", function (e) {
     var clickedBtn = e.target;
@@ -187,78 +185,77 @@ if (roleForm) {
   });
 }
 //get the data and post it to the server
-if (signupbtn) {
-  signupForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    messageFromServer.style.display = "none";
+signupForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  messageFromServer.style.display = "none";
 
-    let signupData = new FormData(signupForm);
-    let username = signupData.get("username");
-    let email = signupData.get("email");
-    let password = signupData.get("password");
-    let password_confirm = signupData.get("password-confirm");
-    if (
-      typeof username !== "string" ||
-      typeof password !== "string" ||
-      typeof password_confirm !== "string"
-    ) {
-      console.error("Username and password must be strings.");
-      console.log(typeof username);
-      console.log(typeof password);
-      console.log(typeof password_confirm);
+  let signupData = new FormData(signupForm);
+  let username = signupData.get("username");
+  let email = signupData.get("email");
+  let password = signupData.get("password");
+  let password_confirm = signupData.get("password-confirm");
+  if (
+    typeof username !== "string" ||
+    typeof password !== "string" ||
+    typeof password_confirm !== "string"
+  ) {
+    console.error("Username and password must be strings.");
+    console.log(typeof username);
+    console.log(typeof password);
+    console.log(typeof password_confirm);
 
-      return;
-    }
+    return;
+  }
 
-    // message of empty field
-    if (
-      username === "" ||
-      password === "" ||
-      password_confirm === "" ||
-      email === ""
-    ) {
-      messageFromServer.textContent = "Please Fill All Fields";
-      messageFromServer.style.display = "block";
-    } else if (password != password_confirm) {
-      messageFromServer.textContent = "Password dosen't match ";
-      messageFromServer.style.display = "block";
-    } else {
-      fetch(`https://${DOMAIN_NAME}/api/Auth/register`, {
-        method: "POST",
-        body: JSON.stringify({
-          email: email,
-          username: username,
-          password,
-          role: localStorage.getItem("role"),
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
+  // message of empty field
+  if (
+    username === "" ||
+    password === "" ||
+    password_confirm === "" ||
+    email === ""
+  ) {
+    messageFromServer.textContent = "Please Fill All Fields";
+    messageFromServer.style.display = "block";
+  } else if (password != password_confirm) {
+    messageFromServer.textContent = "Password dosen't match ";
+    messageFromServer.style.display = "block";
+  } else {
+    fetch(`https://${DOMAIN_NAME}/api/Auth/register`, {
+      method: "POST",
+      body: JSON.stringify({
+        email: email,
+        username: username,
+        password,
+        role: localStorage.getItem("roleToServer"),
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => {
+        return response.json();
       })
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          if (data.token) {
-            document.cookie = `authToken=${data.token};path=/`;
-            document.cookie = `user_id=${data.id};path=/`;
-            localStorage.setItem("roleFromServer", data.roles);
-            window.location.href = `profile.html?username=${username}`;
-          } else if (data.message) {
-            messageFromServer.textContent = `${data.message}`;
-            messageFromServer.style.display = "block";
-          } else {
-            messageFromServer.textContent = "An error occurred";
-            messageFromServer.style.display = "block";
-          }
-        })
-        .catch((error) => {
-          if (error) {
-            messageFromServer.textContent =
-              "Connection Error ... Please Try Later";
-            messageFromServer.style.display = "block";
-          }
-        });
-    }
-  });
-}
+      .then((data) => {
+        if (data.token) {
+          document.cookie = `authToken=${data.token};path=/`;
+          document.cookie = `user_id=${data.id};path=/`;
+          localStorage.setItem("roleFromServer", data.roles);
+          signupForm.reset(); 
+          // window.location.href = `profile.html?username=${username}`;
+        } else if (data.message) {
+          messageFromServer.textContent = `${data.message}`;
+          messageFromServer.style.display = "block";
+        } else {
+          messageFromServer.textContent = "An error occurred";
+          messageFromServer.style.display = "block";
+        }
+      })
+      .catch((error) => {
+        if (error) {
+          messageFromServer.textContent =
+            "Connection Error ... Please Try Later";
+          messageFromServer.style.display = "block";
+        }
+      });
+  }
+});

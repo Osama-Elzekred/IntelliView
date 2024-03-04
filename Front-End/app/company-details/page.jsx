@@ -1,6 +1,7 @@
 // components/CompanyDetails.js
 import React from 'react';
 import Layout from '../components/Layout';
+import Link from 'next/link';
 
 const CompanyDetails = () => {
   return (
@@ -9,11 +10,12 @@ const CompanyDetails = () => {
     <link rel="stylesheet" href="/css/style.css"/>  
     <link rel="stylesheet" href="/css/edit-profile.css"/>
     
-    <div className="loader">
+    {/* <div className="loader">
       <div className="spinner-border text-primary" role="status">
         <span className="sr-only">Loading...</span>
       </div>
-    </div><div className="site-wrap">
+    </div> */}
+    <div className="site-wrap">
         <div className="site-mobile-menu site-navbar-target">
           <div className="site-mobile-menu-header">
             <div className="site-mobile-menu-close mt-3">
@@ -23,9 +25,6 @@ const CompanyDetails = () => {
           <div className="site-mobile-menu-body"></div>
         </div> {/* .site-mobile-menu */}
         {/* NAVBAR */}
-        <header className="site-navbar mt-3">
-          <div id="header-content"></div>
-        </header>
         {/* HOME */}
         <section className="section-hero overlay inner-page bg-image" style={{ backgroundImage: "url('/images/ai-background-business-technology-digital-transformation.jpg')" }} id="home-section">
           <div className="container">
@@ -33,7 +32,8 @@ const CompanyDetails = () => {
               <div className="col-md-7">
                 <h1 className="text-white font-weight-bold">Company Details</h1>
                 <div className="custom-breadcrumbs">
-                  <a href="#">Home</a> <span className="mx-2 slash">/</span>
+                  <Link href="/job">Home</Link>
+                  <span className="mx-2 slash">/</span>
                   <span className="text-white"><strong>Company Details</strong></span>
                 </div>
               </div>
@@ -63,7 +63,9 @@ const CompanyDetails = () => {
                     {/* Company website */}
                     <div className="website">
                       <label htmlFor="company-website">Website</label><br />
-                      <a href="#" id="company-website">www.example.com</a>
+                      <Link href="company-details" id="company-website">
+                        www.example.com
+                      </Link>
                     </div>
                     {/* Company phone number */}
                     <div className="phone">

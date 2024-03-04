@@ -1,11 +1,9 @@
 ﻿using IntelliView.Models.Models;
-using IntelliView.Models.Models.job;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace IntelliView.Models.DTO
 {
-    public class AddJobDTO
+    public class JobDTO
     {
         public int Id { get; set; }
 
@@ -18,8 +16,6 @@ namespace IntelliView.Models.DTO
 
         public string? Location { get; set; } = string.Empty;
 
-        public double? Salary { get; set; }
-
         public string? MinimumExperience { get; set; } = string.Empty;
 
         public string? Description { get; set; } = string.Empty;
@@ -30,26 +26,29 @@ namespace IntelliView.Models.DTO
 
         public string? Benefits { get; set; } = string.Empty;
 
-        //public string? Notes { get; set; } = string.Empty;
+        public string? companyName { get; set;}=string.Empty;
+
+        public string? Notes { get; set; } = string.Empty;
 
         //[Range(0, double.MaxValue, ErrorMessage = "Salary must be a non-negative value")]
         //public double? Salary { get; set; }
 
-        //public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } = true;
 
         //public bool IsDeleted { get; set; } = false;
 
         //[Required(ErrorMessage = "CompanyUserId is required")]
-        public string? CompanyUserId { get; set; }
+        //public string? CompanyUserId { get; set; }
 
         //[ForeignKey(nameof(CompanyUserId))]
         //public virtual CompanyUser CompanyUser { get; set; }
-        [JsonIgnore]
-        public virtual List<JobInterestedTopic> JobInterestedTopics { get; set; } = new List<JobInterestedTopic>();
+        public string ImageURl { get; set; } = @"wwwroot/Assets/images/7495e58b-b72b-4b87-8c12-c77a69b39cd3.jpg";
+
+        //[JsonIgnore]
+        //public virtual List<JobInterestedTopic> JobInterestedTopics { get; set; } = new List<JobInterestedTopic>();
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public DateTime? EndedAt { get; set; } = DateTime.Now.AddDays(20);
-
     }
 }

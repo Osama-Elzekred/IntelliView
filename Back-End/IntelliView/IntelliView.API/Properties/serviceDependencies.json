@@ -8,9 +8,10 @@
       "connectionId": "ConnectionStrings:DefaultConnection",
       "dynamicId": null
     },
-    "mssql3": {
+    "mssql2": {
       "type": "mssql",
-      "connectionId": "DefaultConnectionprod"
+      "connectionId": "azureDBConnetionString",
+      "dynamicId": null
     }
   }
 }

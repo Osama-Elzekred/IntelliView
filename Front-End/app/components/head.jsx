@@ -12,7 +12,7 @@ export default function CustomHead() {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       <link
-        href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap"
+        href="https://fonts.googleapis.com/css2?fa-mily=Fjalla+One&display=swap"
         rel="stylesheet"
       />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,7 +29,6 @@ export default function CustomHead() {
       />
       {/* MAIN CSS */}
       <link rel="stylesheet" href="/css/style.css" />
-
     </head>
   );
 }

@@ -34,7 +34,7 @@ namespace IntelliView.Models.Models
         //[Required(ErrorMessage = "Requirements are required")]
         public string? Requirements { get; set; } = string.Empty;
 
-        public string? Responsibilities { get; set; } = string.Empty;
+        public string? Responsibilities { get; set; } 
 
         public string? Benefits { get; set; } = string.Empty;
 

@@ -1,4 +1,5 @@
-import { DOMAIN_NAME } from "../../config";
+// import { DOMAIN_NAME } from "../../config";
+const DOMAIN_NAME = "localhost:7049";
 
 let companyName = document.getElementById("company-name");
 let type = document.getElementById("type_");

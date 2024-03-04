@@ -1,7 +1,194 @@
-import Layout from '../../components/Layout';
-import Phone from '../../components/Phone';
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import Layout from "../../components/Layout";
+import Phone from "../../components/Phone";
+import Cookies from "js-cookie";
+import Link from "next/link";
+export default function EditProfile() {
+  let [message,setMessage] = useState(""); 
+  let [color,setColor] = useState(""); 
+  const [authToken, setAuthToken] = useState("");
+  // const [userId ,setUserId] = useState("")
+  const [formData, setFormData] = useState({
+    companyName: "",
+    type: "",
+    overview: "",
+    website: "",
+    size: "",
+    founded: "",
+    phoneNumber: "",
+  });
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    newPasswordConfirm: "",
+  });
+  const [imageURL, setPhotoUrl] = useState(null);
+  const phoneInputGfgRef = useRef();
 
-export default function Edit_profile() {
+  // Function to retrieve the phone number value
+  const getPhoneNumberValue = () => {
+    if (phoneInputGfgRef.current) {
+      return phoneInputGfgRef.current.getPhoneInputValue();
+    }
+    return "";
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const authTokenCookie = Cookies.get("authToken");
+        if (authTokenCookie) {
+          setAuthToken(authTokenCookie);
+          const response = await fetch("https://localhost:7049/api/Profile", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authTokenCookie}`,
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setFormData({
+              companyName: data.companyName,
+              type: data.type,
+              overview: data.overview,
+              website: data.website,
+              phoneNumber: data.phoneNumber,
+              size: data.size,
+              founded: data.founded,
+            });
+            setPhotoUrl(
+              `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
+            );
+          } else {
+            console.error("Failed to fetch user data");
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+  };
+
+  const handleDataSubmit = async () => {
+    // to make the post of form user data
+    const phoneNumber = getPhoneNumberValue();
+    setFormData((FormData) => ({
+      ...FormData,
+      phoneNumber: phoneNumber,
+    }));
+
+    try {
+      const response = await fetch("https://localhost:7049/api/Profile", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        console.log("Profile updated successfully");
+      } else {
+        console.error("Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
+  //change password here
+  const handlePasswordChange = (field, value) => {
+    setPasswordForm({ ...passwordForm, [field]: value });
+  };
+  const handlePasswordSubmit = async () => {
+    console.log("password part here ");
+    if (
+      passwordForm.currentPassword === "" ||
+      passwordForm.newPassword === "" ||
+      passwordForm.newPasswordConfirm === ""
+    ) {
+      setColor("red");
+      setMessage("Fill All Fields");
+      
+    } else if (passwordForm.newPassword != passwordForm.newPasswordConfirm) {
+      setColor("blue");
+      setMessage("Password not match"); 
+      
+    } else {
+      const userId = Cookies.get("user_id");
+      try {
+        const response = await fetch(
+          "https://localhost:7049/api/Password/change-password",
+          {
+            method: "POST",
+            headers: {
+              Authoriazation: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: userId,
+              oldPassword: passwordForm.currentPassword,
+              newPassword: passwordForm.newPassword,
+            }),
+          }
+        );
+        if (response.ok) {
+          setColor("green"); 
+          setMessage( "Password Changed Successfully");
+          
+        } else {
+          setColor("red");
+          setMessage ("Password Not Change");
+        }
+      } catch (error) {
+        setColor("red");
+        setMessage (error);
+        console.error("error", error);
+      }
+    }
+  };
+  const [file, setFile] = useState(null);
+  const handleFileChange = async (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Create a new FormData object
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // Send the POST request to the server
+    try {
+      const response = await fetch(
+        "https://localhost:7049/api/Profile/updatePicture",
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData,
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+
+        setPhotoUrl(
+          `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
+        );
+        console.log("Photo uploaded successfully");
+      } else {
+        console.error("Failed to upload photo");
+      }
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+    }
+  };
   return (
     <Layout>
       <link rel="stylesheet" href="/css/edit-profile.css" />
@@ -19,108 +206,10 @@ export default function Edit_profile() {
             </div>
           </div>
           <div className="site-mobile-menu-body" />
-        </div>{' '}
+        </div>{" "}
         {/* .site-mobile-menu */}
         {/* NAVBAR */}
-        <header className="site-navbar mt-3">
-          <div className="container-fluid">
-            <div className="row align-items-center">
-              <div className="site-logo col-6">
-                <a href="index.html">intelliview</a>
-              </div>
-              <nav className="mx-auto site-navigation">
-                <ul className="site-menu js-clone-nav d-none d-xl-block ml-0 pl-0">
-                  <li>
-                    <a href="index.html" className="nav-link">
-                      Home
-                    </a>
-                  </li>
-                  <li>
-                    <a href="about.html">About</a>
-                  </li>
-                  <li className="has-children">
-                    <a href="job-listings.html">Job Listings</a>
-                    <ul className="dropdown">
-                      <li>
-                        <a href="job-single.html">Job Single</a>
-                      </li>
-                      <li>
-                        <a href="post-job.html">Post a Job</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li className="has-children">
-                    <a href="services.html">Pages</a>
-                    <ul className="dropdown">
-                      <li>
-                        <a href="services.html">Services</a>
-                      </li>
-                      <li>
-                        <a href="service-single.html">Service Single</a>
-                      </li>
-                      <li>
-                        <a href="blog-single.html">Blog Single</a>
-                      </li>
-                      <li>
-                        <a href="portfolio.html">Portfolio</a>
-                      </li>
-                      <li>
-                        <a href="portfolio-single.html">Portfolio Single</a>
-                      </li>
-                      <li>
-                        <a href="testimonials.html">Testimonials</a>
-                      </li>
-                      <li>
-                        <a href="faq.html">Frequently Ask Questions</a>
-                      </li>
-                      <li>
-                        <a href="gallery.html">Gallery</a>
-                      </li>
-                    </ul>
-                  </li>
-                  <li>
-                    <a href="blog.html">Blog</a>
-                  </li>
-                  <li>
-                    <a href="contact.html">Contact</a>
-                  </li>
-                  <li className="d-lg-none">
-                    <a href="post-job.html">
-                      <span className="mr-2">+</span> Post a Job
-                    </a>
-                  </li>
-                  <li className="d-lg-none">
-                    <a href="login.html">Log In</a>
-                  </li>
-                </ul>
-              </nav>
-              <div className="right-cta-menu text-right d-flex aligin-items-center col-6">
-                <div className="ml-auto">
-                  <a
-                    href="post-job.html"
-                    className="btn btn-outline-white border-width-2 d-none d-lg-inline-block"
-                  >
-                    <span className="mr-2 icon-add" />
-                    Post a Job
-                  </a>
-                  <a
-                    href="login.html"
-                    className="btn btn-primary border-width-2 d-none d-lg-inline-block"
-                  >
-                    <span className="mr-2 icon-lock_outline" />
-                    Log In
-                  </a>
-                </div>
-                <a
-                  href="#"
-                  className="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3"
-                >
-                  <span className="icon-menu h3 m-0 p-0 mt-2" />
-                </a>
-              </div>
-            </div>
-          </div>
-        </header>
+
         {/* HOME */}
         <section
           className="section-hero overlay inner-page bg-image"
@@ -135,7 +224,7 @@ export default function Edit_profile() {
               <div className="col-md-7">
                 <h1 className="text-white font-weight-bold">Edit Profile</h1>
                 <div className="custom-breadcrumbs">
-                  <a href="#">Home</a> <span className="mx-2 slash">/</span>
+                  <Link href="#">Home</Link> <span className="mx-2 slash">/</span>
                   <span className="text-white">
                     <strong>Edit Peofile</strong>
                   </span>
@@ -149,48 +238,48 @@ export default function Edit_profile() {
             <div className="row no-gutters row-bordered row-border-light">
               <div className="col-md-3 pt-0">
                 <div className="list-group list-group-flush account-settings-links">
-                  <a
+                  <Link
                     className="list-group-item list-group-item-action active"
                     data-toggle="list"
                     href="#account-general"
                   >
                     General
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-change-password"
                   >
                     Change password
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-info"
                   >
                     Info
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-social-links"
                   >
                     Social links
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-connections"
                   >
                     Connections
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-notifications"
                   >
                     Notifications
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="col-md-9">
@@ -200,19 +289,16 @@ export default function Edit_profile() {
                     id="account-general"
                   >
                     <div className="card-body media align-items-center">
-                      <img
-                        src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
-                        alt=""
-                        className="d-block ui-w-80"
-                      />
+                      <img src={imageURL} alt="" className="d-block ui-w-80" />
                       <div className="media-body ml-4">
                         <label className="btn btn-outline-primary">
                           Upload new photo
                           <input
                             type="file"
                             className="account-settings-fileinput"
+                            onChange={handleFileChange}
                           />
-                        </label>{' '}
+                        </label>{" "}
                         &nbsp;
                         <button
                           type="button"
@@ -233,61 +319,176 @@ export default function Edit_profile() {
                             <div className="company-name">
                               <label htmlFor="company-name">name</label>
                               <br />
-                              <input id="company-name" type="text" />
+                              <input
+                                id="company-name"
+                                type="text"
+                                value={formData.companyName}
+                                onChange={(e) =>
+                                  handleChange("companyName", e.target.value)
+                                }
+                              />
                             </div>
                             <div className="type_">
                               <label htmlFor="type_">type</label>
                               <br />
-                              <input type="text" id="type_" />
+                              <input
+                                type="text"
+                                id="type_"
+                                value={formData.type}
+                                onChange={(e) =>
+                                  handleChange("type", e.target.value)
+                                }
+                              />
                             </div>
                           </div>
                           <div className="overview">
                             <label htmlFor="overview">overview</label>
                             <br />
-                            <textarea className="overview_" defaultValue={''} />
+                            <textarea
+                              className="overview_"
+                              defaultValue={""}
+                              value={formData.overview}
+                              onChange={(e) =>
+                                handleChange("overview", e.target.value)
+                              }
+                            />
                           </div>
                           <div className="website_">
                             <label htmlFor="website_">Website</label>
                             <br />
-                            <input type="text" id="website_" />
+                            <input
+                              type="text"
+                              id="website_"
+                              value={formData.website}
+                              onChange={(e) =>
+                                handleChange("website", e.target.value)
+                              }
+                            />
                           </div>
                           {/* <div className="phone-company"> */}
                           <label htmlFor="phone">phone number</label>
-                          <br />
-                          <Phone />
+
+                          <Phone
+                            value={formData.phoneNumber}
+                            // onChange={(e) =>
+                            //   handleChange("phoneNumber", e.target.value)
+                            // }
+                          />
                           {/* </div> */}
                           <div className="size-founded">
                             <div className="size_">
                               <label htmlFor="size_">size</label>
                               <br />
-                              <input type="text" id="size_" />
+                              <input
+                                type="text"
+                                id="size_"
+                                value={formData.size}
+                                onChange={(e) =>
+                                  handleChange("size", e.target.value)
+                                }
+                              />
                             </div>
                             <div className="founded_">
                               <label htmlFor="founded_">founded</label>
                               <br />
-                              <input type="month" id="founded_" />
+                              <input
+                                type="year"
+                                id="founded_"
+                                value={formData.founded}
+                                onChange={(e) =>
+                                  handleChange("founded", e.target.value)
+                                }
+                              />
                             </div>
                           </div>
+                        </div>
+                        <div className="text-right mt-3">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleDataSubmit}
+                          >
+                            Save Changes
+                          </button>
+                          &nbsp;
+                          <button type="button" className="btn btn-default">
+                            Cancel
+                          </button>
                         </div>
                       </form>
                     </div>
                   </div>
                   <div className="tab-pane fade" id="account-change-password">
                     <div className="card-body pb-2">
-                      <div className="form-group-">
-                        <label className="form-label-">Current password</label>
-                        <input type="password" className="form-control" />
-                      </div>
-                      <div className="form-group-">
-                        <label className="form-label">New password</label>
-                        <input type="password" className="form-control" />
-                      </div>
-                      <div className="form-group-">
-                        <label className="form-label-">
-                          Repeat new password
-                        </label>
-                        <input type="password" className="form-control" />
-                      </div>
+                      <form>
+                        <div className="form-group-">
+                          <label className="form-label-">
+                            Current password
+                          </label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            onChange={(e) =>
+                              handlePasswordChange(
+                                "currentPassword",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label">New password</label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            onChange={(e) =>
+                              handlePasswordChange(
+                                "newPassword",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label-">
+                            Repeat new password
+                          </label>
+                          <input
+                            type="password"
+                            className="form-control"
+                            onChange={(e) =>
+                              handlePasswordChange(
+                                "newPasswordConfirm",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="text-right mt-3">
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handlePasswordSubmit}
+                          >
+                            Change Password
+                          </button>
+                          &nbsp;
+                          <button type="button" className="btn btn-default">
+                            Cancel
+                          </button>
+                        </div>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color: color,
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {message}
+                        </div>
+                      </form>
                     </div>
                   </div>
                   <div className="tab-pane fade" id="account-info">
@@ -298,7 +499,7 @@ export default function Edit_profile() {
                           className="form-control"
                           rows={5}
                           defaultValue={
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus.'
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus."
                           }
                         />
                       </div>
@@ -395,22 +596,22 @@ export default function Edit_profile() {
                     <hr className="border-light m-0" />
                     <div className="card-body">
                       <h5 className="mb-2">
-                        <a
+                        <Link
                           href="javascript:void(0)"
                           className="float-right text-muted text-tiny"
                         >
                           <i className="ion ion-md-close" /> Remove
-                        </a>
+                        </Link>
                         <i className="ion ion-logo-google text-google" />
                         You are connected to Google:
                       </h5>
-                      <a
+                      <Link
                         href="/cdn-cgi/l/email-protection"
                         className="__cf_email__"
                         data-cfemail="523c3f332a25373e3e123f333b3e7c313d3f"
                       >
                         [email&nbsp;protected]
-                      </a>
+                      </Link>
                     </div>
                     <hr className="border-light m-0" />
                     <div className="card-body">
@@ -526,98 +727,9 @@ export default function Edit_profile() {
               </div>
             </div>
           </div>
-          <div className="text-right mt-3">
-            <button type="button" className="btn btn-primary">
-              Save changes
-            </button>
-            &nbsp;
-            <button type="button" className="btn btn-default">
-              Cancel
-            </button>
-          </div>
         </div>
-        <footer className="site-footer">
-          <a href="#top" className="smoothscroll scroll-top">
-            <span className="icon-keyboard_arrow_up" />
-          </a>
-          <div className="container">
-            <div className="row mb-5">
-              <div className="col-6 col-md-3 mb-4 mb-md-0">
-                <h3>Search Trending</h3>
-                <ul className="list-unstyled">
-                  <li>
-                    <a href="#">Web Design</a>
-                  </li>
-                  <li>
-                    <a href="#">Graphic Design</a>
-                  </li>
-                  <li>
-                    <a href="#">Web Developers</a>
-                  </li>
-                  <li>
-                    <a href="#">Python</a>
-                  </li>
-                  <li>
-                    <a href="#">HTML5</a>
-                  </li>
-                  <li>
-                    <a href="#">CSS3</a>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-6 col-md-3 mb-4 mb-md-0">
-                <h3>Company</h3>
-                <ul className="list-unstyled">
-                  <li>
-                    <a href="#">About Us</a>
-                  </li>
-                  <li>
-                    <a href="#">Career</a>
-                  </li>
-                  <li>
-                    <a href="#">Blog</a>
-                  </li>
-                  <li>
-                    <a href="#">Resources</a>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-6 col-md-3 mb-4 mb-md-0">
-                <h3>Support</h3>
-                <ul className="list-unstyled">
-                  <li>
-                    <a href="#">Support</a>
-                  </li>
-                  <li>
-                    <a href="#">Privacy</a>
-                  </li>
-                  <li>
-                    <a href="#">Terms of Service</a>
-                  </li>
-                </ul>
-              </div>
-              <div className="col-6 col-md-3 mb-4 mb-md-0">
-                <h3>Contact Us</h3>
-                <div className="footer-social">
-                  <a href="#">
-                    <span className="icon-facebook" />
-                  </a>
-                  <a href="#">
-                    <span className="icon-twitter" />
-                  </a>
-                  <a href="#">
-                    <span className="icon-instagram" />
-                  </a>
-                  <a href="#">
-                    <span className="icon-linkedin" />
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </footer>
+        
       </div>
-
     </Layout>
   );
 }

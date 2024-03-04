@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export default function Header() {
   return (
@@ -50,36 +50,56 @@ export default function Header() {
                 </Link>
                 <ul className="dropdown">
                   <li>
-                    <Link href="/service" replace>Services</Link>
+                    <Link href="/service" replace>
+                      Services
+                    </Link>
                   </li>
                   <li>
-                    <Link href="/service-single" replace>Service Single</Link>
+                    <Link href="/service-single" replace>
+                      Service Single
+                    </Link>
                   </li>
                   <li>
-                    <Link href="/blog-single" replace>Blog Single</Link>
+                    <Link href="/blog-single" replace>
+                      Blog Single
+                    </Link>
                   </li>
                   <li>
-                    <Link href="/portfolio" replace>Portfolio</Link>
+                    <Link href="/portfolio" replace>
+                      Portfolio
+                    </Link>
                   </li>
                   <li>
-                    <Link href="/portfolio-single" replace>Portfolio Single</Link>
+                    <Link href="/portfolio-single" replace>
+                      Portfolio Single
+                    </Link>
                   </li>
                   <li>
-                    <Link href="/testimonials" replace>Testimonials</Link>
+                    <Link href="/testimonials" replace>
+                      Testimonials
+                    </Link>
                   </li>
                   <li>
-                    <Link href="/faq" replace>Frequently Ask Questions</Link>
+                    <Link href="/faq" replace>
+                      Frequently Ask Questions
+                    </Link>
                   </li>
                   <li>
-                    <Link href="/gallery" replace>Gallery</Link>
+                    <Link href="/gallery" replace>
+                      Gallery
+                    </Link>
                   </li>
                 </ul>
               </li>
               <li>
-                <Link href="/blog" replace>Blog</Link>
+                <Link href="/blog" replace>
+                  Blog
+                </Link>
               </li>
               <li>
-                <Link href="/contact" replace>Contact</Link>
+                <Link href="/contact" replace>
+                  Contact
+                </Link>
               </li>
               <li className="d-lg-none">
                 <Link href="/post">
@@ -87,7 +107,9 @@ export default function Header() {
                 </Link>
               </li>
               <li className="d-lg-none">
-                <Link href="/login" replace>Log In</Link>
+                <Link href="/login" replace>
+                  Log In
+                </Link>
               </li>
             </ul>
           </nav>
@@ -103,7 +125,7 @@ export default function Header() {
               </Link>
               <Link
                 href="/login"
-                className="btn btn-primary border-width-2 d-none d-lg-inline-block"
+                className="btn btn-primary border-width-2 d-none ml-2 d-lg-inline-block"
                 replace
               >
                 <span className="mr-2 icon-lock_outline" />

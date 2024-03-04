@@ -11,16 +11,21 @@ import { SelectInput } from '../../components/SelectInput';
 
 export default function Post_job() {
   const [openModal, setOpenModal] = useState(false);
+  const [openModal2, setOpenModal2] = useState(false);
   const QuestionInputRef = useRef(null);
-  const steps = ['Job info', 'Custom Questions', 'Interview Questions'];
+  const CustQestionRef = useRef(null);
+  const AnswerInputRef = useRef(null);
+  const steps = ['Job info', `Custom Q&A`, 'Interview Q&A'];
   const [currentStep, setCurrentStep] = useState(1);
   const [complete, setComplete] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState('');
+  const [slectExperience, setSelectExperience] = useState('');
   const [Questionitems, setItems] = useState([]);
-
-  const addItem = (newItem) => {
-    setItems((prevItems) => [...prevItems, newItem]);
-  };
+  const [CustQuestions, setQuestions] = useState([]);
+  // const addItem = (newItem) => {
+  //   // setItems((prevItems) => [...prevItems, newItem]);
+  //   setItems((prevItems) => [...prevItems, { id: Date.now(), value: newItem }]);
+  // };
   // const handleCountryChange = (event) => {
   //   setSelectedCountry(event.target.value);
   // };
@@ -36,8 +41,18 @@ export default function Post_job() {
     setDescription(event.target.value);
   };
 
-  const addQuestion = (newQuestion) => {
-    setItems((prevItems) => [...prevItems, newQuestion]);
+  const addQuestion = (item) => {
+    setItems((prevItems) => [
+      ...prevItems,
+      { id: Date.now(), Question: item.Question, Answer: item.Answer },
+    ]);
+    console.log(Questionitems);
+  };
+  const addCustQuestion = (item) => {
+    setQuestions((prevItems) => [
+      ...prevItems,
+      { id: Date.now(), Question: item.Question },
+    ]);
   };
   return (
     <Layout>
@@ -67,7 +82,7 @@ export default function Post_job() {
             <div className="container">
               <div className="row">
                 <div className="col-md-7">
-                  <h1 className="text-white font-weight-bold">Post A Job</h1>
+                  <h1 className="text-white font-weight-bold">Post a Job</h1>
                   <div className="custom-breadcrumbs">
                     <Link href="#">Home</Link>{' '}
                     <span className="mx-2 slash">/</span>
@@ -87,7 +102,7 @@ export default function Post_job() {
                 <div className="col-lg-8 mb-4 mb-lg-0">
                   <div className="d-flex align-items-center">
                     <div>
-                      <h2>Post A Job</h2>
+                      <h2>Post a Job</h2>
                     </div>
                   </div>
                 </div>
@@ -192,13 +207,35 @@ export default function Post_job() {
                             />
                           </div>
                         </div>
+                        <div className="form-group w-[100%]">
+                          <div className="mb-2 ">
+                            <Label
+                              htmlFor="Experience"
+                              value="Select The years of Experience"
+                            />
+                          </div>
+                          <SelectInput
+                            options={[
+                              '0-1 years',
+                              '1-2 years',
+                              '2-3 years',
+                              '3-4 years',
+                              '4-5 years',
+                              '5 or more years',
+                            ]}
+                            value={slectExperience}
+                            onChange={(event) =>
+                              setSelectExperience(event.target.value)
+                            }
+                          />
+                        </div>
                         <div className="form-group">
                           <Label
                             htmlFor="job-description"
                             value="Job Requirements"
                           />
                           <Textarea
-                            className="editor"
+                            // className="editor"
                             // id="editor-1"
                             placeholder="Job Requirements"
                             value={description}
@@ -217,101 +254,126 @@ export default function Post_job() {
                               required
                             />
                           </div>
+                          <div className="form-group">
+                            <div>
+                              <div className="mb-2 block">
+                                <Label
+                                  htmlFor="Answer"
+                                  value="Job Description"
+                                />
+                              </div>
+                              <Textarea
+                                // id="editor-2"
+                                // ref={QuestionInputRef}
+                                placeholder="Write Job Description!"
+                                required
+                              />
+                            </div>
+                          </div>
                         </div>
                       </>
                     ) : //condition for step 2
                     currentStep == 2 ? (
                       <>
+                        <div className="m-2 p-2">
+                          <h3 class="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+                              Better Interview Experience
+                            </span>{' '}
+                            With AI.
+                          </h3>
+                          <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+                            Create a better interview experience with AI. Add
+                            custom questions or use our virtual interview
+                            questions to get started.
+                          </p>
+                        </div>
                         <Button
                           className="m-auto mb-3"
-                          onClick={() => setOpenModal(true)}
+                          onClick={() => {
+                            setOpenModal(true);
+                            setOpenModal2(false);
+                          }}
                         >
+                          <svg
+                            width="20"
+                            height="20"
+                            fill="currentColor"
+                            class="mr-2"
+                            aria-hidden="true"
+                          >
+                            <path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1Z" />
+                          </svg>
                           Add interview Question
                         </Button>
                         <div
                           className={`flex flex-col-reverse gap-0.5  p-1 mt-2`}
                         >
-                          {Questionitems.map((item, index) => (
+                          {Questionitems.map((item) => (
                             <Toastitem
-                              key={index}
-                              value={item}
+                              key={item.id}
+                              value={item.Question}
                               className="space-y-4"
                               onAbort={() => {
-                                const newItems = [...Questionitems];
-                                newItems.splice(index, 1);
+                                const newItems = Questionitems.filter(
+                                  (i) => i.id !== item.id
+                                );
                                 setItems(newItems);
                               }}
                             />
                           ))}
                         </div>
-                        <Modal
-                          show={openModal}
-                          size="lg"
-                          popup
-                          onClose={() => setOpenModal(false)}
-                          initialFocus={QuestionInputRef}
-                        >
-                          <Modal.Header />
-                          <Modal.Body>
-                            <div className="space-y-6">
-                              <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-                                Add New Virtual Interview Qestion
-                              </h3>
-                              <div>
-                                <div className="mb-2 block">
-                                  <Label
-                                    htmlFor="Question"
-                                    value="Enter Application Question"
-                                  />
-                                </div>
-                                <Textarea
-                                  id="Question"
-                                  ref={QuestionInputRef}
-                                  placeholder="How many years of experiance do you have ?"
-                                  required
-                                />
-                              </div>
-                              <div>
-                                <div className="mb-2 block">
-                                  <Label
-                                    htmlFor="Answer"
-                                    value="Enter the question model Answer"
-                                  />
-                                </div>
-                                <Textarea
-                                  id="Answer"
-                                  // ref={QuestionInputRef}
-                                  placeholder="I have Three years of experiance"
-                                  required
-                                />
-                              </div>
-                              <div className="w-full">
-                                <Button
-                                  onClick={() => {
-                                    if (QuestionInputRef.current.value != '') {
-                                      addQuestion(
-                                        QuestionInputRef.current.value
-                                      );
-                                      QuestionInputRef.current.value = '';
-                                    }
-                                  }}
-                                >
-                                  Add Question
-                                </Button>
-                              </div>
-                            </div>
-                          </Modal.Body>
-                        </Modal>
-                        <div>
-                          <div className="mb-2 block">
-                            <Label htmlFor="file-upload" value="Upload file" />
-                          </div>
-                          <FileInput id="file-upload" />
-                        </div>
                       </>
                     ) : (
-                      //condition for step 3
-                      <div className="form-group"> list 3</div>
+                      <>
+                        <div className="form-group">
+                          <div className="m-2 p-2">
+                            <h3 class="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
+                              <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+                                Custom Questions
+                              </span>{' '}
+                              in the Application Form.
+                            </h3>
+                            <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+                              Add Custom Questions to the job application form.
+                            </p>
+                          </div>
+                          <Button
+                            className="m-auto mb-3"
+                            onClick={() => {
+                              setOpenModal(true);
+                              setOpenModal2(true);
+                            }}
+                          >
+                            <svg
+                              width="20"
+                              height="20"
+                              fill="currentColor"
+                              class="mr-2"
+                              aria-hidden="true"
+                            >
+                              <path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1Z" />
+                            </svg>
+                            Add Custom Question
+                          </Button>
+                        </div>
+                        <div
+                          className={`flex flex-col-reverse gap-0.5  p-1 mt-2`}
+                        >
+                          {CustQuestions.map((item) => (
+                            <Toastitem
+                              value={item.Question}
+                              className="space-y-4"
+                              onAbort={() => {
+                                const newItems = Questionitems.filter(
+                                  (i) => i.id !== item.id
+                                );
+                                setQuestions(newItems);
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </>
                     )}
                   </form>
                   <div className="form-group h-5 m-5 flex flex-row justify-center ql-align-center text-center mb-2 ">
@@ -332,7 +394,7 @@ export default function Post_job() {
                               i + 1
                             )}
                           </div>
-                          <p className="text-gray-500">{step}</p>
+                          <p className="text-gray-500 m-[0.5rem]">{step}</p>
                         </div>
                       ))}
                     </div>
@@ -384,6 +446,95 @@ export default function Post_job() {
             </div>
           </section>
         </div>
+
+        <Modal
+          show={openModal}
+          size="lg"
+          popup
+          onClose={() => setOpenModal(false)}
+          initialFocus={QuestionInputRef}
+        >
+          <Modal.Header />
+          <Modal.Body>
+            <div className="space-y-6">
+              <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+                {openModal2
+                  ? 'Add New Custom Qestion'
+                  : 'Add New Virtual Interview Qestion'}
+              </h3>
+              <div>
+                <div className="mb-2 block">
+                  <Label
+                    htmlFor="Question"
+                    value="Enter Application Question"
+                  />
+                </div>
+                <Textarea
+                  id="Question"
+                  {...(openModal2
+                    ? { ref: CustQestionRef }
+                    : { ref: QuestionInputRef })}
+                  placeholder={
+                    !openModal2
+                      ? `Can you describe a challenging situation you've faced at work and how you handled it?`
+                      : 'Tell me about the last project you were involved in ?'
+                  }
+                  required
+                />
+              </div>
+              {!openModal2 && (
+                <div>
+                  <div className="mb-2 block">
+                    <Label
+                      htmlFor="Answer"
+                      value="Enter the question model Answer"
+                    />
+                  </div>
+                  <Textarea
+                    id="Answer"
+                    ref={AnswerInputRef}
+                    placeholder="In my previous role as a software developer, we were working on a project with a very tight deadline. Halfway through......."
+                    required
+                  />
+                </div>
+              )}
+              <div className="w-full">
+                <Button
+                  onClick={() => {
+                    if (openModal2) {
+                      if (CustQestionRef.current.value != '') {
+                        addCustQuestion({
+                          Question: CustQestionRef.current.value,
+                        });
+                        CustQestionRef.current.value = '';
+                      }
+                    } else {
+                      if (QuestionInputRef.current.value != '') {
+                        addQuestion({
+                          Question: QuestionInputRef.current.value,
+                          Answer: QuestionInputRef.current.value,
+                        });
+                        QuestionInputRef.current.value = '';
+                        AnswerInputRef.current.value = '';
+                      }
+                    }
+                  }}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    class="mr-2"
+                    aria-hidden="true"
+                  >
+                    <path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1Z" />
+                  </svg>
+                  Add Question
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
       </>
     </Layout>
   );

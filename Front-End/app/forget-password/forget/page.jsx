@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useState } from 'react';
 import Link from 'next/link';
 
@@ -10,14 +10,17 @@ const Forget_password = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const email = formData.get("email"); 
+    const email = formData.get('email');
     try {
-      const response = await fetch('https://localhost:7049/api/Password/forget-password', {
-        method: 'POST',
-        body: JSON.stringify({
-          'email' : email , 
-        }),
-      });
+      const response = await fetch(
+        'https://localhost:7049/api/Password/forget-password',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            email: email,
+          }),
+        }
+      );
       if (response.ok) {
         setMessage('Check your inbox to reset your password.');
         setShowResetForm(true); // Display the reset form
@@ -77,7 +80,7 @@ const Forget_password = () => {
             padding: 10px;
             border: none;
             border-radius: 3px;
-            background-color: #89ba16;
+            background-color: #17a9c3;
             color: #fff;
             font-weight: bold;
             cursor: pointer;
@@ -149,11 +152,21 @@ const Forget_password = () => {
             </div>
             <div className="form-group">
               <label htmlFor="newPassword">New Password</label>
-              <input type="password" id="newPassword" name="newPassword" required />
+              <input
+                type="password"
+                id="newPassword"
+                name="newPassword"
+                required
+              />
             </div>
             <div className="form-group">
               <label htmlFor="confirmNewPassword">Confirm New Password</label>
-              <input type="password" id="confirmNewPassword" name="confirmNewPassword" required />
+              <input
+                type="password"
+                id="confirmNewPassword"
+                name="confirmNewPassword"
+                required
+              />
             </div>
             <div className="form-group">
               <button type="submit" id="resetButton">

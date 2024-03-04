@@ -570,7 +570,7 @@ export default function Jobs() {
                     </li>
                   </Link>
                 ))} */}
-                {jobData.map((job) => (
+                {jobs.map((job) => (
                   <CardComp
                     title={job.title}
                     company={job.companyName}

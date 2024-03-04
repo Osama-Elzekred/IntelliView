@@ -1,4 +1,5 @@
 import Layout from '../components/Layout';
+import Link from 'next/link';
 export default function IndexPage() {
   return (
     <>
@@ -41,8 +42,7 @@ export default function IndexPage() {
                     The Easiest Way To Get Your Dream Job
                   </h1>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Cupiditate est, consequuntur perferendis.
+                    Find your dream jobs in our powerful AI-driven platform.
                   </p>
                 </div>
                 <form method="post" className="search-jobs-form">
@@ -355,29 +355,23 @@ export default function IndexPage() {
           </div>
         </section>
         <section
-          className=" sign py-5 bg-image overlay-primary fixed overlay"
-          style={{
-            backgroundImage:
-              'url("/images/ai-background-business-technology-digital-transformation.jpg")',
-          }}
-        >
-          <div className="container">
-            <div className="row align-items-center">
-              <div className="col-md-8">
-                <h2>Looking For A Job?</h2>
-                <p className="mb-0 text-white lead wait">
-                  {' '}
-                  What are you waiting for?!
-                </p>
-              </div>
-              <div className="col-md-3 ml-auto">
-                <a href="#" className="btn btn-dark btn-block btn-lg">
-                  Sign Up
-                </a>
+            className="py-5 bg-image overlay-primary fixed overlay"
+            style={{ backgroundImage: 'url("/images/background.jpg")' }}
+          >
+            <div className="container" id="ayklam">
+              <div className="row align-items-center">
+                <div className="col-md-8">
+                  <h2 className="text-white">Looking For A Job?</h2>
+                  <p className="mb-0 text-white lead"> Find your dream job.</p>
+                </div>
+                <div className="col-md-3 ml-auto">
+                  <Link href="/login" className="btn btn-warning btn-block btn-lg" >
+                    Sign Up
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
         <section className="site-section py-4">
           <div className="container"></div>
         </section>
@@ -465,10 +459,7 @@ export default function IndexPage() {
                   <div className="col-lg-6 align-self-center text-center text-lg-left">
                     <blockquote>
                       <p>
-                        “Soluta quasi cum delectus eum facilis recusandae
-                        nesciunt molestias accusantium libero dolores repellat
-                        id in dolorem laborum ad modi qui at quas dolorum
-                        voluptatem voluptatum repudiandae.”
+                        “suiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.”
                       </p>
                       <p>
                         <cite> — Corey Woods, @Dribbble</cite>

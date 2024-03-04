@@ -126,7 +126,7 @@ label.btn {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    height: 730px
+    height: 700px;
 }
 
 #title,#phone{

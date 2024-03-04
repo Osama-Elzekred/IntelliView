@@ -1,16 +1,86 @@
 // import { useNavigation } from 'next/navigation';
-import Layout from '../../components/Layout';
+"use client";
+import Cookies from "js-cookie";
+import Layout from "../../components/Layout";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+const DOMAIN_NAME = "localhost:7049";
+
+// const jobData = 
+//   {
+//     id: 1,
+//     title: "Front End",
+//     jobType: "remote",
+//     jobTime: "full time",
+//     location: "Cairo",
+//     description: "ay klam ",
+//     requirements: "bla bla ",
+//     responsibilities: null,
+//     companyName: "Inteliview",
+//     notes: "",
+//     salary: "7000$",
+//     imageURl: "images/job_logo_1.jpg",
+//     isActive: true,
+//     isDeleted: false,
+//     companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+//     companyUser: null,
+//     jobQuestions: null,
+//     jobInterestedTopics: null,
+//     createdAt: "2024-03-02T14:43:33.796Z",
+//     updatedAt: "2024-03-02T14:43:33.796Z",
+//     endedAt: "2024-03-02T14:43:33.796Z",
+//   }
+// ;
+
 export default function Job_details({ params }) {
   console.log(parseInt(params.id));
+  const authToken = Cookies.get("authToken");
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://${DOMAIN_NAME}/api/job/` + params.id,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  //const jobData = Object.keys(data).length > 0 ? [data] : [];
+  //console.log(jobData); 
+
+  const date = new Date(data.createdAt);
+   const options = {year: 'numeric', month: 'short', day: 'numeric' };
+   const formattedDate = date.toLocaleDateString('en-US', options);
+  //console.log(jobData[0].createdAt);
+  const date1 = new Date(data.endedAt);
+   const options1 = {year: 'numeric', month: 'short', day: 'numeric' };
+   const formattedDate1 = date1.toLocaleDateString('en-US', options1);
   return (
     <Layout>
       <>
         {/* <div id="overlayer" /> */}
-        <div className="loader">
+        {/* <div className="loader">
           <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
           </div>
-        </div>
+        </div> */}
         <div className="site-wrap">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">
@@ -19,14 +89,13 @@ export default function Job_details({ params }) {
               </div>
             </div>
             <div className="site-mobile-menu-body" />
-          </div>{' '}
+          </div>{" "}
           {/* .site-mobile-menu */}
           {/* HOME */}
           <section
             className="section-hero overlay inner-page bg-image"
             style={{
-              backgroundImage:
-                'url("/images/hero_1.jpg")',
+              backgroundImage: 'url("/images/hero_1.jpg")',
             }}
             id="home-section"
           >
@@ -35,8 +104,10 @@ export default function Job_details({ params }) {
                 <div className="col-md-7">
                   <h1 className="text-white font-weight-bold" />
                   <div className="custom-breadcrumbs">
-                    <a href="#">Home</a> <span className="mx-2 slash">/</span>
-                    <a href="#">Job</a> <span className="mx-2 slash">/</span>
+                    <Link href="#">Home</Link>{" "}
+                    <span className="mx-2 slash">/</span>
+                    <Link href="#">Job</Link>{" "}
+                    <span className="mx-2 slash">/</span>
                     <span className="text-white">
                       <strong />
                     </span>
@@ -54,15 +125,18 @@ export default function Job_details({ params }) {
                       <img src="/images/job_logo_5.jpg" alt="Image" />
                     </div>
                     <div>
-                      <h2>Product Designer</h2>
+                      {data.map((item) => (
+                        
+                        <h2>{item.title}</h2>
+                      ))}
                       <div>
                         <span className="ml-0 mr-2 mb-2">
                           <span className="icon-briefcase mr-2" />
-                          Puma
+                          {data.comopanyName}
                         </span>
                         <span className="m-2">
                           <span className="icon-room mr-2" />
-                          New York City
+                          {data.location}
                         </span>
                         <span className="m-2">
                           <span className="icon-clock-o mr-2" />
@@ -75,15 +149,17 @@ export default function Job_details({ params }) {
                 <div className="col-lg-4">
                   <div className="row">
                     <div className="col-6">
-                      <a href="#" className="btn btn-block btn-light btn-md">
+                      <Link href="#" className="btn btn-block btn-light btn-md">
                         <span className="icon-heart-o mr-2 text-danger" />
                         Save Job
-                      </a>
+                      </Link>
                     </div>
                     <div className="col-6">
-                      <a href="#" className="btn btn-block btn-primary btn-md">
+                      <Link
+                        href="/job/${id}/apply"
+                        className="btn btn-block btn-primary btn-md">
                         Apply Now
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -102,6 +178,9 @@ export default function Job_details({ params }) {
                       <span className="icon-align-left mr-3" />
                       Job Description
                     </h3>
+                  {data.map((item) => (
+                    <span>{item.description}</span>
+                  ))}
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -109,26 +188,16 @@ export default function Job_details({ params }) {
                       Responsibilities
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
+                      {data.map((item) => (
+                        <li
+                          key={item}
+                          className="d-flex align-items-start mb-2"
+                        >
+                          <span className="icon-check_circle mr-2 text-muted" />
+                          <span>{item.responsibilities}</span>{" "}
+                          {/* Assuming each item is a string */}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                   <div className="mb-5">
@@ -137,26 +206,16 @@ export default function Job_details({ params }) {
                       Education + Experience
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
+                      {data.map((item) => (
+                        <li
+                          key={item}
+                          className="d-flex align-items-start mb-2"
+                        >
+                          <span className="icon-check_circle mr-2 text-muted" />
+                          <span>Requirements : {item.requirements}</span>{" "}
+                          {/* Assuming each item is a string */}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                   <div className="mb-5">
@@ -165,39 +224,32 @@ export default function Job_details({ params }) {
                       Other Benifits
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
-                      <li className="d-flex align-items-start mb-2">
-                        <span className="icon-check_circle mr-2 text-muted" />
-                        <span />
-                      </li>
+                      {data.map((item) => (
+                        <li
+                          key={item}
+                          className="d-flex align-items-start mb-2"
+                        >
+                          <span className="icon-check_circle mr-2 text-muted" />
+                          <span>{item.item}</span>{" "}
+                          {/* Assuming each item is a string */}
+                        </li>
+                      ))}
                     </ul>
                   </div>
                   <div className="row mb-5">
                     <div className="col-6">
-                      <a href="#" className="btn btn-block btn-light btn-md">
+                      <Link href="#" className="btn btn-block btn-light btn-md">
                         <span className="icon-heart-o mr-2 text-danger" />
                         Save Job
-                      </a>
+                      </Link>
                     </div>
                     <div className="col-6">
-                      <a href="#" className="btn btn-block btn-primary btn-md">
+                      <Link
+                        href="/job/${id}/apply"
+                        className="btn btn-block btn-primary btn-md"
+                      >
                         Apply Now
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -207,57 +259,52 @@ export default function Job_details({ params }) {
                       Job Summary
                     </h3>
                     <ul className="list-unstyled pl-3 mb-0">
-                      <li className="mb-2">
-                        <strong className="text-black">Published on:</strong>{' '}
-                        April 14, 2019
-                      </li>
-                      <li className="mb-2">
+                    <li className="mb-2">
+                        <strong className="text-black">Published on:</strong>{" "}
+                        {formattedDate}
+                    </li>
+                      {/* <li className="mb-2">
                         <strong className="text-black">Vacancy:</strong> 20
-                      </li>
+                      </li> */}
                       <li className="mb-2">
                         <strong className="text-black">
                           Employment Status:
-                        </strong>{' '}
-                        Full-time
+                        </strong>{" "}
+                        {data.jobTime}
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">Experience:</strong> 2 to
-                        3 year(s)
+                        <strong className="text-black">Experience:</strong>
+                        {data.minimumExperience}
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">Job Location:</strong>{' '}
-                        New ork City
+                        <strong className="text-black">Job Location:</strong>{" "}
+                        {data.location}
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">Salary:</strong> $60k -
-                        $100k
+                        <strong className="text-black">Salary:</strong>
+                        {data.salary}
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">Gender:</strong> Any
-                      </li>
-                      <li className="mb-2">
-                        <strong className="text-black">
-                          Application Deadline:
-                        </strong>{' '}
-                        April 28, 2019
-                      </li>
+                        <strong className="text-black">Application DeadLine:</strong>{" "}
+                        {formattedDate1}
+                    </li>
                     </ul>
                   </div>
                   <div className="bg-light p-3 border rounded">
                     <h3 className="text-primary  mt-3 h5 pl-3 mb-3 ">Share</h3>
                     <div className="px-3">
-                      <a href="#" className="pt-3 pb-3 pr-3 pl-0">
+                      <Link href="#" className="pt-3 pb-3 pr-3 pl-0">
                         <span className="icon-facebook" />
-                      </a>
-                      <a href="#" className="pt-3 pb-3 pr-3 pl-0">
+                      </Link>
+                      <Link href="#" className="pt-3 pb-3 pr-3 pl-0">
                         <span className="icon-twitter" />
-                      </a>
-                      <a href="#" className="pt-3 pb-3 pr-3 pl-0">
+                      </Link>
+                      <Link href="#" className="pt-3 pb-3 pr-3 pl-0">
                         <span className="icon-linkedin" />
-                      </a>
-                      <a href="#" className="pt-3 pb-3 pr-3 pl-0">
+                      </Link>
+                      <Link href="#" className="pt-3 pb-3 pr-3 pl-0">
                         <span className="icon-pinterest" />
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -271,9 +318,9 @@ export default function Job_details({ params }) {
                   <h2 className="section-title mb-2">22,392 Related Jobs</h2>
                 </div>
               </div>
-              <ul className="job-listings mb-5">
+              <ul className="job mb-5">
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_1.jpg"
@@ -295,7 +342,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_2.jpg"
@@ -317,7 +364,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_3.jpg"
@@ -339,7 +386,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_4.jpg"
@@ -361,7 +408,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_5.jpg"
@@ -372,7 +419,7 @@ export default function Job_details({ params }) {
                   <div className="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
                     <div className="job-listing-position custom-width w-50 mb-3 mb-sm-0">
                       <h2>Product Designer</h2>
-                      <strong>Puma</strong>
+                      <strong>{data.companyName}</strong>
                     </div>
                     <div className="job-listing-location mb-3 mb-sm-0 custom-width w-25">
                       <span className="icon-room" /> San Mateo, CA
@@ -383,7 +430,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_1.jpg"
@@ -405,7 +452,7 @@ export default function Job_details({ params }) {
                   </div>
                 </li>
                 <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                  <a href="job-single.html" />
+                  <Link href="/job/id"></Link>
                   <div className="job-listing-logo">
                     <img
                       src="/images/job_logo_2.jpg"
@@ -433,20 +480,20 @@ export default function Job_details({ params }) {
                 </div>
                 <div className="col-md-6 text-center text-md-right">
                   <div className="custom-pagination ml-auto">
-                    <a href="#" className="prev">
+                    <Link href="#" className="prev">
                       Prev
-                    </a>
+                    </Link>
                     <div className="d-inline-block">
-                      <a href="#" className="active">
+                      <Link href="#" className="active">
                         1
-                      </a>
-                      <a href="#">2</a>
-                      <a href="#">3</a>
-                      <a href="#">4</a>
+                      </Link>
+                      <Link href="#">2</Link>
+                      <Link href="#">3</Link>
+                      <Link href="#">4</Link>
                     </div>
-                    <a href="#" className="next">
+                    <Link href="#" className="next">
                       Next
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -517,20 +564,21 @@ export default function Job_details({ params }) {
                     tempora adipisci impedit.
                   </p>
                   <p className="mb-0">
-                    <a
+                    <Link
                       href="#"
                       className="btn btn-dark btn-md px-4 border-width-2"
                     >
                       <span className="icon-apple mr-3" />
                       App Store
-                    </a>
-                    <a
+                    </Link>
+                    <span> </span>
+                    <Link
                       href="#"
                       className="btn btn-dark btn-md px-4 border-width-2"
                     >
                       <span className="icon-android mr-3" />
                       Play Store
-                    </a>
+                    </Link>
                   </p>
                 </div>
                 <div className="col-md-6 ml-auto align-self-end">

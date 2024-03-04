@@ -1,7 +1,7 @@
 import Layout from '../../components/Layout';
 import Phone from '../../components/Phone';
 import Script from 'next/script';
-export default function User_profile() {
+const User_profile = () => {
   return (
     <Layout>
       <>
@@ -36,7 +36,7 @@ export default function User_profile() {
                 <div className="col-md-7">
                   <h1 className="text-white font-weight-bold">Edit Profile</h1>
                   <div className="custom-breadcrumbs">
-                    <a href="#">Home</a> <span className="mx-2 slash">/</span>
+                    <Link href="#">Home</Link> <span className="mx-2 slash">/</span>
                     <span className="text-white">
                       <strong>Edit Peofile</strong>
                     </span>
@@ -50,48 +50,48 @@ export default function User_profile() {
               <div className="row no-gutters row-bordered row-border-light">
                 <div className="col-md-3 pt-0">
                   <div className="list-group list-group-flush account-settings-links">
-                    <a
+                    <Link
                       className="list-group-item list-group-item-action active"
                       data-toggle="list"
                       href="#account-general"
                     >
                       General
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="list-group-item list-group-item-action"
                       data-toggle="list"
                       href="#account-change-password"
                     >
                       Change password
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="list-group-item list-group-item-action"
                       data-toggle="list"
                       href="#account-info"
                     >
                       Info
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="list-group-item list-group-item-action"
                       data-toggle="list"
                       href="#account-social-links"
                     >
                       Social links
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="list-group-item list-group-item-action"
                       data-toggle="list"
                       href="#account-connections"
                     >
                       Connections
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="list-group-item list-group-item-action"
                       data-toggle="list"
                       href="#account-notifications"
                     >
                       Notifications
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <div className="col-md-9">
@@ -156,9 +156,9 @@ export default function User_profile() {
                               </div>
                             </div>
                             <div className="cv">
-                              <label htmlFor="cv">cv</label>
+                              <label htmlFor="inputFile">cv</label>
                               <br />
-                              <button
+                              <div
                                 className="cssbuttons-io-button"
                                 id="uploadCv"
                               >
@@ -173,12 +173,14 @@ export default function User_profile() {
                                 <input
                                   type="file"
                                   name="cv"
-                                  id="cv"
+                                  id="CVfile"
                                   // htmlFor="inputFile"
                                   style={{ display: 'none' }}
                                 />
-                                <span>Upload your CV</span>
-                              </button>
+                                <label className="" htmlFor="CVfile">
+                                  Upload your CV
+                                </label>
+                              </div>
                             </div>
                             <div className="title">
                               <label htmlFor="title">title</label>
@@ -331,22 +333,22 @@ export default function User_profile() {
                       <hr className="border-light m-0" />
                       <div className="card-body">
                         <h5 className="mb-2">
-                          <a
+                          <Link
                             href="javascript:void(0)"
                             className="float-right text-muted text-tiny"
                           >
                             <i className="ion ion-md-close" /> Remove
-                          </a>
+                          </Link>
                           <i className="ion ion-logo-google text-google" />
                           You are connected to Google:
                         </h5>
-                        <a
+                        <Link
                           href="/cdn-cgi/l/email-protection"
                           className="__cf_email__"
                           data-cfemail="523c3f332a25373e3e123f333b3e7c313d3f"
                         >
                           [email&nbsp;protected]
-                        </a>
+                        </Link>
                       </div>
                       <hr className="border-light m-0" />
                       <div className="card-body">
@@ -482,4 +484,5 @@ export default function User_profile() {
       </>
     </Layout>
   );
-}
+};
+export default User_profile;

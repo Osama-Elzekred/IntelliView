@@ -30,7 +30,6 @@ export default function RootLayout({ children }) {
       <Script src="/js/quill.min.js"></Script>
       <Script src="/js/bootstrap-select.min.js"></Script>
       <Script src="/js/custom.js"></Script>
-      <Script src="/js/forms_api_code.js"></Script>
     </html>
   );
 }

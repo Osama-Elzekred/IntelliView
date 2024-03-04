@@ -1,33 +1,32 @@
 'use client';
 import React from 'react';
 
-function MainComponent({
+function CardComp({
   title,
+  jobTime,
   company,
-  companyLogo,
   location,
   timePosted,
   employmentType,
-  workType,
-  experienceLevel,
   categories,
-  linkToDetailsPage,
+  companyImageUrl,
+  onClick,
 }) {
   const categoriesList = categories.map((category, index) => (
     <span
       key={index}
-      className="inline after:content-['·'] last:after:content-['']"
+      className="font-roboto text-[#6B7280] text-sm after:content-['·'] last:after:content-['']"
     >
-      {category}
+      {category.trim()}
     </span>
   ));
 
   return (
-    <a
-      href={linkToDetailsPage}
-      className="bg-white p-4 rounded-lg shadow-lg max-w-[920px] mx-auto transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl"
+    <div
+      className="bg-white p-2 rounded-md shadow-lg max-w-[920px] mx-auto hover:bg-gray-100 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 cursor-pointer"
+      onClick={onClick}
     >
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-center">
         <div>
           <h2 className="font-roboto text-[#121212] text-lg font-semibold">
             {title}
@@ -36,90 +35,57 @@ function MainComponent({
             {company} - {location}
           </p>
           <p className="font-roboto text-[#6B7280] text-sm">{timePosted}</p>
-          <div className="flex gap-2 my-2">
-            <span className="bg-[#E5E7EB] rounded px-2 py-1 text-sm">
-              {employmentType}
-            </span>
-            {workType && (
-              <span className="bg-[#E5E7EB] rounded px-2 py-1 text-sm">
-                {workType}
-              </span>
-            )}
-          </div>
-          {experienceLevel && (
-            <p className="font-roboto text-[#6B7280] text-sm">
-              {experienceLevel}
-            </p>
-          )}
         </div>
-        <div className="flex-shrink-0">
+        <div className="w-[50px] h-[50px]">
           <img
-            src={companyLogo}
-            alt={`Logo of ${company}`}
-            className="w-16 h-16 rounded-full"
+            className="rounded-full border border-[#6B7280] object-cover object-center"
+            src={companyImageUrl}
+            alt={`Company logo of ${company}`}
+            width="50"
+            height="50"
           />
         </div>
       </div>
-      <div className="font-roboto text-[#6B7280] text-sm flex flex-wrap gap-1">
-        {categoriesList}
+      <div className="font-roboto text-[#121212] space-x-2">
+        <span className="bg-[#E5E7EB] rounded px-2 py-1 text-sm">
+          {employmentType}
+        </span>
+        <span className="bg-[#E5E7EB] rounded px-2 py-1 text-sm">
+          {jobTime}
+        </span>
       </div>
-    </a>
-  );
-}
-
-function StoryComponent() {
-  const jobDetails = [
-    {
-      title: 'Payroll Specialist - Middle East',
-      company: 'Remote Technology, Inc.',
-      companyLogo: './images/remote-tech-logo.png',
-      location: 'Cairo, Egypt',
-      timePosted: '20 minutes ago',
-      employmentType: 'Full Time',
-      categories: [
-        'Not specified',
-        'Accounting/Finance',
-        'Administration',
-        'Human Resources Payroll',
-        'Human Resources (HR)',
-        'Personnel',
-        'Accounting',
-        'Microsoft Office',
-        'Labor Law HR',
-      ],
-      linkToDetailsPage: '/details/payroll-specialist-middle-east',
-    },
-    {
-      title: 'Administrative Specialist',
-      company: 'REMAX/KAYAN',
-      companyLogo: './images/remax-kayan-logo.png',
-      location: 'New Cairo, Cairo, Egypt',
-      timePosted: '17 hours ago',
-      employmentType: 'Full Time',
-      workType: 'On-site',
-      experienceLevel: 'Entry Level - 1 - 3 Yrs of Exp',
-      categories: [
-        'Accounting/Finance',
-        'Administration',
-        'English',
-        'Accounting',
-        'Business Administration',
-        'New Cairo',
-        'Microsoft Office',
-        'Real Estate',
-        'Brokerage',
-      ],
-      linkToDetailsPage: '/details/administrative-specialist',
-    },
-  ];
-
-  return (
-    <div className="p-6 bg-[#F9FAFB] min-h-screen flex flex-col items-center justify-center space-y-4">
-      {jobDetails.map((jobInfo, index) => (
-        <MainComponent key={index} {...jobInfo} />
-      ))}
+      <div className="flex flex-wrap gap-1">{categoriesList}</div>
     </div>
   );
 }
 
-export default MainComponent;
+function StoryComponent() {
+  const jobInfo = {
+    title: 'Payroll Specialist - Middle East',
+    company: 'Remote Technology, Inc.',
+    location: 'Cairo, Egypt',
+    timePosted: '20 minutes ago',
+    employmentType: 'Full Time',
+    categories: [
+      'Not specified',
+      'Accounting/Finance',
+      'Administration',
+      'Human Resources Payroll',
+      'Human Resources (HR)',
+      'Personnel',
+      'Accounting',
+      'Microsoft Office',
+      'Labor Law HR',
+    ],
+    companyImageUrl: './images/company-logo.png',
+    onClick: () => (window.location.href = '/job-details'),
+  };
+
+  return (
+    <div className="p-6 bg-[#F9FAFB] min-h-screen flex items-center justify-center">
+      <CardComp {...jobInfo} />
+    </div>
+  );
+}
+
+export default CardComp;

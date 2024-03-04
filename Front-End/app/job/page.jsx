@@ -3,79 +3,310 @@ import Layout from "../components/Layout";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { Badge } from "flowbite-react";
+import { HiCheck, HiClock } from "react-icons/hi";
 
 export default function Jobs() {
-  const imageURl=  "images/job_logo_1.jpg"
-  // const jobData = [
-  //   {
-  //     id: 1,
-  //     title: "Front End",
-  //     jobType: "remote",
-  //     jobTime: "full time",
-  //     location: "Cairo",
-  //     description: "ay klam ",
-  //     requirements: "bla bla ",
-  //     responsibilities: null,
-  //     companyName: "Inteliview",
-  //     notes: "",
-  //     salary: "7000$",
-  //     imageURl: "images/job_logo_1.jpg",
-  //     isActive: true,
-  //     isDeleted: false,
-  //     companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
-  //     companyUser: null,
-  //     jobQuestions: null,
-  //     jobInterestedTopics: null,
-  //     createdAt: "2024-03-02T14:43:33.796Z",
-  //     updatedAt: "2024-03-02T14:43:33.796Z",
-  //     endedAt: "2024-03-02T14:43:33.796Z",
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "back End",
-  //     jobType: "on site",
-  //     jobTime: "part time",
-  //     location: "Cairo",
-  //     description: "ay klam ",
-  //     requirements: "bla bla ",
-  //     responsibilities: null,
-  //     companyName: "Inteliview",
-  //     notes: "",
-  //     salary: "8000$",
-  //     imageURl: "images/job_logo_2.jpg",
-  //     isActive: true,
-  //     isDeleted: false,
-  //     companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
-  //     companyUser: null,
-  //     jobQuestions: null,
-  //     jobInterestedTopics: null,
-  //     createdAt: "2024-03-02T14:43:33.796Z",
-  //     updatedAt: "2024-03-02T14:43:33.796Z",
-  //     endedAt: "2024-03-02T14:43:33.796Z",
-  //   },
-    
-  // ];
-  const [jobListings, setJobListings] = useState([]);
-    useEffect(() => {
-      const fetchJobs = async () => {
-        const authToken = Cookies.get('authToken');
-        try {
-          const response = await fetch('https://localhost:7049/api/Job/GetAll', {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          });
-          if (response.ok) {
-            const jobs = await response.json();
-            setJobListings(jobs);
-          }
-        } catch (error) {
-          console.log('error : ', error);
-        }
-      };
-      fetchJobs();
-    }, []);
+  const imageURl = "images/job_logo_1.jpg";
+  const jobData = [
+    {
+      id: 1,
+      title: "Front End",
+      jobType: "remote",
+      jobTime: "full time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "7000$",
+      imageURl: "images/job_logo_1.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 2,
+      title: "back End",
+      jobType: "on site",
+      jobTime: "part time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "8000$",
+      imageURl: "images/job_logo_2.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 3,
+      title: "Front End",
+      jobType: "remote",
+      jobTime: "full time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "7000$",
+      imageURl: "images/job_logo_1.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 4,
+      title: "back End",
+      jobType: "on site",
+      jobTime: "part time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "8000$",
+      imageURl: "images/job_logo_2.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 5,
+      title: "Front End",
+      jobType: "remote",
+      jobTime: "full time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "7000$",
+      imageURl: "images/job_logo_1.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 6,
+      title: "back End",
+      jobType: "on site",
+      jobTime: "part time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "8000$",
+      imageURl: "images/job_logo_2.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 7,
+      title: "Front End",
+      jobType: "remote",
+      jobTime: "full time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "7000$",
+      imageURl: "images/job_logo_1.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 8,
+      title: "back End",
+      jobType: "on site",
+      jobTime: "part time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "8000$",
+      imageURl: "images/job_logo_2.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 9,
+      title: "front End",
+      jobType: "on site",
+      jobTime: "part time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "8000$",
+      imageURl: "images/job_logo_2.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 10,
+      title: "front End",
+      jobType: "on site",
+      jobTime: "part time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "8000$",
+      imageURl: "images/job_logo_2.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 11,
+      title: "back End",
+      jobType: "on site",
+      jobTime: "part time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "8000$",
+      imageURl: "images/job_logo_2.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+    {
+      id: 12,
+      title: "back End",
+      jobType: "on site",
+      jobTime: "part time",
+      location: "Cairo",
+      description: "ay klam ",
+      requirements: "bla bla ",
+      responsibilities: null,
+      companyName: "Inteliview",
+      notes: "",
+      salary: "8000$",
+      imageURl: "images/job_logo_2.jpg",
+      isActive: true,
+      isDeleted: false,
+      companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
+      companyUser: null,
+      jobQuestions: null,
+      jobInterestedTopics: null,
+      createdAt: "2024-03-02T14:43:33.796Z",
+      updatedAt: "2024-03-02T14:43:33.796Z",
+      endedAt: "2024-03-02T14:43:33.796Z",
+    },
+  ];
+  // const [jobListings, setJobListings] = useState([]);
+  //   useEffect(() => {
+  //     const fetchJobs = async () => {
+  //       const authToken = Cookies.get('authToken');
+  //       try {
+  //         const response = await fetch('https://localhost:7049/api/Job/GetAll', {
+  //           method: 'GET',
+  //           headers: {
+  //             Authorization: `Bearer ${authToken}`,
+  //           },
+  //         });
+  //         if (response.ok) {
+  //           const jobs = await response.json();
+  //           setJobListings(jobs);
+  //         }
+  //       } catch (error) {
+  //         console.log('error : ', error);
+  //       }
+  //     };
+  //     fetchJobs();
+  //   }, []);
   const [searchForm, setSearchForm] = useState({
     title: "",
     jobType: "",
@@ -87,7 +318,7 @@ export default function Jobs() {
   const [test, setTest] = useState(false);
   const handleSearch = async () => {
     setTest(true);
-    const filteredJobs = jobListings.filter((job) => {
+    const filteredJobs = jobData.filter((job) => {
       // Filter by title
       if (
         searchForm.title &&
@@ -112,12 +343,65 @@ export default function Jobs() {
       return true;
     });
     setSearchResult(filteredJobs);
+    setCurrentPage(1);
+    document.getElementById("job-listings").scrollIntoView({ behavior: "smooth" });
   };
   const [searchResult, setSearchResult] = useState([]);
-  const jobListingsToDisplay =
-    searchResult.length > 0 || (searchResult.length === 0 && test === true)
-      ? searchResult
-      : jobListings;
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [jobs, setJobs] = useState([]);
+  const jobsPerPage = 5;
+
+  useEffect(() => {
+    if (
+      searchResult.length > 0 ||
+      (searchResult.length === 0 && test === true)
+    ) {
+      setTotalPages(Math.ceil(searchResult.length / jobsPerPage)); // Update total pages based on search result
+      setJobs(
+        searchResult.slice(
+          (currentPage - 1) * jobsPerPage,
+          currentPage * jobsPerPage
+        )
+      );
+    } else {
+      setTotalPages(Math.ceil(jobData.length / jobsPerPage)); // Update total pages based on original job data
+      const startIndex = (currentPage - 1) * jobsPerPage;
+      const endIndex = Math.min(startIndex + jobsPerPage, jobData.length);
+      setJobs(jobData.slice(startIndex, endIndex));
+    }
+  }, [currentPage, searchResult]);
+  const changePage = (page) => {
+    setCurrentPage(page);
+    setTimeout(() => {
+      document.getElementById("job-listings").scrollIntoView({ behavior: "smooth" });
+    },200);
+  };
+  
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      setTimeout(() => {
+        document.getElementById("job-listings").scrollIntoView({ behavior: "smooth" });
+      },200);
+    }
+    else if(currentPage === 1 ){
+      setCurrentPage(currentPage)
+
+    }
+    
+  };
+  
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      setTimeout(() => {
+        document.getElementById("job-listings").scrollIntoView({ behavior: "smooth" });
+      },200);
+    }
+   
+  };
+
 
   return (
     <Layout>
@@ -225,63 +509,51 @@ export default function Jobs() {
                 </div>
               </div>
             </div>
-            <Link href="#next" className="scroll-button smoothscroll"></Link>
-            <span className=" icon-keyboard_arrow_down" />
+            <Link href="#next" className="scroll-button smoothscroll">
+              <span className=" icon-keyboard_arrow_down" />
+            </Link>
           </section>
           <section className="site-section" id="next">
-            <div className="container">
+            <div className="container" id="job-listings">
               <div className="row mb-5 justify-content-center">
                 <div className="col-md-7 text-center">
                   <h2 className="section-title mb-2">
-                    {jobListings.length} Job Listed
+                    {searchResult.length > 0 ||
+                    (searchResult.length === 0 && test === true)
+                      ? searchResult.length
+                      : jobData.length}{" "}
+                    Job Listed
                   </h2>
                 </div>
               </div>
-              <ul class="job-listings mb-5">
-                {jobListingsToDisplay.map((job, index) => (
+              <ul className="job-listings mb-5">
+                {jobs.map((job, index) => (
                   <Link key={index} href={`/job/${job.id}`}>
-                    <li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+                    <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
                       <a href="job-single.html"></a>
-                      <div class="job-listing-logo">
-                        <img src={imageURl} alt="Image" class="img-fluid" />
+                      <div className="job-listing-logo">
+                        <img src={imageURl} alt="Image" className="img-fluid" />
                       </div>
-                      <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
-                        <div class="job-listing-position custom-width w-50 mb-3 mb-sm-0">
+                      <div className="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+                        <div className="job-listing-position custom-width w-50 mb-3 mb-sm-0">
                           <h2>{job.title}</h2>
                           <strong>{job.companyName}</strong>
                         </div>
-                        <div
-                          class="job-listing-meta"
-                          style={{ marginLeft: "-170px" }}
-                        >
-                          <span class="badge badge-success">{job.salary}</span>
+
+                        <div className="flex flex-wrap gap-2">
+                          <Badge icon={HiCheck} size="">{job.jobType}</Badge>
                         </div>
                         <div
-                          class="job-listing-meta"
-                          style={{ marginLeft: "140px" }}
+                          className="job-listing-location mb-3 mb-sm-0 custom-width w-25"
+                          style={{ marginRight: "-120px" }}
                         >
-                          <span
-                            class={`badge ${
-                              job.jobType === "remote" ||
-                              job.jobType === "Remote"
-                                ? "badge-danger"
-                                : "badge-success"
-                            }`}
-                          >
-                            {job.jobType}
-                          </span>
-                        </div>
-                        <div
-                          class="job-listing-location mb-3 mb-sm-0 custom-width w-25"
-                          style={{ marginLeft: "100px" }}
-                        >
-                          <span class="icon-room">
+                          <span className="icon-room">
                             {job.location},{job.location}
                           </span>
                         </div>
-                        <div class="job-listing-meta">
+                        <div className="job-listing-meta">
                           <span
-                            class={`badge ${
+                            className={`badge ${
                               job.jobTime === "part time" ||
                               job.jobTime === "Part Time"
                                 ? "badge-danger"
@@ -298,11 +570,37 @@ export default function Jobs() {
               </ul>
               <div className="row pagination-wrap">
                 <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
-                  <span id="paginationInfo">Showing 1-10 of 43,167 Jobs</span>
+                  <span>
+                    Showing 1-5 Of{" "}
+                    {searchResult.length > 0 ||
+                    (searchResult.length === 0 && test === true)
+                      ? searchResult.length
+                      : jobData.length}{" "}
+                    Jobs
+                  </span>
                 </div>
                 <div className="col-md-6 text-center text-md-right">
-                  <div className="custom-pagination ml-auto" id="pagination">
-                    {/* Pagination links will be dynamically added here */}
+                  <div className="custom-pagination ml-auto">
+                  {currentPage !== 1 && (
+                    <Link href="#" className="prev" onClick={prevPage}>
+                      Prev
+                    </Link>
+                  )}
+                    {[...Array(totalPages).keys()].map((page) => (
+                      <Link
+                        key={page + 1}
+                        href="#"
+                        className={page + 1 === currentPage ? "active" : ""}
+                        onClick={() => changePage(page + 1)}
+                      >
+                        {page + 1}
+                      </Link>
+                    ))}
+                    {currentPage !== Math.ceil((searchResult.length > 0 ? searchResult.length : jobData.length) / jobsPerPage) && (
+                    <Link href="#" className="next" onClick={nextPage}>
+                      Next
+                    </Link>
+                    )}
                   </div>
                 </div>
               </div>
@@ -312,7 +610,7 @@ export default function Jobs() {
             className="py-5 bg-image overlay-primary fixed overlay"
             style={{ backgroundImage: 'url("/images/background.jpg")' }}
           >
-            <div className="container">
+            <div className="container" id="ayklam">
               <div className="row align-items-center">
                 <div className="col-md-8">
                   <h2 className="text-white">Looking For A Job?</h2>

@@ -2092,7 +2092,7 @@ textarea.form-control {
   font-size: 0.875rem;
   line-height: 1.5;
   color: #212529;
-  background-color: rgba(137, 186, 22, 0.9);
+  background-color: #17a9c3;
   border-radius: 0.25rem;
 }
 .form-control.is-valid,
@@ -2517,7 +2517,7 @@ fieldset:disabled a.btn {
 .show > .btn-primary.dropdown-toggle {
   color: #fff;
   background-color: #678c11;
-  border-color: #5f810f;
+  border-color: #0ec7c1;
 }
 .btn-primary:not(:disabled):not(.disabled).active:focus,
 .btn-primary:not(:disabled):not(.disabled):active:focus,
@@ -2585,7 +2585,7 @@ fieldset:disabled a.btn {
 .show > .btn-success.dropdown-toggle {
   color: #fff;
   background-color: #678c11;
-  border-color: #5f810f;
+  border-color: #0ec7c1;
 }
 .btn-success:not(:disabled):not(.disabled).active:focus,
 .btn-success:not(:disabled):not(.disabled):active:focus,
@@ -2629,8 +2629,8 @@ fieldset:disabled a.btn {
 }
 .btn-warning {
   color: #212529;
-  background-color: #fff568;
-  border-color: #fff568;
+  background-color: #fff;
+  border-color: #fff;
 }
 .btn-warning:hover {
   color: #212529;

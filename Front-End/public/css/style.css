@@ -799,7 +799,7 @@ h4 {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(137, 186, 22, 0.9);
+  background: #17a9c3;
   z-index: 1;
 }
 .bg-image.overlay-primary > .container {
@@ -816,7 +816,7 @@ h4 {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(137, 186, 22, 0.9);
+  background: #17a9c3;
   z-index: 1;
 }
 .bg-image.overlay-blue > .container {
@@ -2201,7 +2201,7 @@ footer {
 .feat {
   width: 60px;
   height: 60px;
-  fill: rgba(137, 186, 22, 0.9);
+  fill: #17a9c3;
 }
 .feat-hov:hover {
   transform: translate(5px, 5px);

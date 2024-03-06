@@ -1,6 +1,33 @@
-import Link from 'next/link';
+"use client"; 
+import Cookies from "js-cookie";
+import Link from "next/link";
+import {
+  Avatar,
+  Dropdown,
+  DropdownDivider,
+  DropdownHeader,
+  DropdownItem,
+} from "flowbite-react";
+import { useEffect, useState } from "react";
+
 
 export default function Header() {
+  const role = Cookies.get("role"); 
+  const userName = Cookies.get("userName"); 
+  const [isLoggedIn ,setIsLoggedIn] = useState(false); 
+  useEffect(()=> {
+    const authToken = Cookies.get("authToken"); 
+    setIsLoggedIn(!!authToken); 
+  },[]); 
+
+  const signOut = async() => {
+    Cookies.remove('authToken');
+    Cookies.remove("user_id"); 
+    Cookies.remove ("role");
+    setIsLoggedIn(false); 
+    return <Link href="/login"/>; 
+  }
+
   return (
     <header className="site-navbar mt-3" id="top">
       <div className="container-fluid">
@@ -106,6 +133,7 @@ export default function Header() {
                   <span className="mr-2">+</span>
                 </Link>
               </li>
+
               <li className="d-lg-none">
                 <Link href="/login" replace>
                   Log In
@@ -114,30 +142,66 @@ export default function Header() {
             </ul>
           </nav>
           <div className="right-cta-menu text-right d-flex aligin-items-center col-6">
-            <div className="ml-auto">
-              <Link
+            <div className="ml-auto d-flex align-items-center" >
+              { role != "user" &&( 
+            <Link
                 href="job/post"
-                className="btn btn-outline-white border-width-2 d-none d-lg-inline-block"
+                className="btn btn-outline-white border-width-2 d-none d-lg-inline-block mr-3"
                 replace
               >
                 <span className="mr-2 icon-add" />
                 Post a Job
               </Link>
-              <Link
-                href="/login"
-                className="btn btn-primary border-width-2 d-none ml-2 d-lg-inline-block"
-                replace
-              >
-                <span className="mr-2 icon-lock_outline" />
-                Log In
-              </Link>
+)}
+              {/* Conditional rendering based on authToken */}
+              {isLoggedIn ? (
+                <div className="mr-3 d-flex align-items-center">
+                  <span className="block text-xl mr-3 text-light ">{userName}</span>
+                  <Dropdown
+
+                    label={
+                      <Avatar
+                        alt="User settings"
+                        img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                        rounded
+                      />
+                    }
+                    arrowIcon={false}
+                    inline
+                  >
+                    <DropdownHeader>
+                      <span className="block text-xl">{userName}</span>
+                    </DropdownHeader>
+                    <DropdownItem>Dashboard</DropdownItem>
+                    <Link
+                      href={
+                        Cookies.get("role")=== "company" ||
+                        Cookies.get("role") === "Company"
+                          ? "/profile/Edit-company-profile"
+                          : "/profile/Edit-user-profile"
+                      }
+                    >
+                      <DropdownItem>Settings</DropdownItem>
+                    </Link>
+                    <DropdownItem>Earnings</DropdownItem>
+                    <DropdownDivider />
+                    <Link href="" onClick={signOut}>
+                    <DropdownItem>Sign out</DropdownItem>
+                    </Link>
+                  </Dropdown>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  className="btn btn-primary border-width-2 d-none ml-2 d-lg-inline-block"
+                  replace
+                >
+                  <span className="mr-2 icon-lock_outline" />
+                  Log In
+                </Link>
+              )}
+              
             </div>
-            {/* <a
-              href="#"
-              className="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3"
-            >
-              <span className="icon-menu h3 m-0 p-0 mt-2" />
-            </a> */}
             <Link
               href=""
               className="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3"

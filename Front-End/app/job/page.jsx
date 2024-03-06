@@ -12,7 +12,7 @@ export default function Jobs() {
     {
       id: 1,
       title: 'Front End',
-      jobType: 'remote',
+      jobType: 'Hybrid',
       jobTime: 'full time',
       location: 'Cairo',
       description: 'ay klam ',
@@ -459,6 +459,7 @@ export default function Jobs() {
                         >
                           <option>Remote</option>
                           <option>On Site</option>
+                          <option>Hybrid</option>
                         </select>
                       </div>
                       <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
@@ -570,7 +571,7 @@ export default function Jobs() {
                     </li>
                   </Link>
                 ))} */}
-                {jobData.map((job) => (
+                {jobs.map((job) => (
                   <CardComp
                     title={job.title}
                     company={job.companyName}

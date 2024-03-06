@@ -53,7 +53,7 @@ export default function Job_details({ params }) {
           throw new Error('Network response was not ok');
         }
         const result = await response.json();
-        setData([result]);
+        setData(result);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -72,6 +72,7 @@ export default function Job_details({ params }) {
   const date1 = new Date(data.endedAt);
   const options1 = { year: 'numeric', month: 'short', day: 'numeric' };
   const formattedDate1 = date1.toLocaleDateString('en-US', options1);
+
   return (
     <Layout>
       <>
@@ -125,13 +126,13 @@ export default function Job_details({ params }) {
                       <img src="/images/job_logo_5.jpg" alt="Image" />
                     </div>
                     <div>
-                      {data.map((item) => (
-                        <h2>{item.title}</h2>
-                      ))}
+                      {/* {data.map((item) => ( */}
+                        <h2>{data.title}</h2>
+                      {/* ))} */}
                       <div>
                         <span className="ml-0 mr-2 mb-2">
                           <span className="icon-briefcase mr-2" />
-                          {data.comopanyName}
+                          {data.companyName}
                         </span>
                         <span className="m-2">
                           <span className="icon-room mr-2" />
@@ -139,7 +140,7 @@ export default function Job_details({ params }) {
                         </span>
                         <span className="m-2">
                           <span className="icon-clock-o mr-2" />
-                          <span className="text-primary">Full Time</span>
+                          <span className="text-primary">{data.jobTime}</span>
                         </span>
                       </div>
                     </div>
@@ -178,9 +179,9 @@ export default function Job_details({ params }) {
                       <span className="icon-align-left mr-3" />
                       Job Description
                     </h3>
-                    {data.map((item) => (
-                      <span>{item.description}</span>
-                    ))}
+                    {/* {data.map((item) => ( */}
+                      <span>{data.description}</span>
+                    {/* ))} */}
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -188,35 +189,29 @@ export default function Job_details({ params }) {
                       Responsibilities
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {data.map((item) => (
-                        <li
-                          key={item}
-                          className="d-flex align-items-start mb-2"
-                        >
+                      {data?.responsibilities?.split('.').map((responsibility, index) => (
+                        <li key={index} className="d-flex align-items-start mb-2">
                           <span className="icon-check_circle mr-2 text-muted" />
-                          <span>{item.responsibilities}</span>{' '}
-                          {/* Assuming each item is a string */}
+                          <span className='pb-1'>{responsibility}</span>
                         </li>
                       ))}
                     </ul>
+
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
                       <span className="icon-book mr-3" />
-                      Education + Experience
+                      Requirements
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {data.map((item) => (
-                        <li
-                          key={item}
-                          className="d-flex align-items-start mb-2"
-                        >
+                      {data?.requirements?.split('.').map((requirement, index) => (
+                        <li key={index} className="d-flex align-items-start mb-2">
                           <span className="icon-check_circle mr-2 text-muted" />
-                          <span>Requirements : {item.requirements}</span>{' '}
-                          {/* Assuming each item is a string */}
+                          <span className='pb-1'>{requirement.trim()}</span>
                         </li>
                       ))}
                     </ul>
+
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -224,17 +219,15 @@ export default function Job_details({ params }) {
                       Other Benifits
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {data.map((item) => (
-                        <li
-                          key={item}
-                          className="d-flex align-items-start mb-2"
-                        >
+                      {data?.benefits?.split('.').map((benefit, index) => (
+                        <li key={index} className="d-flex align-items-start mb-2">
                           <span className="icon-check_circle mr-2 text-muted" />
-                          <span>{item.item}</span>{' '}
-                          {/* Assuming each item is a string */}
+                          <span>{benefit.trim()}</span>
                         </li>
                       ))}
                     </ul>
+
+
                   </div>
                   <div className="row mb-5">
                     <div className="col-6">

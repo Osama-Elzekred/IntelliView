@@ -4,6 +4,7 @@ import Layout from "../../components/Layout";
 import Phone from "../../components/Phone";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import ProtectedPage from '../../components/ProtectedPages';
 export default function EditProfile() {
   let [message,setMessage] = useState(""); 
   let [color,setColor] = useState(""); 
@@ -191,13 +192,8 @@ export default function EditProfile() {
   };
   return (
     <Layout>
+      <ProtectedPage allowedRoles={["company"]}/>
       <link rel="stylesheet" href="/css/edit-profile.css" />
-
-      <div className="loader">
-        <div className="spinner-border text-primary" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      </div>
       <div className="site-wrap">
         <div className="site-mobile-menu site-navbar-target">
           <div className="site-mobile-menu-header">

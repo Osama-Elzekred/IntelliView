@@ -2,6 +2,7 @@
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
+using IntelliView.Models.Models.job;
 using IntelliView.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -132,7 +133,7 @@ namespace IntelliView.API.Controllers
         //        InterestedTopicId = interestedTopicDto.InterestedTopicId,
         //        JobId = interestedTopicDto.JobId
         //    };
-        //    await _unitOfWork.JobInterestedTopics.AddAsync(interestedTopic);
+        //    await _unitOfWork.JobInterestedTopic.AddAsync(interestedTopic);
         //    await _unitOfWork.SaveAsync();
         //    return CreatedAtAction(nameof(GetJobInterestedTopics), new { interestedTopicDto.JobId }, interestedTopic);
         //}
@@ -196,7 +197,7 @@ namespace IntelliView.API.Controllers
         }
         [HttpPost]
         [Authorize(Roles = SD.ROLE_COMPANY)]
-        public async Task<ActionResult<Job>> CreateJob(AddJobDTO jobDto)
+        public async Task<ActionResult<Job>> CreateJob([FromBody] AddJobDto jobDto)
         {
             if (!ModelState.IsValid)
             {
@@ -205,15 +206,35 @@ namespace IntelliView.API.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             jobDto.CompanyUserId = userId;
-            jobDto.JobInterestedTopics.ForEach(topic =>
-            {
-                topic.JobId = jobDto.Id;
-            });
+            //jobDto.JobInterestedTopic.ForEach(topic =>
+            //{
+            //    topic.JobId = jobDto.Id;
+            //});
             var job = _mapper.Map<Job>(jobDto);
+            job.JobInterestedTopic = jobDto.JobInterestedTopics.Select(topic => new JobInterestedTopic
+            {
+                //InterestedTopicId = topic.InterestedTopicId,
+                //JobId = job.Id
+                InterestedTopic = new InterestedTopic
+                {
+                    Topic = topic.Topic
+                }
+            }).ToList();
+            job.JobQuestions = jobDto.CustQuestions.Select(q => new CustQuestion
+            {
+                Question = q.Question,
+                JobId = job.Id
+            }).ToList();
+            job.InterviewQuestions = jobDto.QuestionItems.Select(q => new InterviewQuestion
+            {
+                Question = q.Question,
+                Answer = q.Answer,
+                JobId = job.Id
+            }).ToList();
             await _unitOfWork.Jobs.AddAsync(job);
             await _unitOfWork.SaveAsync();
 
-            return CreatedAtAction(nameof(GetJobById), new { id = job.Id }, job);
+            return Ok(new { id = job.Id });
         }
 
         [HttpPut("{id}")]

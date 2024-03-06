@@ -22,7 +22,7 @@ namespace IntelliView.DataAccess.Repository.Repos.InterviewRepos
 
         public void Update(InterviewApplicationRepo interviewQuestion)
         {
-            //_db.InterviewQuestion.Update(interviewQuestion);
+            //_db.InterviewSessionQuestion.Update(interviewQuestion);
         }
     }
 }

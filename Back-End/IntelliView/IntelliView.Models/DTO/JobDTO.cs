@@ -1,5 +1,4 @@
-﻿using IntelliView.Models.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace IntelliView.Models.DTO
 {
@@ -10,9 +9,9 @@ namespace IntelliView.Models.DTO
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; } = string.Empty;
 
-        public JobType? Jobtype { get; set; }
+        public string? JobType { get; set; } = string.Empty;
 
-        public JobTime? Jobtime { get; set; }
+        public string? JobTime { get; set; } = string.Empty;
 
         public string? Location { get; set; } = string.Empty;
 
@@ -26,7 +25,7 @@ namespace IntelliView.Models.DTO
 
         public string? Benefits { get; set; } = string.Empty;
 
-        public string? companyName { get; set;}=string.Empty;
+        public string? companyName { get; set; } = string.Empty;
 
         public string? Notes { get; set; } = string.Empty;
 
@@ -45,10 +44,11 @@ namespace IntelliView.Models.DTO
         public string ImageURl { get; set; } = @"wwwroot/Assets/images/7495e58b-b72b-4b87-8c12-c77a69b39cd3.jpg";
 
         //[JsonIgnore]
-        //public virtual List<JobInterestedTopic> JobInterestedTopics { get; set; } = new List<JobInterestedTopic>();
+        //public virtual List<JobInterestedTopic> JobInterestedTopic { get; set; } = new List<JobInterestedTopic>();
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public DateTime? EndedAt { get; set; } = DateTime.Now.AddDays(20);
     }
+
 }

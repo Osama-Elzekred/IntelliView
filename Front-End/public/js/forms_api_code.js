@@ -132,10 +132,13 @@ loginForm.addEventListener("submit", function (e) {
       })
       .then((data) => {
         if (data.token) {
+          console.log("error"); 
           document.cookie = `authToken=${data.token};path=/`;
           document.cookie = `user_id=${data.id};path=/`;
           localStorage.setItem("roleFromServer", data.roles);
-          // window.location.href = `profile.html?username=${username}`;
+          document.cookie = `role=${data.roles[0].toLowerCase()};path=/`;
+          document.cookie = `userName=${data.username};path=/`;
+          window.location.href = `/Home`;
           console.log(data);
         } else if (data.message) {
           messageOfWrong.textContent = `${data.message}`;
@@ -147,7 +150,7 @@ loginForm.addEventListener("submit", function (e) {
           messageOfWrong.textContent =
             "Sorry ... The Server can not be reach now ... please try later ";
           messageOfWrong.style.display = "block";
-          console.log("Response details:", error.response);
+          console.log("Response details:", error);
         }
       });
   }
@@ -240,8 +243,10 @@ signupForm.addEventListener("submit", function (e) {
           document.cookie = `authToken=${data.token};path=/`;
           document.cookie = `user_id=${data.id};path=/`;
           localStorage.setItem("roleFromServer", data.roles);
-          signupForm.reset(); 
-          // window.location.href = `profile.html?username=${username}`;
+          document.cookie = `role=${data.roles[0].toLowerCase()};path=/`;
+          document.cookie = `userName=${data.username};path=/`;
+          signupForm.reset();
+          window.location.href = `/Home`;
         } else if (data.message) {
           messageFromServer.textContent = `${data.message}`;
           messageFromServer.style.display = "block";

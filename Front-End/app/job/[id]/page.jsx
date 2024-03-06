@@ -1,13 +1,13 @@
 // import { useNavigation } from 'next/navigation';
-"use client";
-import Cookies from "js-cookie";
-import Layout from "../../components/Layout";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+'use client';
+import Cookies from 'js-cookie';
+import Layout from '../../components/Layout';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-const DOMAIN_NAME = "localhost:7049";
+const DOMAIN_NAME = 'localhost:7049';
 
-// const jobData = 
+// const jobData =
 //   {
 //     id: 1,
 //     title: "Front End",
@@ -34,8 +34,8 @@ const DOMAIN_NAME = "localhost:7049";
 // ;
 
 export default function Job_details({ params }) {
-  console.log(parseInt(params.id));
-  const authToken = Cookies.get("authToken");
+  // console.log(parseInt(params.id));
+  const authToken = Cookies.get('authToken');
   const [data, setData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -43,19 +43,19 @@ export default function Job_details({ params }) {
         const response = await fetch(
           `https://${DOMAIN_NAME}/api/job/` + params.id,
           {
-            method: "GET",
+            method: 'GET',
             headers: {
               Authorization: `Bearer ${authToken}`,
             },
           }
         );
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error('Network response was not ok');
         }
         const result = await response.json();
-        setData(result);
+        setData([result]);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error);
       }
     };
 
@@ -63,15 +63,15 @@ export default function Job_details({ params }) {
   }, []);
 
   //const jobData = Object.keys(data).length > 0 ? [data] : [];
-  //console.log(jobData); 
+  //console.log(jobData);
 
   const date = new Date(data.createdAt);
-   const options = {year: 'numeric', month: 'short', day: 'numeric' };
-   const formattedDate = date.toLocaleDateString('en-US', options);
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  const formattedDate = date.toLocaleDateString('en-US', options);
   //console.log(jobData[0].createdAt);
   const date1 = new Date(data.endedAt);
-   const options1 = {year: 'numeric', month: 'short', day: 'numeric' };
-   const formattedDate1 = date1.toLocaleDateString('en-US', options1);
+  const options1 = { year: 'numeric', month: 'short', day: 'numeric' };
+  const formattedDate1 = date1.toLocaleDateString('en-US', options1);
   return (
     <Layout>
       <>
@@ -89,7 +89,7 @@ export default function Job_details({ params }) {
               </div>
             </div>
             <div className="site-mobile-menu-body" />
-          </div>{" "}
+          </div>{' '}
           {/* .site-mobile-menu */}
           {/* HOME */}
           <section
@@ -104,9 +104,9 @@ export default function Job_details({ params }) {
                 <div className="col-md-7">
                   <h1 className="text-white font-weight-bold" />
                   <div className="custom-breadcrumbs">
-                    <Link href="#">Home</Link>{" "}
+                    <Link href="#">Home</Link>{' '}
                     <span className="mx-2 slash">/</span>
-                    <Link href="#">Job</Link>{" "}
+                    <Link href="#">Job</Link>{' '}
                     <span className="mx-2 slash">/</span>
                     <span className="text-white">
                       <strong />
@@ -126,7 +126,6 @@ export default function Job_details({ params }) {
                     </div>
                     <div>
                       {data.map((item) => (
-                        
                         <h2>{item.title}</h2>
                       ))}
                       <div>
@@ -157,7 +156,8 @@ export default function Job_details({ params }) {
                     <div className="col-6">
                       <Link
                         href="/job/${id}/apply"
-                        className="btn btn-block btn-primary btn-md">
+                        className="btn btn-block btn-primary btn-md"
+                      >
                         Apply Now
                       </Link>
                     </div>
@@ -178,9 +178,9 @@ export default function Job_details({ params }) {
                       <span className="icon-align-left mr-3" />
                       Job Description
                     </h3>
-                  {data.map((item) => (
-                    <span>{item.description}</span>
-                  ))}
+                    {data.map((item) => (
+                      <span>{item.description}</span>
+                    ))}
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -194,7 +194,7 @@ export default function Job_details({ params }) {
                           className="d-flex align-items-start mb-2"
                         >
                           <span className="icon-check_circle mr-2 text-muted" />
-                          <span>{item.responsibilities}</span>{" "}
+                          <span>{item.responsibilities}</span>{' '}
                           {/* Assuming each item is a string */}
                         </li>
                       ))}
@@ -212,7 +212,7 @@ export default function Job_details({ params }) {
                           className="d-flex align-items-start mb-2"
                         >
                           <span className="icon-check_circle mr-2 text-muted" />
-                          <span>Requirements : {item.requirements}</span>{" "}
+                          <span>Requirements : {item.requirements}</span>{' '}
                           {/* Assuming each item is a string */}
                         </li>
                       ))}
@@ -230,7 +230,7 @@ export default function Job_details({ params }) {
                           className="d-flex align-items-start mb-2"
                         >
                           <span className="icon-check_circle mr-2 text-muted" />
-                          <span>{item.item}</span>{" "}
+                          <span>{item.item}</span>{' '}
                           {/* Assuming each item is a string */}
                         </li>
                       ))}
@@ -259,17 +259,17 @@ export default function Job_details({ params }) {
                       Job Summary
                     </h3>
                     <ul className="list-unstyled pl-3 mb-0">
-                    <li className="mb-2">
-                        <strong className="text-black">Published on:</strong>{" "}
+                      <li className="mb-2">
+                        <strong className="text-black">Published on:</strong>{' '}
                         {formattedDate}
-                    </li>
+                      </li>
                       {/* <li className="mb-2">
                         <strong className="text-black">Vacancy:</strong> 20
                       </li> */}
                       <li className="mb-2">
                         <strong className="text-black">
                           Employment Status:
-                        </strong>{" "}
+                        </strong>{' '}
                         {data.jobTime}
                       </li>
                       <li className="mb-2">
@@ -277,7 +277,7 @@ export default function Job_details({ params }) {
                         {data.minimumExperience}
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">Job Location:</strong>{" "}
+                        <strong className="text-black">Job Location:</strong>{' '}
                         {data.location}
                       </li>
                       <li className="mb-2">
@@ -285,9 +285,11 @@ export default function Job_details({ params }) {
                         {data.salary}
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">Application DeadLine:</strong>{" "}
+                        <strong className="text-black">
+                          Application DeadLine:
+                        </strong>{' '}
                         {formattedDate1}
-                    </li>
+                      </li>
                     </ul>
                   </div>
                   <div className="bg-light p-3 border rounded">

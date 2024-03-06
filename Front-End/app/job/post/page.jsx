@@ -1,67 +1,195 @@
 'use client';
-import Layout from '../../components/Layout';
-import Toastitem from '../../components/Toast';
-
 import Link from 'next/link';
-import { Button, FileInput, Label, Modal, Textarea } from 'flowbite-react';
+import { Button, Label, Modal, Textarea, Datepicker } from 'flowbite-react';
 import { useRef, useState } from 'react';
 import '../../../public/css/stepper.css';
 import { TiTick } from 'react-icons/ti';
-import { SelectInput } from '../../components/SelectInput';
+import {
+  SelectInput,
+  SelectMulti,
+  Toastitem,
+  Layout,
+} from '../../components/components';
+import Cookies from 'js-cookie';
 
 export default function Post_job() {
   const [openModal, setOpenModal] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
+  const [showComponent, setShowComponent] = useState(false);
   const QuestionInputRef = useRef(null);
   const CustQestionRef = useRef(null);
   const AnswerInputRef = useRef(null);
   const steps = ['Job info', `Custom Q&A`, 'Interview Q&A'];
   const [currentStep, setCurrentStep] = useState(1);
   const [complete, setComplete] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [slectExperience, setSelectExperience] = useState('');
   const [Questionitems, setItems] = useState([]);
   const [CustQuestions, setQuestions] = useState([]);
-  // const addItem = (newItem) => {
-  //   // setItems((prevItems) => [...prevItems, newItem]);
-  //   setItems((prevItems) => [...prevItems, { id: Date.now(), value: newItem }]);
-  // };
-  // const handleCountryChange = (event) => {
-  //   setSelectedCountry(event.target.value);
-  // };
-  const [selectedRegion, setSelectedRegion] = useState('');
-
-  const handleRegionChange = (event) => {
-    setSelectedRegion(event.target.value);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const handleDateChange = (date) => {
+    const dateString = new Date(date).toLocaleDateString();
+    setSelectedDate(dateString);
   };
-
-  const [description, setDescription] = useState('');
-
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
-  };
+  const categories = [
+    'Data Structures & Algorithms',
+    'C/C++',
+    'Git',
+    'HTML/CSS',
+    'Python',
+    'MATLAB',
+    'Adobe Creative Suite',
+    'Adobe Illustrator',
+    'Adobe Photoshop',
+  ];
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
   const addQuestion = (item) => {
-    setItems((prevItems) => [
-      ...prevItems,
-      { id: Date.now(), Question: item.Question, Answer: item.Answer },
-    ]);
-    console.log(Questionitems);
+    setItems((prevItems) => {
+      const l = [
+        ...prevItems,
+        {
+          id: (Date.now() / 1000) | 0,
+          Question: item.Question,
+          Answer: item.Answer,
+        },
+      ];
+      return l;
+    });
   };
   const addCustQuestion = (item) => {
-    setQuestions((prevItems) => [
-      ...prevItems,
-      { id: Date.now(), Question: item.Question },
-    ]);
+    setQuestions((prevItems) => {
+      const l = [
+        ...prevItems,
+        { id: (Date.now() / 1000) | 0, Question: item.Question },
+      ];
+
+      return l;
+    });
+  };
+
+  function handleSelectCategory(category) {
+    setSelectedCategories((prevCategories) => {
+      if (!prevCategories.includes(category)) {
+        return [...prevCategories, category];
+      }
+      return prevCategories;
+    });
+  }
+
+  function handleDeselectCategory(category) {
+    setSelectedCategories((prevCategories) =>
+      prevCategories.filter((c) => c !== category)
+    );
+  }
+
+  function handleRemoveLastCategory() {
+    setSelectedCategories((prevCategories) =>
+      prevCategories.slice(0, prevCategories.length - 1)
+    );
+  }
+  function handleClose() {
+    setShowComponent(false);
+  }
+
+  // Submit Form
+  const [jobInfo, setJobInfo] = useState({
+    Email: '',
+    JobTitle: '',
+    Location: '',
+    JobType: 'on-site',
+    JobTime: 'Part Time',
+    Experiance: '0-1 years',
+    EndDate: '',
+    JobRequirements: '',
+    JobDescription: '',
+    Questionitems: [],
+    CustQuestions: [],
+    categories: [],
+  });
+  const handleChange = (event) => {
+    const value = event.target ? event.target.value : event;
+    const name = event.target ? event.target.name : event;
+
+    setJobInfo({
+      ...jobInfo,
+      [name]: value,
+    });
+  };
+  const [errors, setErrors] = useState({});
+  const [authToken, setAuthToken] = useState('');
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Validation
+    let errors = {};
+    if (!jobInfo.Email) errors.Email = 'Email is required';
+    if (!jobInfo.JobTitle) errors.JobTitle = 'Job Title is required';
+    if (!jobInfo.Location) errors.Location = 'Location is required';
+    if (!jobInfo.JobType) errors.JobType = 'Job Type is required';
+    if (!jobInfo.JobTime) errors.JobTime = 'Job Time is required';
+    if (!jobInfo.Experiance) errors.Experiance = 'Experience is required';
+    if (!jobInfo.EndDate) errors.EndDate = 'End Date is required';
+    if (!jobInfo.JobRequirements)
+      errors.JobRequirements = 'Job Requirements are required';
+    if (!jobInfo.JobDescription)
+      errors.JobDescription = 'Job Description is required';
+    if (!jobInfo.Questionitems || jobInfo.Questionitems.length === 0)
+      errors.Questionitems = 'Question items are required';
+    if (!jobInfo.CustQuestions || jobInfo.CustQuestions.length === 0)
+      errors.CustQuestions = 'Custom Questions are required';
+    if (!jobInfo.categories || jobInfo.categories.length === 0)
+      errors.categories = 'Categories are required';
+
+    // if (Object.keys(errors).length > 0) {
+    //   // If there are errors, update the state and stop form submission
+    //   setErrors(errors);
+    //   console.log(errors);
+    //   return;
+    // }
+    const addJobDto = {
+      Title: jobInfo.JobTitle,
+      JobType: jobInfo.JobType,
+      JobTime: jobInfo.JobTime,
+      Location: jobInfo.Location,
+      MinimumExperience: jobInfo.Experiance,
+      Description: jobInfo.JobDescription,
+      Requirements: jobInfo.JobRequirements,
+      // Add other mappings...
+    };
+    let idCounter = 0;
+
+    // Add arrays to the DTO
+    addJobDto.Questionitems = Questionitems;
+    addJobDto.CustQuestions = CustQuestions;
+    addJobDto.JobInterestedTopics = selectedCategories.map((category) => ({
+      InterestedTopicId: idCounter++, // or some other method to generate unique ID
+      Topic: category,
+    }));
+    addJobDto.EndDate = selectedDate;
+    const authTokenCookie = Cookies.get('authToken');
+    if (authTokenCookie) setAuthToken(authTokenCookie);
+    // console.log(Cookies.get('authToken'));
+    // Submit the form data
+    const response = await fetch(`https://localhost:7049/api/job`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify(addJobDto),
+    });
+    if (!response.ok) {
+      console.error('Failed to submit form');
+      return;
+    }
+
+    const data = await response.json();
+    const jobId = data.id;
+    window.location.href = `/job/${jobId}`;
   };
   return (
     <Layout>
       <>
-        {/* <div className="loader">
-          <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Loading...</span>
-        </div>
-        </div> */}
         <div className="site-wrap">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">
@@ -127,7 +255,11 @@ export default function Post_job() {
               </div>
               <div className="row mb-5">
                 <div className="col-lg-12">
-                  <form className="p-4 p-md-5 border rounded" method="post">
+                  <form
+                    className="p-4 p-md-5 border rounded"
+                    method="post"
+                    onSubmit={handleSubmit}
+                  >
                     {/* condition for step 1 */}
                     {currentStep == 1 ? (
                       <>
@@ -137,10 +269,14 @@ export default function Post_job() {
                         <div className="form-group">
                           <label htmlFor="email">Email</label>
                           <input
-                            type="text"
+                            type="email"
                             className="form-control"
                             id="email"
+                            name="Email"
+                            value={jobInfo.Email}
+                            onChange={(e) => handleChange(e)}
                             placeholder="you@yourdomain.com"
+                            required
                           />
                         </div>
                         <div className="form-group">
@@ -149,7 +285,11 @@ export default function Post_job() {
                             type="text"
                             className="form-control"
                             id="job-title"
+                            name="JobTitle"
+                            value={jobInfo.JobTitle}
+                            onChange={handleChange}
                             placeholder="Product Designer"
+                            required
                           />
                         </div>
                         <div className="form-group">
@@ -158,33 +298,27 @@ export default function Post_job() {
                             type="text"
                             className="form-control"
                             id="job-location"
+                            name="Location"
+                            value={jobInfo.Location}
+                            onChange={handleChange}
                             placeholder="e.g. New York"
+                            required
                           />
                         </div>
                         <div className="flex justify-between">
                           <div className="form-group w-1/2 pr-2">
                             <div className="mb-2 w-[100%]">
-                              <Label htmlFor="job-region" value="Job Region" />
+                              <Label htmlFor="job-type" value="Job Type" />
                             </div>
                             <SelectInput
-                              options={[
-                                'Anywhere',
-                                'San Francisco',
-                                'Palo Alto',
-                                'New York',
-                                'Manhattan',
-                                'Ontario',
-                                'Toronto',
-                                'Kansas',
-                                'Mountain View',
-                              ]}
-                              value={selectedRegion} // Replace with your actual state variable
-                              onChange={(even) =>
-                                setSelectedRegion(event.target.value)
-                              } // Replace with your actual handler function
+                              options={['on-site', 'remote', 'hybrid']}
+                              name="JobType"
+                              value={jobInfo.JobType}
+                              onChange={handleChange}
+                              // defaultValue="choose a job type"
                             />
                           </div>
-                          <div className="form-group w-1/2">
+                          <div className="form-group w-1/2 pr-2">
                             <div className="mb-2 block ">
                               <Label
                                 htmlFor="job-type"
@@ -200,34 +334,87 @@ export default function Post_job() {
                                 'Temporary',
                                 'Freelance',
                               ]}
-                              value={selectedCountry}
-                              onChange={(event) =>
-                                setSelectedCountry(event.target.value)
+                              name="JobTime"
+                              value={jobInfo.JobTime}
+                              onChange={handleChange}
+                              // defaultValue="choose a job time"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <div className="form-group w-1/2">
+                            <div className="mb-2 ">
+                              <Label
+                                htmlFor="Experience"
+                                value="Select The years of Experience"
+                              />
+                            </div>
+                            <SelectInput
+                              options={[
+                                '0-1 years',
+                                '1-2 years',
+                                '2-3 years',
+                                '3-4 years',
+                                '4-5 years',
+                                '5 or more years',
+                              ]}
+                              name="Experiance"
+                              value={jobInfo.Experiance}
+                              onChange={handleChange}
+                            />
+                          </div>
+                          <div className="form-group w-1/2 pr-2 mx-3 ">
+                            <div className="mb-2 ">
+                              <Label
+                                htmlFor="EndDate"
+                                value="End Date of Applications"
+                              />
+                            </div>
+                            <Datepicker
+                              name="EndDate"
+                              value={selectedDate}
+                              onSelectedDateChanged={(date) =>
+                                handleDateChange(date)
                               }
                             />
                           </div>
                         </div>
-                        <div className="form-group w-[100%]">
-                          <div className="mb-2 ">
-                            <Label
-                              htmlFor="Experience"
-                              value="Select The years of Experience"
-                            />
+                        <div className="flex">
+                          <div className="form-group w-1/3 pr-2 mx-3 items-start ">
+                            <div className="mb-2 ">
+                              <Label
+                                htmlFor="Categories"
+                                value="Select The Categories"
+                              />
+                            </div>
+                            <Button
+                              className="m-auto  "
+                              onClick={() => setShowComponent(true)}
+                            >
+                              <svg
+                                width="20"
+                                height="20"
+                                fill="currentColor"
+                                className="mr-2"
+                                aria-hidden="true"
+                              >
+                                <path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1Z" />
+                              </svg>
+                              Add Categories
+                            </Button>
                           </div>
-                          <SelectInput
-                            options={[
-                              '0-1 years',
-                              '1-2 years',
-                              '2-3 years',
-                              '3-4 years',
-                              '4-5 years',
-                              '5 or more years',
-                            ]}
-                            value={slectExperience}
-                            onChange={(event) =>
-                              setSelectExperience(event.target.value)
-                            }
-                          />
+                          <div className="justify-start items-center gap-3 m-4">
+                            {selectedCategories.map((category) => (
+                              <button
+                                key={category}
+                                className="bg-[#17a9c3] text-white rounded-full px-2 py-1 m-1 text-sm focus:outline-none "
+                                onClick={() => handleDeselectCategory(category)}
+                              >
+                                {category}
+                                <span className="text-dark ml-2">&times;</span>
+                              </button>
+                            ))}
+                          </div>
                         </div>
                         <div className="form-group">
                           <Label
@@ -235,11 +422,10 @@ export default function Post_job() {
                             value="Job Requirements"
                           />
                           <Textarea
-                            // className="editor"
-                            // id="editor-1"
                             placeholder="Job Requirements"
-                            value={description}
-                            onChange={handleDescriptionChange} // Replace with your actual handler function
+                            name="JobRequirements"
+                            value={jobInfo.JobRequirements}
+                            onChange={handleChange} // Replace with your actual handler function
                           />
                         </div>
                         <div className="form-group">
@@ -248,27 +434,13 @@ export default function Post_job() {
                               <Label htmlFor="Answer" value="Job Description" />
                             </div>
                             <Textarea
-                              // id="editor-2"
-                              // ref={QuestionInputRef}
+                              id="job-description"
+                              name="JobDescription"
+                              value={jobInfo.JobDescription}
+                              onChange={handleChange}
                               placeholder="Write Job Description!"
                               required
                             />
-                          </div>
-                          <div className="form-group">
-                            <div>
-                              <div className="mb-2 block">
-                                <Label
-                                  htmlFor="Answer"
-                                  value="Job Description"
-                                />
-                              </div>
-                              <Textarea
-                                // id="editor-2"
-                                // ref={QuestionInputRef}
-                                placeholder="Write Job Description!"
-                                required
-                              />
-                            </div>
                           </div>
                         </div>
                       </>
@@ -276,13 +448,13 @@ export default function Post_job() {
                     currentStep == 2 ? (
                       <>
                         <div className="m-2 p-2">
-                          <h3 class="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+                          <h3 className="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
                               Better Interview Experience
                             </span>{' '}
                             With AI.
                           </h3>
-                          <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+                          <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
                             Create a better interview experience with AI. Add
                             custom questions or use our virtual interview
                             questions to get started.
@@ -299,7 +471,7 @@ export default function Post_job() {
                             width="20"
                             height="20"
                             fill="currentColor"
-                            class="mr-2"
+                            className="mr-2"
                             aria-hidden="true"
                           >
                             <path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1Z" />
@@ -328,13 +500,13 @@ export default function Post_job() {
                       <>
                         <div className="form-group">
                           <div className="m-2 p-2">
-                            <h3 class="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
-                              <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+                            <h3 className="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
+                              <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
                                 Custom Questions
                               </span>{' '}
                               in the Application Form.
                             </h3>
-                            <p class="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
+                            <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400">
                               Add Custom Questions to the job application form.
                             </p>
                           </div>
@@ -349,7 +521,7 @@ export default function Post_job() {
                               width="20"
                               height="20"
                               fill="currentColor"
-                              class="mr-2"
+                              className="mr-2"
                               aria-hidden="true"
                             >
                               <path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1Z" />
@@ -362,10 +534,11 @@ export default function Post_job() {
                         >
                           {CustQuestions.map((item) => (
                             <Toastitem
+                              key={item.id}
                               value={item.Question}
                               className="space-y-4"
                               onAbort={() => {
-                                const newItems = Questionitems.filter(
+                                const newItems = CustQuestions.filter(
                                   (i) => i.id !== item.id
                                 );
                                 setQuestions(newItems);
@@ -429,10 +602,10 @@ export default function Post_job() {
                           } btn-primary btn-md ${
                             currentStep > steps.length && 'disabled'
                           }`}
-                          onClick={() => {
-                            currentStep !== steps.length;
-                            // ? setComplete(true) :
-                            setCurrentStep((prev) => prev + 1);
+                          onClick={(event) => {
+                            currentStep === steps.length
+                              ? handleSubmit(event)
+                              : setCurrentStep((prev) => prev + 1);
                             window.scrollTo({ top: 300, behavior: 'smooth' });
                           }}
                         >
@@ -448,11 +621,28 @@ export default function Post_job() {
         </div>
 
         <Modal
+          show={showComponent}
+          size="sm"
+          popup
+          onClose={() => setShowComponent(false)}
+          // initialFocus={}
+        >
+          <SelectMulti
+            categories={categories}
+            selectedCategories={selectedCategories}
+            onSelectCategory={handleSelectCategory}
+            onDeselectCategory={handleDeselectCategory}
+            onRemoveLast={handleRemoveLastCategory}
+            onClose={handleClose}
+          />
+        </Modal>
+
+        <Modal
           show={openModal}
           size="lg"
           popup
           onClose={() => setOpenModal(false)}
-          initialFocus={QuestionInputRef}
+          initialFocus={!openModal2 ? QuestionInputRef : CustQestionRef}
         >
           <Modal.Header />
           <Modal.Body>
@@ -512,7 +702,7 @@ export default function Post_job() {
                       if (QuestionInputRef.current.value != '') {
                         addQuestion({
                           Question: QuestionInputRef.current.value,
-                          Answer: QuestionInputRef.current.value,
+                          Answer: AnswerInputRef.current.value,
                         });
                         QuestionInputRef.current.value = '';
                         AnswerInputRef.current.value = '';
@@ -524,7 +714,7 @@ export default function Post_job() {
                     width="20"
                     height="20"
                     fill="currentColor"
-                    class="mr-2"
+                    className="mr-2"
                     aria-hidden="true"
                   >
                     <path d="M10 5a1 1 0 0 1 1 1v3h3a1 1 0 1 1 0 2h-3v3a1 1 0 1 1-2 0v-3H6a1 1 0 1 1 0-2h3V6a1 1 0 0 1 1-1Z" />

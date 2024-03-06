@@ -1,10 +1,24 @@
 'use client';
 
-import { Label, Select } from 'flowbite-react';
-function SelectInput({ options, value, onChange, className = '' }) {
+import { Select } from 'flowbite-react';
+export default function SelectInput({
+  options,
+  value,
+  onChange,
+  className = '',
+  name,
+  defaultValue,
+}) {
   return (
     <div className={`max-w-md ${className}`}>
-      <Select id="countries" required value={value} onChange={onChange}>
+      <Select
+        id="countries"
+        name={name}
+        required
+        value={value}
+        onChange={onChange}
+        defaultValue={defaultValue}
+      >
         {options.map((option) => (
           <option key={option}>{option}</option>
         ))}
@@ -12,4 +26,3 @@ function SelectInput({ options, value, onChange, className = '' }) {
     </div>
   );
 }
-export { SelectInput };

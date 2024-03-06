@@ -1,55 +1,45 @@
-﻿using IntelliView.Models.Models;
-using IntelliView.Models.Models.job;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace IntelliView.Models.DTO
 {
-    public class AddJobDTO
+    public class AddJobDto
+    {
+        public string Title { get; set; }
+        public string JobType { get; set; }
+        public string JobTime { get; set; }
+        public string Location { get; set; }
+        public string MinimumExperience { get; set; }
+        public string Description { get; set; }
+        public string Requirements { get; set; }
+        public List<QuestionItemDto> QuestionItems { get; set; }
+        public List<CustQuestionDto> CustQuestions { get; set; }
+        public List<JobInterestedTopicDto> JobInterestedTopics { get; set; }
+        public string EndDate { get; set; }
+
+        [JsonIgnore]
+        public string? CompanyUserId { get; set; } = string.Empty;
+    }
+
+    public class QuestionItemDto
     {
         public int Id { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
+        public int JobId { get; set; }
+    }
 
-        [Required(ErrorMessage = "Title is required")]
-        public string Title { get; set; } = string.Empty;
+    public class CustQuestionDto
+    {
+        public int Id { get; set; }
+        public string Question { get; set; }
+        public int JobId { get; set; }
+    }
 
-        public JobType? Jobtype { get; set; }
+    public class JobInterestedTopicDto
+    {
+        public int InterestedTopicId { get; set; }
+        public string Topic { get; set; }
 
-        public JobTime? Jobtime { get; set; }
-
-        public string? Location { get; set; } = string.Empty;
-
-        public double? Salary { get; set; }
-
-        public string? MinimumExperience { get; set; } = string.Empty;
-
-        public string? Description { get; set; } = string.Empty;
-
-        public string? Requirements { get; set; } = string.Empty;
-
-        public string? Responsibilities { get; set; } = string.Empty;
-
-        public string? Benefits { get; set; } = string.Empty;
-
-        //public string? Notes { get; set; } = string.Empty;
-
-        //[Range(0, double.MaxValue, ErrorMessage = "Salary must be a non-negative value")]
-        //public double? Salary { get; set; }
-
-        //public bool IsActive { get; set; } = true;
-
-        //public bool IsDeleted { get; set; } = false;
-
-        //[Required(ErrorMessage = "CompanyUserId is required")]
-        public string? CompanyUserId { get; set; }
-
-        //[ForeignKey(nameof(CompanyUserId))]
-        //public virtual CompanyUser CompanyUser { get; set; }
-        [JsonIgnore]
-        public virtual List<JobInterestedTopic> JobInterestedTopics { get; set; } = new List<JobInterestedTopic>();
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
-        public DateTime? EndedAt { get; set; } = DateTime.Now.AddDays(20);
-
+        public int JobId { get; set; }
     }
 }

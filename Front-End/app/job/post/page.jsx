@@ -11,6 +11,7 @@ import {
   Layout,
 } from '../../components/components';
 import Cookies from 'js-cookie';
+import ProtectedPage from '../../components/ProtectedPages'
 
 export default function Post_job() {
   const [openModal, setOpenModal] = useState(false);

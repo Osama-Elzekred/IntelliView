@@ -3,310 +3,16 @@ import Layout from '../components/Layout';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { Badge } from 'flowbite-react';
-import { HiCheck, HiClock } from 'react-icons/hi';
 import CardComp from '../components/Card';
 export default function Jobs() {
   const imageURl = 'images/job_logo_1.jpg';
-  const jobData = [
-    {
-      id: 1,
-      title: 'Front End',
-      jobType: 'Hybrid',
-      jobTime: 'full time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '7000$',
-      imageURl: 'images/job_logo_1.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 2,
-      title: 'back End',
-      jobType: 'on site',
-      jobTime: 'part time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '8000$',
-      imageURl: 'images/job_logo_2.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 3,
-      title: 'Front End',
-      jobType: 'remote',
-      jobTime: 'full time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '7000$',
-      imageURl: 'images/job_logo_1.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 4,
-      title: 'back End',
-      jobType: 'on site',
-      jobTime: 'part time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '8000$',
-      imageURl: 'images/job_logo_2.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 5,
-      title: 'Front End',
-      jobType: 'remote',
-      jobTime: 'full time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '7000$',
-      imageURl: 'images/job_logo_1.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 6,
-      title: 'back End',
-      jobType: 'on site',
-      jobTime: 'part time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '8000$',
-      imageURl: 'images/job_logo_2.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 7,
-      title: 'Front End',
-      jobType: 'remote',
-      jobTime: 'full time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '7000$',
-      imageURl: 'images/job_logo_1.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 8,
-      title: 'back End',
-      jobType: 'on site',
-      jobTime: 'part time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '8000$',
-      imageURl: 'images/job_logo_2.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 9,
-      title: 'front End',
-      jobType: 'on site',
-      jobTime: 'part time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '8000$',
-      imageURl: 'images/job_logo_2.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 10,
-      title: 'front End',
-      jobType: 'on site',
-      jobTime: 'part time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '8000$',
-      imageURl: 'images/job_logo_2.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 11,
-      title: 'back End',
-      jobType: 'on site',
-      jobTime: 'part time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '8000$',
-      imageURl: 'images/job_logo_2.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-    {
-      id: 12,
-      title: 'back End',
-      jobType: 'on site',
-      jobTime: 'part time',
-      location: 'Cairo',
-      description: 'ay klam ',
-      requirements: 'bla bla ',
-      responsibilities: null,
-      companyName: 'Inteliview',
-      notes: '',
-      salary: '8000$',
-      imageURl: 'images/job_logo_2.jpg',
-      isActive: true,
-      isDeleted: false,
-      companyUserId: '9e4fcedb-58bf-4592-b21f-5fcc54a51de5',
-      companyUser: null,
-      jobQuestions: null,
-      jobInterestedTopics: null,
-      createdAt: '2024-03-02T14:43:33.796Z',
-      updatedAt: '2024-03-02T14:43:33.796Z',
-      endedAt: '2024-03-02T14:43:33.796Z',
-    },
-  ];
-  // const [jobListings, setJobListings] = useState([]);
-  //   useEffect(() => {
-  //     const fetchJobs = async () => {
-  //       const authToken = Cookies.get('authToken');
-  //       try {
-  //         const response = await fetch('https://localhost:7049/api/Job/GetAll', {
-  //           method: 'GET',
-  //           headers: {
-  //             Authorization: `Bearer ${authToken}`,
-  //           },
-  //         });
-  //         if (response.ok) {
-  //           const jobs = await response.json();
-  //           setJobListings(jobs);
-  //         }
-  //       } catch (error) {
-  //         console.log('error : ', error);
-  //       }
-  //     };
-  //     fetchJobs();
-  //   }, []);
+  const [jobListings, setJobListings] = useState([]);
+  const [searchResult, setSearchResult] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [jobs, setJobs] = useState([]);
+  const jobsPerPage = 5;
+  const [test, setTest] = useState(false);
   const [searchForm, setSearchForm] = useState({
     title: '',
     jobType: '',
@@ -315,10 +21,9 @@ export default function Jobs() {
   const handleChange = async (field, value) => {
     setSearchForm({ ...searchForm, [field]: value });
   };
-  const [test, setTest] = useState(false);
   const handleSearch = async () => {
     setTest(true);
-    const filteredJobs = jobData.filter((job) => {
+    const filteredJobs = jobListings.filter((job) => {
       // Filter by title
       if (
         searchForm.title &&
@@ -348,13 +53,33 @@ export default function Jobs() {
       .getElementById('job-listings')
       .scrollIntoView({ behavior: 'smooth' });
   };
-  const [searchResult, setSearchResult] = useState([]);
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [jobs, setJobs] = useState([]);
-  const jobsPerPage = 5;
+ 
 
   useEffect(() => {
+    const fetchJobs = async () => {
+      const authToken = Cookies.get('authToken');
+      try {
+        const response = await fetch('https://localhost:7049/api/Job/GetAll', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        if (response.ok) {
+          const jobs = await response.json();
+          setJobListings(jobs);
+        }
+      } catch (error) {
+        console.log('error : ', error);
+      }
+    };
+    fetchJobs();
+    
+  }, [currentPage, searchResult]);
+  
+  // setTime out to make delay until the data come from server to store it in jobs . #hossam
+  setTimeout(() => {
+    
     if (
       searchResult.length > 0 ||
       (searchResult.length === 0 && test === true)
@@ -367,12 +92,16 @@ export default function Jobs() {
         )
       );
     } else {
-      setTotalPages(Math.ceil(jobData.length / jobsPerPage)); // Update total pages based on original job data
+      setTotalPages(Math.ceil(jobListings.length / jobsPerPage)); // Update total pages based on original job data
       const startIndex = (currentPage - 1) * jobsPerPage;
-      const endIndex = Math.min(startIndex + jobsPerPage, jobData.length);
-      setJobs(jobData.slice(startIndex, endIndex));
+      const endIndex = Math.min(startIndex + jobsPerPage, jobListings.length);
+      setJobs(jobListings.slice(startIndex, endIndex));
     }
-  }, [currentPage, searchResult]);
+    
+  }, 1);
+  
+
+ 
   const changePage = (page) => {
     setCurrentPage(page);
     setTimeout(() => {
@@ -405,7 +134,9 @@ export default function Jobs() {
       }, 200);
     }
   };
-
+console.log("jobListings : " , jobListings); 
+console.log("-------------------------");
+console.log("jobs : ",jobs); 
   return (
     <Layout>
       <>
@@ -525,7 +256,7 @@ export default function Jobs() {
                     {searchResult.length > 0 ||
                     (searchResult.length === 0 && test === true)
                       ? searchResult.length
-                      : jobData.length}{' '}
+                      : jobListings.length}{' '}
                     Job Listed
                   </h2>
                 </div>
@@ -580,7 +311,7 @@ export default function Jobs() {
                     employmentType={job.jobType}
                     categories={['marketing', 'finance']} // There's no equivalent in the jobData
                     jobTime={job.jobTime}
-                    companyImageUrl={job.imageURl}
+                    companyImageUrl={imageURl}
                     onClick={() => (window.location.href = `/job/${job.id}`)}
                   />
                 ))}
@@ -592,7 +323,7 @@ export default function Jobs() {
                     {searchResult.length > 0 ||
                     (searchResult.length === 0 && test === true)
                       ? searchResult.length
-                      : jobData.length}{' '}
+                      : jobListings.length}{' '}
                     Jobs
                   </span>
                 </div>
@@ -617,7 +348,7 @@ export default function Jobs() {
                       Math.ceil(
                         (searchResult.length > 0
                           ? searchResult.length
-                          : jobData.length) / jobsPerPage
+                          : jobListings.length) / jobsPerPage
                       ) && (
                       <Link href="#" className="next" onClick={nextPage}>
                         Next

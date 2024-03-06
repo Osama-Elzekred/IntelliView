@@ -14,18 +14,15 @@ import { useEffect, useState } from "react";
 export default function Header() {
   const role = Cookies.get("role"); 
   const userName = Cookies.get("userName"); 
-  const [isLoggedIn ,setIsLoggedIn] = useState(false); 
-  useEffect(()=> {
-    const authToken = Cookies.get("authToken"); 
-    setIsLoggedIn(!!authToken); 
-  },[]); 
+  const authToken = Cookies.get("authToken"); 
+  
 
   const signOut = async() => {
     Cookies.remove('authToken');
     Cookies.remove("user_id"); 
     Cookies.remove ("role");
-    setIsLoggedIn(false); 
-    return <Link href="/login"/>; 
+    
+    window.location.href = "/login"; 
   }
 
   return (
@@ -154,8 +151,9 @@ export default function Header() {
               </Link>
 )}
               {/* Conditional rendering based on authToken */}
-              {isLoggedIn ? (
+              {authToken ? (
                 <div className="mr-3 d-flex align-items-center">
+                  
                   <span className="block text-xl mr-3 text-light ">{userName}</span>
                   <Dropdown
 

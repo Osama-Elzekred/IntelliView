@@ -1,9 +1,12 @@
 import Layout from '../../components/Layout';
 import Phone from '../../components/Phone';
 import Script from 'next/script';
+import Link from 'next/link';
+import ProtectedPage from '../../components/ProtectedPages';
 const User_profile = () => {
   return (
     <Layout>
+      <ProtectedPage allowedRoles = {["user"]}/>
       <>
         <link rel="stylesheet" href="/css/edit-profile.css" />
         <div id="overlayer" />

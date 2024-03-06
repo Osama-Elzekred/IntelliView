@@ -1,7 +1,7 @@
 'use client';
 import Layout from '../../components/Layout';
 import Toastitem from '../../components/Toast';
-
+import ProtectedPage from '../../components/ProtectedPages'
 import Link from 'next/link';
 import { Button, FileInput, Label, Modal, Textarea } from 'flowbite-react';
 import { useRef, useState } from 'react';
@@ -55,13 +55,15 @@ export default function Post_job() {
     ]);
   };
   return (
+    <> 
+      <ProtectedPage  allowedRoles={["company"]}/>
     <Layout>
       <>
         {/* <div className="loader">
           <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Loading...</span>
+          <span className="sr-only">Loading...</span>
         </div>
-        </div> */}
+      </div> */}
         <div className="site-wrap">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">
@@ -78,7 +80,7 @@ export default function Post_job() {
             className="section-hero overlay inner-page bg-image"
             style={{ backgroundImage: 'url("/images/hero_1.jpg")' }}
             id="home-section"
-          >
+            >
             <div className="container">
               <div className="row">
                 <div className="col-md-7">
@@ -132,6 +134,7 @@ export default function Post_job() {
                     {currentStep == 1 ? (
                       <>
                         <h3 className="text-black mb-5 border-bottom pb-2">
+            
                           Job Details
                         </h3>
                         <div className="form-group">
@@ -328,8 +331,8 @@ export default function Post_job() {
                       <>
                         <div className="form-group">
                           <div className="m-2 p-2">
-                            <h3 class="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
-                              <span class="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+                            <h3 className="mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl">
+                              <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
                                 Custom Questions
                               </span>{' '}
                               in the Application Form.
@@ -537,5 +540,6 @@ export default function Post_job() {
         </Modal>
       </>
     </Layout>
+    </>
   );
 }

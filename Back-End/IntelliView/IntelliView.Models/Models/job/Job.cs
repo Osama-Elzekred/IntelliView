@@ -62,7 +62,7 @@ namespace IntelliView.Models.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
-        public DateTime? EndedAt { get; set; } = DateTime.Now.AddDays(20);
+        public DateTime? EndedAt { get; set; } 
     }
 
     //public enum JobType

@@ -189,7 +189,7 @@ export default function Post_job() {
   };
   return (
     <>
-      <ProtectedPage allowedRoles={['company']} />
+      {/* <ProtectedPage allowedRoles={['company']} /> */}
       <Layout>
         <>
           <div className="site-wrap">

@@ -204,6 +204,8 @@ namespace IntelliView.API.Controllers
                 return BadRequest(ModelState);
             }
 
+            DateTime dateTime1 = DateTime.Parse(jobDto.EndDate);
+
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             jobDto.CompanyUserId = userId;
             //jobDto.JobInterestedTopic.ForEach(topic =>
@@ -211,6 +213,7 @@ namespace IntelliView.API.Controllers
             //    topic.JobId = jobDto.Id;
             //});
             var job = _mapper.Map<Job>(jobDto);
+            job.EndedAt = dateTime1;
             job.JobInterestedTopic = jobDto.JobInterestedTopics.Select(topic => new JobInterestedTopic
             {
                 //InterestedTopicId = topic.InterestedTopicId,

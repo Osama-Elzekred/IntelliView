@@ -55,7 +55,7 @@ namespace InteliView.DataAccess.Data
                 .HasKey(ji => new { ji.JobId, ji.InterestedTopicId });
             modelBuilder.Entity<JobInterestedTopic>()
                 .HasOne(ji => ji.Job)
-                .WithMany(j => j.JobInterestedTopics)
+                .WithMany(j => j.JobInterestedTopic)
                 .HasForeignKey(ji => ji.JobId);
             modelBuilder.Entity<JobInterestedTopic>()
                 .HasOne(ji => ji.InterestedTopic)

@@ -2,6 +2,7 @@
 using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
 using IntelliView.Models.Models;
+using IntelliView.Models.Models.job;
 namespace IntelliView.DataAccess.Repository.Repos.JobRepos
 {
     public class JobRepo : Repository<Job>, IJobRepo
@@ -38,7 +39,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
 
         // Constructor and other methods...
 
-        public async Task AddQuestionToJob(int jobId, JobQuestion question)
+        public async Task AddQuestionToJob(int jobId, CustQuestion question)
         {
             var job = await _db.Jobs.FindAsync(jobId);
 
@@ -49,7 +50,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
             }
 
             // Associate the question with the job
-            job.JobQuestions ??= new List<JobQuestion>();
+            job.JobQuestions ??= new List<CustQuestion>();
             job.JobQuestions.Add(question);
 
             // Save changes to the database

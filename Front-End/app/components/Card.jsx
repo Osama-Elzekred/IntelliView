@@ -1,0 +1,91 @@
+'use client';
+import React from 'react';
+
+function CardComp({
+  title,
+  jobTime,
+  company,
+  location,
+  timePosted,
+  employmentType,
+  categories,
+  companyImageUrl,
+  onClick,
+}) {
+  const categoriesList = categories.map((category, index) => (
+    <span
+      key={index}
+      className="font-roboto text-[#6B7280] text-sm after:content-['·'] last:after:content-['']"
+    >
+      {category.trim()}
+    </span>
+  ));
+
+  return (
+    <div
+      className="bg-white p-2 rounded-md shadow-lg max-w-[920px] mx-auto hover:bg-gray-100 transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 cursor-pointer"
+      onClick={onClick}
+    >
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="font-roboto text-[#121212] text-lg font-semibold">
+            {title}
+          </h2>
+          <p className="font-roboto text-[#121212]">
+            {company} - {location}
+          </p>
+          <p className="font-roboto text-[#6B7280] text-sm">{timePosted}</p>
+        </div>
+        <div className="w-[50px] h-[50px]">
+          <img
+            className="rounded-full border border-[#6B7280] object-cover object-center"
+            src={companyImageUrl}
+            alt={`Company logo of ${company}`}
+            width="50"
+            height="50"
+          />
+        </div>
+      </div>
+      <div className="font-roboto text-[#121212] space-x-2">
+        <span className="bg-[#E5E7EB] rounded px-2 py-1 text-sm">
+          {employmentType}
+        </span>
+        <span className="bg-[#E5E7EB] rounded px-2 py-1 text-sm">
+          {jobTime}
+        </span>
+      </div>
+      <div className="flex flex-wrap gap-1">{categoriesList}</div>
+    </div>
+  );
+}
+
+function StoryComponent() {
+  const jobInfo = {
+    title: 'Payroll Specialist - Middle East',
+    company: 'Remote Technology, Inc.',
+    location: 'Cairo, Egypt',
+    timePosted: '20 minutes ago',
+    employmentType: 'Full Time',
+    categories: [
+      'Not specified',
+      'Accounting/Finance',
+      'Administration',
+      'Human Resources Payroll',
+      'Human Resources (HR)',
+      'Personnel',
+      'Accounting',
+      'Microsoft Office',
+      'Labor Law HR',
+    ],
+    companyImageUrl: './images/company-logo.png',
+    onClick: () => (window.location.href = '/job-details'),
+  };
+
+  return (
+    <div className="p-6 bg-[#F9FAFB] min-h-screen flex items-center justify-center">
+      <CardComp {...jobInfo} />
+    </div>
+  );
+}
+
+export default CardComp;

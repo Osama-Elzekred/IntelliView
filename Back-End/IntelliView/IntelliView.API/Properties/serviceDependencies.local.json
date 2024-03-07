@@ -9,6 +9,14 @@
       "type": "mssql.local",
       "connectionId": "ConnectionStrings:DefaultConnection",
       "dynamicId": null
+    },
+    "mssql2": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.ServiceLinker/locations/eastus/connectors/azureDBConnetionString_9B0EDC290B",
+      "secretStore": "LocalSecretsFile",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/intelliviewapidbserver/databases/IntelliView.API_db",
+      "type": "mssql.azure",
+      "connectionId": "azureDBConnetionString",
+      "dynamicId": null
     }
   }
 }

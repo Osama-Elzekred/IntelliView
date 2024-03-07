@@ -1,11 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Cookies from "js-cookie";
 import Link from "next/link";
 
 function MainComponent() {
   const [currentStep, setCurrentStep] = React.useState(1);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    gender: "",
+    CV: null, // Assuming the user uploads a file
+  });
+
 
   function handleNext() {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -20,61 +27,68 @@ const isValidEmail = (email) => {
 };
 
 const isValidPhone = (phone) => {
-  return /^[0-9]{10}$/.test(phone);
+  return /^[0-9]$/.test(phone);
 };
-  const questions = [
-    "What is your previous work experience?",
-    "What are your strengths and weaknesses?",
-    "How do you handle tight deadlines?",
-    "Tell us about a challenging project you worked on and how you overcame obstacles.",
-    "What motivates you to excel in your work?",
-    "What are your salary expectations?"
-  ];
+// const questions = [
+//   "What is your previous work experience?",
+//   "What are your strengths and weaknesses?",
+//   "How do you handle tight deadlines?",
+//   "Tell us about a challenging project you worked on and how you overcame obstacles.",
+//   "What motivates you to excel in your work?",
+//   "What are your salary expectations?"
+// ];
+const [questions, setQuestions] = useState([]);
 
-  const [personalInfo, setPersonalInfo] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    gender: "",
-    CV: null, // Assuming the user uploads a file
-  });
+useEffect(() => {
+  fetchQuestions();
+}, []);
+
+const fetchQuestions = async () => {
+  const authToken = Cookies.get('authToken');
+  try {
+    const response = await fetch(`https://${DOMAIN_NAME}/questions`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    });
+    if (response.ok) {
+      const questionsData = await response.json();
+      setQuestions(questionsData);
+    }
+  } catch (error) {
+    console.error('Error fetching questions:', error);
+  }
+};
 
   // Function to handle input change and update personalInfo state
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-  
+   
     // Handle file input separately
     if (type === "file") {
-      const file = files[0];
-      setPersonalInfo((prevInfo) => ({
-        ...prevInfo,
-        [name]: file,
+      const file = files[0]; // Get the first file from the files array
+      setAnswers((prevAnswers) => ({
+        ...prevAnswers,
+        [name]: file, // Update the state with the file object
       }));
     } else {
       const inputValue = value;
       if (name === "fullName" || name === "email" || name === "phone" || name === "gender") {
-        setPersonalInfo((prevInfo) => ({
-          ...prevInfo,
+        setAnswers((prevAnswers) => ({
+          ...prevAnswers,
           [name]: inputValue,
         }));
       } else {
-        if (name === "CV") {
-          const file = files[0];
-          setPersonalInfo((prevInfo) => ({
-            ...prevInfo,
-            [name]: file,
-          }));
-        } else {
-          setAnswers((prevAnswers) => ({ ...prevAnswers, [name]: inputValue }));
-        }
+        setAnswers((prevAnswers) => ({ ...prevAnswers, [name]: inputValue }));
       }
   
       // Basic input validation for email and phone
       if (name === "email" && !isValidEmail(value)) {
         // Handle invalid email
         console.log("Invalid email");
-        setPersonalInfo((prevInfo) => ({
-          ...prevInfo,
+        setAnswers((prevAnswers) => ({
+          ...prevAnswers,
           showEmailWarning: true,
         }));
       }
@@ -82,8 +96,8 @@ const isValidPhone = (phone) => {
       if (name === "phone" && !isValidPhone(value)) {
         // Handle invalid phone number
         console.log("Invalid phone number");
-        setPersonalInfo((prevInfo) => ({
-          ...prevInfo,
+        setAnswers((prevAnswers) => ({
+          ...prevAnswers,
           showPhoneWarning: true,
         }));
       }
@@ -94,22 +108,28 @@ const isValidPhone = (phone) => {
 // Function to send personalInfo and answers to the backend
 const sendAnswers = async () => {
   const authToken = Cookies.get("authToken");
-  
-  // Combine personalInfo and answers into a single object
-  const formData = {
-    personalInfo,
-    answers,
-  };
 
   try {
+    const formData = new FormData(); // Create a new FormData object
+
+    // Append each key-value pair to the formData object
+    Object.entries(answers).forEach(([key, value]) => {
+      // If the value is a file (CV), append it as a file
+      if (value instanceof File) {
+        formData.append(key, value);
+      } else {
+        formData.append(key, JSON.stringify(value)); // Convert non-file values to JSON strings
+      }
+    });
+
     const response = await fetch(`https://${DOMAIN_NAME}/submitAnswers`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData), // Send formData in the request body
+      body: formData, // Send formData in the request body
     });
+
     if (response.ok) {
       console.log("Answers submitted successfully!");
       // Optionally, handle success response from the backend
@@ -124,19 +144,24 @@ const sendAnswers = async () => {
 };
 
 
-  const renderQuestions = () => {
-    return questions.map((question, index) => (
-      <input
-        key={index}
+
+const renderQuestions = () => {
+  return questions.map((question, index) => (
+    <div key={index} className="mb-4">
+      <label htmlFor={`question${index + 1}`} className="block font-medium mb-1">
+        {question}
+      </label>
+      <textarea
+        id={`question${index + 1}`}
         name={`question${index + 1}`}
-        className="w-full p-2 mb-4 border rounded"
-        placeholder={question}
-        type="text"
+        className="w-full p-2 border rounded"
+        //placeholder={question}
         value={answers[`question${index + 1}`] || ""}
         onChange={handleChange}
       />
-    ));
-  };
+    </div>
+  ));
+};
 
   const StepOne = (
     <div>
@@ -147,7 +172,7 @@ const sendAnswers = async () => {
           className="w-full p-2 mb-4 border rounded"
           placeholder="First and Last Name"
           type="text"
-          value={personalInfo.fullName}
+          value={answers.fullName}
           onChange={handleChange}
           required // Add required attribute for input validation
         />
@@ -156,7 +181,7 @@ const sendAnswers = async () => {
           className="w-full p-2 mb-4 border rounded"
           placeholder="Email Address"
           type="email"
-          value={personalInfo.email}
+          value={answers.email}
           onChange={handleChange}
           required // Add required attribute for input validation
         />
@@ -165,7 +190,7 @@ const sendAnswers = async () => {
           className="w-full p-2 mb-4 border rounded"
           placeholder="Phone"
           type="tel"
-          value={personalInfo.phone}
+          value={answers.phone}
           onChange={handleChange}
           required // Add required attribute for input validation
         />
@@ -177,7 +202,7 @@ const sendAnswers = async () => {
             type="radio"
             value="Male"
             id="genderMale"
-            checked={personalInfo.gender === "Male"}
+            checked={answers.gender === "Male"}
             onChange={handleChange}
             required // Add required attribute for input validation
           />
@@ -190,7 +215,7 @@ const sendAnswers = async () => {
             type="radio"
             value="Female"
             id="genderFemale"
-            checked={personalInfo.gender === "Female"}
+            checked={answers.gender === "Female"}
             onChange={handleChange}
             required // Add required attribute for input validation
           />
@@ -204,6 +229,7 @@ const sendAnswers = async () => {
             name="CV"
             className="w-full p-2 border rounded"
             type="file"
+            accept=".pdf"
             onChange={handleChange}
             required // Add required attribute for input validation
           />

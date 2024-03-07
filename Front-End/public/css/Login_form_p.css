@@ -3,7 +3,7 @@
     margin: 0;
 } */
 .form {
-  display: grid;
+  /* display: grid; */
   grid-template-columns: repeat(3, 1fr);
   grid-template-areas: '. form .';
   grid-template-rows: 630px;
@@ -12,41 +12,41 @@
 .sign-up-,
 .sign-in- {
   text-transform: capitalize;
-  width: 535px;
+  /* width: 535px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  /* position: absolute; */
 }
 .sign-up_ {
   position: relative;
   bottom: 15px;
 }
 form input {
-  width: 340px;
-  position: relative;
-  right: 20px;
+  /* width: 340px; */
+  /* position: relative; */
+  /* right: 20px; */
   font-size: 17px;
   background-color: #96989c18;
   margin-bottom: 20px;
   outline: 0;
   border: 0.5px solid #828c7f1a;
 }
-#passwordField {
+/* #passwordField {
   position: relative;
   top: 15px;
 }
 #password- {
   position: relative;
   right: 14px;
-}
+} */
 
 .sign-up,
 .word {
   font-family: 'Fjalla One', sans-serif;
   font-size: 30px;
-  position: absolute;
+  /* position: absolute; */
   top: 30px;
   text-shadow: 2px 2px #7f848c;
   opacity: 0.5;
@@ -57,9 +57,9 @@ form input {
 
   font-size: 34px;
 }
-form {
+/* form {
   position: relative;
-}
+} */
 
 .button1 {
   position: absolute;
@@ -202,10 +202,10 @@ form {
   top: 15px;
 }
 
-#password- {
+/* #password- {
   position: relative;
   right: 20px;
-}
+} */
 .input-container {
   position: relative;
   width: fit-content;
@@ -224,16 +224,16 @@ form {
 
 .c-p {
   display: flex;
-  width: 250px;
+  /* width: 250px;
   position: relative;
   top: -33px;
-  left: 16px;
+  left: 16px; */
 }
 .c-p input.person.active,
 .c-p input.company.active {
-  background-color: #17a9c3;
+  background-color: rgb(28 100 242 / var(--tw-bg-opacity));
   color: white;
-  border-color: #17a9c3;
+  border-color: rgb(28 100 242 / var(--tw-bg-opacity));
 }
 .c-p input {
   cursor: pointer;

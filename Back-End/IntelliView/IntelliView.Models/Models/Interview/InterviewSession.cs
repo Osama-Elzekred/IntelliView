@@ -23,7 +23,7 @@ namespace IntelliView.Models.Models
 
         // Navigation property for Applications received for this session
         public virtual ICollection<InterviewApplication> Applications { get; set; }
-        public virtual ICollection<InterviewQuestion> Questions { get; set; }
+        public virtual ICollection<InterviewSessionQuestion> Questions { get; set; }
     }
     public enum Categories
     {

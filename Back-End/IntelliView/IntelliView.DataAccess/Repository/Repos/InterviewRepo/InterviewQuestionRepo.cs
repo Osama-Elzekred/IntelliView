@@ -16,7 +16,7 @@ namespace IntelliView.DataAccess.Repository.Repos.InterviewRepos
 
         public void Update(InterviewQuestionRepo interviewQuestion)
         {
-            //_db.InterviewQuestion.Update(interviewQuestion);
+            //_db.InterviewSessionQuestion.Update(interviewQuestion);
         }
     }
 }

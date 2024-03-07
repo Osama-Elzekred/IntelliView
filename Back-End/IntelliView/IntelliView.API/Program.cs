@@ -118,14 +118,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
-
 //app.MapIdentityApi<IdentityUser>();
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 
 
-app.UseExceptionHandler();
+//app.UseExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -10,6 +10,7 @@ import { useState } from 'react';
 // import  '../public/scss/styles.scss';
 // import '../public/scss/style.scss';
 export default function login() {
+  const DOMAIN_NAME = 'localhost:7049';
   const [isFlipped, setIsFlipped] = useState(true);
   const [loginForm, setLogin] = useState({
     Email: '',

@@ -1,29 +1,27 @@
-"use client"; 
-import Cookies from "js-cookie";
-import Link from "next/link";
+'use client';
+import Cookies from 'js-cookie';
+import Link from 'next/link';
 import {
   Avatar,
   Dropdown,
   DropdownDivider,
   DropdownHeader,
   DropdownItem,
-} from "flowbite-react";
-import { useEffect, useState } from "react";
-
+} from 'flowbite-react';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
-  const role = Cookies.get("role"); 
-  const userName = Cookies.get("userName"); 
-  const authToken = Cookies.get("authToken"); 
-  
+  const role = Cookies.get('role');
+  const userName = Cookies.get('userName');
+  const authToken = Cookies.get('authToken');
 
-  const signOut = async() => {
+  const signOut = async () => {
     Cookies.remove('authToken');
-    Cookies.remove("user_id"); 
-    Cookies.remove ("role");
-    
-    window.location.href = "/login"; 
-  }
+    Cookies.remove('user_id');
+    Cookies.remove('role');
+
+    window.location.href = '/login';
+  };
 
   return (
     <header className="site-navbar mt-3" id="top">
@@ -70,9 +68,14 @@ export default function Header() {
               </li>
               <li className="has-children">
                 <Link href="/service" replace>
-                  Pages
+                  Interview
                 </Link>
                 <ul className="dropdown">
+                  <li>
+                    <Link href="/Interview/mocks" replace>
+                      Mocks
+                    </Link>
+                  </li>
                   <li>
                     <Link href="/service" replace>
                       Services
@@ -139,24 +142,24 @@ export default function Header() {
             </ul>
           </nav>
           <div className="right-cta-menu text-right d-flex aligin-items-center col-6">
-            <div className="ml-auto d-flex align-items-center" >
-              { role != "user" &&( 
-            <Link
-                href="job/post"
-                className="btn btn-outline-white border-width-2 d-none d-lg-inline-block mr-3"
-                replace
-              >
-                <span className="mr-2 icon-add" />
-                Post a Job
-              </Link>
-)}
+            <div className="ml-auto d-flex align-items-center">
+              {role != 'user' && (
+                <Link
+                  href="job/post"
+                  className="btn btn-outline-white border-width-2 d-none d-lg-inline-block mr-3"
+                  replace
+                >
+                  <span className="mr-2 icon-add" />
+                  Post a Job
+                </Link>
+              )}
               {/* Conditional rendering based on authToken */}
               {authToken ? (
                 <div className="mr-3 d-flex align-items-center">
-                  
-                  <span className="block text-xl mr-3 text-light ">{userName}</span>
+                  <span className="block text-xl mr-3 text-light ">
+                    {userName}
+                  </span>
                   <Dropdown
-
                     label={
                       <Avatar
                         alt="User settings"
@@ -173,10 +176,10 @@ export default function Header() {
                     <DropdownItem>Dashboard</DropdownItem>
                     <Link
                       href={
-                        Cookies.get("role")=== "company" ||
-                        Cookies.get("role") === "Company"
-                          ? "/profile/Edit-company-profile"
-                          : "/profile/Edit-user-profile"
+                        Cookies.get('role') === 'company' ||
+                        Cookies.get('role') === 'Company'
+                          ? '/profile/Edit-company-profile'
+                          : '/profile/Edit-user-profile'
                       }
                     >
                       <DropdownItem>Settings</DropdownItem>
@@ -184,7 +187,7 @@ export default function Header() {
                     <DropdownItem>Earnings</DropdownItem>
                     <DropdownDivider />
                     <Link href="" onClick={signOut}>
-                    <DropdownItem>Sign out</DropdownItem>
+                      <DropdownItem>Sign out</DropdownItem>
                     </Link>
                   </Dropdown>
                 </div>
@@ -198,7 +201,6 @@ export default function Header() {
                   Log In
                 </Link>
               )}
-              
             </div>
             <Link
               href=""

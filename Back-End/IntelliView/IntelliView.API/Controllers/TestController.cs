@@ -3,6 +3,7 @@ using IntelliView.API.Infrastructure;
 using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace IntelliView.API.Controllers
 {
@@ -32,13 +33,77 @@ namespace IntelliView.API.Controllers
         }
 
 
-        [HttpGet("GetAiBasedResult")]
-        public async Task<IActionResult> GetAiBasedResult(string searchText)
+        [HttpGet("GeminiAI")]
+        public async Task<IActionResult> GeminiAI(string category, string level, int numberOfQuestions)
         {
-            var result = await _aiBasedSearchService.GetAiBasedResult(searchText);
-            return Ok(result);
+            // Construct the prompt based on the category and level
+            string prompt = $"Generate a {numberOfQuestions} text interview question with model answers in the {category} category and {level} level. Format: {{Question}}; {{Answer}}";
 
+            // Call the AI service with the constructed prompt
+            var result = await _aiBasedSearchService.GeminiAiApi(prompt);
+
+            // Replace unicode escape sequences with corresponding characters
+            string formattedResponse = System.Text.RegularExpressions.Regex.Unescape(result);
+
+            // Parse the formatted response to extract question and answer
+            var response = ParseGeminiApiResponse(formattedResponse);
+
+
+            return Ok(response);
         }
+
+        private List<InterviewResponse> ParseGeminiApiResponse(string apiResponse)
+        {
+            // Split the API response by "**Question:**" to separate questions and answers
+            var qaPairs = apiResponse.Split("**Question:**");
+
+            // Initialize a list to store the parsed interview responses
+            List<InterviewResponse> interviewResponses = new List<InterviewResponse>();
+
+            // Iterate over each question-answer pair and parse them
+            foreach (var pair in qaPairs)
+            {
+                // Trim any leading/trailing whitespace from the pair
+                string trimmedPair = pair.Trim();
+
+                if (string.IsNullOrWhiteSpace(trimmedPair))
+                {
+                    continue; // Skip empty or whitespace-only pairs
+                }
+
+                // Split the pair into question and answer parts
+                var parts = trimmedPair.Split("**Answer:**");
+
+                // Trim any leading/trailing whitespace from the question and answer
+                string question = parts[0]?.Trim();
+                string answer = parts.Length > 1 ? parts[1]?.Trim() : ""; // Handle cases where no answer is provided
+
+                // Create an InterviewResponse object and add it to the list
+                interviewResponses.Add(new InterviewResponse
+                {
+                    Question = question,
+                    Answer = answer
+                });
+            }
+
+            return interviewResponses;
+        }
+
+
+
+        public class InterviewResponse
+        {
+            [JsonProperty("Question")]
+            public string Question { get; set; }
+
+            [JsonProperty("Answer")]
+            public string Answer { get; set; }
+        }
+
+
+
+
+
         [HttpPost("AddMultibleDataForm")]
         public Task<IActionResult> AddMultibleDataForm(MultibleFormDataDTO multibleFormDataDTO)
         {

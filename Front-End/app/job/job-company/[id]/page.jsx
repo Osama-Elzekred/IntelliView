@@ -10,7 +10,7 @@ import Cookies from 'js-cookie';
 
 
 export default function JobApplicants() {
-  const DOMAIN_NAME = "//localhost:7049/api";
+  const DOMAIN_NAME = '//localhost:7049/api';
   const [allApplicants, setAllApplicants] = useState([
     { name: "John Doe", email: "ABC Company",position:"react", location: "New York", status: "Pending" },
     { name: "Jane Smith", email: "XYZ Corporation", position:"react",location: "Los Angeles", status: "Approved" },

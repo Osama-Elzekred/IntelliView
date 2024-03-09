@@ -101,7 +101,7 @@ function MainComponent() {
             <div className="row"></div>
           </div>
         </section>
-        <div className="flex flex-col lg:flex-row gap-4 p-8">
+        <div className="flex flex-col lg:flex-row gap-4 ">
           <div
             className="lg:w-1/4 bg-white rounded-lg shadow p-4 overflow-auto"
             style={{ maxHeight: '75vh' }}

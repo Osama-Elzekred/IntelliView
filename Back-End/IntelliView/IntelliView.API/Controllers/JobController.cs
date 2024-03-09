@@ -5,6 +5,7 @@ using IntelliView.Models.Models;
 using IntelliView.Models.Models.job;
 using IntelliView.Utility;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 namespace IntelliView.API.Controllers
@@ -43,6 +44,7 @@ namespace IntelliView.API.Controllers
             var jobs = await _unitOfWork.Jobs.GetAllAsync();
             return Ok(jobs);
         }
+
         [HttpPost("AddQuestions")]
         public async Task<ActionResult<JobQuestion>> AddQuestion(int JobId, QuestionDTO questionDto)
         {
@@ -96,18 +98,22 @@ namespace IntelliView.API.Controllers
 
             return CreatedAtAction(nameof(GetJobQuestions), new { questionDto.JobId }, jobquestion);
         }
-        [HttpGet("{jobId}/questions")]
+        [Authorize(Roles = SD.ROLE_USER)]
+        [HttpGet("questions/{jobId}")]
         public async Task<ActionResult<IEnumerable<JobQuestion>>> GetJobQuestions(int jobId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == jobId && j.CompanyUserId == userId);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == jobId);
             if (job == null)
             {
                 return NotFound();
             }
             var jobQuestions = await _unitOfWork.JobQuestions.GetJobQuestionsAsync(jobId);
-            var jq = jobQuestions.Select(jq => new { jq.Id, jq.Content, jq.Type, jq.MCQOptions });
-            return Ok(jq);
+
+            // Extract question content from JobQuestion objects
+            var questionContents = jobQuestions.Select(jq => jq.Question);
+
+            return Ok(questionContents);
         }
 
         [HttpGet("AllTopics")]

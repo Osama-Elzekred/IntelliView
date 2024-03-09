@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using InteliView.DataAccess.Data;
+using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
 using IntelliView.Models.Models;
 using IntelliView.Models.Models.job;
@@ -39,9 +40,23 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
 
 
         // Constructor and other methods...
-        public async Task<IEnumerable<JobQuestion>> GetJobQuestionsAsync(int jobId)
+        public async Task<IEnumerable<CustQuestion>> GetJobQuestionsAsync(int jobId)
         {
-            var questions = await _db.JobQuestions.Where(j => j.JobId == jobId).Include(j => j.MCQOptions).ToListAsync();
+            var job = await _db.Jobs.Include(j => j.JobQuestions).FirstOrDefaultAsync(j => j.Id == jobId);
+
+            if (job == null)
+            {
+                // Handle job not found
+                return Enumerable.Empty<CustQuestion>();
+            }
+
+            if (job.JobQuestions == null)
+            {
+                // Handle null JobQuestions collection
+                return Enumerable.Empty<CustQuestion>();
+            }
+
+            var questions = job.JobQuestions.ToList();
 
             return questions;
         }

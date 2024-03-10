@@ -37,7 +37,7 @@ namespace IntelliView.Models.DTO
         //public bool IsDeleted { get; set; } = false;
 
         //[Required(ErrorMessage = "CompanyUserId is required")]
-        //public string? CompanyUserId { get; set; }
+        public string? CompanyUserId { get; set; }
 
         //[ForeignKey(nameof(CompanyUserId))]
         //public virtual CompanyUser CompanyUser { get; set; }

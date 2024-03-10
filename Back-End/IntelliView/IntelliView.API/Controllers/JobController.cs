@@ -173,7 +173,6 @@ namespace IntelliView.API.Controllers
 
         #region Company
         [HttpGet("{id}")]
-        [Authorize(Roles = SD.ROLE_COMPANY)]
         public async Task<ActionResult<JobDTO>> GetJobById(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -191,6 +190,7 @@ namespace IntelliView.API.Controllers
             }
             JobDto.ImageURl = company.ImageURl;
             JobDto.companyName = company.CompanyName;
+            JobDto.CompanyUserId = company.Id;
             return Ok(JobDto);
         }
         [HttpGet("CompanyJobs")]

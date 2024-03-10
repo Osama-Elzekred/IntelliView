@@ -76,6 +76,15 @@ export default function Job_details({ params }) {
   return (
     <Layout>
       <>
+
+      <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer"
+        />
+
         {/* <div id="overlayer" /> */}
         {/* <div className="loader">
           <div className="spinner-border text-primary" role="status">
@@ -150,12 +159,14 @@ export default function Job_details({ params }) {
                 </div>
                 <div className="col-lg-4">
                   <div className="row">
+                    
                     <div className="col-6">
-                      <Link href="#" className="btn btn-block btn-light btn-md">
-                        <span className="icon-heart-o mr-2 text-danger" />
-                        Save Job
+                      <Link href={`/job/post/${params.id}`} className="btn btn-block btn-light btn-md">
+                        <span className="fa-solid fa-pen-to-square mr-2"/>
+                        Edit job
                       </Link>
                     </div>
+
                     <div className="col-6">
                       <Link href={`/job/${params.id}/apply`}
                         className="btn btn-block btn-primary btn-md"
@@ -190,14 +201,15 @@ export default function Job_details({ params }) {
                       Responsibilities
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {data?.responsibilities?.split('.').map((responsibility, index) => (
-                        <li key={index} className="d-flex align-items-start mb-2">
-                          <span className="icon-check_circle mr-2 text-muted" />
-                          <span className='pb-1'>{responsibility}</span>
-                        </li>
-                      ))}
+                      {data?.responsibilities
+                        ?.split(';') 
+                        .map((responsibility, index) => (
+                          <li key={index} className="d-flex align-items-baseline mb-2">
+                            <span className="icon-check_circle mr-2 text-muted" />
+                            <span className='pb-1'>{responsibility}</span>
+                          </li>
+                        ))}
                     </ul>
-
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">
@@ -205,33 +217,19 @@ export default function Job_details({ params }) {
                       Requirements
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {data?.requirements?.split('.').map((requirement, index) => (
-                        <li key={index} className="d-flex align-items-start mb-2">
-                          <span className="icon-check_circle mr-2 text-muted" />
-                          <span className='pb-1'>{requirement.trim()}</span>
-                        </li>
-                      ))}
+                      {data?.requirements
+                        ?.split(/\.(?=\S)/) 
+                        .map((requirement, index) => (
+                          <li key={index} className="d-flex align-items-baseline mb-2">
+                            <span className="icon-check_circle mr-2 text-muted" />
+                            <span className='pb-1'>{requirement.trim()}</span>
+                          </li>
+                        ))}
                     </ul>
-
                   </div>
-                  <div className="mb-5">
-                    <h3 className="h5 d-flex align-items-center mb-4 text-primary">
-                      <span className="icon-turned_in mr-3" />
-                      Other Benifits
-                    </h3>
-                    <ul className="list-unstyled m-0 p-0">
-                      {data?.benefits?.split('.').map((benefit, index) => (
-                        <li key={index} className="d-flex align-items-start mb-2">
-                          <span className="icon-check_circle mr-2 text-muted" />
-                          <span>{benefit.trim()}</span>
-                        </li>
-                      ))}
-                    </ul>
 
-
-                  </div>
                   <div className="row mb-5">
-                    <div className="col-6">
+                  <div className="col-6">
                       <Link href="#" className="btn btn-block btn-light btn-md">
                         <span className="icon-heart-o mr-2 text-danger" />
                         Save Job

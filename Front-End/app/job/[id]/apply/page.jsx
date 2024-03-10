@@ -2,8 +2,7 @@
 import React, { useState,useEffect } from "react";
 import Cookies from "js-cookie";
 import Link from "next/link";
-
-function MainComponent() {
+function Apply({ params }) {
   const [currentStep, setCurrentStep] = React.useState(1);
   const [answers, setAnswers] = useState({
     fullName: "",
@@ -13,7 +12,7 @@ function MainComponent() {
     CV: null, // Assuming the user uploads a file
   });
 
-
+  const DOMAIN_NAME = 'localhost:7049/api';
   function handleNext() {
     setCurrentStep((prevStep) => prevStep + 1);
   }
@@ -38,28 +37,33 @@ const isValidPhone = (phone) => {
 //   "What are your salary expectations?"
 // ];
 const [questions, setQuestions] = useState([]);
-
-useEffect(() => {
-  fetchQuestions();
-}, []);
-
+const [error, setError] = useState(null);
 const fetchQuestions = async () => {
   const authToken = Cookies.get('authToken');
   try {
-    const response = await fetch(`https://${DOMAIN_NAME}/questions`, {
+    const response = await fetch(`https://${DOMAIN_NAME}/job/questions/${params.id}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${authToken}`,
       },
     });
-    if (response.ok) {
-      const questionsData = await response.json();
-      setQuestions(questionsData);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch questions');
     }
+
+    const questionsData = await response.json();
+    setQuestions(questionsData);
   } catch (error) {
-    console.error('Error fetching questions:', error);
+    console.error('Error fetching questions:', error.message);
+    // Handle the error appropriately, e.g., display an error message to the user
+    setError('Failed to fetch questions. Please try again later.');
   }
 };
+
+useEffect(() => {
+  fetchQuestions(params.id); // Pass the jobId parameter
+}, [params.id]); // Add jobId to the dependency array
 
   // Function to handle input change and update personalInfo state
   const handleChange = (e) => {
@@ -104,7 +108,6 @@ const fetchQuestions = async () => {
     }
   };
   
- const DOMAIN_NAME = "localhost:3000/api"; // Replace with your domain name
 // Function to send personalInfo and answers to the backend
 const sendAnswers = async () => {
   const authToken = Cookies.get("authToken");
@@ -122,7 +125,7 @@ const sendAnswers = async () => {
       }
     });
 
-    const response = await fetch(`https://${DOMAIN_NAME}/submitAnswers`, {
+    const response = await fetch(`https://${DOMAIN_NAME}/jobApplication/submitAnswers`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -339,4 +342,4 @@ const renderQuestions = () => {
   );
 }
 
-export default MainComponent;
+export default Apply;

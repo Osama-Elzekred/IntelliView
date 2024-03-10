@@ -1,4 +1,6 @@
-﻿using System.Linq.Expressions;
+﻿using IntelliView.DataAccess.Repository.Repos;
+using IntelliView.Models.Models;
+using System.Linq.Expressions;
 
 namespace IntelliView.DataAccess.Repository.IRepository
 {

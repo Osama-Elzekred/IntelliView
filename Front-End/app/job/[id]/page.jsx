@@ -130,10 +130,12 @@ export default function Job_details({ params }) {
                         <h2>{data.title}</h2>
                       {/* ))} */}
                       <div>
-                        <span className="ml-0 mr-2 mb-2">
-                          <span className="icon-briefcase mr-2" />
-                          {data.companyName}
-                        </span>
+                        <Link href={`/company-details/${data.companyUserId}`}>
+                          <span className="ml-0 mr-2 mb-2">
+                            <span className="icon-briefcase mr-2" />
+                            {data.companyName}
+                          </span>
+                        </Link>
                         <span className="m-2">
                           <span className="icon-room mr-2" />
                           {data.location}

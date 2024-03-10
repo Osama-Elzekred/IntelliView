@@ -1,9 +1,47 @@
-// components/CompanyDetails.js
-import React from 'react';
-import Layout from '../components/Layout';
-import Link from 'next/link';
+"use client";
+import Layout from '../../components/Layout';
+import React, { useState,useEffect } from "react";
+import Cookies from "js-cookie";
+import Link from "next/link";
 
-const CompanyDetails = () => {
+function CompanyDetails({ params }) {
+  const DOMAIN_NAME = 'localhost:7049/api';
+  const authToken = Cookies.get('authToken');
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`https://${DOMAIN_NAME}/Job/CompanyDetails/`+ params.id, 
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  // const data = {
+  //   imageURl: '/images/company-profile-photo.jpg',
+  //   companyName: 'Example Company',
+  //   companyType: 'IT',
+  //   companyOverview: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin rutrum felis euismod nunc eleifend ultricies.',
+  //   companyWebsite: 'www.example.com',
+  //   phoneNumber: '123-456-7890',
+  //   companySize: 'Large',
+  //   companyFounded: '2000',
+  // };
+
   return (
     <Layout>
     <><></>
@@ -49,37 +87,37 @@ const CompanyDetails = () => {
               <div className="col-md-8 d-flex flex-column justify-content-between">
                 <div className="card-body">
                   <div className="form-company">
-                    <h1 className="card-title" htmlFor="company-name">Company Name</h1>
+                    <h1 className="card-title" htmlFor="company-name">{data.companyName}</h1>
 
-                    <div className="overview">
+                    <div className="Type">
                       <label htmlFor="company-type">Type</label><br />
-                      <span id="company-overview">IT</span>
+                      <span id="company-overview">{data.companyType}</span>
                     </div>
                     {/* Company overview */}
                     <div className="overview">
                       <label htmlFor="company-overview">Overview</label><br />
-                      <span id="company-overview">hassannnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn.</span>
+                      <span id="company-overview">{data.companyOverview}.</span>
                     </div>
                     {/* Company website */}
                     <div className="website">
                       <label htmlFor="company-website">Website</label><br />
                       <Link href="company-details" id="company-website">
-                        www.example.com
+                        {data.companyWebsite}
                       </Link>
                     </div>
                     {/* Company phone number */}
                     <div className="phone">
                       <label htmlFor="company-phone">Phone</label><br />
-                      <span id="company-phone">123-456-7890</span>
+                      <span id="company-phone">{data.phoneNumber}</span>
                     </div>
                     {/* Company size and founded date */}
                     <div className="size">
                       <label htmlFor="company-size">Size</label><br />
-                      <span id="company-size">Large</span>
+                      <span id="company-size">{data.companySize}</span>
                     </div>
                     <div className="founded">
                       <label htmlFor="company-founded">Founded</label><br />
-                      <span id="company-founded">2000</span>
+                      <span id="company-founded">{data.companyFounded}</span>
                     </div>
                   </div>
                 </div>

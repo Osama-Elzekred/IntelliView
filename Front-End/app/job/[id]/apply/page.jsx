@@ -12,7 +12,7 @@ function Apply({ params }) {
     CV: null, // Assuming the user uploads a file
   });
 
-  const DOMAIN_NAME = '//localhost:7049/api';
+  const DOMAIN_NAME = 'localhost:7049/api';
   function handleNext() {
     setCurrentStep((prevStep) => prevStep + 1);
   }
@@ -37,6 +37,7 @@ const isValidPhone = (phone) => {
 //   "What are your salary expectations?"
 // ];
 const [questions, setQuestions] = useState([]);
+const [error, setError] = useState(null);
 const fetchQuestions = async () => {
   const authToken = Cookies.get('authToken');
   try {

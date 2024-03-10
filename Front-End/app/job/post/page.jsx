@@ -11,7 +11,7 @@ import {
   Layout,
 } from '../../components/components';
 import Cookies from 'js-cookie';
-import ProtectedPage from '../../components/ProtectedPages'
+import ProtectedPage from '../../components/ProtectedPages';
 
 export default function Post_job() {
   const [openModal, setOpenModal] = useState(false);
@@ -168,26 +168,31 @@ export default function Post_job() {
     }));
     addJobDto.EndDate = selectedDate;
     const authTokenCookie = Cookies.get('authToken');
-    if (authTokenCookie) setAuthToken(authTokenCookie);
+    if (!authTokenCookie) window.location.href = `/unauthorized`;
     // console.log(Cookies.get('authToken'));
     // Submit the form data
-    const response = await fetch(`https://localhost:7049/api/job`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(addJobDto),
-    });
-    if (!response.ok) {
-      console.error('Failed to submit form');
-      return;
-    }
+    try {
+      const response = await fetch(`https://localhost:7049/api/job`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authTokenCookie}`,
+        },
+        body: JSON.stringify(addJobDto),
+      });
+      if (!response.ok) {
+        console.error('Failed to submit form');
+        return;
+      }
 
-    const data = await response.json();
-    const jobId = data.id;
-    window.location.href = `/job/${jobId}`;
+      const data = await response.json();
+      const jobId = data.id;
+      window.location.href = `/job/${jobId}`;
+    } catch (error) {
+      console.error('Failed to submit the form', error);
+    }
   };
+
   return (
     <>
       {/* <ProtectedPage allowedRoles={['company']} /> */}

@@ -81,6 +81,8 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IVerifyService, VerifyService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IAiSearchService, AiSearchService>();
+builder.Services.AddScoped<HttpClient, HttpClient>();
+
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);

@@ -134,9 +134,6 @@ export default function Jobs() {
       }, 200);
     }
   };
-console.log("jobListings : " , jobListings); 
-console.log("-------------------------");
-console.log("jobs : ",jobs); 
   return (
     <Layout>
       <>
@@ -262,46 +259,6 @@ console.log("jobs : ",jobs);
                 </div>
               </div>
               <ul className="job-listings m-5 space-y-2 py-2">
-                {/* {jobs.map((job, index) => (
-                  <Link key={index} href={`/job/${job.id}`}>
-                    <li className="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
-                      <a href="job-single.html"></a>
-                      <div className="job-listing-logo">
-                        <img src={imageURl} alt="Image" className="img-fluid" />
-                      </div>
-                      <div className="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
-                        <div className="job-listing-position custom-width w-50 mb-3 mb-sm-0">
-                          <h2>{job.title}</h2>
-                          <strong>{job.companyName}</strong>
-                        </div>
-
-                        <div className="flex flex-wrap gap-2">
-                          <Badge icon={HiCheck} size="">{job.jobType}</Badge>
-                        </div>
-                        <div
-                          className="job-listing-location mb-3 mb-sm-0 custom-width w-25"
-                          style={{ marginRight: "-120px" }}
-                        >
-                          <span className="icon-room">
-                            {job.location},{job.location}
-                          </span>
-                        </div>
-                        <div className="job-listing-meta">
-                          <span
-                            className={`badge ${
-                              job.jobTime === "part time" ||
-                              job.jobTime === "Part Time"
-                                ? "badge-danger"
-                                : "badge-success"
-                            }`}
-                          >
-                            {job.jobTime}
-                          </span>
-                        </div>
-                      </div>
-                    </li>
-                  </Link>
-                ))} */}
                 {jobs.map((job) => (
                   <CardComp
                     title={job.title}

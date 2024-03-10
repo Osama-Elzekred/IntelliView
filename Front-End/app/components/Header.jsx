@@ -9,17 +9,26 @@ import {
   DropdownItem,
 } from 'flowbite-react';
 import { useEffect, useState } from 'react';
+import { Sidebar } from 'flowbite-react';
+import {
+  HiArrowSmRight,
+  HiChartPie,
+  HiInbox,
+  HiShoppingBag,
+  HiTable,
+  HiUser,
+} from 'react-icons/hi';
 
 export default function Header() {
   // const role = Cookies.get('role');
   // const userName = Cookies.get('userName');
   // const authToken = Cookies.get('authToken');
-
+  const [authToken, setAuthToken] = useState('');
   const [userName, setUserName] = useState('');
   const [role, setRole] = useState('');
-
+  const [slidebarOpen, setSlidebarOpen] = useState(false);
   useEffect(() => {
-    // const authToken = Cookies.get('authToken');
+    setAuthToken(Cookies.get('authToken'));
     setUserName(Cookies.get('userName'));
     setRole(Cookies.get('role'));
   }, []);
@@ -28,10 +37,67 @@ export default function Header() {
     Cookies.remove('authToken');
     Cookies.remove('user_id');
     Cookies.remove('role');
+    Cookies.remove('userName');
 
     window.location.href = '/login';
   };
-
+  const Slidebar = () => {
+    return (
+      <Sidebar
+        aria-label="Sidebar with multi-level dropdown example"
+        className="absolute top-15 right-0 mx-4 my-2 min-w-[200px] h-auto rounded-xl"
+      >
+        <Sidebar.Items>
+          <button
+            aria-label="Close"
+            className="-m-1.5 ml-auto inline-flex h-6 w-6 rounded-lg bg-gray-100 text-cyan-900 hover:bg-gray-200 focus:ring-2 focus:ring-gray-400 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
+            type="button"
+            onClick={() => setSlidebarOpen(!slidebarOpen)}
+          >
+            <svg
+              aria-hidden
+              className="h-4 w-4"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          <Sidebar.ItemGroup className="p-0 m-2">
+            <Sidebar.Item href="#" icon={HiChartPie}>
+              Dashboard
+            </Sidebar.Item>
+            <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
+              <Sidebar.Item href="#">Products</Sidebar.Item>
+              <Sidebar.Item href="#">Sales</Sidebar.Item>
+              <Sidebar.Item href="#">Refunds</Sidebar.Item>
+              <Sidebar.Item href="#">Shipping</Sidebar.Item>
+            </Sidebar.Collapse>
+            <Sidebar.Item href="#" icon={HiInbox}>
+              Inbox
+            </Sidebar.Item>
+            <Sidebar.Item href="#" icon={HiUser}>
+              Users
+            </Sidebar.Item>
+            <Sidebar.Item href="#" icon={HiShoppingBag}>
+              Products
+            </Sidebar.Item>
+            <Sidebar.Item href="#" icon={HiArrowSmRight}>
+              Sign In
+            </Sidebar.Item>
+            <Sidebar.Item href="#" icon={HiTable}>
+              Sign Up
+            </Sidebar.Item>
+          </Sidebar.ItemGroup>
+        </Sidebar.Items>
+      </Sidebar>
+    );
+  };
   return (
     <header className="site-navbar mt-3" id="top">
       <div className="container-fluid">
@@ -163,7 +229,7 @@ export default function Header() {
                 </Link>
               )}
               {/* Conditional rendering based on authToken */}
-              {userName ? (
+              {authToken ? (
                 <div className="mr-3 d-flex align-items-center">
                   <span className="block text-xl mr-3 text-light ">
                     {userName}
@@ -212,9 +278,13 @@ export default function Header() {
             </div>
             <Link
               href=""
-              className="site-menu-toggle js-menu-toggle d-inline-block d-xl-none mt-lg-2 ml-3"
+              className="site-menu-toggle  d-inline-block d-xl-none mt-lg-2 flex items-center justify-between xl:hidden mt-2 ml-3"
             >
-              <span className="icon-menu h3 m-0 p-0 mt-2" />
+              <span
+                className="icon-menu h3 m-0 p-0 mt-2"
+                onClick={() => setSlidebarOpen(!slidebarOpen)}
+              />
+              {slidebarOpen && <Slidebar />}
             </Link>
           </div>
         </div>

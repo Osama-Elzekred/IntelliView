@@ -11,9 +11,18 @@ import {
 import { useEffect, useState } from 'react';
 
 export default function Header() {
-  const role = Cookies.get('role');
-  const userName = Cookies.get('userName');
-  const authToken = Cookies.get('authToken');
+  // const role = Cookies.get('role');
+  // const userName = Cookies.get('userName');
+  // const authToken = Cookies.get('authToken');
+
+  const [userName, setUserName] = useState('');
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+    // const authToken = Cookies.get('authToken');
+    setUserName(Cookies.get('userName'));
+    setRole(Cookies.get('role'));
+  }, []);
 
   const signOut = async () => {
     Cookies.remove('authToken');
@@ -154,7 +163,7 @@ export default function Header() {
                 </Link>
               )}
               {/* Conditional rendering based on authToken */}
-              {authToken ? (
+              {userName ? (
                 <div className="mr-3 d-flex align-items-center">
                   <span className="block text-xl mr-3 text-light ">
                     {userName}
@@ -176,8 +185,7 @@ export default function Header() {
                     <DropdownItem>Dashboard</DropdownItem>
                     <Link
                       href={
-                        Cookies.get('role') === 'company' ||
-                        Cookies.get('role') === 'Company'
+                        role === 'company' || role === 'Company'
                           ? '/profile/Edit-company-profile'
                           : '/profile/Edit-user-profile'
                       }

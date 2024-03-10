@@ -11,9 +11,9 @@ namespace IntelliView.Models.DTO
         public string MinimumExperience { get; set; }
         public string Description { get; set; }
         public string Requirements { get; set; }
-        public List<QuestionItemDto> QuestionItems { get; set; }
-        public List<CustQuestionDto> CustQuestions { get; set; }
-        public List<JobInterestedTopicDto> JobInterestedTopics { get; set; }
+        public List<QuestionItemDto>? QuestionItems { get; set; }
+        public List<CustQuestionDto>? CustQuestions { get; set; }
+        public List<JobInterestedTopicDto>? JobInterestedTopics { get; set; }
         public string EndDate { get; set; }
 
         [JsonIgnore]

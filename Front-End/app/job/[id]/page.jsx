@@ -189,13 +189,15 @@ export default function Job_details({ params }) {
                       Responsibilities
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {data?.responsibilities?.split('.').map((responsibility, index) => (
-                        <li key={index} className="d-flex align-items-start mb-2">
-                          <span className="icon-check_circle mr-2 text-muted" />
-                          <span className='pb-1'>{responsibility}</span>
-                        </li>
-                      ))}
-                    </ul>
+                        {data?.responsibilities
+                          ?.split(';') // Use a delimiter other than period (.)
+                          .map((responsibility, index) => (
+                            <li key={index} className="d-flex align-items-start mb-2">
+                              <span className="icon-check_circle mr-2 text-muted" />
+                              <span className='pb-1'>{responsibility}</span>
+                            </li>
+                          ))}
+                      </ul>
 
                   </div>
                   <div className="mb-5">
@@ -204,13 +206,16 @@ export default function Job_details({ params }) {
                       Requirements
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {data?.requirements?.split('.').map((requirement, index) => (
-                        <li key={index} className="d-flex align-items-start mb-2">
-                          <span className="icon-check_circle mr-2 text-muted" />
-                          <span className='pb-1'>{requirement.trim()}</span>
-                        </li>
-                      ))}
-                    </ul>
+                        {data?.requirements
+                          ?.split(/\.(?=\S)/) // Use regular expression to split by periods excluding empty strings
+                          .map((requirement, index) => (
+                            <li key={index} className="d-flex align-items-start mb-2">
+                              <span className="icon-check_circle mr-2 text-muted" />
+                              <span className='pb-1'>{requirement.trim()}</span>
+                            </li>
+                          ))}
+                      </ul>
+
 
                   </div>
                   <div className="mb-5">
@@ -219,14 +224,16 @@ export default function Job_details({ params }) {
                       Other Benifits
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
-                      {data?.benefits?.split('.').map((benefit, index) => (
-                        <li key={index} className="d-flex align-items-start mb-2">
-                          <span className="icon-check_circle mr-2 text-muted" />
-                          <span>{benefit.trim()}</span>
-                        </li>
-                      ))}
-                    </ul>
-
+                        {data?.benefits
+                          ?.split(';') // Use a semicolon as the delimiter if benefits are separated by semicolons
+                          .filter(benefit => benefit.trim()) // Remove any empty strings after splitting
+                          .map((benefit, index) => (
+                            <li key={index} className="d-flex align-items-start mb-2">
+                              <span className="icon-check_circle mr-2 text-muted" />
+                              <span>{benefit.trim()}</span>
+                            </li>
+                          ))}
+                      </ul>
 
                   </div>
                   <div className="row mb-5">

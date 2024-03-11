@@ -241,7 +241,7 @@ namespace IntelliView.API.Controllers
         }
         [HttpPost]
         [Authorize(Roles = SD.ROLE_COMPANY)]
-        public async Task<ActionResult<Job>> CreateJob([FromBody] AddJobDto jobDto)
+        public async Task<ActionResult<JsonContent>> CreateJob([FromBody] AddJobDto jobDto)
         {
             if (!ModelState.IsValid)
             {

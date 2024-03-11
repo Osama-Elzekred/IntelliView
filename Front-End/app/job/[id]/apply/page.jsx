@@ -1,17 +1,19 @@
-"use client";
-import React, { useState,useEffect } from "react";
-import Cookies from "js-cookie";
-import Link from "next/link";
+'use client';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import Link from 'next/link';
 function Apply({ params }) {
   const [currentStep, setCurrentStep] = React.useState(1);
   const [answers, setAnswers] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    gender: "",
-    CV: null, 
-    questionsAnswers: []
+    JobId: parseInt(params.id),
+    fullName: '',
+    email: '',
+    phone: '',
+    gender: '',
+    CV: null,
   });
+  const [questionslist, setQuestionslist] = useState([]);
+  const [answerslist, setQuesionsAnswers] = useState({});
   const DOMAIN_NAME = 'localhost:7049/api';
   function handleNext() {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -20,57 +22,57 @@ function Apply({ params }) {
   function handleBack() {
     setCurrentStep((prevStep) => prevStep - 1);
   }
-// Add basic input validation for email and phone
-const isValidEmail = (email) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
+  // Add basic input validation for email and phone
+  const isValidEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
 
-const isValidPhone = (phone) => {
-  return /^[0-9]$/.test(phone);
-};
-// const questions = [
-//   "What is your previous work experience?",
-//   "What are your strengths and weaknesses?",
-//   "How do you handle tight deadlines?",
-//   "Tell us about a challenging project you worked on and how you overcame obstacles.",
-//   "What motivates you to excel in your work?",
-//   "What are your salary expectations?"
-// ];
-const [questions, setQuestions] = useState([]);
-const [error, setError] = useState(null);
-const fetchQuestions = async () => {
-  const authToken = Cookies.get('authToken');
-  try {
-    const response = await fetch(`https://${DOMAIN_NAME}/job/questions/${params.id}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch questions');
+  const isValidPhone = (phone) => {
+    return /^[0-9]$/.test(phone);
+  };
+  const [error, setError] = useState(null);
+  const fetchQuestions = async () => {
+    const authToken = Cookies.get('authToken');
+    try {
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/job/questions/${params.id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setQuestionslist(data);
+          const initialAnswers = data.reduce(
+            (acc, [id]) => ({ ...acc, [id]: '' }),
+            {}
+          );
+          setQuesionsAnswers(initialAnswers);
+        });
+      if (!response.ok) {
+        throw new Error('Failed to fetch questions');
+      }
+    } catch (error) {
+      console.error('Error fetching questions:', error.message);
+      // Handle the error appropriately, e.g., display an error message to the user
+      setError('Failed to fetch questions. Please try again later.');
     }
+  };
 
-    const questionsData = await response.json();
-    setQuestions(questionsData);
-  } catch (error) {
-    console.error('Error fetching questions:', error.message);
-    // Handle the error appropriately, e.g., display an error message to the user
-    setError('Failed to fetch questions. Please try again later.');
-  }
-};
-
-useEffect(() => {
-  fetchQuestions(params.id); // Pass the jobId parameter
-}, [params.id]); // Add jobId to the dependency array
+  useEffect(() => {
+    fetchQuestions(params.id); // Pass the jobId parameter
+  }, [params.id]); // Add jobId to the dependency array
 
   // Function to handle input change and update personalInfo state
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-   
+
     // Handle file input separately
-    if (type === "file") {
+    if (type === 'file') {
       const file = files[0]; // Get the first file from the files array
       setAnswers((prevAnswers) => ({
         ...prevAnswers,
@@ -78,101 +80,98 @@ useEffect(() => {
       }));
     } else {
       const inputValue = value;
-      if (name === "fullName" || name === "email" || name === "phone" || name === "gender" ) {
+      if (
+        name === 'fullName' ||
+        name === 'email' ||
+        name === 'phone' ||
+        name === 'gender'
+      ) {
         setAnswers((prevAnswers) => ({
           ...prevAnswers,
           [name]: inputValue,
         }));
-      } else {
-        // Handle question inputs
-        const updatedQuestionsAnswers = [...answers.questionsAnswers];
-        const index = updatedQuestionsAnswers.findIndex(qa => qa.question === name);
-        if (index !== -1) {
-          updatedQuestionsAnswers[index] = { question: name, answer: inputValue };
-        } else {
-          updatedQuestionsAnswers.push({ question: name, answer: inputValue });
-        }
-        setAnswers((prevAnswers) => ({ ...prevAnswers, questionsAnswers: updatedQuestionsAnswers }));
       }
 
-  
       // Basic input validation for email and phone
-      if (name === "email" && !isValidEmail(value)) {
+      if (name === 'email' && !isValidEmail(value)) {
         // Handle invalid email
-        console.log("Invalid email");
+        console.log('Invalid email');
         setAnswers((prevAnswers) => ({
           ...prevAnswers,
         }));
       }
-  
-      if (name === "phone" && !isValidPhone(value)) {
+
+      if (name === 'phone' && !isValidPhone(value)) {
         // Handle invalid phone number
-        console.log("Invalid phone number");
+        console.log('Invalid phone number');
         setAnswers((prevAnswers) => ({
           ...prevAnswers,
         }));
       }
     }
   };
-  
-// Function to send personalInfo and answers to the backend
-const sendAnswers = async () => {
-  const authToken = Cookies.get("authToken");
+  // Function to send personalInfo and answers to the backend
+  const sendAnswers = async () => {
+    const authToken = Cookies.get('authToken');
 
-  try {
-    const formData = new FormData(); // Create a new FormData object
+    try {
+      const formData = new FormData(); // Create a new FormData object
 
-    // Append each key-value pair to the formData object
-    Object.entries(answers).forEach(([key, value]) => {
-      // If the value is a file (CV), append it as a file
-      if (value instanceof File) {
-        formData.append(key, value);
+      // Append each key-value pair to the formData object
+      Object.entries(answers).forEach(([key, value]) => {
+        // If the value is a file (CV), append it as a file
+        if (value instanceof File) {
+          formData.append(key, value);
+        } else {
+          formData.append(key, JSON.stringify(value)); // Convert non-file values to JSON strings
+        }
+      });
+
+      formData.append('questionsAnswers', JSON.stringify(answerslist));
+      console.log(formData);
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/JobApplication/submitAnswers`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData, // Send formData in the request body
+        }
+      );
+
+      if (response.ok) {
+        console.log('Answers submitted successfully!');
+        // Optionally, handle success response from the backend
       } else {
-        formData.append(key, JSON.stringify(value)); // Convert non-file values to JSON strings
+        console.log('Failed to submit answers');
+        // Optionally, handle error response from the backend
       }
-    });
-
-    const response = await fetch(`https://${DOMAIN_NAME}/jobApplication/submitAnswers`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: formData, // Send formData in the request body
-    });
-
-    if (response.ok) {
-      console.log("Answers submitted successfully!");
-      // Optionally, handle success response from the backend
-    } else {
-      console.log("Failed to submit answers");
-      // Optionally, handle error response from the backend
+    } catch (error) {
+      console.error('Error submitting answers:', error);
+      // Handle fetch error
     }
-  } catch (error) {
-    console.error("Error submitting answers:", error);
-    // Handle fetch error
-  }
-};
-
-
-
-const renderQuestions = () => {
-  return questions.map((question, index) => (
-    <div key={index} className="mb-4">
-      <label htmlFor={`${question.item1}`} className="block font-medium mb-1">
-        {question.item2}
-      </label>
-      <textarea
-        id={`${question.item1}`}
-        name={`${question.item1}`} // Ensure that the name attribute corresponds to the question ID
-        className="w-full p-2 border rounded"
-        value={answers[question.item1] || ""} // Use the correct question ID to access the answer in the answers state
-        onChange={handleChange}
-      />
-    </div>
-  ));
-};
-
-
+  };
+  const handleAnswerChange = (event) => {
+    const { name, value } = event.target;
+    setQuesionsAnswers((prevAnswers) => ({ ...prevAnswers, [name]: value }));
+  };
+  const renderQuestions = () => {
+    return questionslist.map(({ item1: id, item2: question }) => (
+      <div key={id} className="mb-4">
+        <label htmlFor={`question-${id}`} className="block font-medium mb-1">
+          {question}
+        </label>
+        <textarea
+          className="w-full p-2 border rounded"
+          id={`question-${id}`}
+          name={id.toString()}
+          value={answerslist[id] || ''}
+          onChange={handleAnswerChange}
+        />
+      </div>
+    ));
+  };
 
   const StepOne = (
     <div>
@@ -213,7 +212,7 @@ const renderQuestions = () => {
             type="radio"
             value="Male"
             id="genderMale"
-            checked={answers.gender === "Male"}
+            checked={answers.gender === 'Male'}
             onChange={handleChange}
             required // Add required attribute for input validation
           />
@@ -226,16 +225,14 @@ const renderQuestions = () => {
             type="radio"
             value="Female"
             id="genderFemale"
-            checked={answers.gender === "Female"}
+            checked={answers.gender === 'Female'}
             onChange={handleChange}
             required // Add required attribute for input validation
           />
           <label htmlFor="genderFemale">Female</label>
         </div>
         <div className="mb-4">
-          <label>
-            Upload CV (File accepted: .pdf - Max file size: 5MB)
-          </label>
+          <label>Upload CV (File accepted: .pdf - Max file size: 5MB)</label>
           <input
             name="CV"
             className="w-full p-2 border rounded"
@@ -260,7 +257,7 @@ const renderQuestions = () => {
 
   const StepTwo = (
     <div>
-      <h3 className="font-semibold mb-4 ">Answer  Questions</h3>
+      <h3 className="font-semibold mb-4 ">Answer Questions</h3>
       <form>{renderQuestions()}</form>
       <div className="flex justify-between mb-4">
         <button
@@ -279,7 +276,9 @@ const renderQuestions = () => {
         </button>
       </div>
       <div className=" mb-4">
-        <span style={{ display: "inline-block", width: "100px", height: "20px" }}></span>
+        <span
+          style={{ display: 'inline-block', width: '100px', height: '20px' }}
+        ></span>
       </div>
     </div>
   );
@@ -292,7 +291,7 @@ const renderQuestions = () => {
         return StepTwo;
       default:
         return (
-          <div >
+          <div>
             <h3 className="font-semibold mb-4 text-[#17a9c3]">Thank you!</h3>
             <p>Your application has been submitted.</p>
             <Link href="/job">Back to job list</Link>
@@ -303,7 +302,7 @@ const renderQuestions = () => {
 
   return (
     <div className="flex h-screen bg-[#f7f7f7]">
-      <div className="w-1/3 bg-[#17a9c3] p-10 text-white flex flex-col justify-between hidden sm:block">
+      <div className="w-1/3 bg-[#17a9c3] p-10 text-white flex-col justify-between hidden sm:block">
         <div>
           <div className="flex justify-between">
             <div className="footer-social">
@@ -330,19 +329,16 @@ const renderQuestions = () => {
           <img
             src="/images/info_graphic_1.svg"
             alt="image"
-            className="w-50 h-60"/>
+            className="w-50 h-60"
+          />
           <h1 className="font-bold text-4xl my-4">We are Hiring</h1>
-          <p className="mb-4">
-            please fill the form to apply for the job
-          </p>
+          <p className="mb-4">please fill the form to apply for the job</p>
           <div className="text-sm mt-32">&copy; 2024 Intelliview</div>
         </div>
       </div>
       <div className="w-3/3 overflow-y-auto p-10 flex justify-center lg:2/3 sm:w-2/3">
         <div className="mt-10">
-          <h2 className=" text-2xl font-bold mb-4">
-            Application Form
-          </h2>
+          <h2 className=" text-2xl font-bold mb-4">Application Form</h2>
           {renderStep()}
         </div>
       </div>

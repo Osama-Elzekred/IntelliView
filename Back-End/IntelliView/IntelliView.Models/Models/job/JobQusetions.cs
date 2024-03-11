@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace IntelliView.Models.Models.job
 {
@@ -21,7 +20,7 @@ namespace IntelliView.Models.Models.job
         public int JobId { get; set; }
 
         [ForeignKey(nameof(JobId))]
-        [JsonIgnore]
+        //[JsonIgnore]
         public virtual Job Job { get; set; }
     }
 }

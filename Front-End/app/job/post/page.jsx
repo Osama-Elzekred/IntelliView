@@ -26,6 +26,11 @@ export default function Post_job(JobId) {
   const [Questionitems, setItems] = useState([]);
   const [CustQuestions, setQuestions] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+  const authTokenCookie = Cookies.get('authToken');
+  const role = Cookies.get("role"); 
+  if(!authTokenCookie || role != "company"){
+    redirect("/")
+  }
   const categories = [
     'Data Structures & Algorithms',
     'C/C++',
@@ -56,8 +61,7 @@ export default function Post_job(JobId) {
 
   useEffect(() => {
     const fetchJobData = async () => {
-      const authTokenCookie = Cookies.get('authToken');
-      if (!authTokenCookie) window.location.href = `/unauthorized`;
+      
 
       try {
         const response = await fetch(

@@ -13,7 +13,7 @@ import {
 import Cookies from 'js-cookie';
 import ProtectedPage from '../../components/ProtectedPages';
 
-export default function Post_job() {
+export default function Post_job(JobId) {
   const [openModal, setOpenModal] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
@@ -26,10 +26,6 @@ export default function Post_job() {
   const [Questionitems, setItems] = useState([]);
   const [CustQuestions, setQuestions] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
-  const handleDateChange = (date) => {
-    const dateString = new Date(date).toLocaleDateString();
-    setSelectedDate(dateString);
-  };
   const categories = [
     'Data Structures & Algorithms',
     'C/C++',
@@ -42,7 +38,73 @@ export default function Post_job() {
     'Adobe Photoshop',
   ];
   const [selectedCategories, setSelectedCategories] = useState([]);
+  // Submit Form
+  const [jobInfo, setJobInfo] = useState({
+    Email: '',
+    JobTitle: '',
+    Location: '',
+    JobType: 'on-site',
+    JobTime: 'Part Time',
+    Experiance: '0-1 years',
+    EndDate: '',
+    JobRequirements: '',
+    JobDescription: '',
+    Questionitems: [],
+    CustQuestions: [],
+    categories: [],
+  });
 
+  useEffect(() => {
+    const fetchJobData = async () => {
+      const authTokenCookie = Cookies.get('authToken');
+      if (!authTokenCookie) window.location.href = `/unauthorized`;
+
+      try {
+        const response = await fetch(
+          `https://localhost:7049/api/job/CompanyJob/${JobId}`,
+          {
+            method: 'get',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${authTokenCookie}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          console.error('Failed to fetch job data');
+          return;
+        }
+
+        const data = await response.json();
+
+        // Update jobInfo state with the fetched data
+        setJobInfo({
+          Title: data.Title,
+          JobType: data.JobType,
+          JobTime: data.JobTime,
+          Location: data.Location,
+          MinimumExperience: data.MinimumExperience,
+          Description: data.Description,
+          Requirements: data.Requirements,
+          // Add other mappings...
+          // Add arrays to the state
+          Questionitems: data.Questionitems,
+          CustQuestions: data.CustQuestions,
+          JobInterestedTopics: data.JobInterestedTopics,
+          EndDate: data.EndDate,
+        });
+      } catch (error) {
+        console.error('Failed to fetch job data', error);
+      }
+    };
+    if (JobId) fetchJobData();
+  }, []);
+
+  const handleDateChange = (date) => {
+    const dateString = new Date(date).toLocaleDateString();
+    setSelectedDate(dateString);
+  };
   const addQuestion = (item) => {
     setItems((prevItems) => {
       const l = [
@@ -91,21 +153,6 @@ export default function Post_job() {
     setShowComponent(false);
   }
 
-  // Submit Form
-  const [jobInfo, setJobInfo] = useState({
-    Email: '',
-    JobTitle: '',
-    Location: '',
-    JobType: 'on-site',
-    JobTime: 'Part Time',
-    Experiance: '0-1 years',
-    EndDate: '',
-    JobRequirements: '',
-    JobDescription: '',
-    Questionitems: [],
-    CustQuestions: [],
-    categories: [],
-  });
   const handleChange = (event) => {
     const value = event.target ? event.target.value : event;
     const name = event.target ? event.target.name : event;
@@ -147,6 +194,7 @@ export default function Post_job() {
     //   console.log(errors);
     //   return;
     // }
+    let idCounter = 0;
     const addJobDto = {
       Title: jobInfo.JobTitle,
       JobType: jobInfo.JobType,
@@ -156,17 +204,16 @@ export default function Post_job() {
       Description: jobInfo.JobDescription,
       Requirements: jobInfo.JobRequirements,
       // Add other mappings...
+      // Add arrays to the DTO
+      Questionitems: Questionitems,
+      CustQuestions: CustQuestions,
+      JobInterestedTopics: selectedCategories.map((category) => ({
+        InterestedTopicId: idCounter++, // or some other method to generate unique ID
+        Topic: category,
+      })),
+      EndDate: selectedDate,
     };
-    let idCounter = 0;
 
-    // Add arrays to the DTO
-    addJobDto.Questionitems = Questionitems;
-    addJobDto.CustQuestions = CustQuestions;
-    addJobDto.JobInterestedTopics = selectedCategories.map((category) => ({
-      InterestedTopicId: idCounter++, // or some other method to generate unique ID
-      Topic: category,
-    }));
-    addJobDto.EndDate = selectedDate;
     const authTokenCookie = Cookies.get('authToken');
     if (!authTokenCookie) window.location.href = `/unauthorized`;
     // console.log(Cookies.get('authToken'));
@@ -192,7 +239,37 @@ export default function Post_job() {
       console.error('Failed to submit the form', error);
     }
   };
+  const handleEditPost = async (event) => {
+    event.preventDefault();
 
+    const authTokenCookie = Cookies.get('authToken');
+    if (!authTokenCookie) window.location.href = `/unauthorized`;
+
+    const addJobDto = {
+      // Map jobInfo state to DTO
+      // ...
+    };
+
+    try {
+      const response = await fetch(`https://localhost:7049/api/job/${JobId}`, {
+        method: 'put',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authTokenCookie}`,
+        },
+        body: JSON.stringify(addJobDto),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to submit form');
+        return;
+      }
+
+      const data = await response.json();
+    } catch (error) {
+      console.error('Failed to submit the form', error);
+    }
+  };
   return (
     <>
       {/* <ProtectedPage allowedRoles={['company']} /> */}

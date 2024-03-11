@@ -54,15 +54,15 @@ namespace IntelliView.Models.Models
 
         //public virtual ICollection<InterviewSession> InterviewSessions { get; set; }
         [JsonIgnore]
-        public virtual ICollection<CustQuestion> JobQuestions { get; set; }
-        public virtual ICollection<InterviewQuestion> InterviewQuestions { get; set; }
+        public virtual ICollection<CustQuestion>? JobQuestions { get; set; }
+        public virtual ICollection<InterviewQuestion>? InterviewQuestions { get; set; }
 
-        public virtual ICollection<JobInterestedTopic> JobInterestedTopic { get; set; }
+        public virtual ICollection<JobInterestedTopic>? JobInterestedTopic { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
-        public DateTime? EndedAt { get; set; } 
+        public DateTime? EndedAt { get; set; }
     }
 
     //public enum JobType

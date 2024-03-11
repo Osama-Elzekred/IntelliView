@@ -28,6 +28,7 @@ export default function Header() {
     Cookies.remove('authToken');
     Cookies.remove('user_id');
     Cookies.remove('role');
+    Cookies.remove("userName"); 
 
     window.location.href = '/login';
   };

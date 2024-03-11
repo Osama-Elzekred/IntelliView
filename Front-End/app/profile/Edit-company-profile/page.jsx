@@ -4,12 +4,18 @@ import Layout from "../../components/Layout";
 import Phone from "../../components/Phone";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import ProtectedPage from '../../components/ProtectedPages';
+import { redirect } from "next/navigation";
 export default function EditProfile() {
   let [message,setMessage] = useState(""); 
   let [color,setColor] = useState(""); 
   const [authToken, setAuthToken] = useState("");
+  const role = Cookies.get("role"); 
+  const authTokenCookie = Cookies.get("authToken");
   // const [userId ,setUserId] = useState("")
+
+  if (!authTokenCookie || (role != "company")){
+    redirect("/"); 
+  }
   const [formData, setFormData] = useState({
     companyName: "",
     type: "",
@@ -37,7 +43,6 @@ export default function EditProfile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const authTokenCookie = Cookies.get("authToken");
         if (authTokenCookie) {
           setAuthToken(authTokenCookie);
           const response = await fetch("https://localhost:7049/api/Profile", {
@@ -192,7 +197,7 @@ export default function EditProfile() {
   };
   return (
     <Layout>
-      <ProtectedPage allowedRoles={["company"]}/>
+      {/* <ProtectedPage allowedRoles={["company"]}/> */}
       <link rel="stylesheet" href="/css/edit-profile.css" />
       <div className="site-wrap">
         <div className="site-mobile-menu site-navbar-target">

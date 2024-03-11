@@ -1,12 +1,85 @@
-import Layout from '../../components/Layout';
-import Phone from '../../components/Phone';
-import Script from 'next/script';
-import Link from 'next/link';
-import ProtectedPage from '../../components/ProtectedPages';
+"use client";
+import Layout from "../../components/Layout";
+import Phone from "../../components/Phone";
+import Script from "next/script";
+import Link from "next/link";
+import ProtectedPage from "../../components/ProtectedPages";
+import Cookies from "js-cookie";
+import { FileInput, Label } from "flowbite-react";
+import { Badge } from "flowbite-react";
+import { Button } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { redirect } from 'next/navigation'
+const DOMAIN_NAME = "localhost:7049";
 const User_profile = () => {
+
+  const [click,setClick] = useState(); 
+  const authToken = Cookies.get("authToken");
+  const [cvName, setCvName] = useState(null);
+  const role = Cookies.get("role"); 
+  useEffect(() => {
+    if(!authToken || (role!= "user" && role != "User")){
+      redirect("/"); 
+    }
+    if (typeof window != "undefined") {
+      const storedCvName = localStorage.getItem("cvName");
+      if (storedCvName) {
+        setCvName(storedCvName);
+        setClick(true);  
+      }
+    }
+  }, []);
+  const handleDisplay = async ()=> {
+    setClick(false); 
+  } 
+  const handleFileChange = async (event) => {
+    // setSelectedFiles(event.target.files);
+    await handleUpload(event.target.files);
+  };
+
+  const handleUpload = async (files) => {
+    if (!files) {
+      console.error("No file selected");
+      return;
+    }
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+      formData.append("file", files[i]);
+    }
+
+    try {
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/api/Profile/updateCV`,
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        const fileName = files[0].name;
+        localStorage.setItem("cvName", fileName);
+        setCvName(fileName);
+        setClick(true); 
+        console.log("Files uploaded successfully");
+        // Handle success
+      } else {
+        console.error("Failed to upload files");
+        // Handle failure
+      }
+    } catch (error) {
+      console.error("Error occurred while uploading files:", error);
+      // Handle error
+    }
+  };
+
   return (
     <Layout>
-      <ProtectedPage allowedRoles = {["user"]}/>
+      {/* <ProtectedPage allowedRoles={["user"]} /> */}
       <>
         <link rel="stylesheet" href="/css/edit-profile.css" />
         <div id="overlayer" />
@@ -23,7 +96,7 @@ const User_profile = () => {
               </div>
             </div>
             <div className="site-mobile-menu-body" />
-          </div>{' '}
+          </div>{" "}
           {/* .site-mobile-menu */}
           {/* HOME */}
           <section
@@ -39,7 +112,8 @@ const User_profile = () => {
                 <div className="col-md-7">
                   <h1 className="text-white font-weight-bold">Edit Profile</h1>
                   <div className="custom-breadcrumbs">
-                    <Link href="#">Home</Link> <span className="mx-2 slash">/</span>
+                    <Link href="#">Home</Link>{" "}
+                    <span className="mx-2 slash">/</span>
                     <span className="text-white">
                       <strong>Edit Peofile</strong>
                     </span>
@@ -116,7 +190,7 @@ const User_profile = () => {
                             htmlFor="inputFile"
                           >
                             Upload new photo
-                          </label>{' '}
+                          </label>{" "}
                           &nbsp;
                           <input
                             type="file"
@@ -159,31 +233,54 @@ const User_profile = () => {
                               </div>
                             </div>
                             <div className="cv">
-                              <label htmlFor="inputFile">cv</label>
-                              <br />
-                              <div
-                                className="cssbuttons-io-button"
-                                id="uploadCv"
-                              >
-                                <svg
-                                  viewBox="0 0 640 512"
-                                  fill="white"
-                                  height="1em"
-                                  xmlns="http://www.w3.org/2000/svg"
+                              {cvName !== "" && click? (
+                                <div
+                                  id="cvName"
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                  }}
+                                  className="flex items-center"
                                 >
-                                  <path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z" />
-                                </svg>
-                                <input
-                                  type="file"
-                                  name="cv"
-                                  id="CVfile"
-                                  // htmlFor="inputFile"
-                                  style={{ display: 'none' }}
-                                />
-                                <label className="" htmlFor="CVfile">
-                                  Upload your CV
-                                </label>
-                              </div>
+                                  <Badge
+                                    className="bg-blue-500 text-white mr-3"
+                                    style={{
+                                      backgroundColor: "#17a9c3",
+                                      color: "white",
+                                    }}
+                                    size=""
+                                  >
+                                    CV Name : {cvName}
+                                  </Badge>
+                                  <Button
+                                    className="ml-2 hover:bg-green-100"
+                                    style={{
+                                      backgroundColor: "#17a9c3",
+                                      color: "white",
+                                      fontFamily: "arial",
+                                      fontWeight: "semibold",
+                                    }}
+                                    size="sm"
+                                    onClick={handleDisplay}
+                                  >
+                                    Change Cv
+                                  </Button>
+                                </div>
+                              ) : (
+                                <div id="uploadCv">
+                                  <div className="mb-2 block">
+                                    <Label
+                                      htmlFor="file-upload"
+                                      value="Upload file"
+                                    />
+                                  </div>
+                                  <FileInput
+                                    id="file-upload"
+                                    onChange={handleFileChange}
+                                  />
+                                </div>
+                              )}
                             </div>
                             <div className="title">
                               <label htmlFor="title">title</label>
@@ -239,7 +336,7 @@ const User_profile = () => {
                             className="form-control"
                             rows={5}
                             defaultValue={
-                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus.'
+                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus."
                             }
                           />
                         </div>

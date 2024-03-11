@@ -11,7 +11,7 @@ import {
   Layout,
 } from '../../components/components';
 import Cookies from 'js-cookie';
-import ProtectedPage from '../../components/ProtectedPages';
+import { redirect } from 'next/navigation';
 
 export default function Post_job() {
   const [openModal, setOpenModal] = useState(false);
@@ -26,6 +26,11 @@ export default function Post_job() {
   const [Questionitems, setItems] = useState([]);
   const [CustQuestions, setQuestions] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+  const authTokenCookie = Cookies.get('authToken');
+  const role = Cookies.get("role"); 
+  if(!authTokenCookie || role != "company"){
+    redirect("/")
+  }
   const handleDateChange = (date) => {
     const dateString = new Date(date).toLocaleDateString();
     setSelectedDate(dateString);
@@ -167,8 +172,7 @@ export default function Post_job() {
       Topic: category,
     }));
     addJobDto.EndDate = selectedDate;
-    const authTokenCookie = Cookies.get('authToken');
-    if (!authTokenCookie) window.location.href = `/unauthorized`;
+    
     // console.log(Cookies.get('authToken'));
     // Submit the form data
     try {

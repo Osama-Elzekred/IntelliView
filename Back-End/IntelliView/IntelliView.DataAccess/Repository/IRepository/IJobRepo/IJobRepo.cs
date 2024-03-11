@@ -7,5 +7,7 @@ namespace IntelliView.DataAccess.Repository.IRepository.IJobRepos
     {
         public Task<Job> Update(Job job);
         public Task AddQuestionToJob(int jobId, CustQuestion question);
+        public Task<IEnumerable<Job>> GetAllAsyncWithTopics();
+
     }
 }

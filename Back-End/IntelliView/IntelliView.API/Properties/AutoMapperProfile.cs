@@ -11,7 +11,9 @@ namespace ANWAAR.CORE
             //CreateMap<Product, ProductVM>().ReverseMap();
             //CreateMap<ProductCategory, ProductVM>().ReverseMap();
             //CreateMap<Product, ProductVM>();
-            CreateMap<Job, JobDTO>().ReverseMap();
+            CreateMap<Job, JobDTO>()
+                 .ForMember(dest => dest.JobInterestedTopic, opt => opt.MapFrom(src => src.JobInterestedTopic.Select(j => j.InterestedTopic).Select(it => it.Topic).ToList()))
+                .ReverseMap();
             CreateMap<UpdateJobDTO, Job>().ReverseMap();
             CreateMap<CompanyUser, ProfileDTO>().ReverseMap();
             CreateMap<IndividualUser, ProfileDTO>().ReverseMap();

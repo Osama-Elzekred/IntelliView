@@ -53,7 +53,6 @@ export default function Jobs() {
       .getElementById('job-listings')
       .scrollIntoView({ behavior: 'smooth' });
   };
- 
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -74,12 +73,10 @@ export default function Jobs() {
       }
     };
     fetchJobs();
-    
   }, [currentPage, searchResult]);
-  
+
   // setTime out to make delay until the data come from server to store it in jobs . #hossam
   setTimeout(() => {
-    
     if (
       searchResult.length > 0 ||
       (searchResult.length === 0 && test === true)
@@ -97,11 +94,8 @@ export default function Jobs() {
       const endIndex = Math.min(startIndex + jobsPerPage, jobListings.length);
       setJobs(jobListings.slice(startIndex, endIndex));
     }
-    
   }, 1);
-  
 
- 
   const changePage = (page) => {
     setCurrentPage(page);
     setTimeout(() => {
@@ -266,7 +260,7 @@ export default function Jobs() {
                     location={job.location}
                     timePosted={new Date(job.createdAt).toDateString()}
                     employmentType={job.jobType}
-                    categories={['marketing', 'finance']} // There's no equivalent in the jobData
+                    categories={job.jobInterestedTopic} // There's no equivalent in the jobData
                     jobTime={job.jobTime}
                     companyImageUrl={imageURl}
                     onClick={() => (window.location.href = `/job/${job.id}`)}

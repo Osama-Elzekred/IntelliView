@@ -3,6 +3,8 @@ using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
 using IntelliView.Models.Models;
 using IntelliView.Models.Models.job;
+using Microsoft.EntityFrameworkCore;
+
 namespace IntelliView.DataAccess.Repository.Repos.JobRepos
 {
     public class JobRepo : Repository<Job>, IJobRepo
@@ -55,6 +57,11 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
 
             // Save changes to the database
             //await _db.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Job>> GetAllAsyncWithTopics()
+        {
+            return await _db.Jobs.Include(j => j.JobInterestedTopic).ThenInclude(jt => jt.InterestedTopic).AsNoTracking().ToListAsync();
         }
     }
 }

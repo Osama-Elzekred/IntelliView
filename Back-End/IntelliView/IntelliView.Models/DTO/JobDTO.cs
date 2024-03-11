@@ -44,11 +44,11 @@ namespace IntelliView.Models.DTO
         public string ImageURl { get; set; } = @"wwwroot/Assets/images/7495e58b-b72b-4b87-8c12-c77a69b39cd3.jpg";
 
         //[JsonIgnore]
-        //public virtual List<JobInterestedTopic> JobInterestedTopic { get; set; } = new List<JobInterestedTopic>();
+        public virtual List<string> JobInterestedTopic { get; set; } = new List<string>();
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
-        public DateTime? EndedAt { get; set; } = DateTime.Now.AddDays(20);
+        public DateTime? EndedAt { get; set; }
     }
 
 }

@@ -38,10 +38,12 @@ namespace IntelliView.API.Controllers
             return Ok(company);
         }
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<Job>>> GetAllJobs()
+        public async Task<ActionResult<IEnumerable<JobDTO>>> GetAllJobs()
         {
-            var jobs = await _unitOfWork.Jobs.GetAllAsync();
-            return Ok(jobs);
+            var jobs = await _unitOfWork.Jobs.GetAllAsyncWithTopics();
+            var jobsDto = _mapper.Map<IEnumerable<JobDTO>>(jobs);
+
+            return Ok(jobsDto);
         }
 
         [HttpPost("AddQuestions")]

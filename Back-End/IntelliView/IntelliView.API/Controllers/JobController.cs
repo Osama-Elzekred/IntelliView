@@ -5,7 +5,6 @@ using IntelliView.Models.Models;
 using IntelliView.Models.Models.job;
 using IntelliView.Utility;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 namespace IntelliView.API.Controllers
@@ -100,21 +99,25 @@ namespace IntelliView.API.Controllers
         }
         [Authorize(Roles = SD.ROLE_USER)]
         [HttpGet("questions/{jobId}")]
-        public async Task<ActionResult<IEnumerable<JobQuestion>>> GetJobQuestions(int jobId)
+        public async Task<ActionResult<IEnumerable<(int, string)>>> GetJobQuestions(int jobId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == jobId);
+
             if (job == null)
             {
                 return NotFound();
             }
+
             var jobQuestions = await _unitOfWork.JobQuestions.GetJobQuestionsAsync(jobId);
 
-            // Extract question content from JobQuestion objects
-            var questionContents = jobQuestions.Select(jq => jq.Question);
-
-            return Ok(questionContents);
+            if (jobQuestions == null)
+            {
+                return NotFound();
+            }
+            return Ok(jobQuestions);
         }
+
 
         [HttpGet("AllTopics")]
         public async Task<ActionResult<IEnumerable<InterestedTopic>>> GetAllTopics()
@@ -171,12 +174,11 @@ namespace IntelliView.API.Controllers
             return Ok(result);
         }
 
-        #region Company
         [HttpGet("{id}")]
         public async Task<ActionResult<JobDTO>> GetJobById(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id);
 
             if (job == null)
             {
@@ -193,6 +195,42 @@ namespace IntelliView.API.Controllers
             JobDto.CompanyUserId = company.Id;
             return Ok(JobDto);
         }
+        #region Company
+
+        [HttpGet("CompanyJob/{id}")]
+        [Authorize(Roles = SD.ROLE_COMPANY)]
+        public async Task<ActionResult<AddJobDto>> GetCompanyJob(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId, properties: [j => j.JobInterestedTopic, j => j.JobQuestions, j => j.InterviewQuestions]);
+
+            if (job == null)
+            {
+                return NotFound();
+            }
+            var jobDto = _mapper.Map<AddJobDto>(job);
+            jobDto.JobInterestedTopics = job.JobInterestedTopic?.Select(topic => new JobInterestedTopicDto
+            {
+                InterestedTopicId = topic.InterestedTopicId,
+                Topic = topic.InterestedTopic.Topic
+            }).ToList();
+            jobDto.CustQuestions = job.JobQuestions?.Select(q => new CustQuestionDto
+            {
+                Id = q.JobId,
+                Question = q.Question
+            }
+            ).ToList();
+            jobDto.QuestionItems = job.InterviewQuestions?.Select(q => new QuestionItemDto
+            {
+                Id = q.Id,
+                Question = q.Question,
+                Answer = q.Answer,
+
+            }).ToList();
+
+            return Ok(jobDto);
+        }
+
         [HttpGet("CompanyJobs")]
         [Authorize(Roles = SD.ROLE_COMPANY)]
         public async Task<ActionResult<IEnumerable<Job>>> GetCompanyJobs()
@@ -203,7 +241,7 @@ namespace IntelliView.API.Controllers
         }
         [HttpPost]
         [Authorize(Roles = SD.ROLE_COMPANY)]
-        public async Task<ActionResult<Job>> CreateJob([FromBody] AddJobDto jobDto)
+        public async Task<ActionResult<JsonContent>> CreateJob([FromBody] AddJobDto jobDto)
         {
             if (!ModelState.IsValid)
             {
@@ -220,7 +258,8 @@ namespace IntelliView.API.Controllers
             //});
             var job = _mapper.Map<Job>(jobDto);
             job.EndedAt = dateTime1;
-            job.JobInterestedTopic = jobDto.JobInterestedTopics.Select(topic => new JobInterestedTopic
+
+            job.JobInterestedTopic = jobDto.JobInterestedTopics?.Select(topic => new JobInterestedTopic
             {
                 //InterestedTopicId = topic.InterestedTopicId,
                 //JobId = job.Id
@@ -229,26 +268,61 @@ namespace IntelliView.API.Controllers
                     Topic = topic.Topic
                 }
             }).ToList();
+
             job.JobQuestions = jobDto.CustQuestions.Select(q => new CustQuestion
             {
                 Question = q.Question,
                 JobId = job.Id
             }).ToList();
+
+
             job.InterviewQuestions = jobDto.QuestionItems.Select(q => new InterviewQuestion
             {
                 Question = q.Question,
                 Answer = q.Answer,
                 JobId = job.Id
             }).ToList();
+
             await _unitOfWork.Jobs.AddAsync(job);
             await _unitOfWork.SaveAsync();
 
             return Ok(new { id = job.Id });
         }
 
+        //[HttpPut("{id}")]
+        //[Authorize(Roles = SD.ROLE_COMPANY)]
+        //public async Task<IActionResult> UpdateJob(int id, UpdateJobDTO jobDto)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        //    // Retrieve the existing job
+        //    var existingJob = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId);
+
+        //    if (existingJob == null)
+        //    {
+        //        return NotFound("Job not found or you do not have permission to update it");
+        //    }
+
+        //    // Update the existing job with the new information
+        //    //var job = _mapper.Map<Job>(jobDto);
+        //    _mapper.Map(jobDto, existingJob);
+        //    // Update other properties as needed
+
+        //    // Save changes to the database
+        //    await _unitOfWork.Jobs.Update(existingJob);
+        //    await _unitOfWork.SaveAsync();
+
+        //    return NoContent();
+        //}
+
         [HttpPut("{id}")]
         [Authorize(Roles = SD.ROLE_COMPANY)]
-        public async Task<IActionResult> UpdateJob(int id, UpdateJobDTO jobDto)
+        public async Task<IActionResult> UpdateJob(int id, [FromBody] AddJobDto jobDto)
         {
             if (!ModelState.IsValid)
             {
@@ -256,26 +330,23 @@ namespace IntelliView.API.Controllers
             }
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId);
 
-            // Retrieve the existing job
-            var existingJob = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId);
-
-            if (existingJob == null)
+            if (job == null)
             {
-                return NotFound("Job not found or you do not have permission to update it");
+                return NotFound();
             }
 
-            // Update the existing job with the new information
-            //var job = _mapper.Map<Job>(jobDto);
-            _mapper.Map(jobDto, existingJob);
-            // Update other properties as needed
+            // Map jobDto to job
+            _mapper.Map(jobDto, job);
 
-            // Save changes to the database
-            await _unitOfWork.Jobs.Update(existingJob);
+            // Update the job
+            await _unitOfWork.Jobs.Update(job);
             await _unitOfWork.SaveAsync();
 
             return NoContent();
         }
+
 
         [HttpDelete("{id}")]
         [Authorize(Roles = SD.ROLE_COMPANY)]

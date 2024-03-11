@@ -47,6 +47,14 @@ export default function Header() {
         aria-label="Sidebar with multi-level dropdown example"
         className="absolute top-15 right-0 mx-4 my-2 min-w-[200px] h-auto rounded-xl"
       >
+
+          <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
         <Sidebar.Items>
           <button
             aria-label="Close"
@@ -69,30 +77,54 @@ export default function Header() {
             </svg>
           </button>
           <Sidebar.ItemGroup className="p-0 m-2">
-            <Sidebar.Item href="#" icon={HiChartPie}>
-              Dashboard
+            <Link href={"/Home"}>
+            <Sidebar.Item icon={HiChartPie}>
+              Home
             </Sidebar.Item>
-            <Sidebar.Collapse icon={HiShoppingBag} label="E-commerce">
-              <Sidebar.Item href="#">Products</Sidebar.Item>
-              <Sidebar.Item href="#">Sales</Sidebar.Item>
-              <Sidebar.Item href="#">Refunds</Sidebar.Item>
-              <Sidebar.Item href="#">Shipping</Sidebar.Item>
+            </Link>   
+            <Link href="/about">
+            <Sidebar.Item  icon={HiChartPie}>
+              About
+            </Sidebar.Item>
+            </Link>         
+            <Sidebar.Collapse icon={HiShoppingBag} label="Jobs">
+              <Link href="/job/post">
+               <Sidebar.Item >Post a Job</Sidebar.Item>
+              </Link>              
+              <Link href="/job/job-company">
+                <Sidebar.Item >Job of Company</Sidebar.Item>
+              </Link>
             </Sidebar.Collapse>
-            <Sidebar.Item href="#" icon={HiInbox}>
-              Inbox
+            <Sidebar.Collapse icon={HiShoppingBag} label="Interview">
+              <Link href="/Interview/mocks">
+                <Sidebar.Item >Mocks</Sidebar.Item>
+              </Link>
+            </Sidebar.Collapse>
+            <Link href="/service">
+            <Sidebar.Item  icon={HiInbox}>
+              Service
             </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiUser}>
-              Users
-            </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiShoppingBag}>
-              Products
-            </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiArrowSmRight}>
-              Sign In
-            </Sidebar.Item>
-            <Sidebar.Item href="#" icon={HiTable}>
-              Sign Up
-            </Sidebar.Item>
+            </Link>
+            <Link href="/blog">
+              <Sidebar.Item icon={HiInbox}>
+                Blog
+              </Sidebar.Item>
+            </Link>
+            <Link href="/contact">
+              <Sidebar.Item icon={HiUser}>
+                Contact
+              </Sidebar.Item>
+            </Link>
+            <Link href="/login">
+              <Sidebar.Item icon={HiArrowSmRight}>
+                Sign In
+              </Sidebar.Item>
+            </Link>
+            <Link href="/signup">
+              <Sidebar.Item icon={HiTable}>
+                Sign Up
+              </Sidebar.Item>
+            </Link>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
       </Sidebar>
@@ -125,11 +157,6 @@ export default function Header() {
                 </Link>
                 <ul className="dropdown">
                   <li>
-                    <Link href="job/id" replace>
-                      Job Single
-                    </Link>
-                  </li>
-                  <li>
                     <Link href="job/post" replace>
                       Post a Job
                     </Link>
@@ -149,46 +176,6 @@ export default function Header() {
                   <li>
                     <Link href="/Interview/mocks" replace>
                       Mocks
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/service" replace>
-                      Services
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/service-single" replace>
-                      Service Single
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/blog-single" replace>
-                      Blog Single
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/portfolio" replace>
-                      Portfolio
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/portfolio-single" replace>
-                      Portfolio Single
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/testimonials" replace>
-                      Testimonials
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/faq" replace>
-                      Frequently Ask Questions
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/gallery" replace>
-                      Gallery
                     </Link>
                   </li>
                 </ul>

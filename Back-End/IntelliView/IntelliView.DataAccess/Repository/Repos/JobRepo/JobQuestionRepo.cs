@@ -40,26 +40,44 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
 
 
         // Constructor and other methods...
-        public async Task<IEnumerable<CustQuestion>> GetJobQuestionsAsync(int jobId)
+        //public async Task<IEnumerable<CustQuestion>> GetJobQuestionsAsync(int jobId)
+        //{
+        //    var job = await _db.Jobs.Include(j => j.JobQuestions).FirstOrDefaultAsync(j => j.Id == jobId);
+
+        //    if (job == null)
+        //    {
+        //        // Handle job not found
+        //        return Enumerable.Empty<CustQuestion>();
+        //    }
+
+        //    if (job.JobQuestions == null)
+        //    {
+        //        // Handle null JobQuestions collection
+        //        return Enumerable.Empty<CustQuestion>();
+        //    }
+
+        //    var questions = job.JobQuestions.ToList();
+
+        //    return questions;
+        //}
+        public async Task<IEnumerable<(int, string)>> GetJobQuestionsAsync(int jobId)
         {
-            var job = await _db.Jobs.Include(j => j.JobQuestions).FirstOrDefaultAsync(j => j.Id == jobId);
+            var job = await _db.Jobs
+                .Include(j => j.JobQuestions)
+                .FirstOrDefaultAsync(j => j.Id == jobId);
 
-            if (job == null)
+            if (job == null || job.JobQuestions == null)
             {
-                // Handle job not found
-                return Enumerable.Empty<CustQuestion>();
+                return Enumerable.Empty<(int, string)>();
             }
 
-            if (job.JobQuestions == null)
-            {
-                // Handle null JobQuestions collection
-                return Enumerable.Empty<CustQuestion>();
-            }
-
-            var questions = job.JobQuestions.ToList();
+            var questions = job.JobQuestions
+                .Select(q => (q.Id, q.Question))
+                .ToList();
 
             return questions;
         }
+
         public async Task AddQuestionToJob(int jobId, CustQuestion question)
         {
             var job = await _db.Jobs.FindAsync(jobId);

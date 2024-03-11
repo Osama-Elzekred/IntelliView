@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace IntelliView.Models.Models.job
 {
     public class InterviewQuestion
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }
         public int JobId { get; set; }
@@ -15,11 +16,12 @@ namespace IntelliView.Models.Models.job
 
     public class CustQuestion
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Question { get; set; }
         public int JobId { get; set; }
 
         [ForeignKey(nameof(JobId))]
+        [JsonIgnore]
         public virtual Job Job { get; set; }
     }
 }

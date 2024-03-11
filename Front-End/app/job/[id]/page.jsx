@@ -265,16 +265,12 @@ export default function Job_details({ params }) {
                         {data.jobTime}
                       </li>
                       <li className="mb-2">
-                        <strong className="text-black">Experience:</strong>
+                        <strong className="text-black pr-1">Experience:</strong>
                         {data.minimumExperience}
                       </li>
                       <li className="mb-2">
                         <strong className="text-black">Job Location:</strong>{' '}
                         {data.location}
-                      </li>
-                      <li className="mb-2">
-                        <strong className="text-black">Salary:</strong>
-                        {data.salary}
                       </li>
                       <li className="mb-2">
                         <strong className="text-black">

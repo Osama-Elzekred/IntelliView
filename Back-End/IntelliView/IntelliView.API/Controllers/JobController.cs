@@ -176,7 +176,7 @@ namespace IntelliView.API.Controllers
         public async Task<ActionResult<JobDTO>> GetJobById(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id );
 
             if (job == null)
             {
@@ -193,6 +193,7 @@ namespace IntelliView.API.Controllers
             JobDto.CompanyUserId = company.Id;
             return Ok(JobDto);
         }
+
         [HttpGet("CompanyJobs")]
         [Authorize(Roles = SD.ROLE_COMPANY)]
         public async Task<ActionResult<IEnumerable<Job>>> GetCompanyJobs()

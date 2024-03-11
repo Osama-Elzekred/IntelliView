@@ -100,21 +100,25 @@ namespace IntelliView.API.Controllers
         }
         [Authorize(Roles = SD.ROLE_USER)]
         [HttpGet("questions/{jobId}")]
-        public async Task<ActionResult<IEnumerable<JobQuestion>>> GetJobQuestions(int jobId)
+        public async Task<ActionResult<IEnumerable<(int, string)>>> GetJobQuestions(int jobId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == jobId);
+
             if (job == null)
             {
                 return NotFound();
             }
+
             var jobQuestions = await _unitOfWork.JobQuestions.GetJobQuestionsAsync(jobId);
 
-            // Extract question content from JobQuestion objects
-            var questionContents = jobQuestions.Select(jq => jq.Question);
-
-            return Ok(questionContents);
+            if (jobQuestions == null)
+            {
+                return NotFound();
+            }
+            return Ok(jobQuestions);
         }
+
 
         [HttpGet("AllTopics")]
         public async Task<ActionResult<IEnumerable<InterestedTopic>>> GetAllTopics()
@@ -176,7 +180,7 @@ namespace IntelliView.API.Controllers
         public async Task<ActionResult<JobDTO>> GetJobById(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id );
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id);
 
             if (job == null)
             {

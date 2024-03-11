@@ -9,9 +9,9 @@ function Apply({ params }) {
     email: "",
     phone: "",
     gender: "",
-    CV: null, // Assuming the user uploads a file
+    CV: null, 
+    questionsAnswers: []
   });
-
   const DOMAIN_NAME = 'localhost:7049/api';
   function handleNext() {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -78,14 +78,23 @@ useEffect(() => {
       }));
     } else {
       const inputValue = value;
-      if (name === "fullName" || name === "email" || name === "phone" || name === "gender") {
+      if (name === "fullName" || name === "email" || name === "phone" || name === "gender" ) {
         setAnswers((prevAnswers) => ({
           ...prevAnswers,
           [name]: inputValue,
         }));
       } else {
-        setAnswers((prevAnswers) => ({ ...prevAnswers, [name]: inputValue }));
+        // Handle question inputs
+        const updatedQuestionsAnswers = [...answers.questionsAnswers];
+        const index = updatedQuestionsAnswers.findIndex(qa => qa.question === name);
+        if (index !== -1) {
+          updatedQuestionsAnswers[index] = { question: name, answer: inputValue };
+        } else {
+          updatedQuestionsAnswers.push({ question: name, answer: inputValue });
+        }
+        setAnswers((prevAnswers) => ({ ...prevAnswers, questionsAnswers: updatedQuestionsAnswers }));
       }
+
   
       // Basic input validation for email and phone
       if (name === "email" && !isValidEmail(value)) {
@@ -93,7 +102,6 @@ useEffect(() => {
         console.log("Invalid email");
         setAnswers((prevAnswers) => ({
           ...prevAnswers,
-          showEmailWarning: true,
         }));
       }
   
@@ -102,7 +110,6 @@ useEffect(() => {
         console.log("Invalid phone number");
         setAnswers((prevAnswers) => ({
           ...prevAnswers,
-          showPhoneWarning: true,
         }));
       }
     }
@@ -151,20 +158,21 @@ const sendAnswers = async () => {
 const renderQuestions = () => {
   return questions.map((question, index) => (
     <div key={index} className="mb-4">
-      <label htmlFor={`question${index + 1}`} className="block font-medium mb-1">
-        {question}
+      <label htmlFor={`${question.item1}`} className="block font-medium mb-1">
+        {question.item2}
       </label>
       <textarea
-        id={`question${index + 1}`}
-        name={`question${index + 1}`}
+        id={`${question.item1}`}
+        name={`${question.item1}`} // Ensure that the name attribute corresponds to the question ID
         className="w-full p-2 border rounded"
-        //placeholder={question}
-        value={answers[`question${index + 1}`] || ""}
+        value={answers[question.item1] || ""} // Use the correct question ID to access the answer in the answers state
         onChange={handleChange}
       />
     </div>
   ));
 };
+
+
 
   const StepOne = (
     <div>

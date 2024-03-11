@@ -29,6 +29,7 @@ namespace IntelliView.Models.Models
         // Documents uploaded by the user (e.g., resume)
         public virtual string ResumeURL { get; set; }
         public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
+        public bool IsApproved { get; set; }
     }
     public enum ApplicationStatus
     {

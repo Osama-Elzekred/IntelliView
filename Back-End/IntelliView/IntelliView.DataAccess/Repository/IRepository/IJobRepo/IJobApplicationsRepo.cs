@@ -1,4 +1,5 @@
-﻿using IntelliView.Models.Models;
+﻿using IntelliView.Models.DTO;
+using IntelliView.Models.Models;
 
 namespace IntelliView.DataAccess.Repository.IRepository.IJobRepos
 {
@@ -13,6 +14,7 @@ namespace IntelliView.DataAccess.Repository.IRepository.IJobRepos
         void Update(JobApplication userApplication);
 
         Task RemoveUserApplicationAsync(int jobId, string userId);
+        Task<IEnumerable<GetAppliedJobsDTO>> GetAppliedJobsAsync(string userId);
     }
 
 }

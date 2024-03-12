@@ -21,11 +21,11 @@ namespace IntelliView.Models.Models
 
         // Navigation property to the associated user (applicant)
 
-        public string FullName { get; set; } = String.Empty;
-        public string Email { get; set; } = String.Empty;
-        public string Phone { get; set; } = String.Empty;
-        public string Gender { get; set; } = String.Empty;
-        public byte[]? CV { get; set; }
+        public string FullName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Phone { get; set; } = string.Empty;
+        public string Gender { get; set; } = string.Empty;
+        public string CVURL { get; set; } = string.Empty;
 
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; }

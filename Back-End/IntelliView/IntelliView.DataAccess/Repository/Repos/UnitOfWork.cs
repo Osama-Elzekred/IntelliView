@@ -1,8 +1,10 @@
 ﻿using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.IRepository.IInterviewRepo;
 using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
 using IntelliView.DataAccess.Repository.IRepository.InterviewRepos;
 using IntelliView.DataAccess.Repository.IRepository.IUserRepo;
+using IntelliView.DataAccess.Repository.Repos.InterviewRepo;
 using IntelliView.DataAccess.Repository.Repos.InterviewRepos;
 using IntelliView.DataAccess.Repository.Repos.JobRepos;
 using IntelliView.DataAccess.Repository.Repos.UserRepos;
@@ -21,6 +23,8 @@ namespace IntelliView.DataAccess.Repository.Repos
         public IJobQuestionRepo JobQuestions { get; private set; }
         public IJobApplicationsRepo JobApplications { get; private set; }
         public IInterestedTopicRepo InterestedTopics { get; private set; }
+        public IInterviewMockRepo InterviewMocks { get; private set; }
+        public IInterviewMockTopicRepo InterviewMockTopics { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -33,6 +37,8 @@ namespace IntelliView.DataAccess.Repository.Repos
             JobQuestions = new JobQuestionRepo(_db);
             JobApplications = new JobApplicationsRepo(_db);
             InterestedTopics = new InterestedTopicRepo(_db);
+            InterviewMocks = new InterviewMockRepo(_db);
+            InterviewMockTopics = new InterviewMockTopicRepo(_db);
         }
         public async Task SaveAsync()
         {

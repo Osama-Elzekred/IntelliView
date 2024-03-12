@@ -1,4 +1,5 @@
-﻿using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
+﻿using IntelliView.DataAccess.Repository.IRepository.IInterviewRepo;
+using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
 using IntelliView.DataAccess.Repository.IRepository.InterviewRepos;
 using IntelliView.DataAccess.Repository.IRepository.IUserRepo;
 namespace IntelliView.DataAccess.Repository.IRepository
@@ -14,6 +15,10 @@ namespace IntelliView.DataAccess.Repository.IRepository
         IJobRepo Jobs { get; }
         IJobQuestionRepo JobQuestions { get; }
         IInterestedTopicRepo InterestedTopics { get; }
+        IInterviewMockRepo InterviewMocks { get; }
+        IInterviewMockTopicRepo InterviewMockTopics { get; }
+
+
         Task SaveAsync();
     }
 }

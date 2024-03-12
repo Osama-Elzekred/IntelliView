@@ -1,30 +1,28 @@
-﻿using IntelliView.DataAccess.Services.IService;
+﻿using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
-using IntelliView.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntelliView.DataAccess.Services
 {
     public class InterviewService : IInterviewService
     {
         private readonly Dictionary<string, List<string>> _interviewSessions;
-        public InterviewService()
+        private readonly IUnitOfWork _unitOfWork;
+        public InterviewService(IUnitOfWork unitOfWork)
         {
+            _unitOfWork = unitOfWork;
             _interviewSessions = new Dictionary<string, List<string>>();
+
         }
         public string GetNextQuestion(string sessionId)
         {
             if (_interviewSessions.ContainsKey(sessionId))
             {
                 var sessionQuestions = _interviewSessions[sessionId];
-                
+
                 if (sessionQuestions.Count > 0)
                 {
-                    
+
                     var nextQuestion = sessionQuestions[0];
                     sessionQuestions.RemoveAt(0);
                     return nextQuestion;
@@ -55,7 +53,11 @@ namespace IntelliView.DataAccess.Services
                 return "Invalid session ID.";
             }
         }
-
+        //public  GetInterviewMock(int interviewId)
+        //{
+        //    var interviewMock = _unitOfWork.InterviewMocks.GetFirstOrDefaultAsync();
+        //    //return interviewMock.Mock;
+        //}
         public string StartInterview()
         {
             var sessionId = Guid.NewGuid().ToString();

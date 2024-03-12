@@ -1,4 +1,6 @@
-﻿using IntelliView.DataAccess.Services.IService;
+﻿using AutoMapper;
+using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,8 +11,13 @@ namespace IntelliView.API.Controllers
     public class InterviewController : ControllerBase
     {
         private readonly IInterviewService _interviewService;
-        public InterviewController(IInterviewService interviewService)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public InterviewController(IInterviewService interviewService, IUnitOfWork unitOfWork, IMapper mapper)
         {
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
             _interviewService = interviewService;
         }
         [HttpPost("start")]

@@ -1,11 +1,6 @@
 ﻿using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.Models.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntelliView.DataAccess.Repository.Repos
 {

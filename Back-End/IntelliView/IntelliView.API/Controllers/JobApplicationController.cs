@@ -4,6 +4,7 @@ using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility.Settings;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Validations;
 using Newtonsoft.Json;
 using System.Security.Claims;
 
@@ -209,12 +210,25 @@ namespace IntelliView.API.Controllers
         }
 
         [HttpGet("GetUserJobs")]
-        public async Task<ActionResult<IEnumerable<Job>>> GetUserJobs()
+        public async Task<ActionResult<IEnumerable<GetAppliedJobsDTO>>> GetUserJobs()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
             var jobs = await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
-            return Ok(jobs);
+            if (jobs == null)
+            {
+                return NotFound("No jobs found");
+            }
+            var jobsDTO = _mapper.Map<IEnumerable<JobDTO>>(jobs);
+            var jobApp =await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
+            var res =await _unitOfWork.JobApplications.GetAppliedJobsAsync(userId);
+
+            return Ok(res);
         }
+
         // view all applications for a job
         [HttpGet("/{jobId}")]
         public async Task<ActionResult<IEnumerable<JobApplication>>> GetJobApplications(int jobId)

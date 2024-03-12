@@ -1,5 +1,6 @@
 ﻿using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
+using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,6 +50,38 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
             }
         }
 
+        //get user applied jobs with its status
+        public async Task<IEnumerable<GetAppliedJobsDTO>> GetAppliedJobsAsync(string userId)
+        {
+            var userApplications = await _db.JobApplications
+                .Include(ua => ua.Job)
+                .Where(ua => ua.UserId == userId)
+                .Select(ua => new GetAppliedJobsDTO
+                {
+                    jobDto= new JobDTO
+                    {
+                        Id = ua.Job.Id,
+                        Title = ua.Job.Title,
+                        JobTime = ua.Job.JobTime,
+                        MinimumExperience = ua.Job.MinimumExperience,
+                        Requirements = ua.Job.Requirements,
+                        Responsibilities = ua.Job.Responsibilities,
+                        Benefits = ua.Job.Benefits,
+                        companyName = ua.Job.CompanyUser.CompanyName,
+                        Notes = ua.Job.Notes,
+                        IsActive = ua.Job.IsActive,
+                        Description = ua.Job.Description,
+                        Location = ua.Job.Location,
+                        JobType = ua.Job.JobType,                       
+                        CreatedAt = ua.Job.CreatedAt,
+                        UpdatedAt = ua.Job.UpdatedAt,
+                        EndedAt = ua.Job.EndedAt,
+                    },
+                    Status = ua.Status
+                })
+                .ToListAsync();
+            return userApplications;
+        }
     }
 
 }

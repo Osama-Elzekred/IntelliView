@@ -120,7 +120,7 @@ export default function Header() {
                 Sign In
               </Sidebar.Item>
             </Link>
-            <Link href="/signup">
+            <Link href="/login">
               <Sidebar.Item icon={HiTable}>
                 Sign Up
               </Sidebar.Item>
@@ -147,8 +147,8 @@ export default function Header() {
                 </Link>
               </li>
               <li>
-                <Link href="/about" replace>
-                  About
+                <Link href="/service" replace>
+                  Service
                 </Link>
               </li>
               <li className="has-children">
@@ -169,7 +169,7 @@ export default function Header() {
                 </ul>
               </li>
               <li className="has-children">
-                <Link href="/service" replace>
+                <Link href="/Interview" replace>
                   Interview
                 </Link>
                 <ul className="dropdown">
@@ -235,7 +235,6 @@ export default function Header() {
                     <DropdownHeader>
                       <span className="block text-xl">{userName}</span>
                     </DropdownHeader>
-                    <DropdownItem>Dashboard</DropdownItem>
                     <Link
                       href={
                         role === 'company' || role === 'Company'
@@ -245,7 +244,6 @@ export default function Header() {
                     >
                       <DropdownItem>Settings</DropdownItem>
                     </Link>
-                    <DropdownItem>Earnings</DropdownItem>
                     <DropdownDivider />
                     <Link href="" onClick={signOut}>
                       <DropdownItem>Sign out</DropdownItem>

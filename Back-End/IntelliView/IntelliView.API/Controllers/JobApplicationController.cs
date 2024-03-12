@@ -2,8 +2,12 @@
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
+using IntelliView.Utility;
 using IntelliView.Utility.Settings;
+using Mailosaur.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Validations;
 using Newtonsoft.Json;
 using System.Security.Claims;
 
@@ -11,7 +15,7 @@ namespace IntelliView.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = SD.ROLE_USER)]
+    [Authorize(Roles = SD.ROLE_USER)]
     public class JobApplicationController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -105,20 +109,23 @@ namespace IntelliView.API.Controllers
         //}
 
         [HttpPost("submitAnswers")]
-        //[Route()]
-        public async Task<IActionResult> SubmitAnswers([FromForm] JobApplicationDto model)
+        public async Task<IActionResult> SubmitAnswers([FromForm] JobApplicationDto model, IFormFile CV)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Unauthorized();
+                return NotFound(new {Message= "UserId not found" });
             }
             var job = await _unitOfWork.Jobs.GetByIdAsync(model.JobId);
             if (job == null)
             {
-                return NotFound("Job not found");
+                return NotFound(new { Message = "Job not found" });
             }
-
+            var user = await _unitOfWork.IndividualUsers.GetByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound(new { Message="User not found" });
+            }
             var existingApplication = await _unitOfWork.JobApplications
            .GetByIdAsync(job.Id, userId);
 
@@ -128,6 +135,40 @@ namespace IntelliView.API.Controllers
             }
             // Deserialize the questionsAnswers string to a dictionary
             var questionsAnswers = JsonConvert.DeserializeObject<Dictionary<int, string>>(model.QuestionsAnswers);
+
+            // Save the CV file
+            if (CV != null)
+            {
+                if (CV.Length > FileSettings.MAxFileSizeInBytes)
+                {
+                    return BadRequest(new { message = "File size should not be more than 5MB!" });
+                }
+                if (!FileSettings.AllowedCVExtensions.Contains(Path.GetExtension(CV.FileName).ToLower()))
+                {
+                    return BadRequest(new { message = "This file extension is not allowed!" });
+                }
+                string webRootPath = _webHostEnvironment.ContentRootPath;
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(CV.FileName);
+                string CVPath = Path.Combine(webRootPath, "wwwroot", "Assets", "CVs", fileName);
+
+                // Delete the old cv if it exists
+                if (!string.IsNullOrEmpty(user.CVURL))
+                {
+                    var oldCVPath = Path.Combine(webRootPath, user.CVURL.TrimStart('\\'));
+                    if (System.IO.File.Exists(oldCVPath))
+                    {
+                        System.IO.File.Delete(oldCVPath);
+                    }
+                }
+                using (var fileStream = new FileStream(CVPath, FileMode.Create))
+                {
+                    await CV.CopyToAsync(fileStream);
+                }
+
+                // Update the job application with the CV URL
+                model.CVURL = Path.Combine("wwwroot", "Assets", "CVs", fileName).Replace("\\", "/");
+                user.CVURL = model.CVURL;
+            }
 
             // Create a new JobApplication
             var jobApplication = new JobApplication
@@ -140,7 +181,6 @@ namespace IntelliView.API.Controllers
                 FullName = model.FullName,
                 Email = model.Email,
                 Phone = model.Phone,
-                CV = model.CV,
                 UserAnswers = questionsAnswers?.Select(qa => new UserJobAnswer
                 {
                     QuestionId = qa.Key,
@@ -149,11 +189,6 @@ namespace IntelliView.API.Controllers
                     JobId = model.JobId
                 }).ToList()
             };
-            //using (var memoryStream = new MemoryStream())
-            //{
-            //    await model.CV.CopyToAsync(memoryStream);
-            //    jobApplication.CV = memoryStream.ToArray();
-            //}
 
             // Add the JobApplication to the database
             await _unitOfWork.JobApplications.AddAsync(jobApplication);
@@ -161,6 +196,7 @@ namespace IntelliView.API.Controllers
 
             return Ok("Application submitted successfully");
         }
+
 
         [HttpPost("UploadCV")]
         public async Task<IActionResult> UploadCV(IFormFile file)
@@ -209,12 +245,25 @@ namespace IntelliView.API.Controllers
         }
 
         [HttpGet("GetUserJobs")]
-        public async Task<ActionResult<IEnumerable<Job>>> GetUserJobs()
+        public async Task<ActionResult<IEnumerable<GetAppliedJobsDTO>>> GetUserJobs()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
             var jobs = await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
-            return Ok(jobs);
+            if (jobs == null)
+            {
+                return NotFound("No jobs found");
+            }
+            var jobsDTO = _mapper.Map<IEnumerable<JobDTO>>(jobs);
+            var jobApp =await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
+            var res =await _unitOfWork.JobApplications.GetAppliedJobsAsync(userId);
+
+            return Ok(res);
         }
+
         // view all applications for a job
         [HttpGet("/{jobId}")]
         public async Task<ActionResult<IEnumerable<JobApplication>>> GetJobApplications(int jobId)

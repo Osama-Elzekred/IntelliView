@@ -1,37 +1,36 @@
-"use client";
-import Layout from "../../components/Layout";
-import Phone from "../../components/Phone";
-import Script from "next/script";
-import Link from "next/link";
-import ProtectedPage from "../../components/ProtectedPages";
-import Cookies from "js-cookie";
-import { FileInput, Label } from "flowbite-react";
-import { Badge } from "flowbite-react";
-import { Button } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { redirect } from 'next/navigation'
-const DOMAIN_NAME = "localhost:7049";
+'use client';
+import Layout from '../../components/Layout';
+import Phone from '../../components/Phone';
+import Script from 'next/script';
+import Link from 'next/link';
+import ProtectedPage from '../../components/ProtectedPages';
+import Cookies from 'js-cookie';
+import { FileInput, Label } from 'flowbite-react';
+import { Badge } from 'flowbite-react';
+import { Button } from 'flowbite-react';
+import { useEffect, useState } from 'react';
+import { redirect } from 'next/navigation';
+const DOMAIN_NAME = 'localhost:7049';
 const User_profile = () => {
-
-  const [click,setClick] = useState(); 
-  const authToken = Cookies.get("authToken");
+  const [click, setClick] = useState();
+  const authToken = Cookies.get('authToken');
   const [cvName, setCvName] = useState(null);
-  const role = Cookies.get("role"); 
+  const role = Cookies.get('role');
   useEffect(() => {
-    if(!authToken || (role!= "user" && role != "User")){
-      redirect("/"); 
+    if (!authToken || (role != 'user' && role != 'User')) {
+      redirect('/');
     }
-    if (typeof window != "undefined") {
-      const storedCvName = localStorage.getItem("cvName");
+    if (typeof window != 'undefined') {
+      const storedCvName = localStorage.getItem('cvName');
       if (storedCvName) {
         setCvName(storedCvName);
-        setClick(true);  
+        setClick(true);
       }
     }
   }, []);
-  const handleDisplay = async ()=> {
-    setClick(false); 
-  } 
+  const handleDisplay = async () => {
+    setClick(false);
+  };
   const handleFileChange = async (event) => {
     // setSelectedFiles(event.target.files);
     await handleUpload(event.target.files);
@@ -39,20 +38,20 @@ const User_profile = () => {
 
   const handleUpload = async (files) => {
     if (!files) {
-      console.error("No file selected");
+      console.error('No file selected');
       return;
     }
 
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
-      formData.append("file", files[i]);
+      formData.append('file', files[i]);
     }
 
     try {
       const response = await fetch(
         `https://${DOMAIN_NAME}/api/Profile/updateCV`,
         {
-          method: "PATCH",
+          method: 'PATCH',
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
@@ -62,17 +61,17 @@ const User_profile = () => {
 
       if (response.ok) {
         const fileName = files[0].name;
-        localStorage.setItem("cvName", fileName);
+        localStorage.setItem('cvName', fileName);
         setCvName(fileName);
-        setClick(true); 
-        console.log("Files uploaded successfully");
+        setClick(true);
+        console.log('Files uploaded successfully');
         // Handle success
       } else {
-        console.error("Failed to upload files");
+        console.error('Failed to upload files');
         // Handle failure
       }
     } catch (error) {
-      console.error("Error occurred while uploading files:", error);
+      console.error('Error occurred while uploading files:', error);
       // Handle error
     }
   };
@@ -82,12 +81,12 @@ const User_profile = () => {
       {/* <ProtectedPage allowedRoles={["user"]} /> */}
       <>
         <link rel="stylesheet" href="/css/edit-profile.css" />
-        <div id="overlayer" />
+        {/* <div id="overlayer" />
         <div className="loader">
           <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
           </div>
-        </div>
+        </div> */}
         <div className="site-wrap" id="top">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">
@@ -96,7 +95,7 @@ const User_profile = () => {
               </div>
             </div>
             <div className="site-mobile-menu-body" />
-          </div>{" "}
+          </div>{' '}
           {/* .site-mobile-menu */}
           {/* HOME */}
           <section
@@ -112,7 +111,7 @@ const User_profile = () => {
                 <div className="col-md-7">
                   <h1 className="text-white font-weight-bold">Edit Profile</h1>
                   <div className="custom-breadcrumbs">
-                    <Link href="#">Home</Link>{" "}
+                    <Link href="#">Home</Link>{' '}
                     <span className="mx-2 slash">/</span>
                     <span className="text-white">
                       <strong>Edit Peofile</strong>
@@ -190,7 +189,7 @@ const User_profile = () => {
                             htmlFor="inputFile"
                           >
                             Upload new photo
-                          </label>{" "}
+                          </label>{' '}
                           &nbsp;
                           <input
                             type="file"
@@ -209,10 +208,10 @@ const User_profile = () => {
                         </div>
                       </div>
                       <hr className="border-light m-0" />
-                      <div className="card-body">
+                      <div className="container">
                         <form className="user" id="userForm">
-                          <div className="form_">
-                            <div className="name">
+                          <div className="container ">
+                            <div className=" flex-row">
                               <div className="first_name">
                                 <label htmlFor="first">First name</label>
                                 <br />
@@ -233,21 +232,21 @@ const User_profile = () => {
                               </div>
                             </div>
                             <div className="cv">
-                              {cvName !== "" && click? (
+                              {cvName !== '' && click ? (
                                 <div
                                   id="cvName"
                                   style={{
-                                    display: "flex",
-                                    flexDirection: "row",
-                                    alignItems: "center",
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
                                   }}
                                   className="flex items-center"
                                 >
                                   <Badge
                                     className="bg-blue-500 text-white mr-3"
                                     style={{
-                                      backgroundColor: "#17a9c3",
-                                      color: "white",
+                                      backgroundColor: '#17a9c3',
+                                      color: 'white',
                                     }}
                                     size=""
                                   >
@@ -256,10 +255,10 @@ const User_profile = () => {
                                   <Button
                                     className="ml-2 hover:bg-green-100"
                                     style={{
-                                      backgroundColor: "#17a9c3",
-                                      color: "white",
-                                      fontFamily: "arial",
-                                      fontWeight: "semibold",
+                                      backgroundColor: '#17a9c3',
+                                      color: 'white',
+                                      fontFamily: 'arial',
+                                      fontWeight: 'semibold',
                                     }}
                                     size="sm"
                                     onClick={handleDisplay}
@@ -268,7 +267,7 @@ const User_profile = () => {
                                   </Button>
                                 </div>
                               ) : (
-                                <div id="uploadCv">
+                                <div id="uploadCv" className="w-[100%]">
                                   <div className="mb-2 block">
                                     <Label
                                       htmlFor="file-upload"
@@ -282,12 +281,12 @@ const User_profile = () => {
                                 </div>
                               )}
                             </div>
-                            <div className="title">
+                            <div className="w-full">
                               <label htmlFor="title">title</label>
                               <br />
                               <input type="text" id="title" name="title" />
                             </div>
-                            <div className="phone">
+                            <div className="">
                               <label htmlFor="phone">phone number</label>
                               <br />
                               <Phone />
@@ -336,7 +335,7 @@ const User_profile = () => {
                             className="form-control"
                             rows={5}
                             defaultValue={
-                              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus."
+                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus.'
                             }
                           />
                         </div>

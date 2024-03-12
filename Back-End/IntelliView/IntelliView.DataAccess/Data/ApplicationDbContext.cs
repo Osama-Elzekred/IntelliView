@@ -14,6 +14,18 @@ namespace InteliView.DataAccess.Data
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<MCQOption> MCQOptions { get; set; }
         public DbSet<InterestedTopic> InterestedTopics { get; set; }
+        public DbSet<UserInterestedTopic> UserInterestedTopics { get; set; }
+        public DbSet<JobInterestedTopic> JobInterestedTopics { get; set; }
+        //public DbSet<UserJobAnswer> UserJobAnswers { get; set; }
+
+        //public DbSet<JobApplication> JobApplication { get; set; }
+        public DbSet<InterviewMock> InterviewMocks { get; set; }
+        //public DbSet<InterviewQuestion> InterviewQuestions { get; set; }
+        //public DbSet<InterviewSession> InterviewSessions { get; set; }
+        //public DbSet<InterviewSessionQuestion> InterviewSessionQuestions { get; set; }
+        public DbSet<InterviewVideo> InterviewVideos { get; set; }
+        public DbSet<InterviewMockTopic> InterviewTopics { get; set; }
+        public DbSet<InterviewMockTopic> InterviewMockTopics { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

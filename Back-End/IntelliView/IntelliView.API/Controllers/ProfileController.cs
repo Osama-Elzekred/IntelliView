@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
@@ -17,13 +18,15 @@ namespace IntelliView.API.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         public readonly IWebHostEnvironment _webHostEnvironment;
+        public readonly IUploadFilesToCloud _uploadFilesToCloud;
         public IMapper _mapper { get; }
-        public ProfileController(UserManager<ApplicationUser> userManager, 
+        public ProfileController(UserManager<ApplicationUser> userManager, IUploadFilesToCloud uploadFilesToCloud,
             IWebHostEnvironment webHostEnvironment, IMapper mapper)
         {
             _mapper = mapper;
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
+            _uploadFilesToCloud = uploadFilesToCloud;
         }
 
         [HttpGet]
@@ -88,30 +91,16 @@ namespace IntelliView.API.Controllers
                     {
                         return BadRequest(new { message = "This file extension is not allowed!" });
                     }
-                    string webRootPath = _webHostEnvironment.ContentRootPath;
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string imagePath = Path.Combine(webRootPath, "wwwroot", "Assets", "images", fileName);
+
+                    string fileName = "image"+Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+
+                    string ImageUri = await _uploadFilesToCloud.UploadImage(file, fileName);
 
                     // Delete the old image if it exists
-                    if (!string.IsNullOrEmpty(user.ImageURl))
-                    {
-                        if (user.ImageURl != "wwwroot/Assets/images/7495e58b-b72b-4b87-8c12-c77a69b39cd3.jpg")
-                        {
-                            var oldImagePath = Path.Combine(webRootPath, user.ImageURl.TrimStart('\\'));
-                            if (System.IO.File.Exists(oldImagePath))
-                            {
-                                System.IO.File.Delete(oldImagePath);
-                            }
-                        }
-                    }
-
-                    using (var fileStream = new FileStream(imagePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
+                    /* @not Implemented */
 
                     // Update the user's profile picture URL
-                    user.ImageURl = Path.Combine("wwwroot", "Assets", "images", fileName).Replace("\\", "/");
+                    user.ImageURl = ImageUri;
                     await _userManager.UpdateAsync(user);
 
                     return Ok(new { user.ImageURl }); // Return the URL of the updated image
@@ -140,24 +129,23 @@ namespace IntelliView.API.Controllers
                     {
                         return BadRequest(new { message = "This file extension is not allowed!" });
                     }
-                    string webRootPath = _webHostEnvironment.ContentRootPath;
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string CVPath = Path.Combine(webRootPath, "wwwroot", "Assets", "CVs", fileName);
+
+                    string fileName = "cv"+ Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+
                     // Delete the old cv if it exists
-                    if (!string.IsNullOrEmpty(individualUser.CVURL))
-                    {
-                        var oldCVPath = Path.Combine(webRootPath, individualUser.CVURL.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldCVPath))
-                        {
-                            System.IO.File.Delete(oldCVPath);
-                        }
-                    }
-                    using (var fileStream = new FileStream(CVPath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
+                    //if (!string.IsNullOrEmpty(individualUser.CVURL))
+                    //{
+                    //    var oldCVPath = Path.Combine(webRootPath, individualUser.CVURL.TrimStart('\\'));
+                    //    if (System.IO.File.Exists(oldCVPath))
+                    //    {
+                    //        System.IO.File.Delete(oldCVPath);
+                    //    }
+                    //}
+                    
+                    string CVUri = await _uploadFilesToCloud.UploadFile(file, fileName);
+
                     // Update the user's CV URL
-                    individualUser.CVURL = Path.Combine("wwwroot", "Assets", "CVs", fileName).Replace("\\", "/");
+                    individualUser.CVURL = CVUri;
                     await _userManager.UpdateAsync(individualUser);
                     return Ok(individualUser.CVURL); // Return the URL of the updated CV
                 }

@@ -72,6 +72,13 @@ namespace IntelliView.API.Controllers
                 Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
                 cloudinary.Api.Secure = true;
 
+                Transformation transformation = new Transformation()
+                    .Width(500)
+                    .Crop("scale")
+                    .Quality("auto")
+                    .FetchFormat("auto");
+                cloudinary.Api.UrlImgUp.Transform(transformation).BuildImageTag(file.FileName);
+
                 var uploadParams = new ImageUploadParams()
                 {
                     File = new FileDescription(file.FileName, file.OpenReadStream()),

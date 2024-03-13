@@ -15,6 +15,18 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+// Import the required packages
+//==============================
+
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using dotenv.net;
+
+// Set your Cloudinary credentials
+//=================================
+
+DotEnv.Load(options: new DotEnvOptions(probeForEnv: true));
+
 
 var builder = WebApplication.CreateBuilder(args);
 

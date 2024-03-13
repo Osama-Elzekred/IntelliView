@@ -1,4 +1,6 @@
 ﻿
+using System.Text.Json.Serialization;
+
 namespace IntelliView.Models.DTO
 {
     public class JobApplicationDto

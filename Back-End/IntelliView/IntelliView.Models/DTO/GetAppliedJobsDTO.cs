@@ -6,7 +6,7 @@ namespace IntelliView.Models.DTO
     public class GetAppliedJobsDTO
     {
         
-        public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
+        public string Status { get; set; } =string.Empty;
 
         public JobDTO jobDto = new JobDTO(); 
 

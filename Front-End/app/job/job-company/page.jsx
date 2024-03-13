@@ -3,32 +3,16 @@ import Layout from '../../components/Layout';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { Badge } from 'flowbite-react';
-import { HiCheck, HiClock } from 'react-icons/hi';
 import CardComp from '../../components/Card';
 export default function Jobs() {
-
+  const imageURl = 'images/job_logo_1.jpg';
   const [jobListings, setJobListings] = useState([]);
-    useEffect(() => {
-      const fetchJobs = async () => {
-        const authToken = Cookies.get('authToken');
-        try {
-          const response = await fetch(`https://${DOMAIN_NAME}/Job/CompanyJobs`, {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          });
-          if (response.ok) {
-            const jobs = await response.json();
-            setJobListings(jobs);
-          }
-        } catch (error) {
-          console.log('error : ', error);
-        }
-      };
-      fetchJobs();
-    }, []);
+  const [searchResult, setSearchResult] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [jobs, setJobs] = useState([]);
+  const jobsPerPage = 5;
+  const [test, setTest] = useState(false);
   const [searchForm, setSearchForm] = useState({
     title: '',
     jobType: '',
@@ -37,10 +21,9 @@ export default function Jobs() {
   const handleChange = async (field, value) => {
     setSearchForm({ ...searchForm, [field]: value });
   };
-  const [test, setTest] = useState(false);
   const handleSearch = async () => {
     setTest(true);
-    const filteredJobs = jobData.filter((job) => {
+    const filteredJobs = jobListings.filter((job) => {
       // Filter by title
       if (
         searchForm.title &&
@@ -70,13 +53,30 @@ export default function Jobs() {
       .getElementById('job-listings')
       .scrollIntoView({ behavior: 'smooth' });
   };
-  const [searchResult, setSearchResult] = useState([]);
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [jobs, setJobs] = useState([]);
-  const jobsPerPage = 5;
 
   useEffect(() => {
+    const fetchJobs = async () => {
+      const authToken = Cookies.get('authToken');
+      try {
+        const response = await fetch('https://localhost:7049/api/Job/CompanyJobs', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        if (response.ok) {
+          const jobs = await response.json();
+          setJobListings(jobs);
+        }
+      } catch (error) {
+        console.log('error : ', error);
+      }
+    };
+    fetchJobs();
+  }, [currentPage, searchResult]);
+
+  // setTime out to make delay until the data come from server to store it in jobs . #hossam
+  setTimeout(() => {
     if (
       searchResult.length > 0 ||
       (searchResult.length === 0 && test === true)
@@ -94,7 +94,8 @@ export default function Jobs() {
       const endIndex = Math.min(startIndex + jobsPerPage, jobListings.length);
       setJobs(jobListings.slice(startIndex, endIndex));
     }
-  }, [currentPage, searchResult]);
+  }, 1);
+
   const changePage = (page) => {
     setCurrentPage(page);
     setTimeout(() => {
@@ -127,7 +128,6 @@ export default function Jobs() {
       }, 200);
     }
   };
-
   return (
     <Layout>
       <>
@@ -262,7 +262,7 @@ export default function Jobs() {
                     categories={['marketing', 'finance']} // There's no equivalent in the jobData
                     jobTime={job.jobTime}
                     companyImageUrl={job.imageURl}
-                    onClick={() => (window.location.href = `/job/${job.id}`)}
+                    onClick={() => (window.location.href = `/job/job-company/${job.id}`)}
                   />
                 ))}
               </ul>

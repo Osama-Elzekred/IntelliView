@@ -15,7 +15,7 @@ namespace IntelliView.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = SD.ROLE_USER)]
+    [Authorize(policy: "UserOrCompany")]
     public class JobApplicationController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -265,7 +265,7 @@ namespace IntelliView.API.Controllers
         }
 
         // view all applications for a job
-        [HttpGet("/{jobId}")]
+        [HttpGet("Applications/{jobId}")]
         public async Task<ActionResult<IEnumerable<JobApplication>>> GetJobApplications(int jobId)
         {
             var job = await _unitOfWork.Jobs.GetByIdAsync(jobId);
@@ -285,6 +285,41 @@ namespace IntelliView.API.Controllers
             var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
             return Ok(applications);
         }
+        [Authorize(Roles = SD.ROLE_COMPANY)] // Add authorization if required
+        [HttpPatch("approve/job/{jobId}/user/{userId}")]
+        public async Task<IActionResult> ApproveJobApplication(int jobId, string userId)
+        {
+            var jobApplication = await _unitOfWork.JobApplications.GetByIdAsync(new {jobId,userId});
 
+            if (jobApplication == null)
+            {
+                return NotFound(new { message = "Job application not found" });
+            }
+
+            jobApplication.IsApproved = true; // Update approval status
+
+            _unitOfWork.JobApplications.Update(jobApplication);
+            await _unitOfWork.SaveAsync();
+
+            return Ok("Job application approved successfully");
+        }
+        [Authorize(Roles = SD.ROLE_COMPANY)]
+        [HttpPatch("reject/job/{jobId}/user/{userId}")]
+        public async Task<IActionResult> RejectJobApplication(int jobId, string userId)
+        {
+            var jobApplication = await _unitOfWork.JobApplications.GetByIdAsync(new { jobId, userId });
+
+            if (jobApplication == null)
+            {
+                return NotFound(new { message = "Job application not found" });
+            }
+
+            jobApplication.IsApproved = false; // Update approval status
+
+            _unitOfWork.JobApplications.Update(jobApplication);
+            await _unitOfWork.SaveAsync();
+
+            return Ok("Job application rejected successfully");
+        }
     }
 }

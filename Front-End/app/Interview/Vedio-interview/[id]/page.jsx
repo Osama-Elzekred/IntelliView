@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-
+import { StartInterview } from '../../../components/components';
 function MainComponent() {
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [isListVisible, setIsListVisible] = React.useState(true);
@@ -24,7 +24,7 @@ function MainComponent() {
   ];
 
   const questionList = fullQuestionList.slice(0, currentIndex + 1);
-
+  const [CurrentStep, setCurrentStep] = React.useState(1);
   const selectedQuestion = questionList[currentIndex];
   const progressIndicator = `Question ${currentIndex + 1} of ${
     fullQuestionList.length
@@ -52,7 +52,24 @@ function MainComponent() {
     .toString()
     .padStart(2, '0')}`;
 
-  return (
+  const RenderStep = () => {
+    switch (CurrentStep) {
+      case 1:
+        return (
+          <StartInterview
+            title="Welcome to the interview"
+            subtitle="We are excited to have you here. Let's get started with the interview."
+            startButtonText="Start Interview"
+            onInitiateConversation={() => setCurrentStep(2)}
+          />
+        );
+      case 2:
+        return InterviewStep;
+      default:
+        return null;
+    }
+  };
+  const InterviewStep = (
     <div className="flex flex-col lg:flex-row w-full">
       <div
         className={`bg-white overflow-hidden shadow-lg h-full transition-all ease-in-out duration-500 ${
@@ -159,6 +176,7 @@ function MainComponent() {
       </div>
     </div>
   );
+  return RenderStep();
 }
 
 export default MainComponent;

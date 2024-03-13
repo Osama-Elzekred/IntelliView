@@ -18,10 +18,34 @@ namespace IntelliView.DataAccess.Services
         {
             Configuration = configuration;
         }
-
-        public Task<string> UploadFile(IFormFile file)
+        [Obsolete]
+        public async Task<string> UploadFile(IFormFile file)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
+                cloudinary.Api.Secure = true;
+
+                var uploadParams = new RawUploadParams
+                {
+                    File = new FileDescription(file.FileName, file.OpenReadStream()),
+                    PublicId = Path.GetFileNameWithoutExtension(file.FileName), // Optionally, set the PublicId
+                    Overwrite = true
+                };
+
+                var uploadResult = await cloudinary.UploadAsync(uploadParams);
+                if (uploadResult != null && uploadResult.SecureUri != null)
+                    return uploadResult.SecureUri.ToString();
+                else
+                {
+                    return String.Empty;
+                }
+            }
+            catch (Exception)
+            {
+                return String.Empty;
+            }
+
         }
 
         [Obsolete]
@@ -32,6 +56,13 @@ namespace IntelliView.DataAccess.Services
 
                 Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
                 cloudinary.Api.Secure = true;
+
+                Transformation transformation = new Transformation()
+                    .Width(500)
+                    .Crop("scale")
+                    .Quality("auto")
+                    .FetchFormat("auto");
+                cloudinary.Api.UrlImgUp.Transform(transformation).BuildImageTag(image.FileName);
 
                 var uploadParams = new ImageUploadParams()
                 {
@@ -49,15 +80,44 @@ namespace IntelliView.DataAccess.Services
                     return String.Empty;
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return String.Empty;
             }
         }
 
-        public Task<string> UploadVideo(IFormFile video)
+        [Obsolete]
+        public async Task<string> UploadVideo(IFormFile videoFile)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
+                cloudinary.Api.Secure = true;
+
+                cloudinary.Api.UrlVideoUp.Transform(new Transformation()
+                  .Width(500).Crop("scale").Chain()
+                  .Quality(35).Chain()
+                  .FetchFormat("auto")).BuildVideoTag("intersection_aerial");
+
+                var uploadParams = new VideoUploadParams
+                {
+                    File = new FileDescription(videoFile.FileName, videoFile.OpenReadStream()),
+                    PublicId = Path.GetFileNameWithoutExtension(videoFile.FileName), // Optionally, set the PublicId
+                    Overwrite = true
+                };
+
+                var uploadResult = await cloudinary.UploadAsync(uploadParams);
+                if(uploadResult != null && uploadResult.SecureUri !=null )
+                return uploadResult.SecureUri.ToString();
+                else
+                {
+                    return String.Empty;
+                }
+            }
+            catch (Exception)
+            {
+                return String.Empty;
+            }
         }
     }
 }

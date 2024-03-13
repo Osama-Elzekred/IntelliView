@@ -49,7 +49,10 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
                 _db.JobApplications.Remove(userApplication);
             }
         }
-
+        public async Task<JobApplication> GetApplicationByIdAsync(int jobId, string userId)
+        {
+            return await _db.JobApplications.FindAsync(jobId, userId);
+        }
         //get user applied jobs with its status
         public async Task<IEnumerable<GetAppliedJobsDTO>> GetAppliedJobsAsync(string userId)
         {
@@ -77,7 +80,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
                         UpdatedAt = ua.Job.UpdatedAt,
                         EndedAt = ua.Job.EndedAt,
                     },
-                    Status = ua.Status
+                    Status = ua.Status.ToString()
                 })
                 .ToListAsync();
             return userApplications;

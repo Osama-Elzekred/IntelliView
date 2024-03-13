@@ -141,6 +141,7 @@ function Apply({ params }) {
       );
 
       if (response.ok) {
+        handleNext();
         console.log('Answers submitted successfully!');
         // Optionally, handle success response from the backend
       } else {

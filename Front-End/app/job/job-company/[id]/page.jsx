@@ -8,107 +8,96 @@ import { HiAdjustments, HiClipboardList, HiUserCircle } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
 import Cookies from 'js-cookie';
 
-
-export default function JobApplicants() {
+export default function JobApplicants({params}) {
   const DOMAIN_NAME = '//localhost:7049/api';
-  const [allApplicants, setAllApplicants] = useState([
-    { name: "John Doe", email: "ABC Company",position:"react", location: "New York", status: "Pending" },
-    { name: "Jane Smith", email: "XYZ Corporation", position:"react",location: "Los Angeles", status: "Approved" },
-    { name: "Mike Johnson", email: "123 Industries", position:"react",location: "Chicago", status: "Rejected" }
-  ]);
-  const [approvedApplicants, setApprovedApplicants] = useState([
-    { name: "Jane Smith", email: "ABC Company",position:"react", location: "Los Angeles", status: "Approved" },
-    { name: "Sarah Williams", email: "ABC Company",position:"react", location: "San Francisco", status: "Approved" },
-    { name: "Alex Brown", email: "ABC Company",position:"react", location: "Seattle", status: "Approved" }
-  ]);
-
-  const [rejectedApplicants, setRejectedApplicants] = useState([]);
+  const authToken = Cookies.get('authToken');
+  const [data, setData] = useState([]);
+  const [allApplications, setAllApplications] = useState([]);
+  const [approvedApplications, setApprovedApplications] = useState([]);
   useEffect(() => {
-    fetchApplicants('all');
-    fetchApplicants('approved');
-  }, []);
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          `https://${DOMAIN_NAME}/JobApplication/Applications/` + params.id,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
 
-  const fetchApplicants = async (type) => {
-    try {
-      const authToken = Cookies.get('authToken');
+        // Process each application and extract jobId and userId
+        result.forEach(application => {
+          const { jobId, userId } = application;
+          // Call handleApprove function with jobId, userId, and onActionSuccess
+          handleApprove(jobId, userId);
+          // Call handleReject function with jobId, userId, and onActionSuccess
+          handleReject(jobId, userId);
+        });
       
-      // Assuming you have an endpoint to fetch applicants data based on type
-      const response = await fetch(`https://${DOMAIN_NAME}/applicants?type=${type}`);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch ${type} applicants data`);
+      // Set the fetched data to the state
+      setData(result);
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-      const data = await response.json();
-      if (type === 'all') {
-        setAllApplicants(data);
-      } else if (type === 'approved') {
-        setApprovedApplicants(data);
-      }
-    } catch (error) {
-      console.error(`Error fetching ${type} applicants:`, error);
-    }
-  };
-  const handleApprove = async (applicantId) => {
-    try {
-      const authToken = Cookies.get('authToken');
-      // Assuming you have an endpoint to update the approval status of an applicant
-      const response = await fetch(`https://${DOMAIN_NAME}/applicants/${applicantId}/approve`, {
-        method: 'PATCH', // Assuming PATCH method is used for updating the approval status
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`, // Include authorization token if required
-        },
-        // You can include any additional data needed to update the approval status in the request body
-        body: JSON.stringify({ approved: true }), // Example: Send approved status as true
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to approve applicant');
-      }
-  
-      // Handle success response from the backend
-      console.log('Applicant approved successfully!');
-      // Optionally, you can update the UI to reflect the approval status
-    } catch (error) {
-      console.error('Error approving applicant:', error);
-      // Handle error scenario
-    }
-  };
-  // Function to handle rejection
-  const handleReject = async (applicantId) => {
-    try {
-      const authToken = Cookies.get('authToken');
-      // Assuming you have an endpoint to update the approval status of an applicant
-      const response = await fetch(`https://${DOMAIN_NAME}/applicants/${applicantId}/reject`, {
-        method: 'PATCH', // Assuming PATCH method is used for updating the approval status
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`, // Include authorization token if required
-        },
-        // You can include any additional data needed to update the approval status in the request body
-        body: JSON.stringify({ approved: false }), // Example: Send approved status as true
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to approve applicant');
-      }
-  
-      // Handle success response from the backend
-      console.log('Applicant approved successfully!');
-      // Optionally, you can update the UI to reflect the approval status
-    } catch (error) {
-      console.error('Error approving applicant:', error);
-      // Handle error scenario
-    }
-  };
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Filter applicants based on search query
-    const filtered = allApplicants.filter(applicant =>
-      applicant.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredApplicants(filtered);
-  };
+    };
 
+    fetchData();
+  }, []);
+  useEffect(() => {
+    // Filter data based on isApproved property
+    const all = data.filter(application => true);
+    const approved = data.filter(application => application.isApproved);
+
+    // Update state with filtered data
+    setAllApplications(all);
+    setApprovedApplications(approved);
+  }, [data]);
+
+    const handleApprove = async (jobId, userId) => {
+      try {
+        const response = await fetch(`https://${DOMAIN_NAME}/JobApplication/approve/job/${jobId}/user/${userId}`, {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to approve job application');
+        }
+  
+        // Handle success response
+      } catch (error) {
+        console.error('Error approving job application:', error);
+      }
+    };
+  
+    const handleReject = async (jobId, userId) => {
+      try {
+        const response = await fetch(`https://${DOMAIN_NAME}/JobApplication/reject/job/${jobId}/user/${userId}`, {
+          method: 'PATCH',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Failed to reject job application');
+        }
+  
+        // Handle success response
+      } catch (error) {
+        console.error('Error rejecting job application:', error);
+      }
+    };
   return (
     <Layout>
       <>
@@ -174,12 +163,12 @@ export default function JobApplicants() {
                       </tr>
                     </thead>
                     <tbody>
-                    {allApplicants.map((applicant, index) => (
+                    {allApplications.map((applicant, index) => (
                       <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                           <img className="w-10 h-10 rounded-full" src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt="image" />
                           <div className="ps-3">
-                            <div className="text-base font-semibold">{applicant.name}</div>
+                            <div className="text-base font-semibold">{applicant.fullName}</div>
                             <div className="font-normal text-gray-500">{applicant.email}</div>
                           </div>
                         </th>
@@ -190,7 +179,7 @@ export default function JobApplicants() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <button onClick={() => handleApprove(applicant.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                          <button onClick={() => handleApprove(applicant.jobId, applicant.userId)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                             Approve
                           </button>
                         </td>
@@ -202,7 +191,7 @@ export default function JobApplicants() {
 
                 <div className="row pagination-wrap">
                   <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
-                    <span id="paginationInfo">Showing {allApplicants.length} Applicants</span>
+                    <span id="paginationInfo">Showing {allApplications.length} Applicants</span>
                   </div>
                 </div>
               </div>
@@ -228,12 +217,12 @@ export default function JobApplicants() {
                             </tr>
                           </thead>
                           <tbody>
-                          {approvedApplicants.map((applicant, index) => (
+                          {approvedApplications.map((applicant, index) => (
                             <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                               <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                                 <img className="w-10 h-10 rounded-full" src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt="image" />
                                 <div className="ps-3">
-                                  <div className="text-base font-semibold">{applicant.name}</div>
+                                  <div className="text-base font-semibold">{applicant.fullName}</div>
                                   <div className="font-normal text-gray-500">{applicant.email}</div>
                                 </div>
                               </th>
@@ -244,7 +233,7 @@ export default function JobApplicants() {
                                 </div>
                               </td>
                               <td className="px-6 py-4">
-                                <button onClick={() => handleReject(applicant.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">
+                                <button onClick={() => handleReject(applicant.jobId, applicant.userId)} className="font-medium text-red-600 dark:text-red-500 hover:underline">
                                   Reject
                                 </button>
                               </td>
@@ -255,7 +244,7 @@ export default function JobApplicants() {
                       </div>
                 <div className="row pagination-wrap">
                   <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
-                    <span id="paginationInfo">Showing {approvedApplicants.length} Applicants</span>
+                    <span id="paginationInfo">Showing {approvedApplications.length} Applicants</span>
                   </div>
                 </div>
               </div>
@@ -285,3 +274,5 @@ export default function JobApplicants() {
     </Layout>
   );
 }
+
+

@@ -9,13 +9,9 @@ namespace IntelliView.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        private readonly IEmailSender _emailSender;
-        private readonly IVerifyService _verifyService;
-        public AuthController(IAuthService authService, IEmailSender emailSender, IVerifyService verifyService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
-            _emailSender = emailSender;
-            _verifyService = verifyService;
         }
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO model)

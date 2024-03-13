@@ -18,7 +18,8 @@ namespace IntelliView.API.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         public readonly IWebHostEnvironment _webHostEnvironment;
         public IMapper _mapper { get; }
-        public ProfileController(UserManager<ApplicationUser> userManager, IWebHostEnvironment webHostEnvironment, IMapper mapper)
+        public ProfileController(UserManager<ApplicationUser> userManager, 
+            IWebHostEnvironment webHostEnvironment, IMapper mapper)
         {
             _mapper = mapper;
             _userManager = userManager;
@@ -119,7 +120,7 @@ namespace IntelliView.API.Controllers
 
             return BadRequest("No file or user found.");
         }
-
+        
         [HttpPatch("updateCV")]
         [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> UploadCV(IFormFile file)

@@ -1,8 +1,11 @@
-﻿using IntelliView.API.Errors;
+﻿using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
+using IntelliView.API.Errors;
 using IntelliView.API.Infrastructure;
 using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace IntelliView.API.Controllers
@@ -10,10 +13,18 @@ namespace IntelliView.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize(Roles = SD.ROLE_COMPANY)]
-    public class TestController(IAiSearchService aiBasedSearchService, IWebHostEnvironment _webHostEnvironment) : ControllerBase
+    public class TestController: ControllerBase
     {
-        private readonly IAiSearchService _aiBasedSearchService = aiBasedSearchService;
-        public readonly IWebHostEnvironment _webHostEnvironment = _webHostEnvironment;
+        private readonly IAiSearchService _aiBasedSearchService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IConfiguration Configuration;
+        public TestController(IConfiguration configuration,IAiSearchService aiBasedSearchService,
+             IWebHostEnvironment webHostEnvironment) 
+        {
+            Configuration = configuration;
+            _aiBasedSearchService = aiBasedSearchService;
+            _webHostEnvironment = webHostEnvironment;
+        }
 
         [HttpGet]
         public string Get()
@@ -52,6 +63,32 @@ namespace IntelliView.API.Controllers
             return Ok(response);
         }
 
+        [HttpPost("cloudinary")]
+        public async Task<IActionResult> TestCloudinary(IFormFile file)
+        {
+            try
+            {
+
+                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
+                cloudinary.Api.Secure = true;
+
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(file.FileName, file.OpenReadStream()),
+                    UseFilename = true,
+                    UniqueFilename = false,
+                    Overwrite = true
+                };
+
+                var uploadResult = await cloudinary.UploadAsync(uploadParams);
+                return Ok(uploadResult);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
         private List<InterviewResponse> ParseGeminiApiResponse(string apiResponse)
         {
             // Split the API response by "**Question:**" to separate questions and answers
@@ -75,8 +112,8 @@ namespace IntelliView.API.Controllers
                 var parts = trimmedPair.Split("**Answer:**");
 
                 // Trim any leading/trailing whitespace from the question and answer
-                string question = parts[0]?.Trim();
-                string answer = parts.Length > 1 ? parts[1]?.Trim() : ""; // Handle cases where no answer is provided
+                string question = parts[0].Trim();
+                string answer = parts.Length > 1 ? parts[1].Trim() : ""; // Handle cases where no answer is provided
 
                 // Create an InterviewResponse object and add it to the list
                 interviewResponses.Add(new InterviewResponse
@@ -94,10 +131,10 @@ namespace IntelliView.API.Controllers
         public class InterviewResponse
         {
             [JsonProperty("Question")]
-            public string Question { get; set; }
+            public string? Question { get; set; }
 
             [JsonProperty("Answer")]
-            public string Answer { get; set; }
+            public string? Answer { get; set; }
         }
 
 

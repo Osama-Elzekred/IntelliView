@@ -212,9 +212,9 @@ export default function login() {
           </section>
           <div className=" bg-white">
             <div className="container">
-              <div class="font-[sans-serif] text-[#333]">
-                <div class="min-h-screen flex flex-col items-center justify-center">
-                  <div class="grid md:grid-cols-2 items-center gap-4 max-w-6xl w-full p-4 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
+              <div className="font-[sans-serif] text-[#333]">
+                <div className="min-h-screen flex flex-col items-center justify-center">
+                  <div className="grid md:grid-cols-2 items-center gap-4 max-w-6xl w-full p-4 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
                     {isFlipped ? (
                       <form className="form2" onSubmit={handleSubmit}>
                         <div className="w-full  p-6">
@@ -294,11 +294,11 @@ export default function login() {
                           {messageOfWrong && (
                             <div
                               id="alert-2"
-                              class="flex items-center mt-3 p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                              className="flex items-center mt-3 p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
                               role="alert"
                             >
                               <svg
-                                class="flex-shrink-0 w-4 h-4"
+                                className="flex-shrink-0 w-4 h-4"
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor"
@@ -306,8 +306,8 @@ export default function login() {
                               >
                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                               </svg>
-                              <span class="sr-only">Info</span>
-                              <div class="ms-3 text-sm font-medium">
+                              <span className="sr-only">Info</span>
+                              <div className="ms-3 text-sm font-medium">
                                 {messageOfWrong}
                               </div>
                             </div>
@@ -324,12 +324,12 @@ export default function login() {
                           <div className="space-x-8 flex justify-center mt-6 mb-3">
                             <button
                               type="button"
-                              class="border-none outline-none"
+                              className="border-none outline-none"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="30px"
-                                class="inline"
+                                className="inline"
                                 viewBox="0 0 512 512"
                               >
                                 <path
@@ -366,7 +366,7 @@ export default function login() {
                             </button>
                             <button
                               type="button"
-                              class="border-none outline-none"
+                              className="border-none outline-none"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -382,7 +382,7 @@ export default function login() {
                             </button>
                             <button
                               type="button"
-                              class="border-none outline-none"
+                              className="border-none outline-none"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -499,9 +499,9 @@ export default function login() {
 
                           <p
                             id="filled_error_help"
-                            class="mt-2 text-xs text-red-600 dark:text-red-400"
+                            className="mt-2 text-xs text-red-600 dark:text-red-400"
                           >
-                            <span class="font-medium"></span>{' '}
+                            <span className="font-medium"></span>{' '}
                             <div id="messageOfEmptyUp" />
                             <div id="messageOfNotMatch" />
                             <div id="messageFromServer" />
@@ -518,11 +518,11 @@ export default function login() {
                           {messageFromServer && (
                             <div
                               id="alert-2"
-                              class="flex items-center mt-3 p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
+                              className="flex items-center mt-3 p-4 mb-4 text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
                               role="alert"
                             >
                               <svg
-                                class="flex-shrink-0 w-4 h-4"
+                                className="flex-shrink-0 w-4 h-4"
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor"
@@ -530,8 +530,8 @@ export default function login() {
                               >
                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
                               </svg>
-                              <span class="sr-only">Info</span>
-                              <div class="ms-3 text-sm font-medium">
+                              <span className="sr-only">Info</span>
+                              <div className="ms-3 text-sm font-medium">
                                 {messageFromServer}
                               </div>
                             </div>
@@ -563,12 +563,12 @@ export default function login() {
                           <div className="space-x-8 flex justify-center mt-6">
                             <button
                               type="button"
-                              class="border-none outline-none"
+                              className="border-none outline-none"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="30px"
-                                class="inline"
+                                className="inline"
                                 viewBox="0 0 512 512"
                               >
                                 <path
@@ -605,7 +605,7 @@ export default function login() {
                             </button>
                             <button
                               type="button"
-                              class="border-none outline-none"
+                              className="border-none outline-none"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -621,7 +621,7 @@ export default function login() {
                             </button>
                             <button
                               type="button"
-                              class="border-none outline-none"
+                              className="border-none outline-none"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -639,10 +639,10 @@ export default function login() {
                         </div>
                       </form>
                     )}
-                    <div class="md:h-full max-md:mt-10 bg-[#000842] rounded-xl lg:p-12 p-8">
+                    <div className="md:h-full max-md:mt-10 bg-[#000842] rounded-xl lg:p-12 p-8">
                       <img
                         src="https://readymadeui.com/signin-image.webp"
-                        class="w-full h-full object-contain"
+                        className="w-full h-full object-contain"
                         alt="login-image"
                       />
                     </div>

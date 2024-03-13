@@ -49,7 +49,9 @@ namespace ANWAAR.CORE
             //CreateMap<InterviewVideo, InterviewVideoDTO>();
             //CreateMap<AddInterviewMockDTO, InterviewMock>().ReverseMap();
 
-            CreateMap<DisplayInterviewMockDto, InterviewMock>().ReverseMap();
+            CreateMap<DisplayInterviewMockDto, InterviewMock>()
+            .ForMember(dest => dest.Level, opt => opt.MapFrom(src => src.Level.ToString()))
+            .ReverseMap();
             CreateMap<AddInterviewTopicDTO, InterviewMockTopic>().ReverseMap();
 
             CreateMap<AddInterviewMockDTO, InterviewMock>()

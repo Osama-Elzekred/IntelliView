@@ -1,26 +1,42 @@
-'use client';
-import Layout from '../components/Layout';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
-import CardComp from '../components/Card';
-export default function Jobs() {
-  const imageURl = 'images/job_logo_1.jpg';
+"use client";
+import Layout from "../../components/Layout";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { HiCheck, HiClock } from "react-icons/hi";
+import CardComp from "../../components/Card";
+export default function userJobs() {
+ 
   const [jobListings, setJobListings] = useState([]);
-  const [searchResult, setSearchResult] = useState([]);
-  const [totalPages, setTotalPages] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [jobs, setJobs] = useState([]);
-  const jobsPerPage = 5;
-  const [test, setTest] = useState(false);
+  useEffect(() => {
+      const fetchJobs = async () => {
+      const authToken = Cookies.get('authToken');
+      try {
+          const response = await fetch(`https://${DOMAIN_NAME}/JobApplication/UserApplications`, {
+          method: 'GET',
+          headers: {
+              Authorization: `Bearer ${authToken}`,
+          },
+          });
+          if (response.ok) {
+          const jobs = await response.json();
+          setJobListings(jobs);
+          }
+      } catch (error) {
+          console.log('error : ', error);
+      }
+      };
+      fetchJobs();
+    }, []);
   const [searchForm, setSearchForm] = useState({
-    title: '',
-    jobType: '',
-    jobTime: '',
+    title: "",
+    jobType: "",
+    jobTime: "",
   });
   const handleChange = async (field, value) => {
     setSearchForm({ ...searchForm, [field]: value });
   };
+  const [test, setTest] = useState(false);
   const handleSearch = async () => {
     setTest(true);
     const filteredJobs = jobListings.filter((job) => {
@@ -50,33 +66,16 @@ export default function Jobs() {
     setSearchResult(filteredJobs);
     setCurrentPage(1);
     document
-      .getElementById('job-listings')
-      .scrollIntoView({ behavior: 'smooth' });
+      .getElementById("job-listings")
+      .scrollIntoView({ behavior: "smooth" });
   };
+  const [searchResult, setSearchResult] = useState([]);
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [jobs, setJobs] = useState([]);
+  const jobsPerPage = 5;
 
   useEffect(() => {
-    const fetchJobs = async () => {
-      const authToken = Cookies.get('authToken');
-      try {
-        const response = await fetch('https://localhost:7049/api/Job/GetAll', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-        if (response.ok) {
-          const jobs = await response.json();
-          setJobListings(jobs);
-        }
-      } catch (error) {
-        console.log('error : ', error);
-      }
-    };
-    fetchJobs();
-  }, [currentPage, searchResult]);
-
-  // setTime out to make delay until the data come from server to store it in jobs . #hossam
-  setTimeout(() => {
     if (
       searchResult.length > 0 ||
       (searchResult.length === 0 && test === true)
@@ -94,14 +93,13 @@ export default function Jobs() {
       const endIndex = Math.min(startIndex + jobsPerPage, jobListings.length);
       setJobs(jobListings.slice(startIndex, endIndex));
     }
-  }, 1);
-
+  }, [currentPage, searchResult]);
   const changePage = (page) => {
     setCurrentPage(page);
     setTimeout(() => {
       document
-        .getElementById('job-listings')
-        .scrollIntoView({ behavior: 'smooth' });
+        .getElementById("job-listings")
+        .scrollIntoView({ behavior: "smooth" });
     }, 200);
   };
 
@@ -110,8 +108,8 @@ export default function Jobs() {
       setCurrentPage(currentPage - 1);
       setTimeout(() => {
         document
-          .getElementById('job-listings')
-          .scrollIntoView({ behavior: 'smooth' });
+          .getElementById("job-listings")
+          .scrollIntoView({ behavior: "smooth" });
       }, 200);
     } else if (currentPage === 1) {
       setCurrentPage(currentPage);
@@ -123,8 +121,8 @@ export default function Jobs() {
       setCurrentPage(currentPage + 1);
       setTimeout(() => {
         document
-          .getElementById('job-listings')
-          .scrollIntoView({ behavior: 'smooth' });
+          .getElementById("job-listings")
+          .scrollIntoView({ behavior: "smooth" });
       }, 200);
     }
   };
@@ -139,7 +137,7 @@ export default function Jobs() {
               </div>
             </div>
             <div className="site-mobile-menu-body" />
-          </div>{' '}
+          </div>{" "}
           {/* .site-mobile-menu */}
           {/* NAVBAR */}
           {/* HOME */}
@@ -165,7 +163,7 @@ export default function Jobs() {
                           className="form-control form-control-lg"
                           placeholder="Job title, Company..."
                           onChange={(e) => {
-                            handleChange('title', e.target.value);
+                            handleChange("title", e.target.value);
                           }}
                         />
                       </div>
@@ -176,18 +174,17 @@ export default function Jobs() {
                           data-width="100%"
                           title=" Remote/On Site Job "
                           onChange={(e) => {
-                            handleChange('jobType', e.target.value);
+                            handleChange("jobType", e.target.value);
                           }}
                         >
                           <option>Remote</option>
                           <option>On Site</option>
-                          <option>Hybrid</option>
                         </select>
                       </div>
                       <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
                         <select
                           onChange={(e) => {
-                            handleChange('jobTime', e.target.value);
+                            handleChange("jobTime", e.target.value);
                           }}
                           className="selectpicker"
                           data-style="btn-white btn-lg"
@@ -247,7 +244,7 @@ export default function Jobs() {
                     {searchResult.length > 0 ||
                     (searchResult.length === 0 && test === true)
                       ? searchResult.length
-                      : jobListings.length}{' '}
+                      : jobListings.length}{" "}
                     Job Listed
                   </h2>
                 </div>
@@ -262,7 +259,8 @@ export default function Jobs() {
                     employmentType={job.jobType}
                     categories={job.jobInterestedTopic} // There's no equivalent in the jobData
                     jobTime={job.jobTime}
-                    companyImageUrl={imageURl}
+                    status={job.status}
+                    companyImageUrl={job.imageURl}
                     onClick={() => (window.location.href = `/job/${job.id}`)}
                   />
                 ))}
@@ -270,11 +268,13 @@ export default function Jobs() {
               <div className="row pagination-wrap">
                 <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
                   <span>
-                    Showing {jobs.length === 0 ? (0) : (jobs.length - (jobs.length-1))}-{jobs.length} Of{' '}
+                    Showing{" "}
+                    {jobs.length === 0 ? 0 : jobs.length - (jobs.length - 1)}-
+                    {jobs.length} Of{" "}
                     {searchResult.length > 0 ||
                     (searchResult.length === 0 && test === true)
                       ? searchResult.length
-                      : jobListings.length}{' '}
+                      : jobListings.length}{" "}
                     Jobs
                   </span>
                 </div>
@@ -289,22 +289,24 @@ export default function Jobs() {
                       <Link
                         key={page + 1}
                         href="#"
-                        className={page + 1 === currentPage ? 'active' : ''}
+                        className={page + 1 === currentPage ? "active" : ""}
                         onClick={() => changePage(page + 1)}
                       >
                         {page + 1}
                       </Link>
                     ))}
-                    {currentPage !==
-                      Math.ceil(
-                        (searchResult.length > 0
-                          ? searchResult.length
-                          : jobListings.length) / jobsPerPage
-                      )  && (
-                      <Link href="#" className="next" onClick={nextPage}>
-                        Next
-                      </Link>
-                    )}
+                    {searchResult.length > 0 || jobListings.length > 0
+                      ? currentPage !==
+                          Math.ceil(
+                            (searchResult.length > 0
+                              ? searchResult.length
+                              : jobListings.length) / jobsPerPage
+                          ) && (
+                          <Link href="#" className="next" onClick={nextPage}>
+                            Next
+                          </Link>
+                        )
+                      : null}
                   </div>
                 </div>
               </div>

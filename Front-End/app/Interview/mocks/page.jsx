@@ -1,8 +1,11 @@
 'use client';
 import React from 'react';
 import Layout from '../../components/Layout';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 
 function MainComponent() {
+  const [fristTime, setFristTime] = useState(true);
   const [questionSets, setQuestionSets] = React.useState([
     {
       icon: 'fa-star',
@@ -37,39 +40,191 @@ function MainComponent() {
       bgColor: 'bg-[#a78bfa]',
     },
   ]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [occupations, setOccupations] = React.useState([
-    { icon: 'fa-calculator', title: 'Accounting & Financial Operations' },
-    { icon: 'fa-palette', title: 'Art & Design' },
-    { icon: 'fa-dna', title: 'Biotech' },
-    { icon: 'fa-headset', title: 'Customer Service & Success' },
-    { icon: 'fa-tshirt', title: 'Fashion Industry' },
-    { icon: 'fa-user-tie', title: 'Administrative Assistant' },
-    { icon: 'fa-bullhorn', title: 'Advertising Industry' },
-    { icon: 'fa-plane', title: 'Aviation & Aerospace Industry' },
-    { icon: 'fa-hard-hat', title: 'Banking (Retail)' },
-    { icon: 'fa-tools', title: 'Construction Trades' },
-    { icon: 'fa-comments', title: 'Communications' },
-    { icon: 'fa-fire', title: 'Energy Sector' },
-    { icon: 'fa-gears', title: 'Engineering' },
-    { icon: 'fa-landmark', title: 'Financial Services Industry' },
-    { icon: 'fa-stethoscope', title: 'Healthcare' },
-  ]);
-
+  const IconClasses = [
+    'fa-calculator',
+    'fa-palette',
+    'fa-dna',
+    'fa-headset',
+    'fa-tshirt',
+    'fa-user-tie',
+    'fa-bullhorn',
+    'fa-plane',
+    'fa-hard-hat',
+    'fa-tools',
+    'fa-comments',
+    'fa-fire',
+    'fa-gears',
+    'fa-landmark',
+    'fa-stethoscope',
+  ];
+  const [Topics, setTopics] = React.useState([]);
+  const [interviewMocks, setInterviewMocks] = useState([]);
+  const [ClickedTopicIcon, setClickedTopicIcon] = React.useState('');
   const [selectedSet, setSelectedSet] = React.useState(null);
-  const [selectedOccupation, setSelectedOccupation] = React.useState(null);
+  const [selectedTopic, setSelectedTopic] = React.useState(null);
   const [filter, setFilter] = React.useState('');
   const [difficulty, setDifficulty] = React.useState('entry');
+  const [currentStep, setCurrentStep] = React.useState(1);
 
+  const fetchTopics = async () => {
+    await fetch('https://localhost:7049/api/InterviewMock/allInterviewTopics')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        data.forEach((topic) => {
+          topic.IconClass = topic.IconClass =
+            IconClasses[Math.floor(Math.random() * IconClasses.length)];
+        });
+
+        setTopics(data);
+      })
+      .catch((error) =>
+        console.error(
+          'There has been a problem with your fetch operation:',
+          error
+        )
+      );
+  };
+  const fetchMocks = (id) => {
+    setIsLoading(true);
+    fetch(
+      `https://localhost:7049/api/InterviewMock/GetInterviewMocks/${parseInt(
+        id
+      )}`
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setInterviewMocks(
+          data.map((item) => ({
+            Id: item.id, // Changed to lowercase
+            Title: item.title, // Changed to lowercase
+            Description: item.description, // Changed to lowercase
+            Level: item.level, // Changed to lowercase
+          }))
+        );
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error(
+          'There has been a problem with your fetch operation:',
+          error
+        );
+        setIsLoading(false);
+      });
+  };
+  useEffect(() => {
+    if (fristTime) {
+      setFristTime(false);
+      fetchTopics();
+    }
+    if (currentStep === 2) {
+      setIsLoading(true);
+      fetchMocks(selectedTopic);
+      setIsLoading(false);
+    }
+  }, [currentStep, selectedTopic]); // This effect runs whenever currentStep or selectedTopic changes
+  // useEffect(() => {
+  //   console.log(interviewMocks, 'interviewMocks');
+  // }, [interviewMocks]); // This effect runs whenever interviewMocks changes
   const handleSetClick = (title) => setSelectedSet(title);
-  const handleOccupationClick = (title) => setSelectedOccupation(title);
+  const handleTopicClick = (id, IconClass) => {
+    setSelectedTopic(id);
+    setClickedTopicIcon(IconClass);
+    setCurrentStep(2);
+  };
   const handleFilterChange = (e) => setFilter(e.target.value);
   const handleDifficultyChange = (e) => setDifficulty(e.target.value);
 
-  const filteredOccupations = occupations.filter((occupation) =>
-    occupation.title.toLowerCase().includes(filter.toLowerCase())
+  const filteredOccupations = Topics.filter((occupation) =>
+    occupation.topic.toLowerCase().includes(filter.toLowerCase())
+  );
+  const filteredMocks = interviewMocks.filter(
+    (mock) =>
+      mock.Title && mock.Title.toLowerCase().includes(filter.toLowerCase())
   );
 
+  const TopicStep = (
+    <>
+      {filteredOccupations.map((Topic) => (
+        <div
+          key={Topic.id}
+          className={`flex flex-col items-center text-center p-4 bg-gray-50 rounded shadow cursor-pointer ${
+            selectedTopic === Topic.topic
+              ? 'ring-2 ring-offset-2 ring-[#6366F1]'
+              : 'hover:bg-gray-100'
+          }`}
+          onClick={() => handleTopicClick(Topic.id, Topic.IconClass)}
+        >
+          <i
+            className={`fas ${Topic.IconClass} text-3xl mb-3 text-gray-700`}
+          ></i>
+          <p className="font-semibold text-sm text-[#121212]">{Topic.topic}</p>
+        </div>
+      ))}
+    </>
+  );
+
+  const StepTwo = (
+    <>
+      {/* <p className="font-semibold text-sm text-100">
+        {isLoading && 'Please Wait...'}
+      </p> */}
+      {filteredMocks.map((Mock) => (
+        <>
+          <div
+            key={Mock.Id}
+            href={`/Interview/Vedio-interview/${Mock.Id}`}
+            className={`inline-flex flex-col items-center text-center p-4 bg-gray-50 rounded shadow cursor-pointer ${
+              selectedTopic === Mock.topic
+                ? 'ring-2 ring-offset-2 ring-[#6366F1]'
+                : 'hover:bg-gray-100'
+            }`}
+          >
+            <i
+              className={`fas ${ClickedTopicIcon} text-3xl mb-3 text-gray-700`}
+            ></i>
+            <Link href={`/Interview/Vedio-interview/${Mock.Id}`}>
+              <p className="font-semibold text-sm text-[#121212] line-clamp-2 w-full max-w-40 ">
+                {Mock.Title}
+                <br />
+                <span className="font-normal text-sm text-[#121212] line-clamp-1">{`(${Mock.Level})`}</span>
+              </p>
+            </Link>
+            <p className="text-sm text-gray-500 line-clamp-2 w-full max-w-md">
+              {Mock.Description}
+            </p>
+          </div>
+        </>
+      ))}
+    </>
+  );
+  const renderSteps = () => {
+    switch (currentStep) {
+      case 1:
+        return TopicStep;
+      case 2:
+        return StepTwo;
+      default:
+        return (
+          <div>
+            {/* <h3 className="font-semibold mb-4 text-[#17a9c3]">Thank you!</h3> */}
+            <p>NO mocks available</p>
+            <Link href="/job">Back to job list</Link>
+          </div>
+        );
+    }
+  };
   return (
     <Layout>
       <>
@@ -77,8 +232,8 @@ function MainComponent() {
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
           integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer"
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
         />
 
         <div className="site-mobile-menu site-navbar-target">
@@ -136,7 +291,12 @@ function MainComponent() {
           <div className="lg:w-3/4 bg-white rounded-lg shadow p-4">
             <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
               <h2 className="flex-1 text-lg font-semibold text-[#121212]">
-                Most Popular Occupations
+                {currentStep !== 1 && (
+                  <i
+                    className="fa-solid fa-chevron-left  cursor-pointer  text-2xl"
+                    onClick={() => setCurrentStep(currentStep - 1)}
+                  ></i>
+                )}
               </h2>
               <div className="flex-1 max-w-md">
                 <div className="flex items-center bg-gray-100 rounded overflow-hidden">
@@ -164,24 +324,7 @@ function MainComponent() {
               </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {filteredOccupations.map((occupation) => (
-                <div
-                  key={occupation.title}
-                  className={`flex flex-col items-center text-center p-4 bg-gray-50 rounded shadow cursor-pointer ${
-                    selectedOccupation === occupation.title
-                      ? 'ring-2 ring-offset-2 ring-[#6366F1]'
-                      : 'hover:bg-gray-100'
-                  }`}
-                  onClick={() => handleOccupationClick(occupation.title)}
-                >
-                  <i
-                    className={`fas ${occupation.icon} text-3xl mb-3 text-gray-700`}
-                  ></i>
-                  <p className="font-semibold text-sm text-[#121212]">
-                    {occupation.title}
-                  </p>
-                </div>
-              ))}
+              {renderSteps()}
             </div>
           </div>
         </div>

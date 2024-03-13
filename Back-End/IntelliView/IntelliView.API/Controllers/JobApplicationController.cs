@@ -289,7 +289,7 @@ namespace IntelliView.API.Controllers
         [HttpPatch("approve/job/{jobId}/user/{userId}")]
         public async Task<IActionResult> ApproveJobApplication(int jobId, string userId)
         {
-            var jobApplication = await _unitOfWork.JobApplications.GetByIdAsync(new {jobId,userId});
+            var jobApplication = await _unitOfWork.JobApplications.GetApplicationByIdAsync(jobId,userId);
 
             if (jobApplication == null)
             {
@@ -307,7 +307,7 @@ namespace IntelliView.API.Controllers
         [HttpPatch("reject/job/{jobId}/user/{userId}")]
         public async Task<IActionResult> RejectJobApplication(int jobId, string userId)
         {
-            var jobApplication = await _unitOfWork.JobApplications.GetByIdAsync(new { jobId, userId });
+            var jobApplication = await _unitOfWork.JobApplications.GetApplicationByIdAsync(jobId, userId);
 
             if (jobApplication == null)
             {

@@ -8,7 +8,6 @@ import { HiAdjustments, HiClipboardList, HiUserCircle } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
 import Cookies from 'js-cookie';
 
-
 export default function JobApplicants({params}) {
   const DOMAIN_NAME = '//localhost:7049/api';
   const authToken = Cookies.get('authToken');
@@ -31,7 +30,18 @@ export default function JobApplicants({params}) {
           throw new Error('Network response was not ok');
         }
         const result = await response.json();
-        setData(result);
+
+        // Process each application and extract jobId and userId
+        result.forEach(application => {
+          const { jobId, userId } = application;
+          // Call handleApprove function with jobId, userId, and onActionSuccess
+          handleApprove(jobId, userId);
+          // Call handleReject function with jobId, userId, and onActionSuccess
+          handleReject(jobId, userId);
+        });
+      
+      // Set the fetched data to the state
+      setData(result);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -49,10 +59,9 @@ export default function JobApplicants({params}) {
     setApprovedApplications(approved);
   }, [data]);
 
-  const ApproveRejectJobApplication = ({ applicationId, onActionSuccess }) => {
-    const handleApprove = async () => {
+    const handleApprove = async (jobId, userId) => {
       try {
-        const response = await fetch(`https:${DOMAIN_NAME}/JobApplication/approve/${applicationId}`, {
+        const response = await fetch(`https://${DOMAIN_NAME}/JobApplication/approve/job/${jobId}/user/${userId}`, {
           method: 'PATCH',
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -65,15 +74,14 @@ export default function JobApplicants({params}) {
         }
   
         // Handle success response
-        onActionSuccess();
       } catch (error) {
         console.error('Error approving job application:', error);
       }
     };
   
-    const handleReject = async () => {
+    const handleReject = async (jobId, userId) => {
       try {
-        const response = await fetch(`https:${DOMAIN_NAME}/JobApplication/reject/${applicationId}`, {
+        const response = await fetch(`https://${DOMAIN_NAME}/JobApplication/reject/job/${jobId}/user/${userId}`, {
           method: 'PATCH',
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -86,12 +94,10 @@ export default function JobApplicants({params}) {
         }
   
         // Handle success response
-        onActionSuccess();
       } catch (error) {
         console.error('Error rejecting job application:', error);
       }
     };
-  };
   return (
     <Layout>
       <>
@@ -173,7 +179,7 @@ export default function JobApplicants({params}) {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <button onClick={() => handleApprove(applicant.id)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                          <button onClick={() => handleApprove(applicant.jobId, applicant.userId)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                             Approve
                           </button>
                         </td>
@@ -216,7 +222,7 @@ export default function JobApplicants({params}) {
                               <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
                                 <img className="w-10 h-10 rounded-full" src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt="image" />
                                 <div className="ps-3">
-                                  <div className="text-base font-semibold">{applicant.name}</div>
+                                  <div className="text-base font-semibold">{applicant.fullName}</div>
                                   <div className="font-normal text-gray-500">{applicant.email}</div>
                                 </div>
                               </th>
@@ -227,7 +233,7 @@ export default function JobApplicants({params}) {
                                 </div>
                               </td>
                               <td className="px-6 py-4">
-                                <button onClick={() => handleReject(applicant.id)} className="font-medium text-red-600 dark:text-red-500 hover:underline">
+                                <button onClick={() => handleReject(applicant.jobId, applicant.userId)} className="font-medium text-red-600 dark:text-red-500 hover:underline">
                                   Reject
                                 </button>
                               </td>
@@ -268,4 +274,5 @@ export default function JobApplicants({params}) {
     </Layout>
   );
 }
+
 

@@ -6,10 +6,10 @@ import SelectMulti from './SelectMulti';
 // import Table from './Table';
 import Toastitem from './Toast';
 import Layout from './Layout';
-
+import StartInterview from './StartInterview';
 export {
   Card,
-  // Modal,
+  StartInterview,
   PhoneInputGfg,
   SelectInput,
   SelectMulti,

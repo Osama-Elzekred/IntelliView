@@ -257,8 +257,8 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound("No jobs found");
             }
-            var jobsDTO = _mapper.Map<IEnumerable<JobDTO>>(jobs);
-            var jobApp =await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
+           // var jobsDTO = _mapper.Map<IEnumerable<JobDTO>>(jobs);
+           // var jobApp =await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
             var res =await _unitOfWork.JobApplications.GetAppliedJobsAsync(userId);
 
             return Ok(res);

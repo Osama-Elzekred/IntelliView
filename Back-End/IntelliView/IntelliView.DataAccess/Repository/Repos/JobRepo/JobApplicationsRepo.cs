@@ -77,7 +77,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
                         UpdatedAt = ua.Job.UpdatedAt,
                         EndedAt = ua.Job.EndedAt,
                     },
-                    Status = ua.Status
+                    Status = ua.Status.ToString()
                 })
                 .ToListAsync();
             return userApplications;

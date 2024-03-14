@@ -12,6 +12,9 @@
       "type": "mssql",
       "connectionId": "azureDBConnetionString",
       "dynamicId": null
+    },
+    "apis1": {
+      "type": "apis"
     }
   }
 }

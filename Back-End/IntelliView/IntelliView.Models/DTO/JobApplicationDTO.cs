@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Http;
 using System.Text.Json.Serialization;
 
 namespace IntelliView.Models.DTO
@@ -12,6 +13,8 @@ namespace IntelliView.Models.DTO
         public string Gender { get; set; } = string.Empty;
         public string CVURL { get; set; } = string.Empty;
         public string QuestionsAnswers { get; set; } = string.Empty;
+
+        public IFormFile? CV { get; set; }
     }
 
 }

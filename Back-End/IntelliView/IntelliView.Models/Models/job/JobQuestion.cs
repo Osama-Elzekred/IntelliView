@@ -7,7 +7,7 @@ namespace IntelliView.Models.Models
     public class JobQuestion
     {
         //public int Id { get; set; }
-        //public string Question { get; set; } = string.Empty;
+        //public string CustQuestion { get; set; } = string.Empty;
         //public string ModelAnswer { get; set; } = string.Empty;
         //public string UserAnswer { get; set; } = string.Empty;
         //public ushort IsAnswerValid { get; set; }

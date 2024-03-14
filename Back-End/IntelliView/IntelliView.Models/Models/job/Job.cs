@@ -59,10 +59,12 @@ namespace IntelliView.Models.Models
 
         public virtual ICollection<JobInterestedTopic>? JobInterestedTopic { get; set; }
 
+        public virtual ICollection<JobApplication>? JobApplications { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public DateTime? EndedAt { get; set; }
+
     }
 
     //public enum JobType

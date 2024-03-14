@@ -20,7 +20,8 @@ namespace IntelliView.Models.Models.job
         public int JobId { get; set; }
 
         [ForeignKey(nameof(JobId))]
-        //[JsonIgnore]
         public virtual Job Job { get; set; }
+
+        public virtual UserJobAnswer UserJobAnswer { get; set; }
     }
 }

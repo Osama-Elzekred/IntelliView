@@ -8,7 +8,7 @@ import { HiAdjustments, HiClipboardList, HiUserCircle } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
 import Cookies from 'js-cookie';
 
-export default function JobApplicants({params}) {
+export default function JobApplicants({ params }) {
   const DOMAIN_NAME = '//localhost:7049/api';
   const authToken = Cookies.get('authToken');
   const [data, setData] = useState([]);
@@ -32,16 +32,16 @@ export default function JobApplicants({params}) {
         const result = await response.json();
 
         // Process each application and extract jobId and userId
-        result.forEach(application => {
+        result.forEach((application) => {
           const { jobId, userId } = application;
           // Call handleApprove function with jobId, userId, and onActionSuccess
           handleApprove(jobId, userId);
           // Call handleReject function with jobId, userId, and onActionSuccess
           handleReject(jobId, userId);
         });
-      
-      // Set the fetched data to the state
-      setData(result);
+
+        // Set the fetched data to the state
+        setData(result);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -51,53 +51,59 @@ export default function JobApplicants({params}) {
   }, []);
   useEffect(() => {
     // Filter data based on isApproved property
-    const all = data.filter(application => true);
-    const approved = data.filter(application => application.isApproved);
+    const all = data.filter((application) => true);
+    const approved = data.filter((application) => application.isApproved);
 
     // Update state with filtered data
     setAllApplications(all);
     setApprovedApplications(approved);
   }, [data]);
 
-    const handleApprove = async (jobId, userId) => {
-      try {
-        const response = await fetch(`https://${DOMAIN_NAME}/JobApplication/approve/job/${jobId}/user/${userId}`, {
+  const handleApprove = async (jobId, userId) => {
+    try {
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/JobApplication/approve/job/${jobId}/user/${userId}`,
+        {
           method: 'PATCH',
           headers: {
             Authorization: `Bearer ${authToken}`,
             'Content-Type': 'application/json',
           },
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to approve job application');
         }
-  
-        // Handle success response
-      } catch (error) {
-        console.error('Error approving job application:', error);
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to approve job application');
       }
-    };
-  
-    const handleReject = async (jobId, userId) => {
-      try {
-        const response = await fetch(`https://${DOMAIN_NAME}/JobApplication/reject/job/${jobId}/user/${userId}`, {
+
+      // Handle success response
+    } catch (error) {
+      console.error('Error approving job application:', error);
+    }
+  };
+
+  const handleReject = async (jobId, userId) => {
+    try {
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/JobApplication/reject/job/${jobId}/user/${userId}`,
+        {
           method: 'PATCH',
           headers: {
             Authorization: `Bearer ${authToken}`,
             'Content-Type': 'application/json',
           },
-        });
-  
-        if (!response.ok) {
-          throw new Error('Failed to reject job application');
         }
-  
-        // Handle success response
-      } catch (error) {
-        console.error('Error rejecting job application:', error);
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to reject job application');
       }
-    };
+
+      // Handle success response
+    } catch (error) {
+      console.error('Error rejecting job application:', error);
+    }
+  };
   return (
     <Layout>
       <>
@@ -142,112 +148,162 @@ export default function JobApplicants({params}) {
           </section>
           <section className="site-section p-2" id="next">
             <Tabs aria-label="Tabs with icons" style="underline">
-              <Tabs.Item  title="All applicants" icon={HiUserCircle}>
-              <div className="container">
-                <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                  <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                      <tr>
-                        <th scope="col" className="px-6 py-3">
-                          Name
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                          Position
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                          Status
-                        </th>
-                        <th scope="col" className="px-6 py-3">
-                          Action
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {allApplications.map((applicant, index) => (
-                      <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                          <img className="w-10 h-10 rounded-full" src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt="image" />
-                          <div className="ps-3">
-                            <div className="text-base font-semibold">{applicant.fullName}</div>
-                            <div className="font-normal text-gray-500">{applicant.email}</div>
-                          </div>
-                        </th>
-                        <td className="px-6 py-4">{applicant.position}</td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center">
-                            <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" /> {applicant.location}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <button onClick={() => handleApprove(applicant.jobId, applicant.userId)} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                            Approve
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                    </tbody>
-                  </table>
-                </div>
+              <Tabs.Item title="All applicants" icon={HiUserCircle}>
+                <div className="container">
+                  <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" className="px-6 py-3">
+                            Name
+                          </th>
+                          <th scope="col" className="px-6 py-3">
+                            Position
+                          </th>
+                          <th scope="col" className="px-6 py-3">
+                            Status
+                          </th>
+                          <th scope="col" className="px-6 py-3">
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {allApplications.map((applicant, index) => (
+                          <tr
+                            key={index}
+                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                          >
+                            <th
+                              scope="row"
+                              className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                            >
+                              <img
+                                className="w-10 h-10 rounded-full"
+                                src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
+                                alt="image"
+                              />
+                              <div className="ps-3">
+                                <div className="text-base font-semibold">
+                                  {applicant.fullName}
+                                </div>
+                                <div className="font-normal text-gray-500">
+                                  {applicant.email}
+                                </div>
+                              </div>
+                            </th>
+                            <td className="px-6 py-4">{applicant.position}</td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center">
+                                <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{' '}
+                                {applicant.location}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <button
+                                onClick={() =>
+                                  handleApprove(
+                                    applicant.jobId,
+                                    applicant.userId
+                                  )
+                                }
+                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                              >
+                                Approve
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
 
-                <div className="row pagination-wrap">
-                  <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
-                    <span id="paginationInfo">Showing {allApplications.length} Applicants</span>
+                  <div className="row pagination-wrap">
+                    <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
+                      <span id="paginationInfo">
+                        Showing {allApplications.length} Applicants
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
               </Tabs.Item>
               <Tabs.Item title="Approved applicants" icon={MdDashboard}>
-              <div className="container">
-              <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                              <th scope="col" className="px-6 py-3">
-                                Name
-                              </th>
-                              <th scope="col" className="px-6 py-3">
-                                Position
-                              </th>
-                              <th scope="col" className="px-6 py-3">
-                                Status
-                              </th>
-                              <th scope="col" className="px-6 py-3">
-                                Action
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                          {approvedApplications.map((applicant, index) => (
-                            <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                              <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                <img className="w-10 h-10 rounded-full" src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg" alt="image" />
-                                <div className="ps-3">
-                                  <div className="text-base font-semibold">{applicant.fullName}</div>
-                                  <div className="font-normal text-gray-500">{applicant.email}</div>
+                <div className="container">
+                  <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+                    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" className="px-6 py-3">
+                            Name
+                          </th>
+                          <th scope="col" className="px-6 py-3">
+                            Position
+                          </th>
+                          <th scope="col" className="px-6 py-3">
+                            Status
+                          </th>
+                          <th scope="col" className="px-6 py-3">
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {approvedApplications.map((applicant, index) => (
+                          <tr
+                            key={index}
+                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                          >
+                            <th
+                              scope="row"
+                              className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                            >
+                              <img
+                                className="w-10 h-10 rounded-full"
+                                src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
+                                alt="image"
+                              />
+                              <div className="ps-3">
+                                <div className="text-base font-semibold">
+                                  {applicant.fullName}
                                 </div>
-                              </th>
-                              <td className="px-6 py-4">{applicant.position}</td>
-                              <td className="px-6 py-4">
-                                <div className="flex items-center">
-                                  <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" /> {applicant.location}
+                                <div className="font-normal text-gray-500">
+                                  {applicant.email}
                                 </div>
-                              </td>
-                              <td className="px-6 py-4">
-                                <button onClick={() => handleReject(applicant.jobId, applicant.userId)} className="font-medium text-red-600 dark:text-red-500 hover:underline">
-                                  Reject
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                          </tbody>
-                        </table>
-                      </div>
-                <div className="row pagination-wrap">
-                  <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
-                    <span id="paginationInfo">Showing {approvedApplications.length} Applicants</span>
+                              </div>
+                            </th>
+                            <td className="px-6 py-4">{applicant.position}</td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center justify-center">
+                                <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2" />{' '}
+                                {applicant.location}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <button
+                                onClick={() =>
+                                  handleReject(
+                                    applicant.jobId,
+                                    applicant.userId
+                                  )
+                                }
+                                className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                              >
+                                Reject
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="row pagination-wrap">
+                    <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
+                      <span id="paginationInfo">
+                        Showing {approvedApplications.length} Applicants
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
               </Tabs.Item>
             </Tabs>
           </section>
@@ -262,7 +318,10 @@ export default function JobApplicants({params}) {
                   <p className="mb-0 text-white lead"> Find your dream job.</p>
                 </div>
                 <div className="col-md-3 ml-auto">
-                 <Link href="/login" className="btn btn-warning btn-block btn-lg">
+                  <Link
+                    href="/login"
+                    className="btn btn-warning btn-block btn-lg"
+                  >
                     Sign Up
                   </Link>
                 </div>
@@ -274,5 +333,3 @@ export default function JobApplicants({params}) {
     </Layout>
   );
 }
-
-

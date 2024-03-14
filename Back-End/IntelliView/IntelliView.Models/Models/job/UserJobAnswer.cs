@@ -11,18 +11,17 @@ namespace IntelliView.Models.Models
 
         public int UserApplicationId { get; set; }
 
-        [ForeignKey(nameof(UserApplicationId))]
         public int JobId { get; set; }
 
         public string UserId { get; set; }
 
-        [ForeignKey($"{nameof(JobId)}, {nameof(UserId)}")]
+        [ForeignKey("JobId,UserId")]
         public virtual JobApplication UserApplication { get; set; }
 
         public int QuestionId { get; set; }
 
-        [ForeignKey(nameof(QuestionId))]
-        public virtual CustQuestion Question { get; set; }
+        [ForeignKey("QuestionId")]
+        public virtual CustQuestion CustQuestion { get; set; }
 
         public string Answer { get; set; }
     }

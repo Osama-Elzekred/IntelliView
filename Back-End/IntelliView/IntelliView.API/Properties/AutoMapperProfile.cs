@@ -30,11 +30,11 @@ namespace ANWAAR.CORE
             //}) : new List<JobInterestedTopic>()))
             //.ForMember(dest => dest.JobQuestions, opt => opt.MapFrom(src => src.CustQuestions != null ? src.CustQuestions.Select(q => new CustQuestion
             //{
-            //    Question = q.Question
+            //    CustQuestion = q.CustQuestion
             //}) : new List<CustQuestion>()))
             //.ForMember(dest => dest.InterviewQuestions, opt => opt.MapFrom(src => src.QuestionItems != null ? src.QuestionItems.Select(q => new InterviewQuestion
             //{
-            //    Question = q.Question,
+            //    CustQuestion = q.CustQuestion,
             //    Answer = q.Answer
             //}) : new List<InterviewQuestion>()));
             CreateMap<Job, AddJobDto>()

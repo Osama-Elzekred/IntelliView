@@ -116,6 +116,7 @@ function MainComponent() {
           <div className="w-full lg:w-1/2 mb-4 lg:mb-0 lg:mr-4">
             <div className="relative h-full">
               <video
+                src="https://cvoiceprodwus2.blob.core.windows.net/batch-synthesis-output/e3d0f6ab-0358-410b-aed0-14bfc32dd828/0001.webm?skoid=85130dbe-2390-4897-a9e9-5c88bb59daff&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skt=2024-03-14T00%3A14%3A38Z&ske=2024-03-20T00%3A19%3A38Z&sks=b&skv=2023-11-03&sv=2023-11-03&st=2024-03-14T00%3A14%3A38Z&se=2024-03-15T00%3A19%3A38Z&sr=b&sp=rl&sig=BgVJnxKXHuNU8blQlD2Cu1QJ4ZgBKlASY1W%2BYopLob0%3D"
                 className={`w-full rounded-lg shadow h-4/5 mb-2 border-4 ${
                   isRecording ? 'border-red-500' : 'border-transparent'
                 }`}

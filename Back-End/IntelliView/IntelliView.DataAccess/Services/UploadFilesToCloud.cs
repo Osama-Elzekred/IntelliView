@@ -3,11 +3,6 @@ using CloudinaryDotNet.Actions;
 using IntelliView.DataAccess.Services.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IntelliView.DataAccess.Services
 {
@@ -18,7 +13,7 @@ namespace IntelliView.DataAccess.Services
         {
             Configuration = configuration;
         }
-        [Obsolete]
+        //[Obsolete]
         public async Task<string> UploadFile(IFormFile file)
         {
             try
@@ -34,7 +29,7 @@ namespace IntelliView.DataAccess.Services
                 };
 
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);
-                if (uploadResult != null && uploadResult.SecureUri != null)
+                if (uploadResult != null && uploadResult?.SecureUri != null)
                     return uploadResult.SecureUri.ToString();
                 else
                 {
@@ -73,8 +68,8 @@ namespace IntelliView.DataAccess.Services
                 };
 
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);
-                if(uploadResult != null && uploadResult.SecureUri !=null )
-                return uploadResult.SecureUri.ToString();
+                if (uploadResult != null && uploadResult.SecureUri != null)
+                    return uploadResult.SecureUri.ToString();
                 else
                 {
                     return String.Empty;
@@ -107,8 +102,8 @@ namespace IntelliView.DataAccess.Services
                 };
 
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);
-                if(uploadResult != null && uploadResult.SecureUri !=null )
-                return uploadResult.SecureUri.ToString();
+                if (uploadResult != null && uploadResult.SecureUri != null)
+                    return uploadResult.SecureUri.ToString();
                 else
                 {
                     return String.Empty;

@@ -49,7 +49,7 @@ namespace InteliView.DataAccess.Data
 
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+
 
             modelBuilder.Entity<UserInterestedTopic>()
                 .HasKey(ui => new { ui.UserId, ui.InterestedTopicId });
@@ -73,6 +73,17 @@ namespace InteliView.DataAccess.Data
                 .HasOne(ji => ji.InterestedTopic)
                 .WithMany(t => t.JobInterestedTopics)
                 .HasForeignKey(ji => ji.InterestedTopicId);
+
+            modelBuilder.Entity<UserJobAnswer>()
+               .HasOne(p => p.CustQuestion)
+               .WithOne(b => b.UserJobAnswer)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<JobApplication>()
+                .HasOne(p => p.Job)
+                .WithMany(j => j.JobApplications)
+                .OnDelete(DeleteBehavior.Restrict);
+            base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<InterestedTopic>()
             // .HasData(
             //        new InterestedTopic { Id = 1, Topic = "Back-End Development" },

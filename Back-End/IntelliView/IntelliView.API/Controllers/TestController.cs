@@ -98,7 +98,7 @@ namespace IntelliView.API.Controllers
 
         private List<InterviewResponse> ParseGeminiApiResponse(string apiResponse)
         {
-            // Split the API response by "**Question:**" to separate questions and answers
+            // Split the API response by "**CustQuestion:**" to separate questions and answers
             var qaPairs = apiResponse.Split("**Question:**");
 
             // Initialize a list to store the parsed interview responses

@@ -12,6 +12,7 @@ function CardComp({
   companyImageUrl,
   onClick,
   status,
+
 }) {
   // const categoriesList = categories.map((category, index) => (
   //   <span
@@ -21,6 +22,7 @@ function CardComp({
   //     {category.trim()}
   //   </span>
   // ));
+  // 
 
   return (
     <div
@@ -57,11 +59,11 @@ function CardComp({
         <div className="flex flex-wrap gap-2">
           <Badge
             color={
-              status === "rejected"
+              status === "Rejected"
                 ? "red"
-                : status === "approved"
+                : status === "Accpted"
                 ? "green"
-                : status === "pending" ?  "warning" : null 
+                : status === "Pending" ?  "warning" : null 
             }
             size="sm"
           >

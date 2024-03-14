@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace IntelliView.DataAccess.Services
 {
-    internal class UploadFilesToCloud : IUploadFilesToCloud
+    public class UploadFilesToCloud : IUploadFilesToCloud
     {
         private readonly IConfiguration Configuration;
         public UploadFilesToCloud(IConfiguration configuration)
@@ -19,7 +19,7 @@ namespace IntelliView.DataAccess.Services
             Configuration = configuration;
         }
         [Obsolete]
-        public async Task<string> UploadFile(IFormFile file)
+        public async Task<string> UploadFile(IFormFile file,string fileName)
         {
             try
             {
@@ -28,8 +28,8 @@ namespace IntelliView.DataAccess.Services
 
                 var uploadParams = new RawUploadParams
                 {
-                    File = new FileDescription(file.FileName, file.OpenReadStream()),
-                    PublicId = Path.GetFileNameWithoutExtension(file.FileName), // Optionally, set the PublicId
+                    File = new FileDescription(fileName, file.OpenReadStream()),
+                    PublicId = Path.GetFileNameWithoutExtension(fileName), // Optionally, set the PublicId
                     Overwrite = true
                 };
 
@@ -49,11 +49,10 @@ namespace IntelliView.DataAccess.Services
         }
 
         [Obsolete]
-        public async Task<string> UploadImage(IFormFile image)
+        public async Task<string> UploadImage(IFormFile image, string fileName)
         {
             try
             {
-
                 Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
                 cloudinary.Api.Secure = true;
 
@@ -62,11 +61,11 @@ namespace IntelliView.DataAccess.Services
                     .Crop("scale")
                     .Quality("auto")
                     .FetchFormat("auto");
-                cloudinary.Api.UrlImgUp.Transform(transformation).BuildImageTag(image.FileName);
+                cloudinary.Api.UrlImgUp.Transform(transformation).BuildImageTag(fileName);
 
                 var uploadParams = new ImageUploadParams()
                 {
-                    File = new FileDescription(image.FileName, image.OpenReadStream()),
+                    File = new FileDescription(fileName, image.OpenReadStream()),
                     UseFilename = true,
                     UniqueFilename = false,
                     Overwrite = true
@@ -87,7 +86,7 @@ namespace IntelliView.DataAccess.Services
         }
 
         [Obsolete]
-        public async Task<string> UploadVideo(IFormFile videoFile)
+        public async Task<string> UploadVideo(IFormFile videoFile,string fileName)
         {
             try
             {
@@ -101,8 +100,8 @@ namespace IntelliView.DataAccess.Services
 
                 var uploadParams = new VideoUploadParams
                 {
-                    File = new FileDescription(videoFile.FileName, videoFile.OpenReadStream()),
-                    PublicId = Path.GetFileNameWithoutExtension(videoFile.FileName), // Optionally, set the PublicId
+                    File = new FileDescription(fileName, videoFile.OpenReadStream()),
+                    PublicId = Path.GetFileNameWithoutExtension(fileName), // Optionally, set the PublicId
                     Overwrite = true
                 };
 

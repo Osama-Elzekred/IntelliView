@@ -60,6 +60,7 @@ builder.Services.AddCors(options =>
     });
 });
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IUploadFilesToCloud, UploadFilesToCloud>();
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {

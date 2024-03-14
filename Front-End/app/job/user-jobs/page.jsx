@@ -5,23 +5,31 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { HiCheck, HiClock } from "react-icons/hi";
 import CardComp from "../../components/Card";
+import { Badge } from "flowbite-react";
+
+
 export default function userJobs() {
  
+  const DOMAIN_NAME = "localhost:7049";
   const [jobListings, setJobListings] = useState([]);
   useEffect(() => {
       const fetchJobs = async () => {
       const authToken = Cookies.get('authToken');
       try {
-          const response = await fetch(`https://${DOMAIN_NAME}/JobApplication/UserApplications`, {
+          const response = await fetch(`https://${DOMAIN_NAME}/api/JobApplication/GetUserJobs`, {
           method: 'GET',
           headers: {
               Authorization: `Bearer ${authToken}`,
           },
           });
-          if (response.ok) {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          
           const jobs = await response.json();
           setJobListings(jobs);
-          }
+          console.log(jobs);
+          
       } catch (error) {
           console.log('error : ', error);
       }
@@ -126,6 +134,10 @@ export default function userJobs() {
       }, 200);
     }
   };
+
+    let badgeColor;
+    let statusText;
+  
   return (
     <Layout>
       <>
@@ -250,20 +262,23 @@ export default function userJobs() {
                 </div>
               </div>
               <ul className="job-listings m-5 space-y-2 py-2">
-                {jobs.map((job) => (
+                {jobListings.map((job) => (
                   <CardComp
-                    title={job.title}
-                    company={job.companyName}
-                    location={job.location}
-                    timePosted={new Date(job.createdAt).toDateString()}
-                    employmentType={job.jobType}
-                    categories={job.jobInterestedTopic} // There's no equivalent in the jobData
-                    jobTime={job.jobTime}
+                    title={job.jobDto.title}
+                    company={job.jobDto.companyName}
+                    location={job.jobDto.location}
+                    timePosted={new Date(job.jobDto.createdAt).toDateString()}
+                    employmentType={job.jobDto.jobType}
+                    categories={job.jobDto.jobInterestedTopic} // There's no equivalent in the jobData
+                    jobTime={job.jobDto.jobTime}
                     status={job.status}
-                    companyImageUrl={job.imageURl}
-                    onClick={() => (window.location.href = `/job/${job.id}`)}
+                    companyImageUrl={job.jobDto.imageURl}
+                    onClick={() => (window.location.href = `/job/${job.jobDto.id}`)}
                   />
                 ))}
+                  {/* <div className='flex flex-wrap gap-2'>                
+                    <Badge color={badgeColor}>{statusText}</Badge>
+                  </div> */}
               </ul>
               <div className="row pagination-wrap">
                 <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">

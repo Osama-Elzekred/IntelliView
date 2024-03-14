@@ -64,36 +64,19 @@ namespace IntelliView.API.Controllers
         }
 
         [HttpPost("cloudinary")]
-        public async Task<IActionResult> TestCloudinary(IFormFile file)
+        public async Task<IActionResult> TestCloudinary(string destrotyedFile)
         {
-            try
+            var cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
+            cloudinary.Api.Secure = true;
+
+            //var deleteParams = new DeletionParams(publicId);
+
+            var delParams = new DelResParams()
             {
-
-                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
-                cloudinary.Api.Secure = true;
-
-                Transformation transformation = new Transformation()
-                    .Width(500)
-                    .Crop("scale")
-                    .Quality("auto")
-                    .FetchFormat("auto");
-                cloudinary.Api.UrlImgUp.Transform(transformation).BuildImageTag(file.FileName);
-
-                var uploadParams = new ImageUploadParams()
-                {
-                    File = new FileDescription(file.FileName, file.OpenReadStream()),
-                    UseFilename = true,
-                    UniqueFilename = false,
-                    Overwrite = true
-                };
-
-                var uploadResult = await cloudinary.UploadAsync(uploadParams);
-                return Ok(uploadResult);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
+                PublicIds = new List<string> { destrotyedFile }
+            };
+            var delResult = await cloudinary.DeleteResourcesAsync(delParams);
+            return Ok(delResult);
         }
 
         private List<InterviewResponse> ParseGeminiApiResponse(string apiResponse)

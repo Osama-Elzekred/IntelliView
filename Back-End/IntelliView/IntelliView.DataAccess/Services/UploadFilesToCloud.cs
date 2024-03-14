@@ -14,18 +14,18 @@ namespace IntelliView.DataAccess.Services
     public class UploadFilesToCloud : IUploadFilesToCloud
     {
         private readonly IConfiguration Configuration;
+        private readonly Cloudinary cloudinary;
         public UploadFilesToCloud(IConfiguration configuration)
         {
             Configuration = configuration;
+            Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
+            cloudinary.Api.Secure = true;
         }
         [Obsolete]
         public async Task<string> UploadFile(IFormFile file,string fileName)
         {
             try
             {
-                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
-                cloudinary.Api.Secure = true;
-
                 var uploadParams = new RawUploadParams
                 {
                     File = new FileDescription(fileName, file.OpenReadStream()),
@@ -53,9 +53,6 @@ namespace IntelliView.DataAccess.Services
         {
             try
             {
-                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
-                cloudinary.Api.Secure = true;
-
                 Transformation transformation = new Transformation()
                     .Width(500)
                     .Crop("scale")
@@ -90,9 +87,6 @@ namespace IntelliView.DataAccess.Services
         {
             try
             {
-                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
-                cloudinary.Api.Secure = true;
-
                 cloudinary.Api.UrlVideoUp.Transform(new Transformation()
                   .Width(500).Crop("scale").Chain()
                   .Quality(35).Chain()
@@ -118,5 +112,22 @@ namespace IntelliView.DataAccess.Services
                 return String.Empty;
             }
         }
+
+        public async Task<bool> DeleteFile(string publicId)
+        {
+            try
+            {
+                var deleteParams = new DeletionParams(publicId);
+                var result = await cloudinary.DestroyAsync(deleteParams);
+                if (result.Result == "ok")
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }   
     }
 }

@@ -13,6 +13,7 @@ namespace IntelliView.Models.DTO
         public string Gender { get; set; } = string.Empty;
         public string CVURL { get; set; } = string.Empty;
         public string QuestionsAnswers { get; set; } = string.Empty;
+        public int Score { get; set; } = 0;
 
         public IFormFile? CV { get; set; }
     }

@@ -1,3 +1,4 @@
 username : inteliviewAdmin
 pass : View@123
 connectionString : Server=tcp:intelliviewapidbserver.database.windows.net,1433;Initial Catalog=IntelliView.API_db;Persist Security Info=False;User ID=inteliviewAdmin;Password=View@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+server name : intelliviewapidbserver.database.windows.net

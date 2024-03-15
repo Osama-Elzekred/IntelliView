@@ -31,19 +31,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // for database sql server
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection")));
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection")));
 
 // for database in memory
 
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//{
-//    // Use In-Memory Database
-//    options.UseInMemoryDatabase("InMemoryDatabase");
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    // Use In-Memory Database
+    options.UseInMemoryDatabase("InMemoryDatabase");
 
-//    // If you still want to seed data, you can do it here
-//    // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
-//});
+    // If you still want to seed data, you can do it here
+    // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
+});
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();

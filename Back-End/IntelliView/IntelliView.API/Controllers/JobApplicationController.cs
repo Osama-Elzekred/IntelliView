@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Validations;
 using Newtonsoft.Json;
 using System.Security.Claims;
+using System.Text;
 
 namespace IntelliView.API.Controllers
 {
@@ -136,9 +137,96 @@ namespace IntelliView.API.Controllers
             await _unitOfWork.JobApplications.AddAsync(jobApplication);
             await _unitOfWork.SaveAsync();
 
-            return Ok("Application submitted successfully");
+            // Call the model to get the score
+            var score = 0; // Default score
+            if (!string.IsNullOrEmpty(jobApplication.CVURL))
+            {
+                score = await CallModelToGetScore(jobApplication);
+            }
+            // Update the application status based on the score
+            jobApplication.IsApproved = score >= 50;
+            await _unitOfWork.SaveAsync();
+            if (jobApplication.IsApproved)
+            {
+                return Ok("Application submitted and approved successfully");
+            }
+            else
+            {
+                return Ok("Application submitted but not approved based on score");
+            }
+        }
+        #region CV model
+        [HttpPost("predict")]
+        public IActionResult Predict([FromBody] CVDataModel data)
+        {
+            try
+            {
+                // Here you can perform your model prediction logic
+                // For demonstration purposes, let's assume we return a random score between 0 and 100
+                var random = new Random();
+                var score = random.Next(0, 101);
+
+                return Ok(score); // Return the score as JSON response
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+        public class CVDataModel
+        {
+            public byte[] CVData { get; set; }
+        }
+        private async Task<int> CallModelToGetScore(JobApplication jobApplication)
+        {
+            try
+            {
+                var cvData = await GetCVData(jobApplication.CVURL);
+                var requestData = JsonConvert.SerializeObject(new { CVData = cvData });
+                var modelEndpoint = "https://your-model-endpoint.com/predict";
+
+                using (var httpClient = new HttpClient())
+                {
+                    var requestContent = new StringContent(requestData, Encoding.UTF8, "application/json");
+                    var response = await httpClient.PostAsync(modelEndpoint, requestContent);
+                    response.EnsureSuccessStatusCode();
+                    var responseBody = await response.Content.ReadAsStringAsync();
+                    var score = JsonConvert.DeserializeObject<int>(responseBody);
+                    return score;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("Error calling model: " + ex.Message);
+                return 0; // Return 0 or another default value in case of error
+            }
         }
 
+        private async Task<byte[]> GetCVData(string cvUrl)
+        {
+            try
+            {
+                using (var httpClient = new HttpClient())
+                {
+                    var response = await httpClient.GetAsync(cvUrl);
+                    response.EnsureSuccessStatusCode();
+                    var cvData = await response.Content.ReadAsByteArrayAsync();
+                    return cvData;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                Console.Error.WriteLine("HTTP request error: " + ex.Message);
+                throw new HttpRequestException("Error fetching CV data: " + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("Error fetching CV data: " + ex.Message);
+                throw;
+            }
+        }
+       
+        #endregion
 
         [HttpPost("UploadCV")]
         public async Task<IActionResult> UploadCV(IFormFile file)

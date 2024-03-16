@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
@@ -22,11 +23,14 @@ namespace IntelliView.API.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         public readonly IWebHostEnvironment _webHostEnvironment;
-        public JobApplicationController(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment)
+        private readonly IUploadFilesToCloud _uploadFilesToCloud;
+        public JobApplicationController(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment
+            ,IUploadFilesToCloud uploadFilesToCloud)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
+            _uploadFilesToCloud = uploadFilesToCloud;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Job>> GetJobById(int id)
@@ -245,27 +249,27 @@ namespace IntelliView.API.Controllers
                     {
                         return BadRequest(new { message = "This file extension is not allowed!" });
                     }
-                    string webRootPath = _webHostEnvironment.ContentRootPath;
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string CVPath = Path.Combine(webRootPath, "wwwroot", "Assets", "CVs", fileName);
+
+                    string fileName = "cv-"+ Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
                     // Delete the old cv if it exists
                     if (!string.IsNullOrEmpty(user.CVURL))
                     {
-                        var oldCVPath = Path.Combine(webRootPath, user.CVURL.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldCVPath))
+                        bool deleted = await _uploadFilesToCloud.DeleteFile(user.CVURL);
+                        if (!deleted)
                         {
-                            System.IO.File.Delete(oldCVPath);
+                            return BadRequest(new { message = "Failed to delete the old CV!" });
                         }
                     }
 
-                    using (var fileStream = new FileStream(CVPath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
+                    string cvUrl = await _uploadFilesToCloud.UploadFile(file, fileName);
 
+                    if (cvUrl == String.Empty)
+                    {
+                        return BadRequest(new { message = "Failed to upload the CV!" });
+                    }
                     // Update the user's CV URL
-                    user.CVURL = Path.Combine("wwwroot", "Assets", "CVs", fileName).Replace("\\", "/");
+                    user.CVURL = cvUrl;
                     await _unitOfWork.SaveAsync();
 
                     return Ok(user.CVURL); // Return the URL of the updated CV

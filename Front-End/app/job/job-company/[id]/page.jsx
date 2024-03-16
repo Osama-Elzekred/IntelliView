@@ -164,6 +164,9 @@ export default function JobApplicants({ params }) {
                             Status
                           </th>
                           <th scope="col" className="px-6 py-3">
+                            Score
+                          </th>
+                          <th scope="col" className="px-6 py-3">
                             Action
                           </th>
                         </tr>
@@ -199,6 +202,7 @@ export default function JobApplicants({ params }) {
                                 {applicant.location}
                               </div>
                             </td>
+                            <td className="px-6 py-4">{applicant.score}</td>
                             <td className="px-6 py-4">
                               <button
                                 onClick={() =>
@@ -243,6 +247,9 @@ export default function JobApplicants({ params }) {
                             Status
                           </th>
                           <th scope="col" className="px-6 py-3">
+                            Score
+                          </th>
+                          <th scope="col" className="px-6 py-3">
                             Action
                           </th>
                         </tr>
@@ -278,6 +285,7 @@ export default function JobApplicants({ params }) {
                                 {applicant.location}
                               </div>
                             </td>
+                            <td className="px-6 py-4">{applicant.score}</td>
                             <td className="px-6 py-4">
                               <button
                                 onClick={() =>

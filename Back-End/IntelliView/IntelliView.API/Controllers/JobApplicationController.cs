@@ -7,7 +7,6 @@ using IntelliView.Utility;
 using IntelliView.Utility.Settings;
 using Mailosaur.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Validations;
 using Newtonsoft.Json;
@@ -24,8 +23,9 @@ namespace IntelliView.API.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         public readonly IWebHostEnvironment _webHostEnvironment;
-        public readonly IUploadFilesToCloud _uploadFilesToCloud;
-        public JobApplicationController(IUnitOfWork unitOfWork, IMapper mapper, IUploadFilesToCloud uploadFilesToCloud, IWebHostEnvironment webHostEnvironment)
+        private readonly IUploadFilesToCloud _uploadFilesToCloud;
+        public JobApplicationController(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment
+            ,IUploadFilesToCloud uploadFilesToCloud)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -73,7 +73,8 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound(new { Message="User not found" });
             }
-            var existingApplication = await _unitOfWork.JobApplications.GetByIdAsync(job.Id, userId);
+            var existingApplication = await _unitOfWork.JobApplications
+           .GetByIdAsync(job.Id, userId);
 
             if (existingApplication != null)
             {
@@ -93,7 +94,6 @@ namespace IntelliView.API.Controllers
                 {
                     return BadRequest(new { message = "This file extension is not allowed!" });
                 }
-
                 string webRootPath = _webHostEnvironment.ContentRootPath;
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.CV.FileName);
                 string CVPath = Path.Combine(webRootPath, "wwwroot", "Assets", "CVs", fileName);
@@ -107,15 +107,13 @@ namespace IntelliView.API.Controllers
                         System.IO.File.Delete(oldCVPath);
                     }
                 }
-
                 using (var fileStream = new FileStream(CVPath, FileMode.Create))
                 {
                     await model.CV.CopyToAsync(fileStream);
                 }
 
-                // Update the user's CV URL
-                user.CVURL = Path.Combine("wwwroot", "Assets", "CVs", fileName).Replace("\\", "/");
-                await _unitOfWork.SaveAsync();
+                // Update the job application with the CV URL
+                model.CVURL = Path.Combine("wwwroot", "Assets", "CVs", fileName).Replace("\\", "/");
                 user.CVURL = model.CVURL;
             }
 
@@ -130,7 +128,6 @@ namespace IntelliView.API.Controllers
                 FullName = model.FullName,
                 Email = model.Email,
                 Phone = model.Phone,
-                Score = model.Score,
                 UserAnswers = questionsAnswers?.Select(qa => new UserJobAnswer
                 {
                     QuestionId = qa.Key,
@@ -148,9 +145,7 @@ namespace IntelliView.API.Controllers
             var score = 0; // Default score
             if (!string.IsNullOrEmpty(jobApplication.CVURL))
             {
-                // Call the model to get the score
-                var scoreTask = Task.Run(() => CallModelToGetScore(jobApplication));
-                score = await scoreTask;
+                score = await CallModelToGetScore(jobApplication);
             }
             // Update the application status based on the score
             jobApplication.IsApproved = score >= 50;
@@ -254,27 +249,27 @@ namespace IntelliView.API.Controllers
                     {
                         return BadRequest(new { message = "This file extension is not allowed!" });
                     }
-                    string webRootPath = _webHostEnvironment.ContentRootPath;
-                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                    string CVPath = Path.Combine(webRootPath, "wwwroot", "Assets", "CVs", fileName);
+
+                    string fileName = "cv-"+ Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
                     // Delete the old cv if it exists
                     if (!string.IsNullOrEmpty(user.CVURL))
                     {
-                        var oldCVPath = Path.Combine(webRootPath, user.CVURL.TrimStart('\\'));
-                        if (System.IO.File.Exists(oldCVPath))
+                        bool deleted = await _uploadFilesToCloud.DeleteFile(user.CVURL);
+                        if (!deleted)
                         {
-                            System.IO.File.Delete(oldCVPath);
+                            return BadRequest(new { message = "Failed to delete the old CV!" });
                         }
                     }
 
-                    using (var fileStream = new FileStream(CVPath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
+                    string cvUrl = await _uploadFilesToCloud.UploadFile(file, fileName);
 
+                    if (cvUrl == String.Empty)
+                    {
+                        return BadRequest(new { message = "Failed to upload the CV!" });
+                    }
                     // Update the user's CV URL
-                    user.CVURL = Path.Combine("wwwroot", "Assets", "CVs", fileName).Replace("\\", "/");
+                    user.CVURL = cvUrl;
                     await _unitOfWork.SaveAsync();
 
                     return Ok(user.CVURL); // Return the URL of the updated CV

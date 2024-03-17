@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Models.Models.job;
@@ -16,10 +17,13 @@ namespace IntelliView.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IRepository<Job> _repository;
         public JobController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+
+
         }
 
         //get company details by companyid
@@ -144,6 +148,26 @@ namespace IntelliView.API.Controllers
             JobDto.CompanyUserId = company.Id;
             return Ok(JobDto);
         }
+        // delete job question by id
+        [HttpDelete("DeleteJobQuestion/{id}")]
+        [Authorize(Roles = SD.ROLE_COMPANY)]
+        public async Task<ActionResult<JobQuestion>> DeleteByIdAsync(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var jobQuestion = await _unitOfWork.JobQuestions.GetFirstOrDefaultAsync(j => j.Id == id, j => j.Job);
+            if (jobQuestion == null)
+            {
+                return NotFound();
+            }
+            if (jobQuestion.Job.CompanyUserId != userId)
+            {
+                return Unauthorized();
+            }
+            await _unitOfWork.JobQuestions.RemoveQuestionFromJob(jobQuestion.JobId,jobQuestion.Id);
+            await _unitOfWork.SaveAsync();
+            return jobQuestion;
+        }
+
         #region Company
 
         [HttpGet("CompanyJob/{id}")]

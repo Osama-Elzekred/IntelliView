@@ -66,5 +66,19 @@ namespace IntelliView.API.Controllers
             return Ok(interviewMocksDto);
         }
 
+        //delete interview mock 
+        [HttpDelete("DeleteInterviewMock/{id}")]
+        public async Task<ActionResult> DeleteInterviewMock(int id)
+        {
+            var interviewMock = await _unitOfWork.InterviewMocks.GetByIdAsync(id);
+            if (interviewMock == null)
+            {
+                return NotFound();
+            }
+            await _unitOfWork.InterviewMocks.DeleteByIdAsync(interviewMock);
+            await _unitOfWork.SaveAsync();
+            return NoContent();
+        }
+
     }
 }

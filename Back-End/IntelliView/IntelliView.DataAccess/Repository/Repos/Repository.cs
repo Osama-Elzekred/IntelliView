@@ -61,9 +61,9 @@ namespace IntelliView.DataAccess.Repository.Repos
             await _dbSet.AddAsync(entity);
         }
 
-        public async Task<bool> DeleteByIdAsync(int id)
+        public async Task<bool> DeleteByIdAsync(params object[] keyValues)
         {
-            var entity = await _dbSet.FindAsync(id);
+            var entity = await _dbSet.FindAsync(keyValues);
             if (entity is not null)
             {
                 _dbSet.Remove(entity);

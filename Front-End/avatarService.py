@@ -52,7 +52,7 @@ def submit_synthesis():
         },
         "inputs": [
             {
-                "text": "I am osama elzekred fuck me and i am a fucken stupit dummy gay.",
+                "text": "I am Mo nasr fuck me and i am a fucken stupit dummy gay.",
             },
         ],
         "properties": {

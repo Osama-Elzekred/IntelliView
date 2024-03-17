@@ -50,9 +50,9 @@ namespace IntelliView.Models.Models
         [ForeignKey(nameof(CompanyUserId))]
         public virtual CompanyUser CompanyUser { get; set; }
 
-        //public virtual ICollection<InterviewApplication> JobApplications { get; set; }
-
-        //public virtual ICollection<InterviewSession> InterviewSessions { get; set; }
+        public int? MockId { get; set; }
+        [ForeignKey(nameof(MockId))]
+        public InterviewMock? InterviewMock { get; set; }
         [JsonIgnore]
         public virtual ICollection<CustQuestion>? JobQuestions { get; set; }
         public virtual ICollection<InterviewQuestion>? InterviewQuestions { get; set; }

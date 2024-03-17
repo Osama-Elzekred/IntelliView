@@ -44,7 +44,6 @@ namespace IntelliView.API.Controllers
         public async Task<ActionResult<InterviewMock>> AddInterviewMock(AddInterviewMockDTO interviewMockDto)
         {
             var interviewMock = _mapper.Map<InterviewMock>(interviewMockDto);
-
             await _unitOfWork.InterviewMocks.AddAsync(interviewMock);
             await _unitOfWork.SaveAsync();
 
@@ -55,6 +54,14 @@ namespace IntelliView.API.Controllers
         {
 
             var interviewMocks = await _unitOfWork.InterviewMocks.GetAllAsync(i => i.InterviewTopicId == id);
+            var interviewMocksDto = _mapper.Map<IEnumerable<DisplayInterviewMockDto>>(interviewMocks);
+            return Ok(interviewMocksDto);
+        }
+        //all mocks 
+        [HttpGet("GetInterviewMocks")]
+        public async Task<ActionResult<IEnumerable<DisplayInterviewMockDto>>> GetInterviewMocks()
+        {
+            var interviewMocks = await _unitOfWork.InterviewMocks.GetAllAsync();
             var interviewMocksDto = _mapper.Map<IEnumerable<DisplayInterviewMockDto>>(interviewMocks);
             return Ok(interviewMocksDto);
         }

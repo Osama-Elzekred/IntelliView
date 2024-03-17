@@ -40,5 +40,19 @@ namespace IntelliView.API.Controllers
             var nextQuestion = _interviewService.ProcessAnswer(answerDto);
             return Ok(new { Question = nextQuestion });
         }
+
+        // delete interview question
+        //[HttpDelete("question/{id}")]
+        //public IActionResult DeleteByIdAsync(int id)
+        //{
+        //    var objFromDb = _unitOfWork.InterviewQuestion.GetFirstOrDefault(u => u.Id == id);
+        //    if (objFromDb == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    _unitOfWork.InterviewQuestion.Remove(objFromDb);
+        //    _unitOfWork.Save();
+        //    return NoContent();
+        //}
     }
 }

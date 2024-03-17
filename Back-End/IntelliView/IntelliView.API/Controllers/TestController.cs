@@ -7,6 +7,7 @@ using IntelliView.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System.Security.Policy;
 
 namespace IntelliView.API.Controllers
 {
@@ -64,19 +65,58 @@ namespace IntelliView.API.Controllers
         }
 
         [HttpPost("cloudinary")]
-        public async Task<IActionResult> TestCloudinary(string destrotyedFile)
+        public async Task<IActionResult> TestCloudinary(IFormFile formFile)
         {
-            var cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
-            cloudinary.Api.Secure = true;
-
-            //var deleteParams = new DeletionParams(publicId);
-
-            var delParams = new DelResParams()
+            try
             {
-                PublicIds = new List<string> { destrotyedFile }
-            };
-            var delResult = await cloudinary.DeleteResourcesAsync(delParams);
-            return Ok(delResult);
+                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
+                cloudinary.Api.Secure = true;
+                var uploadParams = new ImageUploadParams
+                {
+                    File = new FileDescription(formFile.FileName, formFile.OpenReadStream()),
+                    PublicId = Path.GetFileNameWithoutExtension(formFile.FileName), // Optionally, set the PublicId
+                    Overwrite = true
+                };
+
+                var uploadResult = await cloudinary.UploadAsync(uploadParams);
+                if (uploadResult.SecureUri != null)
+                {
+                    string url = uploadResult.SecureUri.ToString();
+
+                    // add /f_auto,q_auto to the url after /upload
+                    url = url.Insert(url.IndexOf("/upload") + 7, "/f_auto,q_auto");
+
+                    return Ok(url);
+                }
+                else
+                    return BadRequest();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("DeleteCloudinary")]
+        public async Task<bool> TestCloudinary2(string url)
+        {
+            try
+            {
+                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
+                cloudinary.Api.Secure = true;
+                string publicId = url.Substring(url.LastIndexOf("/") + 1, url.LastIndexOf(".") - url.LastIndexOf("/") - 1);
+
+                var deleteParams = new DeletionParams(publicId);
+                var result = await cloudinary.DestroyAsync(deleteParams);
+                if (result.Result == "ok")
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private List<InterviewResponse> ParseGeminiApiResponse(string apiResponse)

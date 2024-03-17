@@ -92,12 +92,24 @@ namespace IntelliView.API.Controllers
                         return BadRequest(new { message = "This file extension is not allowed!" });
                     }
 
-                    string fileName = "image"+Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string fileName = "image-"+Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+
+                    // Delete the old cv if it exists
+                    //if (!string.IsNullOrEmpty(user.ImageURl))
+                    //{
+                    //    bool deleted = await _uploadFilesToCloud.DeleteFile(user.ImageURl);
+                    //    if(!deleted)
+                    //    {
+                    //        return BadRequest(new { message = "Failed to delete the old image!" });
+                    //    }
+                    //}
 
                     string ImageUri = await _uploadFilesToCloud.UploadImage(file, fileName);
 
-                    // Delete the old image if it exists
-                    /* @not Implemented */
+                    if(ImageUri == String.Empty)
+                    {
+                        return BadRequest(new { message = "Failed to upload the image!" });
+                    }   
 
                     // Update the user's profile picture URL
                     user.ImageURl = ImageUri;
@@ -130,19 +142,24 @@ namespace IntelliView.API.Controllers
                         return BadRequest(new { message = "This file extension is not allowed!" });
                     }
 
-                    string fileName = "cv"+ Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string fileName = "cv-"+ Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
                     // Delete the old cv if it exists
-                    //if (!string.IsNullOrEmpty(individualUser.CVURL))
-                    //{
-                    //    var oldCVPath = Path.Combine(webRootPath, individualUser.CVURL.TrimStart('\\'));
-                    //    if (System.IO.File.Exists(oldCVPath))
-                    //    {
-                    //        System.IO.File.Delete(oldCVPath);
-                    //    }
-                    //}
+                    if (!string.IsNullOrEmpty(individualUser.CVURL))
+                    {
+                        bool deleted = await _uploadFilesToCloud.DeleteFile(individualUser.CVURL);
+                        if (!deleted)
+                        {
+                            return BadRequest(new { message = "Failed to delete the old CV!" });
+                        }
+                    }
                     
                     string CVUri = await _uploadFilesToCloud.UploadFile(file, fileName);
+
+                    if (CVUri == String.Empty)
+                    {
+                        return BadRequest(new { message = "Failed to upload the CV!" });
+                    }
 
                     // Update the user's CV URL
                     individualUser.CVURL = CVUri;

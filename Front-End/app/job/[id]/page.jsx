@@ -114,9 +114,9 @@ export default function Job_details({ params }) {
                 <div className="col-md-7">
                   <h1 className="text-white font-weight-bold" />
                   <div className="custom-breadcrumbs">
-                    <Link href="#">Home</Link>{' '}
+                    <Link href="/Home">Home</Link>{' '}
                     <span className="mx-2 slash">/</span>
-                    <Link href="#">Job</Link>{' '}
+                    <Link href="/job">Job</Link>{' '}
                     <span className="mx-2 slash">/</span>
                     <span className="text-white">
                       <strong />

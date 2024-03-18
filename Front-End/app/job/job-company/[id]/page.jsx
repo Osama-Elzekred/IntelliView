@@ -14,40 +14,43 @@ export default function JobApplicants({ params }) {
   const [data, setData] = useState([]);
   const [allApplications, setAllApplications] = useState([]);
   const [approvedApplications, setApprovedApplications] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `https://${DOMAIN_NAME}/JobApplication/Applications/` + params.id,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+  const [fristTime, setFristTime] = useState(true);
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/JobApplication/Applications/` + params.id,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
         }
-        const result = await response.json();
-
-        // Process each application and extract jobId and userId
-        result.forEach((application) => {
-          const { jobId, userId } = application;
-          // Call handleApprove function with jobId, userId, and onActionSuccess
-          handleApprove(jobId, userId);
-          // Call handleReject function with jobId, userId, and onActionSuccess
-          handleReject(jobId, userId);
-        });
-
-        // Set the fetched data to the state
-        setData(result);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      );
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
-    };
+      const result = await response.json();
 
-    fetchData();
+      // // Process each application and extract jobId and userId
+      // result.forEach((application) => {
+      //   const { jobId, userId } = application;
+      //   // Call handleApprove function with jobId, userId, and onActionSuccess
+      //   handleApprove(jobId, userId);
+      //   // Call handleReject function with jobId, userId, and onActionSuccess
+      //   handleReject(jobId, userId);
+      // });
+
+      // Set the fetched data to the state
+      setData(result);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+  useEffect(() => {
+    if (fristTime) {
+      setFristTime(false);
+      fetchData();
+    }
   }, []);
   useEffect(() => {
     // Filter data based on isApproved property
@@ -75,7 +78,7 @@ export default function JobApplicants({ params }) {
       if (!response.ok) {
         throw new Error('Failed to approve job application');
       }
-
+      fetchData();
       // Handle success response
     } catch (error) {
       console.error('Error approving job application:', error);
@@ -98,7 +101,7 @@ export default function JobApplicants({ params }) {
       if (!response.ok) {
         throw new Error('Failed to reject job application');
       }
-
+      fetchData();
       // Handle success response
     } catch (error) {
       console.error('Error rejecting job application:', error);
@@ -147,9 +150,9 @@ export default function JobApplicants({ params }) {
             </Link>
           </section>
           <section className="site-section p-2" id="next">
-            <Tabs aria-label="Tabs with icons" style="underline">
-              <Tabs.Item title="All applicants" icon={HiUserCircle}>
-                <div className="container">
+            <Tabs aria-label="Tabs with icons"className="p-0 m-0" style="underline">
+              <Tabs.Item className="p-0 m-0" title="All applicants" icon={HiUserCircle}>
+                <div className="p-0 m-0">
                   <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -232,7 +235,7 @@ export default function JobApplicants({ params }) {
                 </div>
               </Tabs.Item>
               <Tabs.Item title="Approved applicants" icon={MdDashboard}>
-                <div className="container">
+                <div className="">
                   <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                       <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -243,7 +246,7 @@ export default function JobApplicants({ params }) {
                           <th scope="col" className="px-6 py-3">
                             Position
                           </th>
-                          <th scope="col" className="px-6 py-3">
+                          <th scope="col" className="flex items-center justify-center px-6 py-3">
                             Status
                           </th>
                           <th scope="col" className="px-6 py-3">

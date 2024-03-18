@@ -6,10 +6,15 @@ function MainComponent() {
   const [modalVisible, setTopicModalVisible] = useState(false);
   const [topics, setTopics] = useState([]);
   const [interviewModalVisible, setInterviewModalVisible] = useState(false);
-  const [videos, setVideos] = React.useState([{ ContentText: '', Url: '' }]);
+  const [InterviewQuestions, setInterviewQuestions] = React.useState([
+    { Question: '', ModelAnswer: '' },
+  ]);
 
   const addVideoField = () => {
-    setVideos([...videos, { ContentText: '', Url: '' }]);
+    setInterviewQuestions([
+      ...InterviewQuestions,
+      { Question: '', ModelAnswer: '' },
+    ]);
   };
   const fetchTopics = async () => {
     fetch('https://localhost:7049/api/InterviewMock/allInterviewTopics')
@@ -40,9 +45,9 @@ function MainComponent() {
     const description = e.target.Description.value;
     const topicId = e.target.topicId.value; // Assuming the select name is "topicId"
     const level = e.target.Level.value;
-    const mappedVideos = videos.map((video, index) => ({
-      contentText: e.target[`ContentText-${index}`].value,
-      url: e.target[`Url-${index}`].value,
+    const mappedInterviewQuestions = InterviewQuestions.map((video, index) => ({
+      Question: e.target[`Question-${index}`].value,
+      ModelAnswer: e.target[`ModelAnswer-${index}`].value,
     }));
 
     const mockData = {
@@ -50,7 +55,7 @@ function MainComponent() {
       description,
       InterviewTopicId: parseInt(topicId),
       level,
-      Videos: mappedVideos,
+      InterviewQuestions: mappedInterviewQuestions,
     };
     try {
       const response = await fetch(
@@ -80,7 +85,7 @@ function MainComponent() {
     e.target.Description.value = '';
     e.target.topicId.value = '';
     e.target.Level.value = '';
-    setVideos([{ ContentText: '', Url: '' }]);
+    setInterviewQuestions([{ Question: '', ModelAnswer: '' }]);
   };
   const handleTopicSubmit = (e) => {
     e.preventDefault();
@@ -260,50 +265,51 @@ function MainComponent() {
                   id="level"
                   className="mt-1 p-2 w-full border rounded"
                 >
-                  <option value="EntryLevel">Entry Level</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Expert">Expert</option>
+                  <option value="1">Entry Level</option>
+                  <option value="2">Intermediate</option>
+                  <option value="3">Expert</option>
                 </select>
               </div>
-              {videos.map((video, index) => (
+              {InterviewQuestions.map((video, index) => (
                 <div key={index} className="space-y-2">
                   <div>
                     <label
-                      htmlFor={`contentText-${index}`}
+                      htmlFor={`Question-${index}`}
                       className="block text-sm font-roboto text-[#333]"
                     >
-                      Content{`-${index}`}
+                      Question{`-${index}`}
                     </label>
                     <input
                       type="text"
-                      name={`ContentText-${index}`}
-                      id={`contentText-${index}`}
+                      name={`Question-${index}`}
+                      id={`question-${index}`}
                       className="mt-1 p-2 w-full border rounded"
-                      value={video.ContentText}
+                      value={video.Question}
                       onChange={(e) => {
-                        const newVideos = [...videos];
-                        newVideos[index].ContentText = e.target.value;
-                        setVideos(newVideos);
+                        const newInterviewQuestions = [...InterviewQuestions];
+                        newInterviewQuestions[index].Question = e.target.value;
+                        setInterviewQuestions(newInterviewQuestions);
                       }}
                     />
                   </div>
                   <div>
                     <label
-                      htmlFor={`url-${index}`}
+                      htmlFor={`ModelAnswer-${index}`}
                       className="block text-sm font-roboto text-[#333]"
                     >
-                      URL{`-${index}`}
+                      Model Answer{`-${index}`}
                     </label>
                     <input
                       type="text"
-                      name={`Url-${index}`}
-                      id={`url-${index}`}
+                      name={`ModelAnswer-${index}`}
+                      id={`modelAnswer-${index}`}
                       className="mt-1 p-2 w-full border rounded"
-                      value={video.Url}
+                      value={video.ModelAnswer}
                       onChange={(e) => {
-                        const newVideos = [...videos];
-                        newVideos[index].Url = e.target.value;
-                        setVideos(newVideos);
+                        const newInterviewQuestions = [...InterviewQuestions];
+                        newInterviewQuestions[index].ModelAnswer =
+                          e.target.value;
+                        setInterviewQuestions(newInterviewQuestions);
                       }}
                     />
                   </div>
@@ -314,7 +320,7 @@ function MainComponent() {
                 onClick={addVideoField}
                 className="mt-4 bg-[#28a745] text-white p-2 rounded block"
               >
-                Add Video
+                Add Interview Question
               </button>
               <button
                 type="submit"

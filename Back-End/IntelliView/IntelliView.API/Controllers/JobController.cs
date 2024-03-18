@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Models.Models.job;
@@ -16,10 +17,13 @@ namespace IntelliView.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IRepository<Job> _repository;
         public JobController(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+
+
         }
 
         //get company details by companyid
@@ -46,59 +50,6 @@ namespace IntelliView.API.Controllers
             return Ok(jobsDto);
         }
 
-        [HttpPost("AddQuestions")]
-        public async Task<ActionResult<JobQuestion>> AddQuestion(int JobId, QuestionDTO questionDto)
-        {
-            // Validate questionDto...
-            questionDto.JobId = JobId;
-            QuestionType type = questionDto.Type.ToLower() switch
-            {
-                "text" => QuestionType.Text,
-                "mcq" => QuestionType.MCQ,
-                "truefalse" => QuestionType.TrueFalse,
-                _ => QuestionType.Text
-            };
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == questionDto.JobId && j.CompanyUserId == userId);
-
-            if (job == null)
-            {
-                return NotFound();
-            }
-
-            var jobquestion = new JobQuestion
-            {
-                Content = questionDto.Content,
-                JobId = questionDto.JobId
-            };
-
-            if (type == QuestionType.Text)
-                jobquestion.Type = QuestionType.Text;
-            else if (type == QuestionType.MCQ)
-            {
-
-                jobquestion.Type = QuestionType.MCQ;
-                jobquestion.MCQOptions = new List<MCQOption>();
-                questionDto.MCQOptions?.ForEach(option =>
-                {
-                    jobquestion.MCQOptions.Add(new MCQOption
-                    {
-                        QuestionId = jobquestion.Id,
-                        Content = option.ToString()
-                    });
-                });
-            }
-            else if (type == QuestionType.TrueFalse)
-                jobquestion.Type = QuestionType.TrueFalse;
-            else
-            {
-                return BadRequest("Invalid question type");
-            }
-            await _unitOfWork.JobQuestions.AddAsync(jobquestion);
-            await _unitOfWork.SaveAsync();
-
-            return CreatedAtAction(nameof(GetJobQuestions), new { questionDto.JobId }, jobquestion);
-        }
         [Authorize(Roles = SD.ROLE_USER)]
         [HttpGet("questions/{jobId}")]
         public async Task<ActionResult<IEnumerable<(int, string)>>> GetJobQuestions(int jobId)
@@ -197,6 +148,26 @@ namespace IntelliView.API.Controllers
             JobDto.CompanyUserId = company.Id;
             return Ok(JobDto);
         }
+        // delete job question by id
+        [HttpDelete("DeleteJobQuestion/{id}")]
+        [Authorize(Roles = SD.ROLE_COMPANY)]
+        public async Task<ActionResult<JobQuestion>> DeleteByIdAsync(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var jobQuestion = await _unitOfWork.JobQuestions.GetFirstOrDefaultAsync(j => j.Id == id, j => j.Job);
+            if (jobQuestion == null)
+            {
+                return NotFound();
+            }
+            if (jobQuestion.Job.CompanyUserId != userId)
+            {
+                return Unauthorized();
+            }
+            await _unitOfWork.JobQuestions.RemoveQuestionFromJob(jobQuestion.JobId,jobQuestion.Id);
+            await _unitOfWork.SaveAsync();
+            return jobQuestion;
+        }
+
         #region Company
 
         [HttpGet("CompanyJob/{id}")]
@@ -226,7 +197,7 @@ namespace IntelliView.API.Controllers
             {
                 Id = q.Id,
                 Question = q.Question,
-                Answer = q.Answer,
+                Answer = q.ModelAnswer,
 
             }).ToList();
 
@@ -250,8 +221,6 @@ namespace IntelliView.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            DateTime dateTime1 = DateTime.Parse(jobDto.EndDate);
-
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             jobDto.CompanyUserId = userId;
             //jobDto.JobInterestedTopic.ForEach(topic =>
@@ -259,7 +228,6 @@ namespace IntelliView.API.Controllers
             //    topic.JobId = jobDto.Id;
             //});
             var job = _mapper.Map<Job>(jobDto);
-            job.EndedAt = dateTime1;
 
             job.JobInterestedTopic = jobDto.JobInterestedTopics?.Select(topic => new JobInterestedTopic
             {
@@ -271,19 +239,26 @@ namespace IntelliView.API.Controllers
                 }
             }).ToList();
 
-            job.JobQuestions = jobDto.CustQuestions.Select(q => new CustQuestion
+
+            job.JobQuestions = jobDto.CustQuestions?.Select(q => new CustQuestion
             {
                 Question = q.Question,
                 JobId = job.Id
             }).ToList();
 
-
-            job.InterviewQuestions = jobDto.QuestionItems.Select(q => new InterviewQuestion
+            job.InterviewMock = new InterviewMock
             {
-                Question = q.Question,
-                Answer = q.Answer,
-                JobId = job.Id
-            }).ToList();
+                InterviewQuestions = jobDto.QuestionItems != null ? jobDto.QuestionItems.Select(q => new InterviewQuestion
+                {
+                    Question = q.Question,
+                    ModelAnswer = q.Answer,
+                }).ToList() : new List<InterviewQuestion>(),
+                Title = jobDto.Title,
+                Description = jobDto.Description,
+                JobId = job.Id,
+                Level = InterviewLevel.None
+            };
+
 
             await _unitOfWork.Jobs.AddAsync(job);
             await _unitOfWork.SaveAsync();

@@ -44,7 +44,6 @@ namespace IntelliView.API.Controllers
         public async Task<ActionResult<InterviewMock>> AddInterviewMock(AddInterviewMockDTO interviewMockDto)
         {
             var interviewMock = _mapper.Map<InterviewMock>(interviewMockDto);
-
             await _unitOfWork.InterviewMocks.AddAsync(interviewMock);
             await _unitOfWork.SaveAsync();
 
@@ -57,6 +56,28 @@ namespace IntelliView.API.Controllers
             var interviewMocks = await _unitOfWork.InterviewMocks.GetAllAsync(i => i.InterviewTopicId == id);
             var interviewMocksDto = _mapper.Map<IEnumerable<DisplayInterviewMockDto>>(interviewMocks);
             return Ok(interviewMocksDto);
+        }
+        //all mocks 
+        [HttpGet("GetInterviewMocks")]
+        public async Task<ActionResult<IEnumerable<DisplayInterviewMockDto>>> GetInterviewMocks()
+        {
+            var interviewMocks = await _unitOfWork.InterviewMocks.GetAllAsync();
+            var interviewMocksDto = _mapper.Map<IEnumerable<DisplayInterviewMockDto>>(interviewMocks);
+            return Ok(interviewMocksDto);
+        }
+
+        //delete interview mock 
+        [HttpDelete("DeleteInterviewMock/{id}")]
+        public async Task<ActionResult> DeleteInterviewMock(int id)
+        {
+            var interviewMock = await _unitOfWork.InterviewMocks.GetByIdAsync(id);
+            if (interviewMock == null)
+            {
+                return NotFound();
+            }
+            await _unitOfWork.InterviewMocks.DeleteByIdAsync(interviewMock);
+            await _unitOfWork.SaveAsync();
+            return NoContent();
         }
 
     }

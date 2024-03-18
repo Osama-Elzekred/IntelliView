@@ -1,17 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using IntelliView.Models.Models.job;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace IntelliView.Models.Models
 {
-    public class InterviewVideo
-    {
-        public int Id { get; set; }
-        public string ContentText { get; set; } // Textual link description
-        public string Url { get; set; } // URL for the  link
-        public int InterviewMockId { get; set; } // Foreign key for InterviewMock
-        [ForeignKey(nameof(InterviewMockId))]
-        public InterviewMock InterviewMock { get; set; } // Navigation property for InterviewMock
-    }
+    //public class InterviewVideo
+    //{
+    //    public int Id { get; set; }
+    //    public string Question { get; set; } // Textual link description
+    //    public string ModelAnswer { get; set; } // URL for the  link
+    //    public int InterviewMockId { get; set; } // Foreign key for InterviewMock
+    //    [ForeignKey(nameof(InterviewMockId))]
+    //    public InterviewMock InterviewMock { get; set; } // Navigation property for InterviewMock
+    //}
 
     public class InterviewMock
     {
@@ -19,10 +20,16 @@ namespace IntelliView.Models.Models
         public string Title { get; set; } // e.g., "Software Developer", "Marketing Manager", etc.
         public string Description { get; set; } // e.g., "This is a mock interview for a software developer position."
         public InterviewLevel Level { get; set; }
-        public int InterviewTopicId { get; set; } // Foreign key for InterviewMockTopic
+        public int? JobId { get; set; }
+
+        [ForeignKey(nameof(JobId))]
+        public virtual Job? Job { get; set; }
+        public int? InterviewTopicId { get; set; } // Foreign key for InterviewMockTopic
         [ForeignKey(nameof(InterviewTopicId))]
-        InterviewMockTopic InterviewTopic { get; set; }
-        public ICollection<InterviewVideo> Videos { get; set; } // Collection of interview videos
+        InterviewMockTopic? InterviewTopic { get; set; }
+        //public ICollection<InterviewVideo> InterviewQuestions { get; set; } // Collection of interview videos
+        public ICollection<InterviewQuestion> InterviewQuestions { get; set; }
+
     }
 
     public class InterviewMockTopic

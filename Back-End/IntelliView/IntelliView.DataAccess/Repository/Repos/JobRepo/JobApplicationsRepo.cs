@@ -85,6 +85,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
                 .ToListAsync();
             return userApplications;
         }
+        
     }
 
 }

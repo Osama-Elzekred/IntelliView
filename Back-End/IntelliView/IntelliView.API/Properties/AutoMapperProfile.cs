@@ -2,6 +2,7 @@
 using IntelliView.Models.DTO;
 using IntelliView.Models.DTO.Interview;
 using IntelliView.Models.Models;
+using IntelliView.Models.Models.job;
 
 namespace ANWAAR.CORE
 {
@@ -35,19 +36,13 @@ namespace ANWAAR.CORE
             //.ForMember(dest => dest.InterviewQuestions, opt => opt.MapFrom(src => src.QuestionItems != null ? src.QuestionItems.Select(q => new InterviewQuestion
             //{
             //    CustQuestion = q.CustQuestion,
-            //    Answer = q.Answer
+            //    ModelAnswer = q.ModelAnswer
             //}) : new List<InterviewQuestion>()));
             CreateMap<Job, AddJobDto>()
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndedAt.ToString()));
-            CreateMap<AddInterviewMockDTO, InterviewMock>()
-           .ForMember(dest => dest.Videos, opt => opt.MapFrom(src => src.Videos));
-
-            //CreateMap<InterviewVideoDTO, InterviewVideo>();
 
             CreateMap<InterviewMock, AddInterviewMockDTO>()
-                .ForMember(dest => dest.Videos, opt => opt.MapFrom(src => src.Videos));
-            //CreateMap<InterviewVideo, InterviewVideoDTO>();
-            //CreateMap<AddInterviewMockDTO, InterviewMock>().ReverseMap();
+                .ForMember(dest => dest.InterviewQuestions, opt => opt.MapFrom(src => src.InterviewQuestions));
 
             CreateMap<DisplayInterviewMockDto, InterviewMock>()
             .ForMember(dest => dest.Level, opt => opt.MapFrom(src => src.Level.ToString()))
@@ -55,10 +50,15 @@ namespace ANWAAR.CORE
             CreateMap<AddInterviewTopicDTO, InterviewMockTopic>().ReverseMap();
 
             CreateMap<AddInterviewMockDTO, InterviewMock>()
-          .ForMember(dest => dest.InterviewTopicId, opt => opt.MapFrom(src => src.InterviewTopicId)) // Assuming InterviewTopicId maps directly
-          .ForMember(dest => dest.Videos, opt => opt.MapFrom(src => src.Videos));
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.Level, opt => opt.MapFrom(src => src.Level))
+            .ForMember(dest => dest.InterviewTopicId, opt => opt.MapFrom(src => src.InterviewTopicId))
+            .ForMember(dest => dest.InterviewQuestions, opt => opt.MapFrom(src => src.InterviewQuestions)) // Map InterviewQuestions property
+            .ReverseMap(); // Automatically create reverse mapping
 
-            CreateMap<InterviewVideoDTO, InterviewVideo>(); // Mapping configuration for InterviewVideoDTO to InterviewVideo
+            CreateMap<InterviewQuestionDTO, InterviewQuestion>().ReverseMap(); // Map InterviewQuestionDTO to InterviewQuestion
+
 
 
         }

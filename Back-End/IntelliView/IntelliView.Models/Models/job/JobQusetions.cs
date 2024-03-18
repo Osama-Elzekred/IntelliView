@@ -6,11 +6,11 @@ namespace IntelliView.Models.Models.job
     {
         public int Id { get; set; }
         public string Question { get; set; }
-        public string Answer { get; set; }
-        public int JobId { get; set; }
-
-        [ForeignKey(nameof(JobId))]
-        public virtual Job Job { get; set; }
+        public string ModelAnswer { get; set; }
+        public string? Url { get; set; }
+        public int MockId { get; set; }
+        [ForeignKey(nameof(MockId))]
+        public InterviewMock InterviewMock { get; set; }
     }
 
     public class CustQuestion

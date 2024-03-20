@@ -15,6 +15,7 @@ export default function JobApplicants({ params }) {
   const [allApplications, setAllApplications] = useState([]);
   const [approvedApplications, setApprovedApplications] = useState([]);
   const [fristTime, setFristTime] = useState(true);
+  const [numberOfApplications, setNumberOfApplications] = useState('');
   const fetchData = async () => {
     try {
       const response = await fetch(
@@ -54,14 +55,50 @@ export default function JobApplicants({ params }) {
   }, []);
   useEffect(() => {
     // Filter data based on isApproved property
-    const all = data.filter((application) => true);
+    const all = data;
     const approved = data.filter((application) => application.isApproved);
 
     // Update state with filtered data
     setAllApplications(all);
     setApprovedApplications(approved);
   }, [data]);
-
+  const handleSubmit = async () => {
+    try {
+      // Convert numberOfApplications to integer
+      const count = parseInt(numberOfApplications);
+      
+      // Make sure count is a valid number
+      if (isNaN(count) || count <= 0) {
+        alert('Please enter a valid positive number.');
+        return;
+      }
+      
+      // Filter applications based on score and select the top ones to approve
+      const applicationsToApprove = allApplications
+        .sort((a, b) => b.Score - a.Score) // Sort applications by score in descending order
+        .slice(0, count); // Select the top 'count' applications
+      
+      // Approve the selected applications
+      for (const application of applicationsToApprove) {
+        try {
+          await handleApprove(application.jobId, application.userId);
+        } catch (error) {
+          // Handle error (optional)
+          console.error('Error approving job application:', error);
+          alert('Failed to approve some job applications. Please try again later.');
+        }
+      }
+      
+      // If all applications are approved successfully, fetch data
+      fetchData();
+      
+      // Handle success response
+      alert(`${count} application(s) approved successfully based on score.`);
+    } catch (error) {
+      console.error('Error approving job applications:', error);
+      alert('Failed to approve job application(s). Please try again later.');
+    }
+  };
   const handleApprove = async (jobId, userId) => {
     try {
       const response = await fetch(
@@ -141,6 +178,24 @@ export default function JobApplicants({ params }) {
                       Job Applicants
                     </h1>
                     <p>Find applicants for job!</p>
+                    <form>
+                      <div className="row mb-5 -flex align-items-end justify-content-center">
+                        <div className="form-group col-md-3">
+                          <input
+                            type="number"
+                            className="form-control"
+                            placeholder="Enter number of applications"
+                            value={numberOfApplications}
+                            onChange={(e) => setNumberOfApplications(e.target.value)}
+                          />
+                        </div>
+                        <div className="form-group col-md-3 ">
+                          <button type="button" className="btn btn-primary" onClick={handleSubmit}>
+                            Approve Applications
+                          </button>
+                        </div>
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

@@ -1,41 +1,49 @@
 // import { useNavigation } from 'next/navigation';
 'use client';
-import Layout from '../../../../components/Layout';
+import Layout from '../../../../../components/Layout';
 import Link from 'next/link';
 import { PaperClipIcon } from '@heroicons/react/20/solid'
-
+import Cookies from 'js-cookie';
 import React, { useState, useEffect } from 'react';
-export default function Job_Application_details({ params }) {
-  const [applicantDetail, setApplicantDetails] = useState(null);
-  const applicantDetails = {
-    id: parseInt(params.id), // Convert id to integer
-    jobTitle: 'Product Designer',
-    Name: 'Hassan Sani',
-    ApplicantPhoto: '/images/default-avatar-profile-icon-of-social-media-user-vector.jpg',
-    location: 'New York City',
-    email: 'example.gmail.com',
-    cvUrl: '/path/to/cv',
+export default function Job_Application_details({ params}) {
+  const [applicantDetails, setApplicantDetails] = useState();
+  // const applicantDetails = {
+    //   id: parseInt(params.id), // Convert id to integer
+    //   jobTitle: 'Product Designer',
+    //   Name: 'Hassan Sani',
+    //   ApplicantPhoto: '/images/default-avatar-profile-icon-of-social-media-user-vector.jpg',
+    //   location: 'New York City',
+    //   email: 'example.gmail.com',
+    //   cvUrl: '/path/to/cv',
+    // };
+    const DOMAIN_NAME = 'localhost:7049/api';
     
-  };
-
-  useEffect(() => {
-    // Fetch applicant details from backend API based on the params.id
-    const fetchApplicantDetails = async () => {
-      try {
-        const response = await fetch(`https://${DOMAIN_NAME}/applicants/${params.id}`);
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+        const authToken = Cookies.get('authToken');
+        const response = await fetch(
+          `https://${DOMAIN_NAME}/JobApplication/Application/${params.id}/${params.userid}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
         if (!response.ok) {
-          throw new Error('Failed to fetch applicant details');
+          throw new Error('Network response was not ok');
         }
-        const data = await response.json();
-        setApplicantDetails(data);
+        const result = await response.json();
+        setApplicantDetails(result);
       } catch (error) {
-        console.error('Error fetching applicant details:', error);
+        console.error('Error fetching data:', error);
       }
     };
-
-    fetchApplicantDetails();
-  }, [params.id]);
-
+      fetchData();
+  }, [params.id, params.userid]);
+  
+ const ApplicantPhoto =  '/images/default-avatar-profile-icon-of-social-media-user-vector.jpg';
  /* if (!applicantDetails) {
     return <div>Loading...</div>; // You can render a loading indicator while data is being fetched
   }*/
@@ -89,36 +97,38 @@ export default function Job_Application_details({ params }) {
     <div className="col-lg-8 mb-4 mb-lg-0">
       <div className="d-flex align-items-center">
         <div className="border p-2 d-inline-block mr-3 rounded">
-          <img src={applicantDetails.ApplicantPhoto} alt="Applicant Photo" />
+          <img src={ApplicantPhoto} alt="Applicant Photo" />
         </div>
         <div>
-          <h2>{applicantDetails.Name}</h2>
+          <h2>{applicantDetails?.fullName}</h2>
           <div>
             <span className="ml-0 mr-2 mb-2">
               <span className="icon-briefcase mr-2" />
-              {applicantDetails.jobTitle}
+              {applicantDetails?.gender}
             </span>
             <span className="m-2">
               <span className="icon-room mr-2" />
-              {applicantDetails.location}
+              {applicantDetails?.phone}
             </span>
             <span className="m-2">
               <span className="icon-envelope mr-2" />
-              {applicantDetails.email}
+              {applicantDetails?.email}
             </span>
           </div>
         </div>
       </div>
     </div>
-    <div className="col-lg-4">
-      <div className="row">
-        <div className="col-12">
-          <Link href={applicantDetails.cvUrl} target="_blank" className="btn btn-block btn-primary btn-md">
-            Preview CV
-          </Link>
+    {applicantDetails && (
+      <div className="col-lg-4">
+        <div className="row">
+          <div className="col-12">
+            <Link href={applicantDetails.cvurl} target="_blank" className="btn btn-block btn-primary btn-md">
+              Preview CV
+            </Link>
+          </div>
         </div>
       </div>
-    </div>
+    )}
   </div>
 </div>
 

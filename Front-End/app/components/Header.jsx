@@ -135,14 +135,14 @@ export default function Header() {
       <div className="container-fluid">
         <div className="row align-items-center">
           <div className="site-logo col-6">
-            <Link href="/" replace>
+            <Link href="/Home" replace>
               intelliview
             </Link>
           </div>
           <nav className="mx-auto site-navigation">
             <ul className="site-menu js-clone-nav d-none d-xl-block ml-0 pl-0">
               <li>
-                <Link href="/" replace>
+                <Link href="/Home" replace>
                   Home
                 </Link>
               </li>

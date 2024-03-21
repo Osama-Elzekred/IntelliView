@@ -95,5 +95,26 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
             // Save changes to the database
             //await _db.SaveChangesAsync();
         }
+
+        public async Task RemoveQuestionFromJob(int jobId, int questionId)
+        {
+            var job = await _db.Jobs
+                .Include(j => j.JobQuestions)
+                .FirstOrDefaultAsync(j => j.Id == jobId);
+            if (job == null || job.JobQuestions == null)
+            {
+                // Handle job not found or null JobQuestions collection
+                return;
+            }
+            var question = job.JobQuestions.FirstOrDefault(q => q.Id == questionId);
+            if (question == null)
+            {
+                // Handle question not found
+                return;
+            }
+            job.JobQuestions.Remove(question);
+            // Save changes to the database
+            //await _db.SaveChangesAsync();
+        }
     }
 }

@@ -159,6 +159,21 @@ namespace IntelliView.API.Controllers
                 return Ok("Application submitted but not approved based on score");
             }
         }
+
+        //delete job application by id
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteJobApplication(int id)
+        {
+            var jobApplication = await _unitOfWork.JobApplications.GetByIdAsync(id);
+            if (jobApplication == null)
+            {
+                return NotFound();
+            }
+            await _unitOfWork.JobApplications.DeleteByIdAsync(jobApplication.JobId,jobApplication.UserId);
+            await _unitOfWork.SaveAsync();
+            return Ok();
+        }
+
         #region CV model
         [HttpPost("predict")]
         public IActionResult Predict([FromBody] CVDataModel data)

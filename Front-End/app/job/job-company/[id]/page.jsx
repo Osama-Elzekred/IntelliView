@@ -239,6 +239,7 @@ export default function JobApplicants({ params }) {
                               scope="row"
                               className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                             >
+                              <Link href={`/job/job-company/${applicant.jobId}/job-application/${applicant.userId}`} target="_blank">
                               <img
                                 className="w-10 h-10 rounded-full"
                                 src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
@@ -252,6 +253,7 @@ export default function JobApplicants({ params }) {
                                   {applicant.email}
                                 </div>
                               </div>
+                              </Link>
                             </th>
                             <td className="px-6 py-4">{applicant.position}</td>
                             <td className="px-6 py-4">
@@ -322,6 +324,7 @@ export default function JobApplicants({ params }) {
                               scope="row"
                               className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                             >
+                              <Link href={`/job/job-company/${applicant.jobId}/job-application/${applicant.userId}`}>
                               <img
                                 className="w-10 h-10 rounded-full"
                                 src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
@@ -335,6 +338,7 @@ export default function JobApplicants({ params }) {
                                   {applicant.email}
                                 </div>
                               </div>
+                              </Link>
                             </th>
                             <td className="px-6 py-4">{applicant.position}</td>
                             <td className="px-6 py-4">

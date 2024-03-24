@@ -2,12 +2,14 @@
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
+using IntelliView.Models.DTO.Interview;
 using IntelliView.Models.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace IntelliView.API.Controllers
 {
-    [Route("api/interview")]
+    [Route("api/Interview")]
     [ApiController]
     public class InterviewController : ControllerBase
     {
@@ -20,24 +22,36 @@ namespace IntelliView.API.Controllers
             _unitOfWork = unitOfWork;
             _interviewService = interviewService;
         }
-        [HttpPost("startMock/{id}")]
+        [HttpGet("Mock/{id}")]
         public async Task<IActionResult> StartInterviewMock(int id)
         {
-
-            var sessionId = await _interviewService.StartInterviewMock(id);
-            if (sessionId == null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
             {
-                return BadRequest(new { message = "Interview Mock not found" });
+                //return Unauthorized();
             }
-            var initialQuestion = _interviewService.GetMockNextQuestion(sessionId);
-
-            if (initialQuestion == null)
+            var mock = await _unitOfWork.InterviewMocks.GetFirstOrDefaultAsync(m => m.Id == id, properties: m => m.InterviewQuestions);
+            if (mock is null)
             {
-
-                return BadRequest(new { message = "No available questions found for this interview" });
+                return NotFound("Mock not found");
             }
 
-            return Ok(new { SessionId = sessionId, Question = initialQuestion });
+            JobApplication? jobApplication = null;
+            // for jobs 
+            if (mock.JobId is not null)
+            {
+                jobApplication = await _unitOfWork.JobApplications.GetByIdAsync(mock.JobId, userId);
+            }
+            var questions = _mapper.Map<List<InterviewSessionQuestionsDto>>(mock.InterviewQuestions);
+
+
+            return Ok(new InterviewSessionDto()
+            {
+                Questions = questions ?? new List<InterviewSessionQuestionsDto>(),
+                Title = mock.Title,
+                JobId = mock.JobId,
+                Authorized = true ? jobApplication is not null || mock.JobId is null : false,
+            });
         }
 
         [HttpGet("question/{sessionId}")]

@@ -58,6 +58,7 @@ namespace ANWAAR.CORE
             .ReverseMap(); // Automatically create reverse mapping
 
             CreateMap<InterviewQuestionDTO, InterviewQuestion>().ReverseMap(); // Map InterviewQuestionDTO to InterviewQuestion
+            CreateMap<InterviewSessionQuestionsDto, InterviewQuestion>().ReverseMap();
 
 
 

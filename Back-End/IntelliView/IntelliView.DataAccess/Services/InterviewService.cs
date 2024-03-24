@@ -108,7 +108,7 @@ namespace IntelliView.DataAccess.Services
                     //if (uploadResult is null || uploadResult.SecureUri is null) continue;
                     //question.Url = uploadResult.SecureUri.ToString();
                     //question.VideoId = VideoId;
-                    string url = "https://cvoiceprodweu.blob.core.windows.net/batch-synthesis-output/d1f4220d-38d7-4df1-9a51-8865e5eef17f/0001.webm?skoid=85130dbe-2390-4897-a9e9-5c88bb59daff&sktid=33e01921-4d64-4f8c-a055-5bdaffd5e33d&skt=2024-03-23T23%3A36%3A50Z&ske=2024-03-29T23%3A41%3A50Z&sks=b&skv=2023-11-03&sv=2023-11-03&st=2024-03-23T23%3A36%3A50Z&se=2024-03-24T11%3A41%3A50Z&sr=b&sp=rl&sig=2wZlgInbWkKdYDn2Qd32fKAcbjI9BFFvfjuTUGewWB8%3D";
+                    string url = "https://res.cloudinary.com/djvcgnkbn/video/upload/f_auto:video,q_auto/36d203fb-eb46-4920-b8f2-ebc9cd339f98";
                     question.Url = url;
                     question.VideoId = "d1f4220d-38d7-4df1-9a51-8865e5eef17f";
 

@@ -20,6 +20,7 @@ namespace IntelliView.Models.Models
         public string Title { get; set; } // e.g., "Software Developer", "Marketing Manager", etc.
         public string Description { get; set; } // e.g., "This is a mock interview for a software developer position."
         public InterviewLevel Level { get; set; }
+        public MockLang Language { get; set; } = MockLang.English;
         public int? JobId { get; set; }
 
         [ForeignKey(nameof(JobId))]
@@ -28,7 +29,7 @@ namespace IntelliView.Models.Models
         [ForeignKey(nameof(InterviewTopicId))]
         InterviewMockTopic? InterviewTopic { get; set; }
         //public ICollection<InterviewVideo> InterviewQuestions { get; set; } // Collection of interview videos
-        public ICollection<InterviewQuestion> InterviewQuestions { get; set; }
+        public ICollection<InterviewQuestion> InterviewQuestions { get; set; } = new List<InterviewQuestion>();
 
     }
 
@@ -41,7 +42,11 @@ namespace IntelliView.Models.Models
         [JsonIgnore]
         public ICollection<InterviewMock> InterviewMockTopics { get; set; }
     }
-
+    public enum MockLang
+    {
+        English = 0,
+        Arabic
+    }
     public enum InterviewLevel
     {
         None = 0,

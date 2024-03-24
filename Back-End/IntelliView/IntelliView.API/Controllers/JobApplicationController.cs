@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Services;
 using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
@@ -24,13 +25,15 @@ namespace IntelliView.API.Controllers
         private readonly IMapper _mapper;
         public readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IUploadFilesToCloud _uploadFilesToCloud;
+        private readonly IEmailSender _emailSender;
         public JobApplicationController(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment
-            ,IUploadFilesToCloud uploadFilesToCloud)
+            ,IUploadFilesToCloud uploadFilesToCloud, IEmailSender emailSender)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
             _uploadFilesToCloud = uploadFilesToCloud;
+            _emailSender = emailSender;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Job>> GetJobById(int id)
@@ -94,27 +97,29 @@ namespace IntelliView.API.Controllers
                 {
                     return BadRequest(new { message = "This file extension is not allowed!" });
                 }
-                string webRootPath = _webHostEnvironment.ContentRootPath;
-                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(model.CV.FileName);
-                string CVPath = Path.Combine(webRootPath, "wwwroot", "Assets", "CVs", fileName);
+
+                string fileName = "cv-" + Guid.NewGuid().ToString() + Path.GetExtension(model.CV.FileName);
 
                 // Delete the old cv if it exists
                 if (!string.IsNullOrEmpty(user.CVURL))
                 {
-                    var oldCVPath = Path.Combine(webRootPath, user.CVURL.TrimStart('\\'));
-                    if (System.IO.File.Exists(oldCVPath))
+                    bool deleted = await _uploadFilesToCloud.DeleteFile(user.CVURL);
+                    if (!deleted)
                     {
-                        System.IO.File.Delete(oldCVPath);
+                        return BadRequest(new { message = "Failed to delete the old CV!" });
                     }
                 }
-                using (var fileStream = new FileStream(CVPath, FileMode.Create))
-                {
-                    await model.CV.CopyToAsync(fileStream);
-                }
 
+                string cvUrl = await _uploadFilesToCloud.UploadFile(model.CV, fileName);
+
+                if (cvUrl == String.Empty)
+                {
+                    return BadRequest(new { message = "Failed to upload the CV!" });
+                }
+                // Update the user's CV URL
+                user.CVURL = cvUrl;
                 // Update the job application with the CV URL
-                model.CVURL = Path.Combine("wwwroot", "Assets", "CVs", fileName).Replace("\\", "/");
-                user.CVURL = model.CVURL;
+                model.CVURL = cvUrl;
             }
 
             // Create a new JobApplication
@@ -127,6 +132,7 @@ namespace IntelliView.API.Controllers
                 Gender = model.Gender,
                 FullName = model.FullName,
                 Email = model.Email,
+                CVURL = model.CVURL,
                 Phone = model.Phone,
                 UserAnswers = questionsAnswers?.Select(qa => new UserJobAnswer
                 {
@@ -152,11 +158,11 @@ namespace IntelliView.API.Controllers
             await _unitOfWork.SaveAsync();
             if (jobApplication.IsApproved)
             {
-                return Ok("Application submitted and approved successfully");
+                return Ok("Application submitted");
             }
             else
             {
-                return Ok("Application submitted but not approved based on score");
+                return Ok("Application submitted");
             }
         }
 
@@ -326,6 +332,17 @@ namespace IntelliView.API.Controllers
             var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.JobId == jobId);
             return Ok(applications);
         }
+        // view one application for a job
+        [HttpGet("Application/{jobId}/{userId}")]
+        public async Task<ActionResult<JobApplication>> GetJobApplication(int jobId, string userId)
+        {
+            var application = await _unitOfWork.JobApplications.GetApplicationByIdAsync(jobId, userId);
+            if (application == null)
+            {
+                return NotFound("Job application not found");
+            }
+            return Ok(application);
+        }
         // view all applications for a user
         [HttpGet("UserApplications")]
         public async Task<ActionResult<IEnumerable<JobApplication>>> GetUserApplications()
@@ -369,6 +386,44 @@ namespace IntelliView.API.Controllers
             await _unitOfWork.SaveAsync();
 
             return Ok("Job application rejected successfully");
+        }
+        // send email for interview to all job applicants for a job
+        [Authorize(Roles = SD.ROLE_COMPANY)]
+        [HttpPost("interview/job/{jobId}")]
+        public async Task<IActionResult> SendInterviewEmail(int jobId, [FromBody] InterviewEmailDTO interview)
+        {
+            var job = await _unitOfWork.Jobs.GetByIdAsync(jobId);
+            if (job == null)
+            {
+                return NotFound("Job not found");
+            }
+            var jobApplications = await _unitOfWork.JobApplications.GetAllAsync(j => j.JobId == jobId && j.IsApproved);
+            if (jobApplications == null || !jobApplications.Any())
+            {
+                return NotFound("No job applications found");
+            }
+            interview.InterviewLink = "https://localhost:7049/InterviewMock/"+ job.MockId;
+            foreach (var application in jobApplications)
+            {
+                var user = await _unitOfWork.IndividualUsers.GetByIdAsync(application.UserId);
+                if (user != null)
+                {
+                    var email = application.Email;
+                    var subject = "Interview Invitation";
+                    var body = "You have been approved for the job: " + job.Title + ".the link to interview is  "+interview.InterviewLink;
+
+                    var emailDto = new EmailDTO
+                    {
+                        To = email,
+                        Subject = subject,
+                        Body = body
+                    };
+
+                   await _emailSender.SendEmailAsync(emailDto);
+                }
+            }
+
+            return Ok("Interview emails sent successfully");
         }
     }
 }

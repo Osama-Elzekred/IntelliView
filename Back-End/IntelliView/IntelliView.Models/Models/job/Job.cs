@@ -55,8 +55,6 @@ namespace IntelliView.Models.Models
         public InterviewMock? InterviewMock { get; set; }
         [JsonIgnore]
         public virtual ICollection<CustQuestion>? JobQuestions { get; set; }
-        public virtual ICollection<InterviewQuestion>? InterviewQuestions { get; set; }
-
         public virtual ICollection<JobInterestedTopic>? JobInterestedTopic { get; set; }
 
         public virtual ICollection<JobApplication>? JobApplications { get; set; }
@@ -66,17 +64,4 @@ namespace IntelliView.Models.Models
         public DateTime? EndedAt { get; set; }
 
     }
-
-    //public enum JobType
-    //{
-    //    Remote,
-    //    OnSite,
-    //    Hybrid
-    //}
-
-    //public enum JobTime
-    //{
-    //    FullTime,
-    //    PartTime
-    //}
 }

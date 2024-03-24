@@ -8,6 +8,7 @@ namespace IntelliView.Models.Models.job
         public string Question { get; set; }
         public string ModelAnswer { get; set; }
         public string? Url { get; set; }
+        public string? VideoId { get; set; }
         public int MockId { get; set; }
         [ForeignKey(nameof(MockId))]
         public InterviewMock InterviewMock { get; set; }

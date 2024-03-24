@@ -132,7 +132,7 @@ function MainComponent() {
     }
   };
   useEffect(()=> {
-    if (recordingTime === 15 ){
+    if (recordingTime === 59 ){
       handleStopRecording(); 
       console.log("stop"); 
     }

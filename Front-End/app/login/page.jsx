@@ -200,7 +200,7 @@ export default function login() {
                 <div className="col-md-7">
                   <h1 className="text-white font-weight-bold">Sign Up/Login</h1>
                   <div className="custom-breadcrumbs">
-                    <Link href="#">Home</Link>{' '}
+                    <Link href="/Home">Home</Link>{' '}
                     <span className="mx-2 slash">/</span>
                     <span className="text-white">
                       <strong>Log In</strong>

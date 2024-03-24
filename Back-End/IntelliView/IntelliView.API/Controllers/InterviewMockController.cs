@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO.Interview;
 using IntelliView.Models.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +13,12 @@ namespace IntelliView.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-
-        public InterviewMockController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IInterviewService _interviewService;
+        public InterviewMockController(IUnitOfWork unitOfWork, IMapper mapper, IInterviewService interviewService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _interviewService = interviewService;
         }
         [HttpGet("allInterviewTopics")]
         public async Task<ActionResult<IEnumerable<InterviewMockTopic>>> GetallInterviewTopics()
@@ -46,7 +48,7 @@ namespace IntelliView.API.Controllers
             var interviewMock = _mapper.Map<InterviewMock>(interviewMockDto);
             await _unitOfWork.InterviewMocks.AddAsync(interviewMock);
             await _unitOfWork.SaveAsync();
-
+            _ = Task.Run(() => _interviewService.AddInterviewVideos(interviewMock));
             return Ok();
         }
         [HttpGet("GetInterviewMocks/{id}")]
@@ -79,6 +81,22 @@ namespace IntelliView.API.Controllers
             await _unitOfWork.SaveAsync();
             return NoContent();
         }
+
+        //update interview mock
+        [HttpPut("UpdateInterviewMock/{id}")]
+        public async Task<ActionResult> UpdateInterviewMock(int id, AddInterviewMockDTO interviewMockDto)
+        {
+            var interviewMock = await _unitOfWork.InterviewMocks.GetByIdAsync(id);
+            if (interviewMock == null)
+            {
+                return NotFound();
+            }
+            _mapper.Map(interviewMockDto, interviewMock);
+            await _unitOfWork.SaveAsync();
+            return NoContent();
+        }
+
+
 
     }
 }

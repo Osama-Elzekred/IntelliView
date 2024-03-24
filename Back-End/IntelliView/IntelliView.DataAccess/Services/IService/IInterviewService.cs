@@ -1,16 +1,15 @@
 ﻿using IntelliView.Models.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using IntelliView.Models.Models;
+using IntelliView.Models.Models.job;
 
 namespace IntelliView.DataAccess.Services.IService
 {
     public interface IInterviewService
     {
-        string StartInterview();
-        string GetNextQuestion(string sessionId);
-        string ProcessAnswer(InterviewAnswerDto answerDto);
+        InterviewQuestion? GetMockNextQuestion(string sessionId);
+        Task<string?> StartInterviewMock(int MockID);
+        InterviewQuestion? ProcessAnswer(InterviewAnswerDto answerDto);
+        bool SessionExists(string sessionId);
+        Task AddInterviewVideos(InterviewMock Mock);
     }
 }

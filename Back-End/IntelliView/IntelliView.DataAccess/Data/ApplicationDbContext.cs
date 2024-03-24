@@ -18,9 +18,9 @@ namespace InteliView.DataAccess.Data
         public DbSet<JobInterestedTopic> JobInterestedTopics { get; set; }
         //public DbSet<UserJobAnswer> UserJobAnswers { get; set; }
 
-        //public DbSet<JobApplication> JobApplication { get; set; }
+        public DbSet<JobApplication> JobApplication { get; set; }
         public DbSet<InterviewMock> InterviewMocks { get; set; }
-        //public DbSet<InterviewQuestion> InterviewQuestions { get; set; }
+        public DbSet<InterviewQuestion> InterviewQuestions { get; set; }
         //public DbSet<InterviewSession> InterviewSessions { get; set; }
         //public DbSet<InterviewSessionQuestion> InterviewSessionQuestions { get; set; }
         //public DbSet<InterviewVideo> InterviewVideos { get; set; }

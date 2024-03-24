@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
-using IntelliView.DataAccess.Repository.IRepository.IJobRepos;
+using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Models.Models.job;
@@ -17,12 +17,12 @@ namespace IntelliView.API.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IRepository<Job> _repository;
-        public JobController(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IInterviewService _interviewService;
+        public JobController(IUnitOfWork unitOfWork, IMapper mapper, IInterviewService interviewService)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-
+            _interviewService = interviewService;
 
         }
 
@@ -85,8 +85,8 @@ namespace IntelliView.API.Controllers
         //    // Validate interestedTopicDto...
         //    interestedTopicDto.JobId = JobId;
         //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == interestedTopicDto.JobId && j.CompanyUserId == userId);
-        //    if (job == null)
+        //    var Mock = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == interestedTopicDto.JobId && j.CompanyUserId == userId);
+        //    if (Mock == null)
         //    {
         //        return NotFound();
         //    }
@@ -148,7 +148,7 @@ namespace IntelliView.API.Controllers
             JobDto.CompanyUserId = company.Id;
             return Ok(JobDto);
         }
-        // delete job question by id
+        // delete Mock question by id
         [HttpDelete("DeleteJobQuestion/{id}")]
         [Authorize(Roles = SD.ROLE_COMPANY)]
         public async Task<ActionResult<JobQuestion>> DeleteByIdAsync(int id)
@@ -163,7 +163,7 @@ namespace IntelliView.API.Controllers
             {
                 return Unauthorized();
             }
-            await _unitOfWork.JobQuestions.RemoveQuestionFromJob(jobQuestion.JobId,jobQuestion.Id);
+            await _unitOfWork.JobQuestions.RemoveQuestionFromJob(jobQuestion.JobId, jobQuestion.Id);
             await _unitOfWork.SaveAsync();
             return jobQuestion;
         }
@@ -175,7 +175,7 @@ namespace IntelliView.API.Controllers
         public async Task<ActionResult<AddJobDto>> GetCompanyJob(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId, properties: [j => j.JobInterestedTopic, j => j.JobQuestions, j => j.InterviewQuestions]);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId, properties: [j => j.JobInterestedTopic, j => j.JobQuestions]);
 
             if (job == null)
             {
@@ -193,7 +193,8 @@ namespace IntelliView.API.Controllers
                 Question = q.Question
             }
             ).ToList();
-            jobDto.QuestionItems = job.InterviewQuestions?.Select(q => new QuestionItemDto
+            // return null for now 
+            jobDto.QuestionItems = job.InterviewMock?.InterviewQuestions?.Select(q => new QuestionItemDto
             {
                 Id = q.Id,
                 Question = q.Question,
@@ -223,16 +224,12 @@ namespace IntelliView.API.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             jobDto.CompanyUserId = userId;
-            //jobDto.JobInterestedTopic.ForEach(topic =>
-            //{
-            //    topic.JobId = jobDto.Id;
-            //});
             var job = _mapper.Map<Job>(jobDto);
 
             job.JobInterestedTopic = jobDto.JobInterestedTopics?.Select(topic => new JobInterestedTopic
             {
                 //InterestedTopicId = topic.InterestedTopicId,
-                //JobId = job.Id
+                //JobId = Mock.Id
                 InterestedTopic = new InterestedTopic
                 {
                     Topic = topic.Topic
@@ -262,10 +259,10 @@ namespace IntelliView.API.Controllers
 
             await _unitOfWork.Jobs.AddAsync(job);
             await _unitOfWork.SaveAsync();
+            Task.Run(() => _interviewService.AddInterviewVideos(job.InterviewMock));
 
             return Ok(new { id = job.Id });
         }
-
         //[HttpPut("{id}")]
         //[Authorize(Roles = SD.ROLE_COMPANY)]
         //public async Task<IActionResult> UpdateJob(int id, UpdateJobDTO jobDto)
@@ -277,7 +274,7 @@ namespace IntelliView.API.Controllers
 
         //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        //    // Retrieve the existing job
+        //    // Retrieve the existing Mock
         //    var existingJob = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId);
 
         //    if (existingJob == null)
@@ -285,8 +282,8 @@ namespace IntelliView.API.Controllers
         //        return NotFound("Job not found or you do not have permission to update it");
         //    }
 
-        //    // Update the existing job with the new information
-        //    //var job = _mapper.Map<Job>(jobDto);
+        //    // Update the existing Mock with the new information
+        //    //var Mock = _mapper.Map<Job>(jobDto);
         //    _mapper.Map(jobDto, existingJob);
         //    // Update other properties as needed
 
@@ -314,10 +311,10 @@ namespace IntelliView.API.Controllers
                 return NotFound();
             }
 
-            // Map jobDto to job
+            // Map jobDto to Mock
             _mapper.Map(jobDto, job);
 
-            // Update the job
+            // Update the Mock
             await _unitOfWork.Jobs.Update(job);
             await _unitOfWork.SaveAsync();
 
@@ -343,7 +340,7 @@ namespace IntelliView.API.Controllers
             return NoContent();
         }
         #region NotTested
-        // get all job applications for a job
+        // get all Mock applications for a Mock
         [HttpGet("{jobId}/applications")]
         [Authorize(Roles = SD.ROLE_COMPANY)]
         public async Task<ActionResult<IEnumerable<JobApplication>>> GetJobApplications(int jobId)
@@ -357,7 +354,7 @@ namespace IntelliView.API.Controllers
             var jobApplications = await _unitOfWork.JobApplications.GetApplicationsByJobIdAsync(jobId);
             return Ok(jobApplications);
         }
-        // allow company to view a specific job application
+        // allow company to view a specific Mock application
         [HttpGet("{jobId}/applications/{applicationId}")]
         [Authorize(Roles = SD.ROLE_COMPANY)]
         public async Task<ActionResult<JobApplication>> GetJobApplication(int jobId, int applicationId)
@@ -375,7 +372,7 @@ namespace IntelliView.API.Controllers
             }
             return Ok(jobApplication);
         }
-        //allow company to Reject a job application
+        //allow company to Reject a Mock application
         [HttpPut("{jobId}/applications/{applicationId}/Reject")]
         [Authorize(Roles = SD.ROLE_COMPANY)]
         public async Task<IActionResult> RejectJobApplication(int jobId, int applicationId)

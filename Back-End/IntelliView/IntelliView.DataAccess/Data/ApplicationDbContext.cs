@@ -22,7 +22,7 @@ namespace InteliView.DataAccess.Data
         public DbSet<InterviewMock> InterviewMocks { get; set; }
         public DbSet<InterviewQuestion> InterviewQuestions { get; set; }
         //public DbSet<InterviewSession> InterviewSessions { get; set; }
-        //public DbSet<InterviewSessionQuestion> InterviewSessionQuestions { get; set; }
+        //public DbSet<InterviewSessionQuestion> InterviewSessionQuestionsDto { get; set; }
         //public DbSet<InterviewVideo> InterviewVideos { get; set; }
         public DbSet<InterviewMockTopic> InterviewTopics { get; set; }
         public DbSet<InterviewMockTopic> InterviewMockTopics { get; set; }

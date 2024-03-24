@@ -1,21 +1,40 @@
-"use client";
-import React from "react";
-import { StartInterview } from "../../../components/components";
-import { useState, useRef, useEffect } from "react";
-import { redirect } from "next/navigation";
+'use client';
+import React from 'react';
+import { StartInterview } from '../../../components/components';
+import { useState, useRef, useEffect } from 'react';
+import { redirect } from 'next/navigation';
+import Cookies from 'js-cookie';
 
-function MainComponent() {
-  const fullQuestionList = [
-    "What is your greatest strength?",
-    "Where do you see yourself in 5 years?",
-    "Why should we hire you?",
-    "what is the expected salary?",
-  ];
-  const questionVideos = [
-    "/images/vid1.mp4",
-    "/images/vid1.mp4",
-    "/images/vid1.mp4",
-  ];
+function MainComponent({ params }) {
+  const fetchMockData = async () => {
+    const authToken = Cookies.get('authToken');
+    try {
+      const response = await fetch(
+        `https://localhost:7049/api/Interview/mock/${params.id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setMockData(data);
+        setFullQuestionList(data.questions);
+        setQuestionVideos(data.questions.map((question) => question.url));
+      }
+    } catch (error) {
+      console.log('error : ', error);
+    }
+  };
+  useEffect(() => {
+    fetchMockData();
+  }, []);
+
+  const [mockData, setMockData] = useState({});
+  const [fullQuestionList, setFullQuestionList] = useState([]);
+  const [questionVideos, setQuestionVideos] = useState([]);
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [isListVisible, setIsListVisible] = React.useState(true);
   const [isRecording, setIsRecording] = React.useState(false);
@@ -37,7 +56,7 @@ function MainComponent() {
     }
     return () => clearInterval(timer);
   }, [isRecording]);
-  const [qVideos, setQVideos] = useState(questionVideos[0]);
+  const [qVideos, setQVideos] = useState(questionVideos[1]);
   const questionList = fullQuestionList.slice(0, currentIndex + 1);
   const [CurrentStep, setCurrentStep] = React.useState(1);
   const selectedQuestion = questionList[currentIndex];
@@ -64,31 +83,33 @@ function MainComponent() {
       videoRef.current.srcObject = mediaStream;
       // Create a new MediaRecorder with video and audio stream
       const mediaRecorder = new MediaRecorder(mediaStream, {
-        mimeType: "video/webm",
+        mimeType: 'video/webm',
       });
       mediaRecorderRef.current = mediaRecorder;
       setRecordingTime(0);
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
-          const blob = new Blob([event.data], { type: "video/webm" });
+          const blob = new Blob([event.data], { type: 'video/webm' });
           const newRecordedVideos = [...recordedVideos];
           newRecordedVideos[currentIndex] = blob;
           setRecordedVideos(newRecordedVideos);
           const blobUrl = URL.createObjectURL(blob);
           setUserVideo(blobUrl);
           console.log(recordedVideos);
+          console.log(recordedVideos);
         }
       };
       mediaRecorder.start();
       setIsRecording(true);
     } catch (err) {
-      console.error("Error accessing camera:", err);
+      console.error('Error accessing camera:', err);
     }
   };
   // stop recording code ....
+  // stop recording code ....
   const handleStopRecording = () => {
     const mediaRecorder = mediaRecorderRef.current;
-    if (mediaRecorder && mediaRecorder.state === "recording") {
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
       mediaRecorder.stop();
       const tracks = stream.getTracks();
       tracks.forEach((track) => track.stop());
@@ -105,16 +126,20 @@ function MainComponent() {
       setCurrentIndex((prevIndex) => prevIndex + 1);
       setQVideos(questionVideos[currentIndex + 1]);
       setRecordingTime(0);
+      setRecordingTime(0);
     }
   };
 
+  //prev button code....
   //prev button code....
   const handlePrevious = () => {
     setCurrentIndex(currentIndex - 1);
     setQVideos(questionVideos[currentIndex - 1]);
     setRecordingTime(0);
+    setRecordingTime(0);
   };
 
+  //post recorded videos
   //post recorded videos
   const formData = new FormData();
   recordedVideos.forEach((video, index) => {
@@ -122,40 +147,40 @@ function MainComponent() {
   });
   const handleUploadVideos = async () => {
     try {
-      const response = await fetch("/upload-videos", {
-        method: "POST",
+      const response = await fetch('/upload-videos', {
+        method: 'POST',
         body: formData,
       });
 
       if (response.ok) {
-        console.log("Videos uploaded successfully");
-        redirect("/job/1");
+        console.log('Videos uploaded successfully');
+        redirect('/job/1');
       } else {
-        console.error("Failed to upload videos");
+        console.error('Failed to upload videos');
       }
     } catch (error) {
-      console.error("Error uploading videos:", error);
+      console.error('Error uploading videos:', error);
     }
   };
   useEffect(() => {
     if (recordingTime === 59) {
       handleStopRecording();
-      console.log("stop");
+      console.log('stop');
     }
   }, [recordingTime]);
 
   const minutes = Math.floor(recordingTime / 60);
   const seconds = recordingTime % 60;
-  const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds
+  const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds
     .toString()
-    .padStart(2, "0")}`;
+    .padStart(2, '0')}`;
 
   const RenderStep = () => {
     switch (CurrentStep) {
       case 1:
         return (
           <StartInterview
-            title="Welcome to the interview"
+            title={`Welcome to the interview on ${mockData.title}`}
             subtitle="We are excited to have you here. Let's get started with the interview."
             startButtonText="Start Interview"
             onInitiateConversation={() => setCurrentStep(2)}
@@ -172,7 +197,7 @@ function MainComponent() {
     <div className="flex flex-col lg:flex-row w-full">
       <div
         className={`bg-white overflow-hidden shadow-lg h-full transition-all ease-in-out duration-500 ${
-          isListVisible ? "lg:w-2/5" : "lg:w-0"
+          isListVisible ? 'lg:w-2/5' : 'lg:w-0'
         }`}
       >
         <h1
@@ -186,15 +211,15 @@ function MainComponent() {
           <ul className="max-h-96 overflow-y-auto">
             {questionList.map((question, index) => (
               <li
-                key={question}
+                key={question.id}
                 className={`p-4 cursor-pointer hover:bg-gray-100 ${
                   currentIndex === index
-                    ? "bg-blue-100 border-l-4 border-blue-500 pl-2"
-                    : ""
+                    ? 'bg-blue-100 border-l-4 border-blue-500 pl-2'
+                    : ''
                 }`}
                 onClick={() => setCurrentIndex(index)}
               >
-                {question}
+                {question.question}
               </li>
             ))}
           </ul>
@@ -203,7 +228,7 @@ function MainComponent() {
 
       <div
         className={`flex-grow p-4 lg:p-8 flex flex-col h-auto lg:h-full lg:max-w-full transition-all ease-in-out duration-500 ${
-          !isListVisible ? "lg:max-w-full" : "lg:max-w-3xl"
+          !isListVisible ? 'lg:max-w-full' : 'lg:max-w-3xl'
         }`}
       >
         {/* arrow code */}
@@ -220,19 +245,19 @@ function MainComponent() {
               class="bi bi-arrow-right-circle h-10 w-10 top-1 left-1"
               viewBox="0 0 16 16"
             >
-              {" "}
+              {' '}
               <path
-              fill="black"
+                fill="black"
                 fill-rule="evenodd"
                 d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
-              />{" "}
+              />{' '}
             </svg>
           </div>
         )}
         <br />
         <div className="flex items-center lg:items-start mb-4">
           <h1 className="font-roboto text-2xl font-semibold mb-2 text-[#333]">
-            {selectedQuestion}
+            {selectedQuestion ? selectedQuestion.question : ''}
           </h1>
         </div>
         <div className="flex flex-col-reverse lg:flex-row lg:justify-between h-full lg:mb-4">
@@ -240,7 +265,7 @@ function MainComponent() {
             <div className="relative h-full">
               <video
                 className={`w-full rounded-lg shadow h-4/5 mb-2 border-4 ${
-                  isRecording ? "border-red-500" : "border-transparent"
+                  isRecording ? 'border-red-500' : 'border-transparent'
                 }`}
                 width="1200"
                 height="900"
@@ -248,6 +273,7 @@ function MainComponent() {
                 playsInline
                 muted
                 ref={videoRef}
+                // poster="/Images/ai.jpg"
                 // poster="/Images/ai.jpg"
               ></video>
 
@@ -269,7 +295,7 @@ function MainComponent() {
                 )}
                 <span
                   className={`font-roboto text-lg rounded-full ${
-                    isRecording ? "text-red-500" : "text-green-500"
+                    isRecording ? 'text-red-500' : 'text-green-500'
                   }`}
                 >
                   {formattedTime}
@@ -280,7 +306,7 @@ function MainComponent() {
           <div className="w-full lg:w-1/2 mb-4 lg:mb-0">
             <video
               className={`w-full rounded-lg shadow mb-2 h-4/5 border-2 ${
-                isRecording ? "border-green-600" : "border-transparent"
+                isRecording ? 'border-green-600' : 'border-transparent'
               }`}
               width="640"
               height="480"

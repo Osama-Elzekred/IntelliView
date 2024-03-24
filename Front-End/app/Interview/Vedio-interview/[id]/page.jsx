@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { StartInterview } from "../../../components/components";
-import { useState, useRef ,useEffect} from "react";
+import { useState, useRef, useEffect } from "react";
 import { redirect } from "next/navigation";
 
 function MainComponent() {
@@ -9,7 +9,7 @@ function MainComponent() {
     "What is your greatest strength?",
     "Where do you see yourself in 5 years?",
     "Why should we hire you?",
-    "what is the expected salary?"
+    "what is the expected salary?",
   ];
   const questionVideos = [
     "/images/vid1.mp4",
@@ -22,7 +22,10 @@ function MainComponent() {
   const [recordingTime, setRecordingTime] = React.useState(0);
   const [stream, setStream] = useState(null);
   const videoRef = useRef(null);
-  const [recordedVideos, setRecordedVideos] = useState(Array(fullQuestionList.length).fill(null));  
+  const [arrow, setArrow] = useState(false);
+  const [recordedVideos, setRecordedVideos] = useState(
+    Array(fullQuestionList.length).fill(null)
+  );
   const mediaRecorderRef = useRef(null);
   const [userVideo, setUserVideo] = useState([]);
   React.useEffect(() => {
@@ -41,9 +44,12 @@ function MainComponent() {
   const progressIndicator = `Question ${currentIndex + 1} of ${
     fullQuestionList.length
   }`;
-  const toggleListVisibility = () => setIsListVisible(!isListVisible);
-  
-  // start recording code 
+  const toggleListVisibility = () => {
+    setIsListVisible(!isListVisible);
+    setArrow(!arrow);
+  };
+
+  // start recording code
   const handleStartRecording = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -70,7 +76,7 @@ function MainComponent() {
           setRecordedVideos(newRecordedVideos);
           const blobUrl = URL.createObjectURL(blob);
           setUserVideo(blobUrl);
-          console.log(recordedVideos); 
+          console.log(recordedVideos);
         }
       };
       mediaRecorder.start();
@@ -79,7 +85,7 @@ function MainComponent() {
       console.error("Error accessing camera:", err);
     }
   };
-// stop recording code .... 
+  // stop recording code ....
   const handleStopRecording = () => {
     const mediaRecorder = mediaRecorderRef.current;
     if (mediaRecorder && mediaRecorder.state === "recording") {
@@ -87,35 +93,35 @@ function MainComponent() {
       const tracks = stream.getTracks();
       tracks.forEach((track) => track.stop());
       setIsRecording(false);
-      
     }
   };
 
-  //next button code... 
-  const recordedVideosLength = recordedVideos.filter(video => video !== null).length;
+  //next button code...
+  const recordedVideosLength = recordedVideos.filter(
+    (video) => video !== null
+  ).length;
   const handleNextQuestion = () => {
     if (currentIndex < fullQuestionList.length - 1) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
       setQVideos(questionVideos[currentIndex + 1]);
-      setRecordingTime(0)
+      setRecordingTime(0);
     }
   };
 
-//prev button code....  
+  //prev button code....
   const handlePrevious = () => {
     setCurrentIndex(currentIndex - 1);
     setQVideos(questionVideos[currentIndex - 1]);
-    setRecordingTime(0)
+    setRecordingTime(0);
   };
 
-//post recorded videos 
+  //post recorded videos
   const formData = new FormData();
   recordedVideos.forEach((video, index) => {
     formData.append(`video${index}`, video);
   });
-    const handleUploadVideos = async () => {
+  const handleUploadVideos = async () => {
     try {
-
       const response = await fetch("/upload-videos", {
         method: "POST",
         body: formData,
@@ -123,7 +129,7 @@ function MainComponent() {
 
       if (response.ok) {
         console.log("Videos uploaded successfully");
-        redirect("/job/1"); 
+        redirect("/job/1");
       } else {
         console.error("Failed to upload videos");
       }
@@ -131,19 +137,18 @@ function MainComponent() {
       console.error("Error uploading videos:", error);
     }
   };
-  useEffect(()=> {
-    if (recordingTime === 59 ){
-      handleStopRecording(); 
-      console.log("stop"); 
+  useEffect(() => {
+    if (recordingTime === 59) {
+      handleStopRecording();
+      console.log("stop");
     }
-  },[recordingTime])
+  }, [recordingTime]);
 
   const minutes = Math.floor(recordingTime / 60);
   const seconds = recordingTime % 60;
   const formattedTime = `${minutes.toString().padStart(2, "0")}:${seconds
     .toString()
     .padStart(2, "0")}`;
-
 
   const RenderStep = () => {
     switch (CurrentStep) {
@@ -201,6 +206,30 @@ function MainComponent() {
           !isListVisible ? "lg:max-w-full" : "lg:max-w-3xl"
         }`}
       >
+        {/* arrow code */}
+        {arrow && (
+          <div
+            className=" fixed top-2 left-0 cursor-pointer"
+            onClick={toggleListVisibility}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-arrow-right-circle h-10 w-10 top-1 left-1"
+              viewBox="0 0 16 16"
+            >
+              {" "}
+              <path
+              fill="black"
+                fill-rule="evenodd"
+                d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
+              />{" "}
+            </svg>
+          </div>
+        )}
+        <br />
         <div className="flex items-center lg:items-start mb-4">
           <h1 className="font-roboto text-2xl font-semibold mb-2 text-[#333]">
             {selectedQuestion}
@@ -219,7 +248,7 @@ function MainComponent() {
                 playsInline
                 muted
                 ref={videoRef}
-                  // poster="/Images/ai.jpg"
+                // poster="/Images/ai.jpg"
               ></video>
 
               <div className="flex justify-between items-center p-2">
@@ -272,7 +301,9 @@ function MainComponent() {
           {currentIndex < fullQuestionList.length - 1 ? (
             <button
               className="bg-gray-300 text-gray-800 font-roboto py-2 px-4 rounded-r-lg"
-              disabled = {isRecording || recordedVideosLength !== currentIndex + 1 }
+              disabled={
+                isRecording || recordedVideosLength !== currentIndex + 1
+              }
               onClick={() => {
                 handleNextQuestion();
               }}
@@ -283,7 +314,9 @@ function MainComponent() {
             <button
               className="bg-gray-300 text-gray-800 font-roboto py-2 px-4 rounded-r-lg"
               onClick={handleUploadVideos}
-              disabled = {isRecording || recordedVideosLength !== currentIndex + 1}
+              disabled={
+                isRecording || recordedVideosLength !== currentIndex + 1
+              }
             >
               Submit
             </button>

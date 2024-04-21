@@ -37,7 +37,7 @@ export default function Header() {
     Cookies.remove('authToken');
     Cookies.remove('user_id');
     Cookies.remove('role');
-    Cookies.remove("userName"); 
+    Cookies.remove('userName');
 
     window.location.href = '/login';
   };
@@ -47,13 +47,13 @@ export default function Header() {
         aria-label="Sidebar with multi-level dropdown example"
         className="absolute top-15 right-0 mx-4 my-2 min-w-[200px] h-auto rounded-xl"
       >
-
-          <link
+        <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
           integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
           crossorigin="anonymous"
-          referrerpolicy="no-referrer" />
+          referrerpolicy="no-referrer"
+        />
 
         <Sidebar.Items>
           <button
@@ -77,53 +77,39 @@ export default function Header() {
             </svg>
           </button>
           <Sidebar.ItemGroup className="p-0 m-2">
-            <Link href={"/Home"}>
-            <Sidebar.Item icon={HiChartPie}>
-              Home
-            </Sidebar.Item>
-            </Link>   
+            <Link href={'/Home'}>
+              <Sidebar.Item icon={HiChartPie}>Home</Sidebar.Item>
+            </Link>
             <Link href="/about">
-            <Sidebar.Item  icon={HiChartPie}>
-              About
-            </Sidebar.Item>
-            </Link>         
+              <Sidebar.Item icon={HiChartPie}>About</Sidebar.Item>
+            </Link>
             <Sidebar.Collapse icon={HiShoppingBag} label="Jobs">
               <Link href="/job/post">
-               <Sidebar.Item >Post a Job</Sidebar.Item>
-              </Link>              
+                <Sidebar.Item>Post a Job</Sidebar.Item>
+              </Link>
               <Link href="/job/job-company">
-                <Sidebar.Item >Job of Company</Sidebar.Item>
+                <Sidebar.Item>Job of Company</Sidebar.Item>
               </Link>
             </Sidebar.Collapse>
             <Sidebar.Collapse icon={HiShoppingBag} label="Interview">
               <Link href="/Interview/mocks">
-                <Sidebar.Item >Mocks</Sidebar.Item>
+                <Sidebar.Item>Mocks</Sidebar.Item>
               </Link>
             </Sidebar.Collapse>
             <Link href="/service">
-            <Sidebar.Item  icon={HiInbox}>
-              Service
-            </Sidebar.Item>
+              <Sidebar.Item icon={HiInbox}>Service</Sidebar.Item>
             </Link>
             <Link href="/blog">
-              <Sidebar.Item icon={HiInbox}>
-                Blog
-              </Sidebar.Item>
+              <Sidebar.Item icon={HiInbox}>Blog</Sidebar.Item>
             </Link>
             <Link href="/contact">
-              <Sidebar.Item icon={HiUser}>
-                Contact
-              </Sidebar.Item>
+              <Sidebar.Item icon={HiUser}>Contact</Sidebar.Item>
             </Link>
             <Link href="/login">
-              <Sidebar.Item icon={HiArrowSmRight}>
-                Sign In
-              </Sidebar.Item>
+              <Sidebar.Item icon={HiArrowSmRight}>Sign In</Sidebar.Item>
             </Link>
             <Link href="/login">
-              <Sidebar.Item icon={HiTable}>
-                Sign Up
-              </Sidebar.Item>
+              <Sidebar.Item icon={HiTable}>Sign Up</Sidebar.Item>
             </Link>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
@@ -176,6 +162,11 @@ export default function Header() {
                   <li>
                     <Link href="/Interview/mocks" replace>
                       Mocks
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/Interview/mocks/Edit-mocks" replace>
+                      Edit Mocks
                     </Link>
                   </li>
                 </ul>

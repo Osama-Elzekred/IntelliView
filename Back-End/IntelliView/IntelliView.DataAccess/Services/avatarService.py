@@ -10,7 +10,7 @@ import os
 import sys
 import time
 from pathlib import Path
-
+import argparse
 import requests
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,  # set to logging.DEBUG for verbose output
@@ -19,17 +19,34 @@ logger = logging.getLogger(__name__)
 
 # Your Speech resource key and region
 # This example requires environment variables named "SPEECH_KEY" and "SPEECH_REGION"
+parser = argparse.ArgumentParser()
+parser.add_argument("--voice", default="en-US-JennyNeural")
+parser.add_argument("--name", default="Simple avatar synthesis")
+parser.add_argument("--description", default="Simple avatar synthesis description")
+parser.add_argument("--input", default="Hi, I'm a virtual assistant created by Microsoft.")
+parser.add_argument("--service_host", default="customvoice.api.speech.microsoft.com")
+parser.add_argument("--talking_avatar_character", default="lisa")
+parser.add_argument("--talking_avatar_style", default="graceful-sitting")
+parser.add_argument("--background_color", default="transparent")
+parser.add_argument("--subtitle_type", default="soft_embedded")
+parser.add_argument("--videocodec", default="vp9")
+parser.add_argument("--text_type", default="PlainText")
 
 SUBSCRIPTION_KEY = os.getenv("SUBSCRIPTION_KEY", '306a1f1015aa4cf6b54d6ab9c8032559')
 SERVICE_REGION = os.getenv("SERVICE_REGION", "westeurope")
 
-NAME = "Simple avatar synthesis"
-DESCRIPTION = "Simple avatar synthesis description"
-
-# The service host suffix.
-SERVICE_HOST = "customvoice.api.speech.microsoft.com"
-
-
+args = parser.parse_args()
+VOICE = args.voice
+NAME = args.name
+DESCRIPTION = args.description
+INPUT = args.input
+SERVICE_HOST = args.service_host
+TALKING_AVATAR_CHARACTER = args.talking_avatar_character
+TALKING_AVATAR_STYLE = args.talking_avatar_style
+BACKGROUND_COLOR = args.background_color
+SUBTITLE_TYPE = args.subtitle_type
+VIDEOCODEC = args.videocodec
+TEXT_TYPE = args.text_type
 def submit_synthesis():
     url = f'https://{SERVICE_REGION}.{SERVICE_HOST}/api/texttospeech/3.1-preview1/batchsynthesis/talkingavatar'
     header = {
@@ -40,9 +57,9 @@ def submit_synthesis():
     payload = {
         'displayName': NAME,
         'description': DESCRIPTION,
-        "textType": "PlainText",
+        "textType": TEXT_TYPE,
         'synthesisConfig': {
-            "voice": "en-US-JennyNeural",
+            "voice": VOICE,
         },
         # Replace with your custom voice name and deployment ID if you want to use custom voice.
         # Multiple voices are supported, the mixture of custom voices and platform voices is allowed.
@@ -52,17 +69,17 @@ def submit_synthesis():
         },
         "inputs": [
             {
-                "text": "Hi, I'm a virtual assistant created by Microsoft.",
+                "text": INPUT,
             },
         ],
         "properties": {
             "customized": False, # set to True if you want to use customized avatar
-            "talkingAvatarCharacter": "lisa",  # talking avatar character
-            "talkingAvatarStyle": "graceful-sitting",  # talking avatar style, required for prebuilt avatar, optional for custom avatar
+            "talkingAvatarCharacter": TALKING_AVATAR_CHARACTER,  # talking avatar character
+            "talkingAvatarStyle": TALKING_AVATAR_STYLE,  # talking avatar style, required for prebuilt avatar, optional for custom avatar
             "videoFormat": "webm",  # mp4 or webm, webm is required for transparent background
-            "videoCodec": "vp9",  # hevc, h264 or vp9, vp9 is required for transparent background; default is hevc
-            "subtitleType": "soft_embedded",
-            "backgroundColor": "transparent",
+            "videoCodec": VIDEOCODEC,  # hevc, h264 or vp9, vp9 is required for transparent background; default is hevc
+            "subtitleType": SUBTITLE_TYPE,
+            "backgroundColor": BACKGROUND_COLOR,
         }
     }
 

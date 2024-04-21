@@ -8,6 +8,7 @@ namespace IntelliView.Models.DTO.Interview
         public string Title { get; set; } // e.g., "Software Developer", "Marketing Manager", etc.
         public string Description { get; set; } // e.g., "This is a mock interview for a software developer position."
         public InterviewLevel Level { get; set; }   // e.g., "Entry Level", "Intermediate", "Expert", etc.
+        public MockLang Language { get; set; } = MockLang.English; // e.g., "English", "Arabic", etc.
         public int InterviewTopicId { get; set; } // Foreign key for InterviewMockTopic
         //[ForeignKey(nameof(InterviewTopicId))]
         public ICollection<InterviewQuestionDTO>? InterviewQuestions { get; set; } // Collection of interview videos

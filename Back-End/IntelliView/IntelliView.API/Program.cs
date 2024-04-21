@@ -32,15 +32,18 @@ var builder = WebApplication.CreateBuilder(args);
 // for database sql server
 
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection")));
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("MonsterASPConnection")));
+//builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
+//      options.UseSqlServer(builder.Configuration.GetConnectionString("MonsterASPConnection")));
+
 
 // for database in memory
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
 {
     // Use In-Memory Database
     options.UseInMemoryDatabase("InMemoryDatabase");
-
+    
     // If you still want to seed data, you can do it here
     // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
 });
@@ -82,7 +85,7 @@ builder.Services.AddAuthentication(options =>
             ValidateLifetime = true,
             ValidIssuer = builder.Configuration["JWT:Issuer"],
             ValidAudience = builder.Configuration["JWT:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!)),
             ClockSkew = TimeSpan.Zero
         };
     });
@@ -93,11 +96,11 @@ builder.Services.AddScoped<IVerifyService, VerifyService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IAiSearchService, AiSearchService>();
 builder.Services.AddScoped<HttpClient, HttpClient>();
-
+builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
-
+builder.Services.AddScoped<IAvatarService, AvatarService>();
+builder.Services.AddLogging();
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);
-
 builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

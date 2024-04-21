@@ -1,30 +1,30 @@
-﻿using CloudinaryDotNet.Actions;
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using IntelliView.API.Errors;
 using IntelliView.API.Infrastructure;
 using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System.Security.Policy;
 
 namespace IntelliView.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     //[Authorize(Roles = SD.ROLE_COMPANY)]
-    public class TestController: ControllerBase
+    public class TestController : ControllerBase
     {
         private readonly IAiSearchService _aiBasedSearchService;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IConfiguration Configuration;
-        public TestController(IConfiguration configuration,IAiSearchService aiBasedSearchService,
-             IWebHostEnvironment webHostEnvironment) 
+        private readonly IAvatarService _avatarService;
+        public TestController(IConfiguration configuration, IAiSearchService aiBasedSearchService,
+             IWebHostEnvironment webHostEnvironment, IAvatarService avatarService)
         {
             Configuration = configuration;
             _aiBasedSearchService = aiBasedSearchService;
             _webHostEnvironment = webHostEnvironment;
+            _avatarService = avatarService;
         }
 
         [HttpGet]
@@ -45,24 +45,7 @@ namespace IntelliView.API.Controllers
         }
 
 
-        [HttpGet("GeminiAI")]
-        public async Task<IActionResult> GeminiAI(string category, string level, int numberOfQuestions)
-        {
-            // Construct the prompt based on the category and level
-            string prompt = $"Generate a {numberOfQuestions} text interview question with model answers in the {category} category and {level} level. Format: {{Question}}; {{Answer}}";
 
-            // Call the AI service with the constructed prompt
-            var result = await _aiBasedSearchService.GeminiAiApi(prompt);
-
-            // Replace unicode escape sequences with corresponding characters
-            string formattedResponse = System.Text.RegularExpressions.Regex.Unescape(result);
-
-            // Parse the formatted response to extract question and answer
-            var response = ParseGeminiApiResponse(formattedResponse);
-
-
-            return Ok(response);
-        }
 
         [HttpPost("cloudinary")]
         public async Task<IActionResult> TestCloudinary(IFormFile formFile)
@@ -119,6 +102,25 @@ namespace IntelliView.API.Controllers
             }
         }
 
+        #region Gemini AI
+        [HttpGet("GeminiAI")]
+        public async Task<IActionResult> GeminiAI(string category, string level, int numberOfQuestions)
+        {
+            // Construct the prompt based on the category and level
+            string prompt = $"Generate a {numberOfQuestions} text interview question with model answers in the {category} category and {level} level. Format: {{Question}}; {{Answer}}";
+
+            // Call the AI service with the constructed prompt
+            var result = await _aiBasedSearchService.GeminiAiApi(prompt);
+
+            // Replace unicode escape sequences with corresponding characters
+            string formattedResponse = System.Text.RegularExpressions.Regex.Unescape(result);
+
+            // Parse the formatted response to extract question and answer
+            var response = ParseGeminiApiResponse(formattedResponse);
+
+
+            return Ok(response);
+        }
         private List<InterviewResponse> ParseGeminiApiResponse(string apiResponse)
         {
             // Split the API response by "**CustQuestion:**" to separate questions and answers
@@ -155,9 +157,6 @@ namespace IntelliView.API.Controllers
 
             return interviewResponses;
         }
-
-
-
         public class InterviewResponse
         {
             [JsonProperty("Question")]
@@ -166,6 +165,8 @@ namespace IntelliView.API.Controllers
             [JsonProperty("Answer")]
             public string? Answer { get; set; }
         }
+
+        # endregion
 
 
 
@@ -207,6 +208,19 @@ namespace IntelliView.API.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
+        }
+
+        [HttpGet("call-azure-avatar")]
+        public async Task<IActionResult> CallAzureAvatar(string InputText, string Voice)
+        {
+            var jobId = await _avatarService.SubmitSynthesis(inputText: InputText, voice: Voice);
+            return Ok(jobId);
+        }
+        [HttpGet("list-azure-avatar")]
+        public async Task<IActionResult> ListAzureAvatar()
+        {
+            var jobs = await _avatarService.ListSynthesisJobs();
+            return Ok(jobs);
         }
 
 

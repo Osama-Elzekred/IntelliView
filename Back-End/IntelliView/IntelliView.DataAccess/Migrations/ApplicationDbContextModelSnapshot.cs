@@ -155,7 +155,13 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<int?>("InterviewMockTopicId")
                         .HasColumnType("int");
 
-                    b.Property<int>("InterviewTopicId")
+                    b.Property<int?>("InterviewTopicId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Language")
                         .HasColumnType("int");
 
                     b.Property<int>("Level")
@@ -168,6 +174,8 @@ namespace IntelliView.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("InterviewMockTopicId");
+
+                    b.HasIndex("JobId");
 
                     b.ToTable("InterviewMocks");
                 });
@@ -195,32 +203,6 @@ namespace IntelliView.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("InterviewMockTopic");
-                });
-
-            modelBuilder.Entity("IntelliView.Models.Models.InterviewVideo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ContentText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("InterviewMockId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InterviewMockId");
-
-                    b.ToTable("InterviewVideos");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.Job", b =>
@@ -267,6 +249,9 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<string>("MinimumExperience")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("MockId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
@@ -289,6 +274,10 @@ namespace IntelliView.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyUserId");
+
+                    b.HasIndex("MockId")
+                        .IsUnique()
+                        .HasFilter("[MockId] IS NOT NULL");
 
                     b.ToTable("Jobs");
                 });
@@ -326,6 +315,9 @@ namespace IntelliView.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -333,7 +325,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("JobApplications");
+                    b.ToTable("JobApplication");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.JobQuestion", b =>
@@ -448,22 +440,28 @@ namespace IntelliView.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Answer")
+                    b.Property<int>("MockId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ModelAnswer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("JobId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Question")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VideoId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("JobId");
+                    b.HasIndex("MockId");
 
-                    b.ToTable("InterviewQuestion");
+                    b.ToTable("InterviewQuestions");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.job.JobInterestedTopic", b =>
@@ -735,17 +733,12 @@ namespace IntelliView.DataAccess.Migrations
                     b.HasOne("IntelliView.Models.Models.InterviewMockTopic", null)
                         .WithMany("InterviewMockTopics")
                         .HasForeignKey("InterviewMockTopicId");
-                });
 
-            modelBuilder.Entity("IntelliView.Models.Models.InterviewVideo", b =>
-                {
-                    b.HasOne("IntelliView.Models.Models.InterviewMock", "InterviewMock")
-                        .WithMany("Videos")
-                        .HasForeignKey("InterviewMockId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("IntelliView.Models.Models.Job", "Job")
+                        .WithMany()
+                        .HasForeignKey("JobId");
 
-                    b.Navigation("InterviewMock");
+                    b.Navigation("Job");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.Job", b =>
@@ -756,7 +749,13 @@ namespace IntelliView.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("IntelliView.Models.Models.InterviewMock", "InterviewMock")
+                        .WithOne()
+                        .HasForeignKey("IntelliView.Models.Models.Job", "MockId");
+
                     b.Navigation("CompanyUser");
+
+                    b.Navigation("InterviewMock");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.JobApplication", b =>
@@ -832,13 +831,13 @@ namespace IntelliView.DataAccess.Migrations
 
             modelBuilder.Entity("IntelliView.Models.Models.job.InterviewQuestion", b =>
                 {
-                    b.HasOne("IntelliView.Models.Models.Job", "Job")
+                    b.HasOne("IntelliView.Models.Models.InterviewMock", "InterviewMock")
                         .WithMany("InterviewQuestions")
-                        .HasForeignKey("JobId")
+                        .HasForeignKey("MockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Job");
+                    b.Navigation("InterviewMock");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.job.JobInterestedTopic", b =>
@@ -939,7 +938,7 @@ namespace IntelliView.DataAccess.Migrations
 
             modelBuilder.Entity("IntelliView.Models.Models.InterviewMock", b =>
                 {
-                    b.Navigation("Videos");
+                    b.Navigation("InterviewQuestions");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.InterviewMockTopic", b =>
@@ -949,8 +948,6 @@ namespace IntelliView.DataAccess.Migrations
 
             modelBuilder.Entity("IntelliView.Models.Models.Job", b =>
                 {
-                    b.Navigation("InterviewQuestions");
-
                     b.Navigation("JobApplications");
 
                     b.Navigation("JobInterestedTopic");

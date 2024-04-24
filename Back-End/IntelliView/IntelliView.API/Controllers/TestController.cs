@@ -20,7 +20,7 @@ namespace IntelliView.API.Controllers
         private readonly IAvatarService _avatarService;
         private readonly IAIModelApiService _aiModelApiService;
         public TestController(IConfiguration configuration, IAiSearchService aiBasedSearchService,
-             IWebHostEnvironment webHostEnvironment, IAvatarService avatarService,IAIModelApiService aIModelApiService)
+             IWebHostEnvironment webHostEnvironment, IAvatarService avatarService, IAIModelApiService aIModelApiService)
         {
             Configuration = configuration;
             _aiBasedSearchService = aiBasedSearchService;
@@ -226,14 +226,14 @@ namespace IntelliView.API.Controllers
         }
 
         [HttpGet("getCVmatch")]
-        public async Task<IActionResult> GetCVmatch(string resumePath, string jd)
+        public async Task<IActionResult> GetCVmatch(string resumePath, string id)
         {
             // get api key from appsettings
             var apiKey = Configuration.GetSection("cvMatchAPIKey").Value;
             var content = new
             {
                 resumePath,
-                jd
+                id
             };
             var result = await _aiModelApiService.SendRequestAsync(content,
                 "https://inteliview.pythonanywhere.com/cvmatch", apiKey!);

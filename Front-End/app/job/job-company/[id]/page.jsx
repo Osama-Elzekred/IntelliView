@@ -151,6 +151,43 @@ export default function JobApplicants({ params }) {
       console.error('Error rejecting job application:', error);
     }
   };
+  // const interviewData = {
+  //   "interviewDate": "2024-04-21T02:43:08.202Z",
+  //   "interviewLink": "string"
+  // };
+  const sendInterviewEmail = async (jobId, interviewData) => {
+    try {
+      const response = await fetch(`https://${DOMAIN_NAME}/JobApplication/interview/job/${jobId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${authToken}`, 
+        },
+        body: JSON.stringify(interviewData),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to send interview emails');
+      }
+  
+      const data = await response.json();
+      alert(`${data.count} Email(s) sent successfully.`);
+      console.log('Interview emails sent successfully:', data);
+    } catch (error) {
+      console.error('Error sending interview emails:', error);
+    }
+  };
+  const handleSendInterviewEmail = () => {
+    if (data && data[0] && data[0].jobId) {
+      const interviewData = {
+        interviewDate: '2024-04-25', // Replace with the actual interview date
+        interviewLink: 'https://example.com/interview', // Replace with the actual interview link
+      };
+      sendInterviewEmail(data[0].jobId, interviewData);
+    } else {
+      console.error('Job ID is not available');
+    }
+  };
 
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
@@ -207,6 +244,11 @@ export default function JobApplicants({ params }) {
                             Approve Applications
                           </button>
                         </div>
+                      </div>
+                      <div className="form-group col-md ">
+                          <button type="button" className="btn btn-primary" onClick={handleSendInterviewEmail}>
+                            Send Interview Emails
+                          </button>
                       </div>
                     </form>
                   </div>

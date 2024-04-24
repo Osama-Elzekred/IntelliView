@@ -43,7 +43,7 @@ builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
 {
     // Use In-Memory Database
     options.UseInMemoryDatabase("InMemoryDatabase");
-
+    
     // If you still want to seed data, you can do it here
     // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
 });
@@ -99,6 +99,7 @@ builder.Services.AddScoped<HttpClient, HttpClient>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 builder.Services.AddScoped<IAvatarService, AvatarService>();
+builder.Services.AddScoped<IAIModelApiService, AIModelApiClient>();
 builder.Services.AddLogging();
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);
 builder.Services.AddControllers().AddNewtonsoftJson();

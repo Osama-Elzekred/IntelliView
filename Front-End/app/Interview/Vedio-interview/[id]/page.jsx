@@ -23,14 +23,12 @@ function MainComponent({ params }) {
         setMockData(data);
         setFullQuestionList(data.questions);
         setQuestionVideos(data.questions.map((question) => question.url));
+        setQVideo(data.questions[0].url);
       }
     } catch (error) {
       console.log('error : ', error);
     }
   };
-  useEffect(() => {
-    fetchMockData();
-  }, []);
 
   const [mockData, setMockData] = useState({});
   const [fullQuestionList, setFullQuestionList] = useState([]);
@@ -47,6 +45,10 @@ function MainComponent({ params }) {
   );
   const mediaRecorderRef = useRef(null);
   const [userVideo, setUserVideo] = useState([]);
+  useEffect(() => {
+    fetchMockData();
+  }, []);
+
   React.useEffect(() => {
     let timer;
     if (isRecording) {
@@ -56,7 +58,7 @@ function MainComponent({ params }) {
     }
     return () => clearInterval(timer);
   }, [isRecording]);
-  const [qVideos, setQVideos] = useState(questionVideos[1]);
+  const [qVideo, setQVideo] = useState(questionVideos[0]);
   const questionList = fullQuestionList.slice(0, currentIndex + 1);
   const [CurrentStep, setCurrentStep] = React.useState(1);
   const selectedQuestion = questionList[currentIndex];
@@ -76,17 +78,14 @@ function MainComponent({ params }) {
         audio: true,
       });
       setStream(mediaStream);
-      // Mute the audio track during streaming
-      mediaStream.getAudioTracks().forEach((track) => {
-        track.enabled = true;
-      });
+      // Enable the audio track during streaming
+      mediaStream.getAudioTracks().map((track) => (track.enabled = true));
       videoRef.current.srcObject = mediaStream;
       // Create a new MediaRecorder with video and audio stream
       const mediaRecorder = new MediaRecorder(mediaStream, {
         mimeType: 'video/webm',
       });
       mediaRecorderRef.current = mediaRecorder;
-      setRecordingTime(0);
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           const blob = new Blob([event.data], { type: 'video/webm' });
@@ -96,17 +95,17 @@ function MainComponent({ params }) {
           const blobUrl = URL.createObjectURL(blob);
           setUserVideo(blobUrl);
           console.log(recordedVideos);
-          console.log(recordedVideos);
         }
       };
       mediaRecorder.start();
+      setRecordingTime(0);
       setIsRecording(true);
     } catch (err) {
       console.error('Error accessing camera:', err);
     }
   };
-  // stop recording code ....
-  // stop recording code ....
+
+  // stop recording code
   const handleStopRecording = () => {
     const mediaRecorder = mediaRecorderRef.current;
     if (mediaRecorder && mediaRecorder.state === 'recording') {
@@ -124,7 +123,7 @@ function MainComponent({ params }) {
   const handleNextQuestion = () => {
     if (currentIndex < fullQuestionList.length - 1) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
-      setQVideos(questionVideos[currentIndex + 1]);
+      setQVideo(questionVideos[currentIndex + 1]);
       setRecordingTime(0);
       setRecordingTime(0);
     }
@@ -134,7 +133,7 @@ function MainComponent({ params }) {
   //prev button code....
   const handlePrevious = () => {
     setCurrentIndex(currentIndex - 1);
-    setQVideos(questionVideos[currentIndex - 1]);
+    setQVideo(questionVideos[currentIndex - 1]);
     setRecordingTime(0);
     setRecordingTime(0);
   };
@@ -145,23 +144,7 @@ function MainComponent({ params }) {
   recordedVideos.forEach((video, index) => {
     formData.append(`video${index}`, video);
   });
-  const handleUploadVideos = async () => {
-    try {
-      const response = await fetch('/upload-videos', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        console.log('Videos uploaded successfully');
-        redirect('/job/1');
-      } else {
-        console.error('Failed to upload videos');
-      }
-    } catch (error) {
-      console.error('Error uploading videos:', error);
-    }
-  };
+  const handleUploadVideos = HandleUploadVideos(formData);
   useEffect(() => {
     if (recordingTime === 59) {
       handleStopRecording();
@@ -211,7 +194,7 @@ function MainComponent({ params }) {
           <ul className="max-h-96 overflow-y-auto">
             {questionList.map((question, index) => (
               <li
-                key={question.id}
+                key={index}
                 className={`p-4 cursor-pointer hover:bg-gray-100 ${
                   currentIndex === index
                     ? 'bg-blue-100 border-l-4 border-blue-500 pl-2'
@@ -242,13 +225,13 @@ function MainComponent({ params }) {
               width="16"
               height="16"
               fill="currentColor"
-              class="bi bi-arrow-right-circle h-10 w-10 top-1 left-1"
+              className="bi bi-arrow-right-circle h-10 w-10 top-1 left-1"
               viewBox="0 0 16 16"
             >
               {' '}
               <path
                 fill="black"
-                fill-rule="evenodd"
+                fillRule="evenodd"
                 d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
               />{' '}
             </svg>
@@ -304,16 +287,18 @@ function MainComponent({ params }) {
             </div>
           </div>
           <div className="w-full lg:w-1/2 mb-4 lg:mb-0">
-            <video
-              className={`w-full rounded-lg shadow mb-2 h-4/5 border-2 ${
-                isRecording ? 'border-green-600' : 'border-transparent'
-              }`}
-              width="640"
-              height="480"
-              controls
-              src={qVideos}
-              type="video/mp4"
-            ></video>
+            {qVideo && (
+              <video
+                className={`w-full rounded-lg shadow mb-2 h-4/5 border-2 ${
+                  isRecording ? 'border-green-600' : 'border-transparent'
+                }`}
+                width="640"
+                height="480"
+                controls
+                src={qVideo}
+                type="video/mp4"
+              ></video>
+            )}
           </div>
         </div>
         <div className="flex justify-between mt-4">
@@ -356,3 +341,22 @@ function MainComponent({ params }) {
 }
 
 export default MainComponent;
+function HandleUploadVideos(formData) {
+  return async () => {
+    try {
+      const response = await fetch('/upload-videos', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log('Videos uploaded successfully');
+        redirect(`/job/${params.id}`);
+      } else {
+        console.error('Failed to upload videos');
+      }
+    } catch (error) {
+      console.error('Error uploading videos:', error);
+    }
+  };
+}

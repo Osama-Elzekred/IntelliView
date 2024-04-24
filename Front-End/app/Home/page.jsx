@@ -355,23 +355,26 @@ export default function IndexPage() {
           </div>
         </section>
         <section
-            className="py-5 bg-image overlay-primary fixed overlay"
-            style={{ backgroundImage: 'url("/images/background.jpg")' }}
-          >
-            <div className="container" id="ayklam">
-              <div className="row align-items-center">
-                <div className="col-md-8">
-                  <h2 className="text-white">Looking For A Job?</h2>
-                  <p className="mb-0 text-white lead"> Find your dream job.</p>
-                </div>
-                <div className="col-md-3 ml-auto">
-                  <Link href="/login" className="btn btn-warning btn-block btn-lg" >
-                    Sign Up
-                  </Link>
-                </div>
+          className="py-5 bg-image overlay-primary fixed overlay"
+          style={{ backgroundImage: 'url("/images/background.jpg")' }}
+        >
+          <div className="container" id="ayklam">
+            <div className="row align-items-center">
+              <div className="col-md-8">
+                <h2 className="text-white">Looking For A Job?</h2>
+                <p className="mb-0 text-white lead"> Find your dream job.</p>
+              </div>
+              <div className="col-md-3 ml-auto">
+                <Link
+                  href="/login"
+                  className="btn btn-warning btn-block btn-lg"
+                >
+                  Sign Up
+                </Link>
               </div>
             </div>
-          </section>
+          </div>
+        </section>
         <section className="site-section py-4">
           <div className="container"></div>
         </section>
@@ -458,9 +461,7 @@ export default function IndexPage() {
                 <div className="row">
                   <div className="col-lg-6 align-self-center text-center text-lg-left">
                     <blockquote>
-                      <p>
-                        “suiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.”
-                      </p>
+                      <p>“suiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.”</p>
                       <p>
                         <cite> — Corey Woods, @Dribbble</cite>
                       </p>

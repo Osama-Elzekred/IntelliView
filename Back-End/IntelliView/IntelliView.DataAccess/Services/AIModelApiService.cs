@@ -1,11 +1,7 @@
 ﻿using IntelliView.DataAccess.Services.IService;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace IntelliView.DataAccess.Services
 {
@@ -27,13 +23,13 @@ namespace IntelliView.DataAccess.Services
             };
         }
 
-        public async Task<string> SendRequestAsync(object dataToSend,string url,string apiKey)
+        public async Task<string> SendRequestAsync(object dataToSend, string url, string apiKey)
         {
             // Serialize the input object to JSON
             var jsonData = JsonSerializer.Serialize(dataToSend, _jsonSerializerOptions);
 
             // Add authorization header with your API key
-            _httpClient.DefaultRequestHeaders.Add("Authorization",$"Bearer {apiKey}");
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
             // Create a StringContent object with the JSON data to send
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");

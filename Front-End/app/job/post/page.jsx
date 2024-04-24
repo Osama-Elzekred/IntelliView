@@ -12,6 +12,7 @@ import {
 } from '../../components/components';
 import Cookies from 'js-cookie';
 import { redirect } from 'next/navigation';
+import Loading from '../../components/loading';
 
 export default function Post_job(JobId) {
   const [openModal, setOpenModal] = useState(false);
@@ -28,6 +29,7 @@ export default function Post_job(JobId) {
   const [selectedDate, setSelectedDate] = useState(null);
   const authTokenCookie = Cookies.get('authToken');
   const role = Cookies.get('role');
+  const [loading, setLoading] = useState(true);
   if (!authTokenCookie || role != 'company') {
     redirect('/');
   }
@@ -96,6 +98,7 @@ export default function Post_job(JobId) {
           JobInterestedTopics: data.JobInterestedTopics,
           EndDate: data.EndDate,
         });
+        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch job data', error);
       }
@@ -237,6 +240,7 @@ export default function Post_job(JobId) {
       const data = await response.json();
       const jobId = data.id;
       window.location.href = `/job/${jobId}`;
+      setLoading(false);
     } catch (error) {
       console.error('Failed to submit the form', error);
     }
@@ -268,10 +272,16 @@ export default function Post_job(JobId) {
       }
 
       const data = await response.json();
+      setLoading(false);
     } catch (error) {
       console.error('Failed to submit the form', error);
     }
   };
+
+  // if (loading) {
+  //   return <Loading />; // Display loading indicator while data is being fetched
+  // }
+
   return (
     <>
       {/* <ProtectedPage allowedRoles={['company']} /> */}

@@ -32,6 +32,7 @@ namespace IntelliView.API.Controllers
         [HttpGet]
         public async Task<ActionResult<ProfileDTO>> GetProfile()
         {
+            
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim?.Value;
             var user = await _userManager.FindByIdAsync(userId!);

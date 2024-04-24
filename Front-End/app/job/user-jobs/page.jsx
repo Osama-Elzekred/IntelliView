@@ -6,12 +6,14 @@ import Cookies from "js-cookie";
 import { HiCheck, HiClock } from "react-icons/hi";
 import CardComp from "../../components/Card";
 import { Badge } from "flowbite-react";
+import Loading from "../../components/loading";
 
 
 export default function userJobs() {
  
   const DOMAIN_NAME = "localhost:7049";
   const [jobListings, setJobListings] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
       const fetchJobs = async () => {
       const authToken = Cookies.get('authToken');
@@ -29,6 +31,7 @@ export default function userJobs() {
           const jobs = await response.json();
           setJobListings(jobs);
           console.log(jobs);
+          setLoading(false);
           
       } catch (error) {
           console.log('error : ', error);
@@ -138,6 +141,11 @@ export default function userJobs() {
     let badgeColor;
     let statusText;
   
+
+    if (loading) {
+      return <Loading />; // Display loading indicator while data is being fetched
+    }
+
   return (
     <Layout>
       <>

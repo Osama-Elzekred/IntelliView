@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
+import Loading from '../../../components/loading';
 function Apply({ params }) {
   const [currentStep, setCurrentStep] = React.useState(1);
   const [answers, setAnswers] = useState({
@@ -12,6 +13,7 @@ function Apply({ params }) {
     gender: '',
     CV: null,
   });
+  const [loading, setLoading] = useState(true);
   const [questionslist, setQuestionslist] = useState([]);
   const [answerslist, setQuesionsAnswers] = useState({});
   const DOMAIN_NAME = 'localhost:7049/api';
@@ -56,6 +58,7 @@ function Apply({ params }) {
       if (!response.ok) {
         throw new Error('Failed to fetch questions');
       }
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching questions:', error.message);
       // Handle the error appropriately, e.g., display an error message to the user
@@ -300,6 +303,11 @@ function Apply({ params }) {
         );
     }
   };
+
+  
+  // if (loading) {
+  //   return <Loading />; // Display loading indicator while data is being fetched
+  // }
 
   return (
     <div className="flex h-screen bg-[#f7f7f7]">

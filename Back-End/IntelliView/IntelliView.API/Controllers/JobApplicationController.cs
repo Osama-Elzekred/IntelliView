@@ -83,9 +83,20 @@ namespace IntelliView.API.Controllers
             {
                 return BadRequest("You have already applied for this job");
             }
-            // Deserialize the questionsAnswers string to a dictionary
-            var questionsAnswers = JsonConvert.DeserializeObject<Dictionary<int, string>>(model.QuestionsAnswers);
+            var questionsAnswersJson = model.QuestionsAnswers;
+            Dictionary<int, string> questionsAnswers;
 
+            // Check if the string is already JSON encoded
+            if (!string.IsNullOrEmpty(questionsAnswersJson) && questionsAnswersJson.StartsWith("{") && questionsAnswersJson.EndsWith("}"))
+            {
+                // Directly use the JSON string without deserialization
+                 questionsAnswers = JsonConvert.DeserializeObject<Dictionary<int, string>>(questionsAnswersJson);
+            }
+            else
+            {
+                // Deserialize the string to a dictionary
+                 questionsAnswers = JsonConvert.DeserializeObject<Dictionary<int, string>>(questionsAnswersJson);
+            }
             // Save the CV file
             if (model.CV != null)
             {
@@ -129,11 +140,11 @@ namespace IntelliView.API.Controllers
                 UserId = userId,
                 Status = ApplicationStatus.Pending,
                 IsApproved = false,
-                Gender = model.Gender,
-                FullName = model.FullName,
-                Email = model.Email,
-                CVURL = model.CVURL,
-                Phone = model.Phone,
+                Gender = model.Gender.Trim('"', ' '),
+                FullName = model.FullName.Trim('"', ' '),
+                Email = model.Email.Trim('"', ' '),
+                CVURL = model.CVURL.Trim('"', ' '),
+                Phone = model.Phone.Trim('"', ' '),
                 UserAnswers = questionsAnswers?.Select(qa => new UserJobAnswer
                 {
                     QuestionId = qa.Key,
@@ -408,7 +419,7 @@ namespace IntelliView.API.Controllers
                 var user = await _unitOfWork.IndividualUsers.GetByIdAsync(application.UserId);
                 if (user != null)
                 {
-                    var email = application.Email;
+                    var email = application.Email.Trim('"');
                     var subject = "Interview Invitation";
                     var body = "You have been approved for the job: " + job.Title + ".the link to interview is  "+interview.InterviewLink;
 
@@ -419,11 +430,11 @@ namespace IntelliView.API.Controllers
                         Body = body
                     };
 
-                   await _emailSender.SendEmailAsync(emailDto);
+                  _emailSender.SendEmailAsync(emailDto);
                 }
             }
 
-            return Ok("Interview emails sent successfully");
+            return Ok(new {Message =  "Interview emails sent successfully"});
         }
     }
 }

@@ -1,13 +1,15 @@
 "use client";
 import Layout from '../../components/Layout';
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect, Suspense } from "react";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import Loading from '../../components/loading';
 
 function CompanyDetails({ params }) {
   const DOMAIN_NAME = 'localhost:7049/api';
   const authToken = Cookies.get('authToken');
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -24,6 +26,7 @@ function CompanyDetails({ params }) {
         }
         const result = await response.json();
         setData(result);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -41,6 +44,10 @@ function CompanyDetails({ params }) {
   //   companySize: 'Large',
   //   companyFounded: '2000',
   // };
+
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
 
   return (
     <Layout>
@@ -86,40 +93,42 @@ function CompanyDetails({ params }) {
             <div className="row">
               <div className="col-md-8 d-flex flex-column justify-content-between">
                 <div className="card-body">
-                  <div className="form-company">
-                    <h1 className="card-title" htmlFor="company-name">{data.companyName}</h1>
+                  
+                    <div className="form-company">
+                      <h1 className="card-title" htmlFor="company-name">{data.companyName}</h1>
 
-                    <div className="Type">
-                      <label htmlFor="company-type">Type</label><br />
-                      <span id="company-overview">{data.companyType}</span>
+                      <div className="Type">
+                        <label htmlFor="company-type">Type</label><br />
+                        <span id="company-overview">{data.companyType}</span>
+                      </div>
+                      {/* Company overview */}
+                      <div className="overview">
+                        <label htmlFor="company-overview">Overview</label><br />
+                        <span id="company-overview">{data.companyOverview}.</span>
+                      </div>
+                      {/* Company website */}
+                      <div className="website">
+                        <label htmlFor="company-website">Website</label><br />
+                        <Link href="company-details" id="company-website">
+                          {data.companyWebsite}
+                        </Link>
+                      </div>
+                      {/* Company phone number */}
+                      <div className="phone">
+                        <label htmlFor="company-phone">Phone</label><br />
+                        <span id="company-phone">{data.phoneNumber}</span>
+                      </div>
+                      {/* Company size and founded date */}
+                      <div className="size">
+                        <label htmlFor="company-size">Size</label><br />
+                        <span id="company-size">{data.companySize}</span>
+                      </div>
+                      <div className="founded">
+                        <label htmlFor="company-founded">Founded</label><br />
+                        <span id="company-founded">{data.companyFounded}</span>
+                      </div>
                     </div>
-                    {/* Company overview */}
-                    <div className="overview">
-                      <label htmlFor="company-overview">Overview</label><br />
-                      <span id="company-overview">{data.companyOverview}.</span>
-                    </div>
-                    {/* Company website */}
-                    <div className="website">
-                      <label htmlFor="company-website">Website</label><br />
-                      <Link href="company-details" id="company-website">
-                        {data.companyWebsite}
-                      </Link>
-                    </div>
-                    {/* Company phone number */}
-                    <div className="phone">
-                      <label htmlFor="company-phone">Phone</label><br />
-                      <span id="company-phone">{data.phoneNumber}</span>
-                    </div>
-                    {/* Company size and founded date */}
-                    <div className="size">
-                      <label htmlFor="company-size">Size</label><br />
-                      <span id="company-size">{data.companySize}</span>
-                    </div>
-                    <div className="founded">
-                      <label htmlFor="company-founded">Founded</label><br />
-                      <span id="company-founded">{data.companyFounded}</span>
-                    </div>
-                  </div>
+                  
                 </div>
               </div>
               <div className="col-md-4 d-flex justify-content-center pt-4 overflow-hidden">

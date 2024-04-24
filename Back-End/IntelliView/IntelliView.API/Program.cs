@@ -99,6 +99,7 @@ builder.Services.AddScoped<HttpClient, HttpClient>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 builder.Services.AddScoped<IAvatarService, AvatarService>();
+builder.Services.AddScoped<IAIModelApiService, AIModelApiClient>();
 builder.Services.AddLogging();
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);
 builder.Services.AddControllers().AddNewtonsoftJson();

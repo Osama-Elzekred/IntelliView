@@ -15,7 +15,7 @@ namespace IntelliView.Models.DTO
         public string? Jobtype { get; set; }= string.Empty;
         public string? Jobtime { get; set; }= string.Empty;
         public string CompanyName { get; set; } = string.Empty;
-        public string CompanyLogo { get; set; } = @"wwwroot/Assets/images/7495e58b-b72b-4b87-8c12-c77a69b39cd3.jpg";
+        public string CompanyLogo { get; set; } = @"";
 
     }
 }

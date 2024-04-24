@@ -73,9 +73,9 @@ export default function JobApplicants({ params }) {
         return;
       }
       
-      // Filter applications based on score and select the top ones to approve
+      // Filter applications based on cvScore and select the top ones to approve
       const applicationsToApprove = allApplications
-        .sort((a, b) => b.Score - a.Score) // Sort applications by score in descending order
+        .sort((a, b) => b.CVcvScore - a.CVcvScore) // Sort applications by cvScore in descending order
         .slice(0, count); // Select the top 'count' applications
       
       // Approve the selected applications
@@ -93,7 +93,7 @@ export default function JobApplicants({ params }) {
       fetchData();
       
       // Handle success response
-      alert(`${count} application(s) approved successfully based on score.`);
+      alert(`${count} application(s) approved successfully based on cvScore.`);
     } catch (error) {
       console.error('Error approving job applications:', error);
       alert('Failed to approve job application(s). Please try again later.');
@@ -304,7 +304,7 @@ export default function JobApplicants({ params }) {
                                 {applicant.location}
                               </div>
                             </td>
-                            <td className="px-6 py-4">{applicant.score}</td>
+                            <td className="px-6 py-4">{applicant.cvScore}</td>
                             <td className="px-6 py-4">
                               <button
                                 onClick={() =>
@@ -366,7 +366,7 @@ export default function JobApplicants({ params }) {
                               scope="row"
                               className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                             >
-                              <Link href={`/job/job-company/${applicant.jobId}/job-application/${applicant.userId}`}>
+                              <Link href={`/job/job-company/${applicant.jobId}/job-application/${applicant.userId}`} target="_blank">
                               <img
                                 className="w-10 h-10 rounded-full"
                                 src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
@@ -389,7 +389,7 @@ export default function JobApplicants({ params }) {
                                 {applicant.location}
                               </div>
                             </td>
-                            <td className="px-6 py-4">{applicant.score}</td>
+                            <td className="px-6 py-4">{applicant.cvScore}</td>
                             <td className="px-6 py-4">
                               <button
                                 onClick={() =>

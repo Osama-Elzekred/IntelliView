@@ -10,10 +10,11 @@ import { Badge } from 'flowbite-react';
 import { Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
-import Loading from '../../components/loading';
 import { data } from 'autoprefixer';
+import Loading from '../../components/loading';
 
 const DOMAIN_NAME = 'localhost:7049';
+const [loading, setLoading] = useState(true);
 const User_profile = () => {
   const [click, setClick] = useState();
   const authToken = Cookies.get('authToken');
@@ -38,8 +39,7 @@ const User_profile = () => {
     // setSelectedFiles(event.target.files);
     await handleUpload(event.target.files);
   };
-
-  const [loading, setLoading] = useState(true);
+  
   const handleUpload = async (files) => {
     if (!files) {
       console.error('No file selected');
@@ -49,7 +49,7 @@ const User_profile = () => {
     for (let i = 0; i < files.length; i++) {
       formData.append('file', files[i]);
     }
-
+    
     try {
       const response = await fetch(
         `https://${DOMAIN_NAME}/api/Profile/updateCV`,
@@ -80,9 +80,9 @@ const User_profile = () => {
     }
   };
 
-  if (loading) {
-    return <Loading />; // Display loading indicator while data is being fetched
-  }
+  // if (loading) {
+  //   return <Loading />; // Display loading indicator while data is being fetched
+  // }
 
   return (
     <Layout>

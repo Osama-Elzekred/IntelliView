@@ -2,12 +2,12 @@
 const DOMAIN_NAME = "localhost:7049";
 
 let companyName = document.getElementById("company-name");
-let type = document.getElementById("type_");
+let companyType = document.getElementById("type_");
 let phoneNumber = document.getElementById("phone_");
-let founded = document.getElementById("founded_");
-let size = document.getElementById("size_");
-let website = document.getElementById("website_");
-let overview = document.getElementById("overview_");
+let companyFounded = document.getElementById("companyFounded");
+let companySize = document.getElementById("size_");
+let companyWebsite = document.getElementById("website_");
+let companyOverview = document.getElementById("overview_");
 let companyForm = document.getElementById("company");
 let saveChanges = document.getElementById("saveChanges");
 let companyImage = document.getElementById("companyImage");
@@ -85,12 +85,12 @@ saveChanges.addEventListener("click", function (e) {
   } else {
     let companyData = new FormData(companyForm);
     let companyName = companyData.get("companyName");
-    let type = companyData.get("type");
+    let companyType = companyData.get("companyType");
     let phoneNumber = companyData.get("phone");
-    let founded = companyData.get("founded");
-    let size = companyData.get("size");
-    let website = companyData.get("website");
-    let overview = companyData.get("overview");
+    let companyFounded = companyData.get("companyFounded");
+    let companySize = companyData.get("companySize");
+    let companyWebsite = companyData.get("companyWebsite");
+    let companyOverview = companyData.get("companyOverview");
 
     fetch(`https://${DOMAIN_NAME}/api/Profile`, {
       method: "PUT",
@@ -100,12 +100,12 @@ saveChanges.addEventListener("click", function (e) {
       },
       body: JSON.stringify({
         companyName: companyName,
-        companyWebsite: website,
+        companyWebsite: companyWebsite,
         phoneNumber: phoneNumber,
-        companyOverview: overview,
-        companySize: size,
-        companyType: type,
-        companyFounded: founded,
+        companyOverview: companyOverview,
+        companySize: companySize,
+        companyType: companyType,
+        companyFounded: companyFounded,
       }),
     })
       .then((response) => {
@@ -163,13 +163,13 @@ document.addEventListener("DOMContentLoaded", function (e) {
     .then((data) => {
       // Handle the profile data received from the server
       companyName.value = data.companyName;
-      type.value = data.companyType;
-      website.value = data.companyWebsite;
+      companyType.value = data.companyType;
+      companyWebsite.value = data.companyWebsite;
       phoneNumber.value = data.phoneNumber;
-      founded.value = data.companyFounded;
-      size.value = data.companySize;
-      overview.value = data.companyOverview;
-      companyImage.src = ` ./../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
+      companyFounded.value = data.companyFounded;
+      companySize.value = data.companySize;
+      companyOverview.value = data.companyOverview;
+      companyImage.src = ` ${data.imageURl}`;
     })
     .catch((error) => {
       // Handle any errors that occurred during the fetch operation

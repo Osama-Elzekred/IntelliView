@@ -19,6 +19,7 @@ const User_profile = () => {
   const authToken = Cookies.get('authToken');
   const [cvName, setCvName] = useState(null);
   const role = Cookies.get('role');
+  const [imageURL, setPhotoUrl] = useState(null);
   useEffect(() => {
     if (!authToken || (role != 'user' && role != 'User')) {
       redirect('/');
@@ -34,11 +35,47 @@ const User_profile = () => {
   const handleDisplay = async () => {
     setClick(false);
   };
+  const handlePhotoChange = async (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Create a new FormData object
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // Send the POST request to the server
+    try {
+      const response = await fetch(
+        "https://localhost:7049/api/Profile/updatePicture",
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData,
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+
+        setPhotoUrl(
+          `${data.imageURl}`
+        );
+        console.log("Photo uploaded successfully");
+      } else {
+        console.error("Failed to upload photo");
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+    }
+  };
   const handleFileChange = async (event) => {
     // setSelectedFiles(event.target.files);
     await handleUpload(event.target.files);
   };
-
+  const [file, setFile] = useState(null);
+ 
   const [loading, setLoading] = useState(true);
   const handleUpload = async (files) => {
     if (!files) {
@@ -80,9 +117,9 @@ const User_profile = () => {
     }
   };
 
-  if (loading) {
-    return <Loading />; // Display loading indicator while data is being fetched
-  }
+  // if (loading) {
+  //   return <Loading />; // Display loading indicator while data is being fetched
+  // }
 
   return (
     <Layout>
@@ -185,36 +222,28 @@ const User_profile = () => {
                       id="account-general"
                     >
                       <div className="card-body media align-items-center">
-                        <img
-                          src={data.imageURl}
-                          alt="profile image"
-                          className="d-block ui-w-80"
-                          id="profileImage"
-                        />
-                        <div className="media-body ml-4">
-                          <label
-                            className="btn btn-outline-primary"
-                            htmlFor="inputFile"
-                          >
-                            Upload new photo
-                          </label>{' '}
-                          &nbsp;
+                      <img src={imageURL} alt="" className="d-block ui-w-80" />
+                      <div className="media-body ml-4">
+                        <label className="btn btn-outline-primary">
+                          Upload new photo
                           <input
                             type="file"
                             className="account-settings-fileinput"
-                            id="inputFile"
+                            onChange={handlePhotoChange}
                           />
-                          <button
-                            type="button"
-                            className="btn btn-default md-btn-flat"
-                          >
-                            Reset
-                          </button>
-                          <div className="text-light small mt-1">
-                            Allowed JPG, GIF or PNG. Max size of 800K
-                          </div>
+                        </label>{" "}
+                        &nbsp;
+                        <button
+                          type="button"
+                          className="btn btn-default md-btn-flat"
+                        >
+                          Reset
+                        </button>
+                        <div className="text-light small mt-1">
+                          Allowed JPG or PNG. Max size of 800K
                         </div>
                       </div>
+                    </div>
                       <hr className="border-light m-0" />
                       <div className="container">
                         <form className="user" id="userForm">

@@ -99,12 +99,12 @@ export default function Header() {
             <Link href="/service">
               <Sidebar.Item icon={HiInbox}>Service</Sidebar.Item>
             </Link>
-            <Link href="/blog">
+            {/* <Link href="/blog">
               <Sidebar.Item icon={HiInbox}>Blog</Sidebar.Item>
             </Link>
             <Link href="/contact">
               <Sidebar.Item icon={HiUser}>Contact</Sidebar.Item>
-            </Link>
+            </Link> */}
             <Link href="/login">
               <Sidebar.Item icon={HiArrowSmRight}>Sign In</Sidebar.Item>
             </Link>
@@ -143,7 +143,7 @@ export default function Header() {
                 </Link>
                 <ul className="dropdown">
                   <li>
-                    <Link href="job/post" replace>
+                    <Link href="/job/post" replace>
                       Post a Job
                     </Link>
                   </li>
@@ -165,13 +165,18 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
+                    <Link href="/Interview/review" replace>
+                      Review
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/Interview/mocks/Edit-mocks" replace>
                       Edit Mocks
                     </Link>
                   </li>
                 </ul>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/blog" replace>
                   Blog
                 </Link>
@@ -180,7 +185,7 @@ export default function Header() {
                 <Link href="/contact" replace>
                   Contact
                 </Link>
-              </li>
+              </li> */}
               <li className="d-lg-none">
                 <Link href="/post">
                   <span className="mr-2">+</span>

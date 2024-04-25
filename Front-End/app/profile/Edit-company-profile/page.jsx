@@ -67,7 +67,7 @@ export default function EditProfile() {
               founded: data.founded,
             });
             setPhotoUrl(
-              `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
+              `${data.imageURl}`
             );
           } else {
             console.error("Failed to fetch user data");
@@ -190,7 +190,7 @@ export default function EditProfile() {
         const data = await response.json();
 
         setPhotoUrl(
-          `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
+          `${data.imageURl}`
         );
         console.log("Photo uploaded successfully");
       } else {

@@ -1,11 +1,13 @@
 'use client';
 import Layout from '../../components/Layout';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import CardComp from '../../components/Card';
+import Loading from '../../components/loading';
+
 export default function Jobs() {
-  const imageURl = 'images/job_logo_1.jpg';
+ // const imageURl = 'images/job_logo_1.jpg';
   const [jobListings, setJobListings] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -21,6 +23,7 @@ export default function Jobs() {
   const handleChange = async (field, value) => {
     setSearchForm({ ...searchForm, [field]: value });
   };
+  const [loading, setLoading] = useState(true);
   const handleSearch = async () => {
     setTest(true);
     const filteredJobs = jobListings.filter((job) => {
@@ -68,6 +71,7 @@ export default function Jobs() {
           const jobs = await response.json();
           setJobListings(jobs);
         }
+        setLoading(false);
       } catch (error) {
         console.log('error : ', error);
       }
@@ -128,6 +132,11 @@ export default function Jobs() {
       }, 200);
     }
   };
+
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
+
   return (
     <Layout>
       <>
@@ -239,75 +248,77 @@ export default function Jobs() {
             </Link>
           </section>
           <section className="site-section" id="next">
-            <div className="container" id="job-listings">
-              <div className="row mb-5 justify-content-center">
-                <div className="col-md-7 text-center">
-                  <h2 className="section-title mb-2">
-                    {searchResult.length > 0 ||
-                    (searchResult.length === 0 && test === true)
-                      ? searchResult.length
-                      : jobListings.length}{' '}
-                    Job Listed
-                  </h2>
+
+              <div className="container" id="job-listings">
+                <div className="row mb-5 justify-content-center">
+                  <div className="col-md-7 text-center">
+                    <h2 className="section-title mb-2">
+                      {searchResult.length > 0 ||
+                      (searchResult.length === 0 && test === true)
+                        ? searchResult.length
+                        : jobListings.length}{' '}
+                      Job Listed
+                    </h2>
+                  </div>
                 </div>
-              </div>
-              <ul className="job-listings m-5 space-y-2 py-2">
-                {jobs.map((job) => (
-                  <CardComp
-                    title={job.title}
-                    company={job.companyName}
-                    location={job.location}
-                    timePosted={new Date(job.createdAt).toDateString()}
-                    employmentType={job.jobType}
-                    categories={['marketing', 'finance']} // There's no equivalent in the jobData
-                    jobTime={job.jobTime}
-                    companyImageUrl={job.imageURl}
-                    onClick={() => (window.location.href = `/job/job-company/${job.id}`)}
-                  />
-                ))}
-              </ul>
-              <div className="row pagination-wrap">
-                <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
-                  <span>
-                    Showing 1-5 Of{' '}
-                    {searchResult.length > 0 ||
-                    (searchResult.length === 0 && test === true)
-                      ? searchResult.length
-                      : jobListings.length}{' '}
-                    Jobs
-                  </span>
-                </div>
-                <div className="col-md-6 text-center text-md-right">
-                  <div className="custom-pagination ml-auto">
-                    {currentPage !== 1 && (
-                      <Link href="#" className="prev" onClick={prevPage}>
-                        Prev
-                      </Link>
-                    )}
-                    {[...Array(totalPages).keys()].map((page) => (
-                      <Link
-                        key={page + 1}
-                        href="#"
-                        className={page + 1 === currentPage ? 'active' : ''}
-                        onClick={() => changePage(page + 1)}
-                      >
-                        {page + 1}
-                      </Link>
-                    ))}
-                    {currentPage !==
-                      Math.ceil(
-                        (searchResult.length > 0
-                          ? searchResult.length
-                          : jobListings.length) / jobsPerPage
-                      ) && (
-                      <Link href="#" className="next" onClick={nextPage}>
-                        Next
-                      </Link>
-                    )}
+                <ul className="job-listings m-5 space-y-2 py-2">
+                  {jobs.map((job) => (
+                    <CardComp
+                      title={job.title}
+                      company={job.companyName}
+                      location={job.location}
+                      timePosted={new Date(job.createdAt).toDateString()}
+                      employmentType={job.jobType}
+                      categories={['marketing', 'finance']} // There's no equivalent in the jobData
+                      jobTime={job.jobTime}
+                      companyImageUrl={job.imageURl}
+                      onClick={() => (window.location.href = `/job/job-company/${job.id}`)}
+                    />
+                  ))}
+                </ul>
+                <div className="row pagination-wrap">
+                  <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
+                    <span>
+                      Showing 1-5 Of{' '}
+                      {searchResult.length > 0 ||
+                      (searchResult.length === 0 && test === true)
+                        ? searchResult.length
+                        : jobListings.length}{' '}
+                      Jobs
+                    </span>
+                  </div>
+                  <div className="col-md-6 text-center text-md-right">
+                    <div className="custom-pagination ml-auto">
+                      {currentPage !== 1 && (
+                        <Link href="#" className="prev" onClick={prevPage}>
+                          Prev
+                        </Link>
+                      )}
+                      {[...Array(totalPages).keys()].map((page) => (
+                        <Link
+                          key={page + 1}
+                          href="#"
+                          className={page + 1 === currentPage ? 'active' : ''}
+                          onClick={() => changePage(page + 1)}
+                        >
+                          {page + 1}
+                        </Link>
+                      ))}
+                      {currentPage !==
+                        Math.ceil(
+                          (searchResult.length > 0
+                            ? searchResult.length
+                            : jobListings.length) / jobsPerPage
+                        ) && (
+                        <Link href="#" className="next" onClick={nextPage}>
+                          Next
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+ 
           </section>
           <section
             className="py-5 bg-image overlay-primary fixed overlay"

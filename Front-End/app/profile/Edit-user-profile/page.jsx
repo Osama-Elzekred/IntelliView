@@ -10,6 +10,9 @@ import { Badge } from 'flowbite-react';
 import { Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
+import Loading from '../../components/loading';
+import { data } from 'autoprefixer';
+
 const DOMAIN_NAME = 'localhost:7049';
 const User_profile = () => {
   const [click, setClick] = useState();
@@ -36,12 +39,12 @@ const User_profile = () => {
     await handleUpload(event.target.files);
   };
 
+  const [loading, setLoading] = useState(true);
   const handleUpload = async (files) => {
     if (!files) {
       console.error('No file selected');
       return;
     }
-
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
       formData.append('file', files[i]);
@@ -70,11 +73,16 @@ const User_profile = () => {
         console.error('Failed to upload files');
         // Handle failure
       }
+      setLoading(false);
     } catch (error) {
       console.error('Error occurred while uploading files:', error);
       // Handle error
     }
   };
+
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
 
   return (
     <Layout>
@@ -178,8 +186,8 @@ const User_profile = () => {
                     >
                       <div className="card-body media align-items-center">
                         <img
-                          src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
-                          alt=""
+                          src={data.imageURl}
+                          alt="profile image"
                           className="d-block ui-w-80"
                           id="profileImage"
                         />

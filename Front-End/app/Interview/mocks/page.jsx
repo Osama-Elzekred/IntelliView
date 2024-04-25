@@ -1,8 +1,9 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 import Layout from '../../components/Layout';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Loading from '../../components/loading';
 
 function MainComponent() {
   const [fristTime, setFristTime] = useState(true);
@@ -182,29 +183,31 @@ function MainComponent() {
       </p> */}
       {filteredMocks.map((Mock) => (
         <>
-          <div
-            key={Mock.Id}
-            href={`/Interview/Vedio-interview/${Mock.Id}`}
-            className={`inline-flex flex-col items-center text-center p-4 bg-gray-50 rounded shadow cursor-pointer ${
-              selectedTopic === Mock.topic
-                ? 'ring-2 ring-offset-2 ring-[#6366F1]'
-                : 'hover:bg-gray-100'
-            }`}
-          >
-            <i
-              className={`fas ${ClickedTopicIcon} text-3xl mb-3 text-gray-700`}
-            ></i>
-            <Link href={`/Interview/Vedio-interview/${Mock.Id}`}>
-              <p className="font-semibold text-sm text-[#121212] line-clamp-2 w-full max-w-40 ">
-                {Mock.Title}
-                <br />
-                <span className="font-normal text-sm text-[#121212] line-clamp-1">{`(${Mock.Level})`}</span>
+          
+            <div
+              key={Mock.Id}
+              href={`/Interview/Vedio-interview/${Mock.Id}`}
+              className={`inline-flex flex-col items-center text-center p-4 bg-gray-50 rounded shadow cursor-pointer ${
+                selectedTopic === Mock.topic
+                  ? 'ring-2 ring-offset-2 ring-[#6366F1]'
+                  : 'hover:bg-gray-100'
+              }`}
+            >
+              <i
+                className={`fas ${ClickedTopicIcon} text-3xl mb-3 text-gray-700`}
+              ></i>
+              <Link href={`/Interview/Vedio-interview/${Mock.Id}`}>
+                <p className="font-semibold text-sm text-[#121212] line-clamp-2 w-full max-w-40 ">
+                  {Mock.Title}
+                  <br />
+                  <span className="font-normal text-sm text-[#121212] line-clamp-1">{`(${Mock.Level})`}</span>
+                </p>
+              </Link>
+              <p className="text-sm text-gray-500 line-clamp-2 w-full max-w-md">
+                {Mock.Description}
               </p>
-            </Link>
-            <p className="text-sm text-gray-500 line-clamp-2 w-full max-w-md">
-              {Mock.Description}
-            </p>
-          </div>
+            </div>
+          
         </>
       ))}
     </>

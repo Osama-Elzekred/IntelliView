@@ -37,7 +37,7 @@ namespace IntelliView.Models.Models
         //public virtual string ResumeURL { get; set; }
         public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
         public bool IsApproved { get; set; }
-        public int Score { get; set; } = 0;
+        public decimal CVScore { get; set; } = 0;
     }
     public enum ApplicationStatus
     {

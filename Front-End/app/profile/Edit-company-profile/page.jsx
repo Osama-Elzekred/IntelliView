@@ -5,6 +5,8 @@ import Phone from "../../components/Phone";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import Loading from "../../components/loading";
+
 export default function EditProfile() {
   let [message,setMessage] = useState(""); 
   let [color,setColor] = useState(""); 
@@ -31,6 +33,7 @@ export default function EditProfile() {
     newPasswordConfirm: "",
   });
   const [imageURL, setPhotoUrl] = useState(null);
+  const [loading, setLoading] = useState(true);
   const phoneInputGfgRef = useRef();
 
   // Function to retrieve the phone number value
@@ -64,12 +67,13 @@ export default function EditProfile() {
               founded: data.founded,
             });
             setPhotoUrl(
-              `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
+              `${data.imageURl}`
             );
           } else {
             console.error("Failed to fetch user data");
           }
         }
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -104,6 +108,7 @@ export default function EditProfile() {
       } else {
         console.error("Failed to update profile");
       }
+      setLoading(false);
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -185,16 +190,22 @@ export default function EditProfile() {
         const data = await response.json();
 
         setPhotoUrl(
-          `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
+          `${data.imageURl}`
         );
         console.log("Photo uploaded successfully");
       } else {
         console.error("Failed to upload photo");
       }
+      setLoading(false);
     } catch (error) {
       console.error("Error uploading photo:", error);
     }
   };
+
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
+
   return (
     <Layout>
       {/* <ProtectedPage allowedRoles={["company"]}/> */}

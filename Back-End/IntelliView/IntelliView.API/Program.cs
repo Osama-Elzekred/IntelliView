@@ -33,20 +33,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("MonsterASPConnection")));
-//builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
-//      options.UseSqlServer(builder.Configuration.GetConnectionString("MonsterASPConnection")));
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
+      options.UseSqlServer(builder.Configuration.GetConnectionString("MonsterASPConnection")));
 
 
 // for database in memory
 
-builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
-{
-    // Use In-Memory Database
-    options.UseInMemoryDatabase("InMemoryDatabase");
-    
-    // If you still want to seed data, you can do it here
-    // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
-});
+//builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
+//{
+//    // Use In-Memory Database
+//    options.UseInMemoryDatabase("InMemoryDatabase");
+
+//    // If you still want to seed data, you can do it here
+//    // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
+//});
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();

@@ -8,6 +8,7 @@ namespace IntelliView.Models.Models
     public class Job
     {
         public int Id { get; set; }
+        public string ImageURl { get; set; }
 
         [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; } = string.Empty;

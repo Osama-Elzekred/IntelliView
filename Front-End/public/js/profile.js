@@ -141,7 +141,7 @@ if (inputFile) {
         return response.json();
       })
       .then((data) => {
-        profileImage.src = `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
+        profileImage.src = `${data.imageURl}`;
       })
       .catch((error) => {
         console.log(error);
@@ -211,7 +211,7 @@ if (document.readyState === 'loading') {
       lastName.value = data.lastName;
       title.value = data.title;
       phoneInput.value = data.phoneNumber;
-      profileImage.src = `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
+      profileImage.src = `${data.imageURl}`;
       console.log('Profile data:', data.firstName);
     })
     .catch((error) => {

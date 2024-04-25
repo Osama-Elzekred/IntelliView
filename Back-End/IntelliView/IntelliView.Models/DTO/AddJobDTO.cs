@@ -14,8 +14,8 @@ namespace IntelliView.Models.DTO
         public List<QuestionItemDto>? QuestionItems { get; set; }
         public List<CustQuestionDto>? CustQuestions { get; set; }
         public List<JobInterestedTopicDto>? JobInterestedTopics { get; set; }
-        public string EndDate { get; set; }
-
+        public string EndDate { get; set; } = DateTime.Now.AddDays(30).ToString("yyyy-MM-dd");
+        public string ImageURl { get; set; } = @"test";
         [JsonIgnore]
         public string? CompanyUserId { get; set; } = string.Empty;
     }

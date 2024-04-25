@@ -23,14 +23,16 @@ namespace IntelliView.API.Controllers
         public readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IUploadFilesToCloud _uploadFilesToCloud;
         private readonly IEmailSender _emailSender;
+        private readonly IAIModelApiService _aiModelApiService;
         public JobApplicationController(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment
-            , IUploadFilesToCloud uploadFilesToCloud, IEmailSender emailSender)
+            ,IUploadFilesToCloud uploadFilesToCloud, IEmailSender emailSender, IAIModelApiService aiModelApiService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _webHostEnvironment = webHostEnvironment;
             _uploadFilesToCloud = uploadFilesToCloud;
             _emailSender = emailSender;
+            _aiModelApiService = aiModelApiService;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Job>> GetJobById(int id)
@@ -78,7 +80,7 @@ namespace IntelliView.API.Controllers
 
             if (existingApplication != null)
             {
-                return BadRequest("You have already applied for this job");
+                return Ok("You have already applied for this job");
             }
             var questionsAnswersJson = model.QuestionsAnswers;
             Dictionary<int, string> questionsAnswers;
@@ -156,22 +158,16 @@ namespace IntelliView.API.Controllers
             await _unitOfWork.SaveAsync();
 
             // Call the model to get the score
-            var score = 0; // Default score
+            var score = string.Empty; // Default score
             if (!string.IsNullOrEmpty(jobApplication.CVURL))
             {
-                score = await CallModelToGetScore(jobApplication);
+                score =await _aiModelApiService.GetCVmatch(jobApplication.CVURL,job.Title +"  "+ job.Description +"  "+ job.Requirements );
             }
             // Update the application status based on the score
-            jobApplication.IsApproved = score >= 50;
+            jobApplication.CVScore = Convert.ToDecimal(score);
+            jobApplication.IsApproved = Convert.ToDecimal(score) >= 50;
             await _unitOfWork.SaveAsync();
-            if (jobApplication.IsApproved)
-            {
-                return Ok("Application submitted");
-            }
-            else
-            {
-                return Ok("Application submitted");
-            }
+            return Ok("Application submitted");
         }
 
         //delete job application by id
@@ -188,125 +184,8 @@ namespace IntelliView.API.Controllers
             return Ok();
         }
 
-        #region CV model
-        [HttpPost("predict")]
-        public IActionResult Predict([FromBody] CVDataModel data)
-        {
-            try
-            {
-                // Here you can perform your model prediction logic
-                // For demonstration purposes, let's assume we return a random score between 0 and 100
-                var random = new Random();
-                var score = random.Next(0, 101);
 
-                return Ok(score); // Return the score as JSON response
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-        public class CVDataModel
-        {
-            public byte[] CVData { get; set; }
-        }
-        private async Task<int> CallModelToGetScore(JobApplication jobApplication)
-        {
-            try
-            {
-                var cvData = await GetCVData(jobApplication.CVURL);
-                var requestData = JsonConvert.SerializeObject(new { CVData = cvData });
-                var modelEndpoint = "https://your-model-endpoint.com/predict";
-
-                using (var httpClient = new HttpClient())
-                {
-                    var requestContent = new StringContent(requestData, Encoding.UTF8, "application/json");
-                    var response = await httpClient.PostAsync(modelEndpoint, requestContent);
-                    response.EnsureSuccessStatusCode();
-                    var responseBody = await response.Content.ReadAsStringAsync();
-                    var score = JsonConvert.DeserializeObject<int>(responseBody);
-                    return score;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine("Error calling model: " + ex.Message);
-                return 0; // Return 0 or another default value in case of error
-            }
-        }
-
-        private async Task<byte[]> GetCVData(string cvUrl)
-        {
-            try
-            {
-                using (var httpClient = new HttpClient())
-                {
-                    var response = await httpClient.GetAsync(cvUrl);
-                    response.EnsureSuccessStatusCode();
-                    var cvData = await response.Content.ReadAsByteArrayAsync();
-                    return cvData;
-                }
-            }
-            catch (HttpRequestException ex)
-            {
-                Console.Error.WriteLine("HTTP request error: " + ex.Message);
-                throw new HttpRequestException("Error fetching CV data: " + ex.Message);
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine("Error fetching CV data: " + ex.Message);
-                throw;
-            }
-        }
-
-        #endregion
-
-        [HttpPost("UploadCV")]
-        public async Task<IActionResult> UploadCV(IFormFile file)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (file != null && userId != null)
-            {
-                var user = await _unitOfWork.IndividualUsers.GetByIdAsync(userId);
-                if (user != null)
-                {
-                    if (file.Length > FileSettings.MAxFileSizeInBytes)
-                    {
-                        return BadRequest(new { message = "File size should not be more than 5MB!" });
-                    }
-                    if (!FileSettings.AllowedCVExtensions.Contains(Path.GetExtension(file.FileName).ToLower()))
-                    {
-                        return BadRequest(new { message = "This file extension is not allowed!" });
-                    }
-
-                    string fileName = "cv-" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-
-                    // Delete the old cv if it exists
-                    if (!string.IsNullOrEmpty(user.CVURL))
-                    {
-                        bool deleted = await _uploadFilesToCloud.DeleteFile(user.CVURL);
-                        if (!deleted)
-                        {
-                            return BadRequest(new { message = "Failed to delete the old CV!" });
-                        }
-                    }
-
-                    string cvUrl = await _uploadFilesToCloud.UploadFile(file, fileName);
-
-                    if (cvUrl == String.Empty)
-                    {
-                        return BadRequest(new { message = "Failed to upload the CV!" });
-                    }
-                    // Update the user's CV URL
-                    user.CVURL = cvUrl;
-                    await _unitOfWork.SaveAsync();
-
-                    return Ok(user.CVURL); // Return the URL of the updated CV
-                }
-            }
-            return BadRequest("No file or user found.");
-        }
-
+       
         [HttpGet("GetUserJobs")]
         public async Task<ActionResult<IEnumerable<GetAppliedJobsDTO>>> GetUserJobs()
         {

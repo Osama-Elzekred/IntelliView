@@ -3,7 +3,8 @@
 import Cookies from 'js-cookie';
 import Layout from '../../components/Layout';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import {useEffect, useState } from 'react';
+import Loading from '../../components/loading';
 
 const DOMAIN_NAME = 'localhost:7049';
 
@@ -37,6 +38,7 @@ export default function Job_details({ params }) {
   // console.log(parseInt(params.id));
   const authToken = Cookies.get('authToken');
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,6 +56,7 @@ export default function Job_details({ params }) {
         }
         const result = await response.json();
         setData(result);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -62,6 +65,11 @@ export default function Job_details({ params }) {
     fetchData();
   }, []);
 
+
+  // if (!data) {
+  //   return <Loading />;
+  // }
+  
   //const jobData = Object.keys(data).length > 0 ? [data] : [];
   //console.log(jobData);
 
@@ -72,6 +80,11 @@ export default function Job_details({ params }) {
   const date1 = new Date(data.endedAt);
   const options1 = { year: 'numeric', month: 'short', day: 'numeric' };
   const formattedDate1 = date1.toLocaleDateString('en-US', options1);
+
+
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
 
   return (
     <Layout>
@@ -132,29 +145,31 @@ export default function Job_details({ params }) {
                 <div className="col-lg-8 mb-4 mb-lg-0">
                   <div className="d-flex align-items-center">
                     <div className="border p-2 d-inline-block mr-3 rounded">
-                      <img src="/images/job_logo_5.jpg" alt="Image" />
+                      <img src={data.imageURL} alt="Image" />
                     </div>
-                    <div>
-                      {/* {data.map((item) => ( */}
-                        <h2>{data.title}</h2>
-                      {/* ))} */}
+                    
                       <div>
-                        <Link href={`/company-details/${data.companyUserId}`}>
-                          <span className="ml-0 mr-2 mb-2">
-                            <span className="icon-briefcase mr-2" />
-                            {data.companyName}
+                        {/* {data.map((item) => ( */}
+                          <h2>{data.title}</h2>
+                        {/* ))} */}
+                        <div>
+                          <Link href={`/company-details/${data.companyUserId}`}>
+                            <span className="ml-0 mr-2 mb-2">
+                              <span className="icon-briefcase mr-2" />
+                              {data.companyName}
+                            </span>
+                          </Link>
+                          <span className="m-2">
+                            <span className="icon-room mr-2" />
+                            {data.location}
                           </span>
-                        </Link>
-                        <span className="m-2">
-                          <span className="icon-room mr-2" />
-                          {data.location}
-                        </span>
-                        <span className="m-2">
-                          <span className="icon-clock-o mr-2" />
-                          <span className="text-primary">{data.jobTime}</span>
-                        </span>
+                          <span className="m-2">
+                            <span className="icon-clock-o mr-2" />
+                            <span className="text-primary">{data.jobTime}</span>
+                          </span>
+                        </div>
                       </div>
-                    </div>
+                    
                   </div>
                 </div>
                 <div className="col-lg-4">
@@ -170,6 +185,7 @@ export default function Job_details({ params }) {
                     <div className="col-6">
                       <Link href={`/job/${params.id}/apply`}
                         className="btn btn-block btn-primary btn-md"
+                        target='_blank'
                       >
                         Apply Now
                       </Link>
@@ -239,6 +255,7 @@ export default function Job_details({ params }) {
                       <Link
                          href={`/job/${params.id}/apply`}
                         className="btn btn-block btn-primary btn-md"
+                        target='_blank'
                       >
                         Apply Now
                       </Link>

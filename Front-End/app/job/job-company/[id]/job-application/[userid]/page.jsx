@@ -4,9 +4,11 @@ import Layout from '../../../../../components/Layout';
 import Link from 'next/link';
 import { PaperClipIcon } from '@heroicons/react/20/solid'
 import Cookies from 'js-cookie';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import Loading from '../../../../../components/loading';
 export default function Job_Application_details({ params}) {
   const [applicantDetails, setApplicantDetails] = useState();
+  const [loading, setLoading] = useState(true); 
   // const applicantDetails = {
     //   id: parseInt(params.id), // Convert id to integer
     //   jobTitle: 'Product Designer',
@@ -18,6 +20,7 @@ export default function Job_Application_details({ params}) {
     // };
     const DOMAIN_NAME = 'localhost:7049/api';
     
+
     useEffect(() => {
       const fetchData = async () => {
         try {
@@ -36,6 +39,7 @@ export default function Job_Application_details({ params}) {
         }
         const result = await response.json();
         setApplicantDetails(result);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -48,6 +52,9 @@ export default function Job_Application_details({ params}) {
     return <div>Loading...</div>; // You can render a loading indicator while data is being fetched
   }*/
 
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
   return (
     <Layout>
       <>
@@ -99,23 +106,25 @@ export default function Job_Application_details({ params}) {
         <div className="border p-2 d-inline-block mr-3 rounded">
           <img src={ApplicantPhoto} alt="Applicant Photo" />
         </div>
-        <div>
-          <h2>{applicantDetails?.fullName}</h2>
+        
           <div>
-            <span className="ml-0 mr-2 mb-2">
-              <span className="icon-briefcase mr-2" />
-              {applicantDetails?.gender}
-            </span>
-            <span className="m-2">
-              <span className="icon-room mr-2" />
-              {applicantDetails?.phone}
-            </span>
-            <span className="m-2">
-              <span className="icon-envelope mr-2" />
-              {applicantDetails?.email}
-            </span>
+            <h2>{applicantDetails?.fullName}</h2>
+            <div>
+              <span className="ml-0 mr-2 mb-2">
+                <span className="icon-briefcase mr-2" />
+                {applicantDetails?.gender}
+              </span>
+              <span className="m-2">
+                <span className="icon-room mr-2" />
+                {applicantDetails?.phone}
+              </span>
+              <span className="m-2">
+                <span className="icon-envelope mr-2" />
+                {applicantDetails?.email}
+              </span>
+            </div>
           </div>
-        </div>
+        
       </div>
     </div>
     {applicantDetails && (

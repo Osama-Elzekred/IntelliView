@@ -30,6 +30,7 @@ namespace IntelliView.API.Controllers
         [HttpGet("CompanyDetails/{companyId}")]
         public async Task<ActionResult<ProfileDTO>> GetCompanyDetails(string companyId)
         {
+            
             if (string.IsNullOrEmpty(companyId))
             {
                 return BadRequest(new { message = "Company ID is required" });
@@ -46,7 +47,6 @@ namespace IntelliView.API.Controllers
         {
             var jobs = await _unitOfWork.Jobs.GetAllAsyncWithTopics();
             var jobsDto = _mapper.Map<IEnumerable<JobDTO>>(jobs);
-
             return Ok(jobsDto);
         }
 
@@ -224,8 +224,14 @@ namespace IntelliView.API.Controllers
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             jobDto.CompanyUserId = userId;
+            var company = await _unitOfWork.CompanyUsers.GetFirstOrDefaultAsync(c => c.Id == userId);
+            if (company == null)
+            {
+                return NotFound("Company not found");
+            }
+            jobDto.ImageURl = company.ImageURl;
             var job = _mapper.Map<Job>(jobDto);
-
+            job.ImageURl = company.ImageURl;
             job.JobInterestedTopic = jobDto.JobInterestedTopics?.Select(topic => new JobInterestedTopic
             {
                 //InterestedTopicId = topic.InterestedTopicId,

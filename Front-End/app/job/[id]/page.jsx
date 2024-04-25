@@ -145,7 +145,7 @@ export default function Job_details({ params }) {
                 <div className="col-lg-8 mb-4 mb-lg-0">
                   <div className="d-flex align-items-center">
                     <div className="border p-2 d-inline-block mr-3 rounded">
-                      <img src="/images/job_logo_5.jpg" alt="Image" />
+                      <img src={data.imageURL} alt="Image" />
                     </div>
                     
                       <div>

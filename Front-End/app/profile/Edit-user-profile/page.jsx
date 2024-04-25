@@ -11,6 +11,7 @@ import { Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
 import Loading from '../../components/loading';
+import { data } from 'autoprefixer';
 
 const DOMAIN_NAME = 'localhost:7049';
 const User_profile = () => {
@@ -185,8 +186,8 @@ const User_profile = () => {
                     >
                       <div className="card-body media align-items-center">
                         <img
-                          src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
-                          alt=""
+                          src={data.imageURl}
+                          alt="profile image"
                           className="d-block ui-w-80"
                           id="profileImage"
                         />

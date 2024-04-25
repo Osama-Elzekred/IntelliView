@@ -252,7 +252,6 @@ namespace IntelliView.API.Controllers
                 }).ToList() : new List<InterviewQuestion>(),
                 Title = jobDto.Title,
                 Description = jobDto.Description,
-                JobId = job.Id,
                 Level = InterviewLevel.None
             };
 

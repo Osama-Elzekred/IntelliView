@@ -165,6 +165,11 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
+                    <Link href="/Interview/review" replace>
+                      Review
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/Interview/mocks/Edit-mocks" replace>
                       Edit Mocks
                     </Link>

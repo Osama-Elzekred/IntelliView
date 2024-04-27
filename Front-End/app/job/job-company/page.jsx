@@ -7,7 +7,7 @@ import CardComp from '../../components/Card';
 import Loading from '../../components/loading';
 
 export default function Jobs() {
-  const imageURl = 'images/job_logo_1.jpg';
+ // const imageURl = 'images/job_logo_1.jpg';
   const [jobListings, setJobListings] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [totalPages, setTotalPages] = useState(0);

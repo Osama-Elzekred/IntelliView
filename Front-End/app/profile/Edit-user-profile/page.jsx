@@ -10,14 +10,17 @@ import { Badge } from 'flowbite-react';
 import { Button } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { redirect } from 'next/navigation';
+import { data } from 'autoprefixer';
 import Loading from '../../components/loading';
 
 const DOMAIN_NAME = 'localhost:7049';
+// const [loading, setLoading] = useState(true);
 const User_profile = () => {
   const [click, setClick] = useState();
   const authToken = Cookies.get('authToken');
   const [cvName, setCvName] = useState(null);
   const role = Cookies.get('role');
+  const [imageURL, setPhotoUrl] = useState(null);
   useEffect(() => {
     if (!authToken || (role != 'user' && role != 'User')) {
       redirect('/');
@@ -33,11 +36,47 @@ const User_profile = () => {
   const handleDisplay = async () => {
     setClick(false);
   };
+  const handlePhotoChange = async (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+
+    // Create a new FormData object
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // Send the POST request to the server
+    try {
+      const response = await fetch(
+        "https://localhost:7049/api/Profile/updatePicture",
+        {
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData,
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+
+        setPhotoUrl(
+          `${data.imageURl}`
+        );
+        console.log("Photo uploaded successfully");
+      } else {
+        console.error("Failed to upload photo");
+      }
+      // setLoading(false);
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+    }
+  };
   const handleFileChange = async (event) => {
     // setSelectedFiles(event.target.files);
     await handleUpload(event.target.files);
   };
-
+  const [file, setFile] = useState(null);
+ 
   const [loading, setLoading] = useState(true);
   const handleUpload = async (files) => {
     if (!files) {
@@ -48,7 +87,7 @@ const User_profile = () => {
     for (let i = 0; i < files.length; i++) {
       formData.append('file', files[i]);
     }
-
+    
     try {
       const response = await fetch(
         `https://${DOMAIN_NAME}/api/Profile/updateCV`,
@@ -72,16 +111,21 @@ const User_profile = () => {
         console.error('Failed to upload files');
         // Handle failure
       }
-      setLoading(false);
+      // setLoading(false);
     } catch (error) {
       console.error('Error occurred while uploading files:', error);
       // Handle error
     }
   };
-
-  if (loading) {
-    return <Loading />; // Display loading indicator while data is being fetched
-  }
+      const profilePhotoUrl = imageURL;
+      localStorage.setItem('profilePhotoUrl', profilePhotoUrl); 
+  
+  // if (loading) {
+  //   return <Loading />; // Display loading indicator while data is being fetched
+  // }
+  // if (loading) {
+  //   return <Loading />; // Display loading indicator while data is being fetched
+  // }
 
   return (
     <Layout>
@@ -184,36 +228,28 @@ const User_profile = () => {
                       id="account-general"
                     >
                       <div className="card-body media align-items-center">
-                        <img
-                          src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
-                          alt=""
-                          className="d-block ui-w-80"
-                          id="profileImage"
-                        />
-                        <div className="media-body ml-4">
-                          <label
-                            className="btn btn-outline-primary"
-                            htmlFor="inputFile"
-                          >
-                            Upload new photo
-                          </label>{' '}
-                          &nbsp;
+                      <img src={imageURL} alt="" className="d-block ui-w-80" />
+                      <div className="media-body ml-4">
+                        <label className="btn btn-outline-primary">
+                          Upload new photo
                           <input
                             type="file"
                             className="account-settings-fileinput"
-                            id="inputFile"
+                            onChange={handlePhotoChange}
                           />
-                          <button
-                            type="button"
-                            className="btn btn-default md-btn-flat"
-                          >
-                            Reset
-                          </button>
-                          <div className="text-light small mt-1">
-                            Allowed JPG, GIF or PNG. Max size of 800K
-                          </div>
+                        </label>{" "}
+                        &nbsp;
+                        <button
+                          type="button"
+                          className="btn btn-default md-btn-flat"
+                        >
+                          Reset
+                        </button>
+                        <div className="text-light small mt-1">
+                          Allowed JPG or PNG. Max size of 800K
                         </div>
                       </div>
+                    </div>
                       <hr className="border-light m-0" />
                       <div className="container">
                         <form className="user" id="userForm">

@@ -38,6 +38,8 @@ export default function Header() {
     Cookies.remove('user_id');
     Cookies.remove('role');
     Cookies.remove('userName');
+    localStorage.removeItem('profilePhotoUrl');
+    localStorage.removeItem('cvName');
 
     window.location.href = '/login';
   };
@@ -99,12 +101,12 @@ export default function Header() {
             <Link href="/service">
               <Sidebar.Item icon={HiInbox}>Service</Sidebar.Item>
             </Link>
-            <Link href="/blog">
+            {/* <Link href="/blog">
               <Sidebar.Item icon={HiInbox}>Blog</Sidebar.Item>
             </Link>
             <Link href="/contact">
               <Sidebar.Item icon={HiUser}>Contact</Sidebar.Item>
-            </Link>
+            </Link> */}
             <Link href="/login">
               <Sidebar.Item icon={HiArrowSmRight}>Sign In</Sidebar.Item>
             </Link>
@@ -116,6 +118,23 @@ export default function Header() {
       </Sidebar>
     );
   };
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
+
+  useEffect(() => {
+    // Check if window object is defined (running in the browser)
+    if (typeof window !== 'undefined') {
+      // Retrieve the profile photo URL from local storage
+      const storedProfilePhotoUrl = localStorage.getItem('profilePhotoUrl');
+
+      // Update state with the retrieved profile photo URL
+      setProfilePhotoUrl(storedProfilePhotoUrl || '');
+      
+      localStorage.setItem('profilePhotoUrl', storedProfilePhotoUrl);
+      
+    }
+  }, []); // Empty dependency array ensures this effect runs only once after component mounts
+
+
   return (
     <header className="site-navbar mt-3" id="top">
       <div className="container-fluid">
@@ -143,7 +162,7 @@ export default function Header() {
                 </Link>
                 <ul className="dropdown">
                   <li>
-                    <Link href="job/post" replace>
+                    <Link href="/job/post" replace>
                       Post a Job
                     </Link>
                   </li>
@@ -165,13 +184,18 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
+                    <Link href="/Interview/review" replace>
+                      Review
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/Interview/mocks/Edit-mocks" replace>
                       Edit Mocks
                     </Link>
                   </li>
                 </ul>
               </li>
-              <li>
+              {/* <li>
                 <Link href="/blog" replace>
                   Blog
                 </Link>
@@ -180,7 +204,7 @@ export default function Header() {
                 <Link href="/contact" replace>
                   Contact
                 </Link>
-              </li>
+              </li> */}
               <li className="d-lg-none">
                 <Link href="/post">
                   <span className="mr-2">+</span>
@@ -216,7 +240,7 @@ export default function Header() {
                     label={
                       <Avatar
                         alt="User settings"
-                        img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+                        img={profilePhotoUrl}
                         rounded
                       />
                     }

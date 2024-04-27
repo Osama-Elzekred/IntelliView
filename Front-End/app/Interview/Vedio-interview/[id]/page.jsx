@@ -4,8 +4,11 @@ import { StartInterview } from '../../../components/components';
 import { useState, useRef, useEffect } from 'react';
 import { redirect } from 'next/navigation';
 import Cookies from 'js-cookie';
+import Loading from "../../../components/loading";
+
 
 function MainComponent({ params }) {
+  const [loading, setLoading] = useState(true);
   const fetchMockData = async () => {
     const authToken = Cookies.get('authToken');
     try {
@@ -25,11 +28,13 @@ function MainComponent({ params }) {
         setQuestionVideos(data.questions.map((question) => question.url));
         setQVideo(data.questions[0].url);
       }
+      setLoading(false);
     } catch (error) {
       console.log('error : ', error);
     }
   };
-
+  
+  
   const [mockData, setMockData] = useState({});
   const [fullQuestionList, setFullQuestionList] = useState([]);
   const [questionVideos, setQuestionVideos] = useState([]);
@@ -48,7 +53,7 @@ function MainComponent({ params }) {
   useEffect(() => {
     fetchMockData();
   }, []);
-
+  
   React.useEffect(() => {
     let timer;
     if (isRecording) {
@@ -69,7 +74,7 @@ function MainComponent({ params }) {
     setIsListVisible(!isListVisible);
     setArrow(!arrow);
   };
-
+  
   // start recording code
   const handleStartRecording = async () => {
     try {
@@ -337,11 +342,17 @@ function MainComponent({ params }) {
     </div>
   );
 
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
+  
   return RenderStep();
 }
 
+
 export default MainComponent;
 function HandleUploadVideos(formData) {
+ 
   return async () => {
     try {
       const response = await fetch('/upload-videos', {

@@ -1,4 +1,5 @@
 ﻿using IntelliView.DataAccess.Services.IService;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using System.Text.Json;
@@ -23,16 +24,11 @@ namespace IntelliView.DataAccess.Services
             };
         }
 
-        public async Task<string> SendRequestAsync(object dataToSend, string url, string apiKey)
+        public async Task<string> SendRequestAsync(MultipartFormDataContent content, string url, string apiKey)
         {
             // Serialize the input object to JSON
-            var jsonData = JsonSerializer.Serialize(dataToSend, _jsonSerializerOptions);
-
             // Add authorization header with your API key
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
-
-            // Create a StringContent object with the JSON data to send
-            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
             // Send a POST request with the JSON data in the request body
             HttpResponseMessage response = await _httpClient.PostAsync(url, content);
@@ -50,18 +46,27 @@ namespace IntelliView.DataAccess.Services
                 return $"Error: {response.StatusCode}";
             }
         }
-        public async Task<string> GetCVmatch(string resumePath, string jd)
+        public async Task<string> GetCVmatch(IFormFile? rawCV, string jd)
         {
             // get api key from appsettings
             var apiKey = _configuration.GetSection("cvMatchAPIKey").Value;
-            var content = new
+
+            using (var memoryStream = new MemoryStream())
             {
-                resumePath,
-                jd
-            };
-            var result = await SendRequestAsync(content,
-                "https://inteliview.pythonanywhere.com/cvmatch", apiKey!);
-            return result;
+                await rawCV!.CopyToAsync(memoryStream);
+
+                // Reset the position of the MemoryStream to the beginning
+                memoryStream.Position = 0;
+
+                // Now you can use 'memoryStream' as the content of the uploaded file
+                // Perform further processing here
+                var content = new MultipartFormDataContent();
+                content.Add(new StreamContent(memoryStream), "rawCV", rawCV.FileName);
+                content.Add(new StringContent(jd), "jd");
+
+                var result = await SendRequestAsync(content, "https://inteliview.pythonanywhere.com/cvmatch", apiKey!);
+                return result;
+            }
         }
     }
 }

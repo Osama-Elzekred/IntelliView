@@ -57,9 +57,14 @@ export default function login() {
           document.cookie = `authToken=${data.token};path=/`;
           document.cookie = `user_id=${data.id};path=/`;
           localStorage.setItem('roleFromServer', data.roles);
+          localStorage.setItem('profilePhotoUrl', data.imageURL)
           document.cookie = `role=${data.roles[0].toLowerCase()};path=/`;
           document.cookie = `userName=${data.username};path=/`;
-          window.location.href = `/Home`;
+          if(data.roles[0].toLowerCase() === 'company'){
+            window.location.href = `/profile/Edit-company-profile`;
+          }else{
+            window.location.href = `/profile/Edit-user-profile`;
+          }
         } else if (data.message) {
           setMessageOfWrong(data.message);
         }
@@ -156,7 +161,11 @@ export default function login() {
             PasswordConfirm: '',
             Role: 'User',
           });
-          window.location.href = `/Home`;
+          if(data.roles[0].toLowerCase() === 'company'){
+            window.location.href = `/profile/Edit-company-profile`;
+          }else{
+            window.location.href = `/profile/Edit-user-profile`;
+          }
         } else if (data.message) {
           setMessageFromServer(data.message);
         } else {

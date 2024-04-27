@@ -201,7 +201,8 @@ export default function EditProfile() {
       console.error("Error uploading photo:", error);
     }
   };
-
+  const profilePhotoUrl = imageURL;
+  localStorage.setItem('profilePhotoUrl', profilePhotoUrl);
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
   }

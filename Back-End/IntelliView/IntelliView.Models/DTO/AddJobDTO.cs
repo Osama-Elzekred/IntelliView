@@ -15,7 +15,7 @@ namespace IntelliView.Models.DTO
         public List<CustQuestionDto>? CustQuestions { get; set; }
         public List<JobInterestedTopicDto>? JobInterestedTopics { get; set; }
         public string EndDate { get; set; } = DateTime.Now.AddDays(30).ToString("yyyy-MM-dd");
-        public string ImageURl { get; set; } = @"test";
+        public string ImageURl { get; set; } = "https://res.cloudinary.com/djvcgnkbn/image/upload/v1714246729/qcicrkq2tjflesksdsat.jpg";
         [JsonIgnore]
         public string? CompanyUserId { get; set; } = string.Empty;
     }

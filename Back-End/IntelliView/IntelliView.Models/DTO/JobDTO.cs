@@ -41,7 +41,7 @@ namespace IntelliView.Models.DTO
 
         //[ForeignKey(nameof(CompanyUserId))]
         //public virtual CompanyUser CompanyUser { get; set; }
-        public string ImageURl { get; set; } = @"test";
+        public string ImageURl { get; set; } = "https://res.cloudinary.com/djvcgnkbn/image/upload/v1714246729/qcicrkq2tjflesksdsat.jpg";
 
         //[JsonIgnore]
         public virtual List<string> JobInterestedTopic { get; set; } = new List<string>();

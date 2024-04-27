@@ -1,11 +1,12 @@
 ﻿using IntelliView.Models.DTO;
 using Microsoft.AspNetCore.Identity;
+using static System.Net.WebRequestMethods;
 
 namespace IntelliView.Models.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public string ImageURl { get; set; } = @"wwwroot/Assets/images/7495e58b-b72b-4b87-8c12-c77a69b39cd3.jpg";
+        public string ImageURl { get; set; } = "https://res.cloudinary.com/djvcgnkbn/image/upload/v1714246729/qcicrkq2tjflesksdsat.jpg";
         public List<RefreshToken>? RefreshTokens { get; set; }
 
         // verfication

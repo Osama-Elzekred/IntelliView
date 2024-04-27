@@ -190,6 +190,7 @@ namespace IntelliView.API.Services
             authModel.ExpiresOn = jwtSecurityToken.ValidTo;
             authModel.Roles = rolesList.ToList();
             authModel.Id = user.Id;
+            authModel.ImageURL = user.ImageURl;
 
             var activeRefreshToken = user.RefreshTokens?.FirstOrDefault(t => t.IsActive);
 

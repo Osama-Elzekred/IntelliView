@@ -14,7 +14,7 @@ import { data } from 'autoprefixer';
 import Loading from '../../components/loading';
 
 const DOMAIN_NAME = 'localhost:7049';
-const [loading, setLoading] = useState(true);
+// const [loading, setLoading] = useState(true);
 const User_profile = () => {
   const [click, setClick] = useState();
   const authToken = Cookies.get('authToken');
@@ -66,7 +66,7 @@ const User_profile = () => {
       } else {
         console.error("Failed to upload photo");
       }
-      setLoading(false);
+      // setLoading(false);
     } catch (error) {
       console.error("Error uploading photo:", error);
     }
@@ -111,13 +111,15 @@ const User_profile = () => {
         console.error('Failed to upload files');
         // Handle failure
       }
-      setLoading(false);
+      // setLoading(false);
     } catch (error) {
       console.error('Error occurred while uploading files:', error);
       // Handle error
     }
   };
-
+      const profilePhotoUrl = imageURL;
+      localStorage.setItem('profilePhotoUrl', profilePhotoUrl); 
+  
   // if (loading) {
   //   return <Loading />; // Display loading indicator while data is being fetched
   // }

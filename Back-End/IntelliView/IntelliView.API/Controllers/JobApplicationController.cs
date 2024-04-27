@@ -1,15 +1,12 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
-using IntelliView.DataAccess.Services;
 using IntelliView.DataAccess.Services.IService;
 using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
 using IntelliView.Utility;
 using IntelliView.Utility.Settings;
-using Mailosaur.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Validations;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using System.Text;
@@ -66,7 +63,7 @@ namespace IntelliView.API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return NotFound(new {Message= "UserId not found" });
+                return NotFound(new { Message = "UserId not found" });
             }
             var job = await _unitOfWork.Jobs.GetByIdAsync(model.JobId);
             if (job == null)
@@ -76,7 +73,7 @@ namespace IntelliView.API.Controllers
             var user = await _unitOfWork.IndividualUsers.GetByIdAsync(userId);
             if (user == null)
             {
-                return NotFound(new { Message="User not found" });
+                return NotFound(new { Message = "User not found" });
             }
             var existingApplication = await _unitOfWork.JobApplications
            .GetByIdAsync(job.Id, userId);
@@ -92,12 +89,12 @@ namespace IntelliView.API.Controllers
             if (!string.IsNullOrEmpty(questionsAnswersJson) && questionsAnswersJson.StartsWith("{") && questionsAnswersJson.EndsWith("}"))
             {
                 // Directly use the JSON string without deserialization
-                 questionsAnswers = JsonConvert.DeserializeObject<Dictionary<int, string>>(questionsAnswersJson);
+                questionsAnswers = JsonConvert.DeserializeObject<Dictionary<int, string>>(questionsAnswersJson);
             }
             else
             {
                 // Deserialize the string to a dictionary
-                 questionsAnswers = JsonConvert.DeserializeObject<Dictionary<int, string>>(questionsAnswersJson);
+                questionsAnswers = JsonConvert.DeserializeObject<Dictionary<int, string>>(questionsAnswersJson);
             }
             // Save the CV file
             if (model.CV != null)
@@ -182,7 +179,7 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound();
             }
-            await _unitOfWork.JobApplications.DeleteByIdAsync(jobApplication.JobId,jobApplication.UserId);
+            await _unitOfWork.JobApplications.DeleteByIdAsync(jobApplication.JobId, jobApplication.UserId);
             await _unitOfWork.SaveAsync();
             return Ok();
         }
@@ -202,9 +199,9 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound("No jobs found");
             }
-           // var jobsDTO = _mapper.Map<IEnumerable<JobDTO>>(jobs);
-           // var jobApp =await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
-            var res =await _unitOfWork.JobApplications.GetAppliedJobsAsync(userId);
+            // var jobsDTO = _mapper.Map<IEnumerable<JobDTO>>(jobs);
+            // var jobApp =await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == userId);
+            var res = await _unitOfWork.JobApplications.GetAppliedJobsAsync(userId);
 
             return Ok(res);
         }
@@ -245,7 +242,7 @@ namespace IntelliView.API.Controllers
         [HttpPatch("approve/job/{jobId}/user/{userId}")]
         public async Task<IActionResult> ApproveJobApplication(int jobId, string userId)
         {
-            var jobApplication = await _unitOfWork.JobApplications.GetApplicationByIdAsync(jobId,userId);
+            var jobApplication = await _unitOfWork.JobApplications.GetApplicationByIdAsync(jobId, userId);
 
             if (jobApplication == null)
             {
@@ -292,7 +289,7 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound("No job applications found");
             }
-            interview.InterviewLink = "https://localhost:7049/InterviewMock/"+ job.MockId;
+            interview.InterviewLink = "https://localhost:7049/InterviewMock/" + job.MockId;
             foreach (var application in jobApplications)
             {
                 var user = await _unitOfWork.IndividualUsers.GetByIdAsync(application.UserId);
@@ -300,7 +297,7 @@ namespace IntelliView.API.Controllers
                 {
                     var email = application.Email.Trim('"');
                     var subject = "Interview Invitation";
-                    var body = "You have been approved for the job: " + job.Title + ".the link to interview is  "+interview.InterviewLink;
+                    var body = "You have been approved for the job: " + job.Title + ".the link to interview is  " + interview.InterviewLink;
 
                     var emailDto = new EmailDTO
                     {
@@ -309,11 +306,35 @@ namespace IntelliView.API.Controllers
                         Body = body
                     };
 
-                  _emailSender.SendEmailAsync(emailDto);
+                    _emailSender.SendEmailAsync(emailDto);
                 }
             }
 
-            return Ok(new {Message =  "Interview emails sent successfully"});
+            return Ok(new { Message = "Interview emails sent successfully" });
         }
+        //[Authorize(Roles=SD.ROLE_COMPANY)]
+        //[HttpGet("/interview/job/{jobId}/getUserVideos/{UserId}")]
+        //public async Task<IActionResult> GetUserVideos(int jobId, string UserId)
+        //{
+        //    var CompId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var job = await _unitOfWork.Jobs.GetByIdAsync(jobId);
+        //    if (job == null)
+        //    {
+        //        return NotFound("Job not found");
+        //    }
+        //    if (job.CompanyUserId != CompId)
+        //    {
+        //        return Unauthorized("You are not authorized to view this job's videos");
+        //    }
+
+        //    var jobApplication = await _unitOfWork.JobApplications.GetApplicationByIdAsync(jobId, UserId);
+        //    if (jobApplication == null)
+        //    {
+        //        return NotFound("Job application not found");
+        //    }
+        //    var videos = jobApplication.UserAnswers.Where(a => a.VideoId != null).Select(a => new { a.QuestionId, a.VideoId });
+        //    return Ok(videos);
+        //}
+
     }
 }

@@ -7,7 +7,7 @@ import CardComp from '../components/Card';
 import Loading from '../components/loading';
 
 export default function Jobs() {
-  const imageURl = 'images/job_logo_1.jpg';
+  //const imageURl = 'images/job_logo_1.jpg';
   const [jobListings, setJobListings] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -273,7 +273,7 @@ export default function Jobs() {
                       employmentType={job.jobType}
                       categories={job.jobInterestedTopic} // There's no equivalent in the jobData
                       jobTime={job.jobTime}
-                      companyImageUrl={imageURl}
+                      companyImageUrl={job.imageURl}
                       onClick={() => (window.location.href = `/job/${job.id}`)}
                     />
                   ))}

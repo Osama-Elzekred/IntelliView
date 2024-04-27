@@ -20,11 +20,11 @@ export default function EditProfile() {
   }
   const [formData, setFormData] = useState({
     companyName: "",
-    type: "",
-    overview: "",
-    website: "",
-    size: "",
-    founded: "",
+    companyType: "",
+    companyOverview: "",
+    companyWebsite: "",
+    companySize: "",
+    companyFounded: "",
     phoneNumber: "",
   });
   const [passwordForm, setPasswordForm] = useState({
@@ -59,15 +59,15 @@ export default function EditProfile() {
             const data = await response.json();
             setFormData({
               companyName: data.companyName,
-              type: data.type,
-              overview: data.overview,
-              website: data.website,
+              companyType: data.companyType,
+              companyOverview: data.companyOverview,
+              companyWebsite: data.companyWebsite,
               phoneNumber: data.phoneNumber,
-              size: data.size,
-              founded: data.founded,
+              companySize: data.companySize,
+              companyFounded: data.companyFounded,
             });
             setPhotoUrl(
-              `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
+              `${data.imageURl}`
             );
           } else {
             console.error("Failed to fetch user data");
@@ -190,7 +190,7 @@ export default function EditProfile() {
         const data = await response.json();
 
         setPhotoUrl(
-          `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`
+          `${data.imageURl}`
         );
         console.log("Photo uploaded successfully");
       } else {
@@ -201,7 +201,8 @@ export default function EditProfile() {
       console.error("Error uploading photo:", error);
     }
   };
-
+  const profilePhotoUrl = imageURL;
+  localStorage.setItem('profilePhotoUrl', profilePhotoUrl);
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
   }
@@ -319,7 +320,7 @@ export default function EditProfile() {
                           Reset
                         </button>
                         <div className="text-light small mt-1">
-                          Allowed JPG, GIF or PNG. Max size of 800K
+                          Allowed JPG or PNG. Max size of 800K
                         </div>
                       </div>
                     </div>
@@ -340,40 +341,40 @@ export default function EditProfile() {
                                 }
                               />
                             </div>
-                            <div className="type_">
-                              <label htmlFor="type_">type</label>
+                            <div className="companyType">
+                              <label htmlFor="companyType">type</label>
                               <br />
                               <input
                                 type="text"
-                                id="type_"
-                                value={formData.type}
+                                id="companyType"
+                                value={formData.companyType}
                                 onChange={(e) =>
-                                  handleChange("type", e.target.value)
+                                  handleChange("companyType", e.target.value)
                                 }
                               />
                             </div>
                           </div>
-                          <div className="overview">
-                            <label htmlFor="overview">overview</label>
+                          <div className="companyOverview">
+                            <label htmlFor="companyOverview">overview</label>
                             <br />
                             <textarea
                               className="overview_"
                               defaultValue={""}
-                              value={formData.overview}
+                              value={formData.companyOverview}
                               onChange={(e) =>
-                                handleChange("overview", e.target.value)
+                                handleChange("companyOverview", e.target.value)
                               }
                             />
                           </div>
-                          <div className="website_">
-                            <label htmlFor="website_">Website</label>
+                          <div className="companyWebsite">
+                            <label htmlFor="companyWebsite">Website</label>
                             <br />
                             <input
                               type="text"
-                              id="website_"
-                              value={formData.website}
+                              id="companyWebsite"
+                              value={formData.companyWebsite}
                               onChange={(e) =>
-                                handleChange("website", e.target.value)
+                                handleChange("companyWebsite", e.target.value)
                               }
                             />
                           </div>
@@ -388,27 +389,27 @@ export default function EditProfile() {
                           />
                           {/* </div> */}
                           <div className="size-founded">
-                            <div className="size_">
-                              <label htmlFor="size_">size</label>
+                            <div className="companySize">
+                              <label htmlFor="companySize">companySize</label>
                               <br />
                               <input
                                 type="text"
-                                id="size_"
-                                value={formData.size}
+                                id="companySize"
+                                value={formData.companySize}
                                 onChange={(e) =>
-                                  handleChange("size", e.target.value)
+                                  handleChange("companySize", e.target.value)
                                 }
                               />
                             </div>
-                            <div className="founded_">
-                              <label htmlFor="founded_">founded</label>
+                            <div className="companyFounded">
+                              <label htmlFor="companyFounded">founded</label>
                               <br />
                               <input
                                 type="year"
-                                id="founded_"
-                                value={formData.founded}
+                                id="companyFounded"
+                                value={formData.companyFounded}
                                 onChange={(e) =>
-                                  handleChange("founded", e.target.value)
+                                  handleChange("companyFounded", e.target.value)
                                 }
                               />
                             </div>

@@ -37,7 +37,7 @@ function MainComponent() {
   };
   useEffect(() => {
     fetchTopics();
-  }, []);
+  }, [topics]);
   const handleMockSubmit = async (e) => {
     e.preventDefault();
 

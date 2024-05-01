@@ -77,11 +77,28 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound();
             }
-            await _unitOfWork.InterviewMocks.DeleteByIdAsync(interviewMock);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.MockId == id);
+            if (job != null)
+            {
+                job.MockId = null;
+            }
+            await _unitOfWork.InterviewMocks.DeleteByIdAsync(interviewMock.Id);
             await _unitOfWork.SaveAsync();
             return NoContent();
         }
-
+        // delete interview topic
+        [HttpDelete("DeleteInterviewTopic/{id}")]
+        public async Task<ActionResult> DeleteInterviewTopic(int id)
+        {
+            var interviewTopic = await _unitOfWork.InterviewMockTopics.GetByIdAsync(id);
+            if (interviewTopic == null)
+            {
+                return NotFound();
+            }
+            await _unitOfWork.InterviewMockTopics.DeleteByIdAsync(interviewTopic.Id);
+            await _unitOfWork.SaveAsync();
+            return NoContent();
+        }
         //update interview mock
         [HttpPut("UpdateInterviewMock/{id}")]
         public async Task<ActionResult> UpdateInterviewMock(int id, AddInterviewMockDTO interviewMockDto)

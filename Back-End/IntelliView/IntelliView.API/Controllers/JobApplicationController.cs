@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Security.Claims;
-using System.Text;
 
 namespace IntelliView.API.Controllers
 {
@@ -25,7 +24,7 @@ namespace IntelliView.API.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IAIModelApiService _aiModelApiService;
         public JobApplicationController(IUnitOfWork unitOfWork, IMapper mapper, IWebHostEnvironment webHostEnvironment
-            ,IUploadFilesToCloud uploadFilesToCloud, IEmailSender emailSender, IAIModelApiService aiModelApiService)
+            , IUploadFilesToCloud uploadFilesToCloud, IEmailSender emailSender, IAIModelApiService aiModelApiService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -159,13 +158,16 @@ namespace IntelliView.API.Controllers
 
             // Call the model to get the score
             var score = string.Empty; // Default score
+            decimal scoreValue = 0; // Default score value
             if (!string.IsNullOrEmpty(jobApplication.CVURL))
             {
-                score =await _aiModelApiService.GetCVmatch(jobApplication.CVURL,job.Title +"  "+ job.Description +"  "+ job.Requirements );
+                score = await _aiModelApiService.GetCVmatch(jobApplication.CVURL, job.Title + "  " + job.Description + "  " + job.Requirements);
+                // Safely try to convert the score to a decimal
+                decimal.TryParse(score, out scoreValue);
             }
             // Update the application status based on the score
-            jobApplication.CVScore = Convert.ToDecimal(score);
-            jobApplication.IsApproved = Convert.ToDecimal(score) >= 50;
+            jobApplication.CVScore = scoreValue;
+            jobApplication.IsApproved = scoreValue >= 50;
             await _unitOfWork.SaveAsync();
             return Ok("Application submitted");
         }
@@ -185,7 +187,7 @@ namespace IntelliView.API.Controllers
         }
 
 
-       
+
         [HttpGet("GetUserJobs")]
         public async Task<ActionResult<IEnumerable<GetAppliedJobsDTO>>> GetUserJobs()
         {
@@ -312,29 +314,5 @@ namespace IntelliView.API.Controllers
 
             return Ok(new { Message = "Interview emails sent successfully" });
         }
-        //[Authorize(Roles=SD.ROLE_COMPANY)]
-        //[HttpGet("/interview/job/{jobId}/getUserVideos/{UserId}")]
-        //public async Task<IActionResult> GetUserVideos(int jobId, string UserId)
-        //{
-        //    var CompId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    var job = await _unitOfWork.Jobs.GetByIdAsync(jobId);
-        //    if (job == null)
-        //    {
-        //        return NotFound("Job not found");
-        //    }
-        //    if (job.CompanyUserId != CompId)
-        //    {
-        //        return Unauthorized("You are not authorized to view this job's videos");
-        //    }
-
-        //    var jobApplication = await _unitOfWork.JobApplications.GetApplicationByIdAsync(jobId, UserId);
-        //    if (jobApplication == null)
-        //    {
-        //        return NotFound("Job application not found");
-        //    }
-        //    var videos = jobApplication.UserAnswers.Where(a => a.VideoId != null).Select(a => new { a.QuestionId, a.VideoId });
-        //    return Ok(videos);
-        //}
-
     }
 }

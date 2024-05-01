@@ -16,7 +16,6 @@ namespace IntelliView.DataAccess.Repository.Repos
         private ApplicationDbContext _db;
         public ICompanyUserRepo CompanyUsers { get; private set; }
         public IIndividualUserRepo IndividualUsers { get; private set; }
-        public IInterviewApplicationRepo InterviewApplications { get; private set; }
         public IInterviewQuestionRepo InterviewQuestions { get; private set; }
         public IInterviewSessionRepo InterviewSessions { get; private set; }
         public IJobRepo Jobs { get; private set; }
@@ -24,13 +23,14 @@ namespace IntelliView.DataAccess.Repository.Repos
         public IJobApplicationsRepo JobApplications { get; private set; }
         public IInterestedTopicRepo InterestedTopics { get; private set; }
         public IInterviewMockRepo InterviewMocks { get; private set; }
+        public IMockVideoAnswerRepo MockVideoAnswers { get; private set; }
         public IInterviewMockTopicRepo InterviewMockTopics { get; private set; }
+        public IUserMockSessionRepo UserMockSessions { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
             CompanyUsers = new CompanyUserRepo(_db);
             IndividualUsers = new IndividualUserRepo(_db);
-            InterviewApplications = new InterviewApplicationRepo(_db);
             InterviewQuestions = new InterviewQuestionRepo(_db);
             InterviewSessions = new InterviewSessionRepo(_db);
             Jobs = new JobRepo(_db);
@@ -39,6 +39,8 @@ namespace IntelliView.DataAccess.Repository.Repos
             InterestedTopics = new InterestedTopicRepo(_db);
             InterviewMocks = new InterviewMockRepo(_db);
             InterviewMockTopics = new InterviewMockTopicRepo(_db);
+            MockVideoAnswers = new MockVideoAnswerRepo(_db);
+            UserMockSessions = new UserMockSessionRepo(_db);
         }
         public async Task SaveAsync()
         {

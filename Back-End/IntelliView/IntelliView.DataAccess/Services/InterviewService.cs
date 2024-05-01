@@ -118,6 +118,20 @@ namespace IntelliView.DataAccess.Services
             }
             await context.SaveChangesAsync();
         }
+        // get the ai score of the answer video from the Ai models
+        public async Task<VideoAiScore> GetAiVideoScores(string answerVideoLink, string modelAnswer)
+        {
+            await Task.Delay(1000);
+            return new VideoAiScore
+            {
+                AnswerSimilarityScore = 0.9m,
+                AudioInfo = "infoA1,infoA2",
+                VideoInfo = "infoV1,infoV2",
+                TextInfo = "infoT1,infoT2"
+
+            };
+
+        }
     }
 }
 

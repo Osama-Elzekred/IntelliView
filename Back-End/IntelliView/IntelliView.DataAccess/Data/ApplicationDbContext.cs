@@ -1,4 +1,5 @@
 ﻿using IntelliView.Models.Models;
+using IntelliView.Models.Models.Interview;
 using IntelliView.Models.Models.job;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ namespace InteliView.DataAccess.Data
         public DbSet<InterviewMockTopic> InterviewTopics { get; set; }
         public DbSet<InterviewMockTopic> InterviewMockTopics { get; set; }
 
-
+        public DbSet<UserMockSession> UserMockSessions { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 
@@ -83,6 +84,19 @@ namespace InteliView.DataAccess.Data
                 .HasOne(p => p.Job)
                 .WithMany(j => j.JobApplications)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Job>()
+                .HasOne(j => j.InterviewMock)
+                .WithMany()
+                .HasForeignKey(j => j.MockId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<MockVideoAnswer>()
+                .HasOne(mva => mva.UserMockSession)
+                .WithMany(a => a.Answers) // Adjust this according to the inverse navigation property, if any
+                .HasForeignKey(mva => new { mva.UserId, mva.MockId })
+                .OnDelete(DeleteBehavior.Restrict); // Set to Restrict to prevent cascade delete issues
+
+
             base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<InterestedTopic>()
             // .HasData(

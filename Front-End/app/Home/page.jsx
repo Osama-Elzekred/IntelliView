@@ -42,6 +42,12 @@ export default function IndexPage() {
             <div className="row align-items-center justify-content-center">
               <div className="col-md-12">
                 <div className="mb-5 text-center">
+                  {/* <h1 class="font-bebas-neue uppercase text-6xl sm:text-8xl font-black flex flex-col leading-none dark:text-white text-gray-800">
+                    The Easiest Way To Get Your Dream Job
+                    <span class="text-5xl sm:text-7xl">
+                      Find your dream jobs in our powerful AI-driven platform.
+                    </span>
+                  </h1> */}
                   <h1 className="text-white font-weight-bold">
                     The Easiest Way To Get Your Dream Job
                   </h1>

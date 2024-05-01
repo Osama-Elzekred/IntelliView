@@ -4,6 +4,7 @@ using InteliView.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntelliView.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240425220452_AddImageURlColumn")]
+    partial class AddImageURlColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,31 +24,6 @@ namespace IntelliView.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("IntelliView.Models.DTO.VideoAiScore", b =>
-                {
-                    b.Property<int>("InterviewQuestionAnswerId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("AnswerSimilarityScore")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<string>("AudioInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TextInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("VideoInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("InterviewQuestionAnswerId");
-
-                    b.ToTable("VideoAiScore");
-                });
 
             modelBuilder.Entity("IntelliView.Models.Models.ApplicationUser", b =>
                 {
@@ -165,13 +143,16 @@ namespace IntelliView.DataAccess.Migrations
                     b.ToTable("InterestedTopics");
                 });
 
-            modelBuilder.Entity("IntelliView.Models.Models.Interview.MockVideoAnswer", b =>
+            modelBuilder.Entity("IntelliView.Models.Models.Interview.InterviewQuestionAnswer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("AnswerSimilarityScore")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("AnswerText")
                         .IsRequired()
@@ -187,7 +168,10 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<int>("InterviewQuestionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MockId")
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserApplicationId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -198,33 +182,9 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("InterviewQuestionId");
 
-                    b.HasIndex("UserId", "MockId");
+                    b.HasIndex("JobId", "UserId");
 
-                    b.ToTable("MockVideoAnswer");
-                });
-
-            modelBuilder.Entity("IntelliView.Models.Models.Interview.UserMockSession", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnOrder(0);
-
-                    b.Property<int>("MockId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
-
-                    b.Property<int?>("JobId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "MockId");
-
-                    b.HasIndex("MockId");
-
-                    b.HasIndex("JobId", "UserId")
-                        .IsUnique()
-                        .HasFilter("[JobId] IS NOT NULL");
-
-                    b.ToTable("UserMockSessions");
+                    b.ToTable("InterviewQuestionAnswer");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.InterviewMock", b =>
@@ -382,7 +342,7 @@ namespace IntelliView.DataAccess.Migrations
                         .HasColumnOrder(1);
 
                     b.Property<decimal>("CVScore")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("CVURL")
                         .IsRequired()
@@ -780,17 +740,6 @@ namespace IntelliView.DataAccess.Migrations
                     b.HasDiscriminator().HasValue("IndividualUser");
                 });
 
-            modelBuilder.Entity("IntelliView.Models.DTO.VideoAiScore", b =>
-                {
-                    b.HasOne("IntelliView.Models.Models.Interview.MockVideoAnswer", "InterviewQuestionAnswer")
-                        .WithOne("AnswerAiEvaluationScores")
-                        .HasForeignKey("IntelliView.Models.DTO.VideoAiScore", "InterviewQuestionAnswerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InterviewQuestionAnswer");
-                });
-
             modelBuilder.Entity("IntelliView.Models.Models.ApplicationUser", b =>
                 {
                     b.OwnsMany("IntelliView.Models.DTO.RefreshToken", "RefreshTokens", b1 =>
@@ -828,7 +777,7 @@ namespace IntelliView.DataAccess.Migrations
                     b.Navigation("RefreshTokens");
                 });
 
-            modelBuilder.Entity("IntelliView.Models.Models.Interview.MockVideoAnswer", b =>
+            modelBuilder.Entity("IntelliView.Models.Models.Interview.InterviewQuestionAnswer", b =>
                 {
                     b.HasOne("IntelliView.Models.Models.job.InterviewQuestion", "InterviewQuestion")
                         .WithMany()
@@ -836,30 +785,13 @@ namespace IntelliView.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("IntelliView.Models.Models.Interview.UserMockSession", "UserMockSession")
-                        .WithMany("Answers")
-                        .HasForeignKey("UserId", "MockId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("InterviewQuestion");
-
-                    b.Navigation("UserMockSession");
-                });
-
-            modelBuilder.Entity("IntelliView.Models.Models.Interview.UserMockSession", b =>
-                {
-                    b.HasOne("IntelliView.Models.Models.InterviewMock", "InterviewMock")
-                        .WithMany()
-                        .HasForeignKey("MockId")
+                    b.HasOne("IntelliView.Models.Models.JobApplication", "UserApplication")
+                        .WithMany("InterviewQuestionAnswers")
+                        .HasForeignKey("JobId", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("IntelliView.Models.Models.JobApplication", "UserApplication")
-                        .WithOne("UserMockSession")
-                        .HasForeignKey("IntelliView.Models.Models.Interview.UserMockSession", "JobId", "UserId");
-
-                    b.Navigation("InterviewMock");
+                    b.Navigation("InterviewQuestion");
 
                     b.Navigation("UserApplication");
                 });
@@ -1073,16 +1005,6 @@ namespace IntelliView.DataAccess.Migrations
                     b.Navigation("UserInterestedTopics");
                 });
 
-            modelBuilder.Entity("IntelliView.Models.Models.Interview.MockVideoAnswer", b =>
-                {
-                    b.Navigation("AnswerAiEvaluationScores");
-                });
-
-            modelBuilder.Entity("IntelliView.Models.Models.Interview.UserMockSession", b =>
-                {
-                    b.Navigation("Answers");
-                });
-
             modelBuilder.Entity("IntelliView.Models.Models.InterviewMock", b =>
                 {
                     b.Navigation("InterviewQuestions");
@@ -1104,9 +1026,9 @@ namespace IntelliView.DataAccess.Migrations
 
             modelBuilder.Entity("IntelliView.Models.Models.JobApplication", b =>
                 {
-                    b.Navigation("UserAnswers");
+                    b.Navigation("InterviewQuestionAnswers");
 
-                    b.Navigation("UserMockSession");
+                    b.Navigation("UserAnswers");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.JobQuestion", b =>

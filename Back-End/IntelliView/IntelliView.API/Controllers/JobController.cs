@@ -30,7 +30,7 @@ namespace IntelliView.API.Controllers
         [HttpGet("CompanyDetails/{companyId}")]
         public async Task<ActionResult<ProfileDTO>> GetCompanyDetails(string companyId)
         {
-            
+
             if (string.IsNullOrEmpty(companyId))
             {
                 return BadRequest(new { message = "Company ID is required" });

@@ -225,18 +225,18 @@ namespace IntelliView.API.Controllers
             return Ok(jobs);
         }
 
-        [HttpGet("getCVmatch")]
-        public async Task<IActionResult> GetCVmatch(string resumePath, string id)
+        [HttpPost("getCVmatch")]
+        public async Task<IActionResult> GetCVmatch(IFormFile cv)
         {
-            // get api key from appsettings
-            var apiKey = Configuration.GetSection("cvMatchAPIKey").Value;
-            var content = new
-            {
-                resumePath,
-                id
-            };
-            var result = await _aiModelApiService.SendRequestAsync(content,
-                "https://inteliview.pythonanywhere.com/cvmatch", apiKey!);
+            var result = await _aiModelApiService.GetCVmatch(cv,
+                "ASP.Net, C#, JavaScript, VB Script, HTML, CSS and SQL.Designs, develops, troubleshoots, debugs, and" +
+                " implements software code using the following web development components: Java, JSP and XHTML with heavy" +
+                " reliance on JavaScript code for DHTML interfaces. Frequent use and application of technical standards," +
+                " principles, theories, concepts, and techniques. Provides solutions to a variety of technical problems" +
+                " of moderate scope and complexity. Experience developing web applications using the ASP.NET MVC Framework" +
+                " is desired. Microsoft Web Developer Backend Development Skills Specifically Strong C# & SQL Server skills " +
+                "required for backend development required Experience With API Testing Tools RequiredADO and Agile Experience" +
+                " required MVC .Net Core and Blazor knowledge would be beneficial");
             return Ok(result);
         }
     }

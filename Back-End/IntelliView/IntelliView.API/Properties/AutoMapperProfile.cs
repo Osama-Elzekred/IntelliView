@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using IntelliView.API.Controllers;
 using IntelliView.Models.DTO;
 using IntelliView.Models.DTO.Interview;
 using IntelliView.Models.Models;
+using IntelliView.Models.Models.Interview;
 using IntelliView.Models.Models.job;
 
 namespace ANWAAR.CORE
@@ -59,6 +61,16 @@ namespace ANWAAR.CORE
 
             CreateMap<InterviewQuestionDTO, InterviewQuestion>().ReverseMap(); // Map InterviewQuestionDTO to InterviewQuestion
             CreateMap<InterviewSessionQuestionsDto, InterviewQuestion>().ReverseMap();
+            //////////////////////
+            // Mapping from MockVideoAnswer entity to MockVideoAnswerDTO
+            CreateMap<UserMockSession, UserMockSessionDTO>()
+                .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers));
+            CreateMap<MockVideoAnswer, MockVideoAnswerDTO>()
+                .ForMember(dest => dest.AnswerAiEvaluationScore, opt => opt.MapFrom(src => src.AnswerAiEvaluationScores)).ReverseMap();
+
+            // Mapping from VideoAiScore entity to VideoAiScoreDto
+            CreateMap<VideoAiScore, VideoAiScoreDto>().ReverseMap();
+
 
 
 

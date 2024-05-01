@@ -54,7 +54,6 @@ namespace IntelliView.API.Controllers
 
             if (!string.IsNullOrEmpty(result.RefreshToken))
                 SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
-
             return Ok(result);
         }
         [HttpPost("addRole")]

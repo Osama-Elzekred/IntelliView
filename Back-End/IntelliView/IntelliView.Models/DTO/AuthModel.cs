@@ -29,5 +29,6 @@ namespace IntelliView.Models.DTO
         public DateTime VerfiedAt { get; set; }
 
         public DateTime VTExpiredAt { get; set; }
+        public string ImageURL { get; set; } = "https://res.cloudinary.com/djvcgnkbn/image/upload/v1714246729/qcicrkq2tjflesksdsat.jpg";
     }
 }

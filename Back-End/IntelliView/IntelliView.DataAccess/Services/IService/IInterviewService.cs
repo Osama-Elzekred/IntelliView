@@ -11,5 +11,6 @@ namespace IntelliView.DataAccess.Services.IService
         InterviewQuestion? ProcessAnswer(InterviewAnswerDto answerDto);
         bool SessionExists(string sessionId);
         Task AddInterviewVideos(InterviewMock Mock);
+        Task<VideoAiScore> GetAiVideoScores(string answerVideoLink, string modelAnswer);
     }
 }

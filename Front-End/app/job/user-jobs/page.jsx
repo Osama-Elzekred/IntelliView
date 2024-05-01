@@ -1,48 +1,48 @@
-"use client";
-import Layout from "../../components/Layout";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { HiCheck, HiClock } from "react-icons/hi";
-import CardComp from "../../components/Card";
-import { Badge } from "flowbite-react";
-import Loading from "../../components/loading";
-
+'use client';
+import Layout from '../../components/Layout';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import { HiCheck, HiClock } from 'react-icons/hi';
+import CardComp from '../../components/Card';
+import { Badge } from 'flowbite-react';
+import Loading from '../../components/loading';
 
 export default function userJobs() {
- 
-  const DOMAIN_NAME = "localhost:7049";
+  const DOMAIN_NAME = 'localhost:7049';
   const [jobListings, setJobListings] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-      const fetchJobs = async () => {
+    const fetchJobs = async () => {
       const authToken = Cookies.get('authToken');
       try {
-          const response = await fetch(`https://${DOMAIN_NAME}/api/JobApplication/GetUserJobs`, {
-          method: 'GET',
-          headers: {
+        const response = await fetch(
+          `https://${DOMAIN_NAME}/api/JobApplication/GetUserJobs`,
+          {
+            method: 'GET',
+            headers: {
               Authorization: `Bearer ${authToken}`,
-          },
-          });
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
+            },
           }
-          
-          const jobs = await response.json();
-          setJobListings(jobs);
-          console.log(jobs);
-          setLoading(false);
-          
+        );
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const jobs = await response.json();
+        setJobListings(jobs);
+        console.log(jobs);
+        setLoading(false);
       } catch (error) {
-          console.log('error : ', error);
+        console.log('error : ', error);
       }
-      };
-      fetchJobs();
-    }, []);
+    };
+    fetchJobs();
+  }, []);
   const [searchForm, setSearchForm] = useState({
-    title: "",
-    jobType: "",
-    jobTime: "",
+    title: '',
+    jobType: '',
+    jobTime: '',
   });
   const handleChange = async (field, value) => {
     setSearchForm({ ...searchForm, [field]: value });
@@ -77,8 +77,8 @@ export default function userJobs() {
     setSearchResult(filteredJobs);
     setCurrentPage(1);
     document
-      .getElementById("job-listings")
-      .scrollIntoView({ behavior: "smooth" });
+      .getElementById('job-listings')
+      .scrollIntoView({ behavior: 'smooth' });
   };
   const [searchResult, setSearchResult] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -109,8 +109,8 @@ export default function userJobs() {
     setCurrentPage(page);
     setTimeout(() => {
       document
-        .getElementById("job-listings")
-        .scrollIntoView({ behavior: "smooth" });
+        .getElementById('job-listings')
+        .scrollIntoView({ behavior: 'smooth' });
     }, 200);
   };
 
@@ -119,8 +119,8 @@ export default function userJobs() {
       setCurrentPage(currentPage - 1);
       setTimeout(() => {
         document
-          .getElementById("job-listings")
-          .scrollIntoView({ behavior: "smooth" });
+          .getElementById('job-listings')
+          .scrollIntoView({ behavior: 'smooth' });
       }, 200);
     } else if (currentPage === 1) {
       setCurrentPage(currentPage);
@@ -132,19 +132,18 @@ export default function userJobs() {
       setCurrentPage(currentPage + 1);
       setTimeout(() => {
         document
-          .getElementById("job-listings")
-          .scrollIntoView({ behavior: "smooth" });
+          .getElementById('job-listings')
+          .scrollIntoView({ behavior: 'smooth' });
       }, 200);
     }
   };
 
-    let badgeColor;
-    let statusText;
-  
+  let badgeColor;
+  let statusText;
 
-    if (loading) {
-      return <Loading />; // Display loading indicator while data is being fetched
-    }
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
 
   return (
     <Layout>
@@ -157,7 +156,7 @@ export default function userJobs() {
               </div>
             </div>
             <div className="site-mobile-menu-body" />
-          </div>{" "}
+          </div>{' '}
           {/* .site-mobile-menu */}
           {/* NAVBAR */}
           {/* HOME */}
@@ -183,7 +182,7 @@ export default function userJobs() {
                           className="form-control form-control-lg"
                           placeholder="Job title, Company..."
                           onChange={(e) => {
-                            handleChange("title", e.target.value);
+                            handleChange('title', e.target.value);
                           }}
                         />
                       </div>
@@ -194,7 +193,7 @@ export default function userJobs() {
                           data-width="100%"
                           title=" Remote/On Site Job "
                           onChange={(e) => {
-                            handleChange("jobType", e.target.value);
+                            handleChange('jobType', e.target.value);
                           }}
                         >
                           <option>Remote</option>
@@ -204,7 +203,7 @@ export default function userJobs() {
                       <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
                         <select
                           onChange={(e) => {
-                            handleChange("jobTime", e.target.value);
+                            handleChange('jobTime', e.target.value);
                           }}
                           className="selectpicker"
                           data-style="btn-white btn-lg"
@@ -264,7 +263,7 @@ export default function userJobs() {
                     {searchResult.length > 0 ||
                     (searchResult.length === 0 && test === true)
                       ? searchResult.length
-                      : jobListings.length}{" "}
+                      : jobListings.length}{' '}
                     Job Listed
                   </h2>
                 </div>
@@ -281,23 +280,23 @@ export default function userJobs() {
                     jobTime={job.jobDto.jobTime}
                     status={job.status}
                     companyImageUrl={job.jobDto.imageURl}
-                    onClick={() => (window.location.href = `/job/${job.jobDto.id}`)}
+                    onClick={() => (window.location.href = `/job/user-jobs`)}
                   />
                 ))}
-                  {/* <div className='flex flex-wrap gap-2'>                
+                {/* <div className='flex flex-wrap gap-2'>                
                     <Badge color={badgeColor}>{statusText}</Badge>
                   </div> */}
               </ul>
               <div className="row pagination-wrap">
                 <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
                   <span>
-                    Showing{" "}
+                    Showing{' '}
                     {jobs.length === 0 ? 0 : jobs.length - (jobs.length - 1)}-
-                    {jobs.length} Of{" "}
+                    {jobs.length} Of{' '}
                     {searchResult.length > 0 ||
                     (searchResult.length === 0 && test === true)
                       ? searchResult.length
-                      : jobListings.length}{" "}
+                      : jobListings.length}{' '}
                     Jobs
                   </span>
                 </div>
@@ -312,7 +311,7 @@ export default function userJobs() {
                       <Link
                         key={page + 1}
                         href="#"
-                        className={page + 1 === currentPage ? "active" : ""}
+                        className={page + 1 === currentPage ? 'active' : ''}
                         onClick={() => changePage(page + 1)}
                       >
                         {page + 1}

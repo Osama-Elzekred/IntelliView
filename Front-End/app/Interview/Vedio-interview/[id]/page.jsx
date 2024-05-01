@@ -1,19 +1,19 @@
 'use client';
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { StartInterview } from '../../../components/components';
-import { useState, useRef, useEffect } from 'react';
-import { redirect } from 'next/navigation';
 import Cookies from 'js-cookie';
+import { Button, Modal } from 'flowbite-react';
+import Link from 'next/link';
 import Loading from "../../../components/loading";
 
-
+const DOMAIN_NAME = 'localhost:7049';
 function MainComponent({ params }) {
-  const [loading, setLoading] = useState(true);
-  const fetchMockData = async () => {
     const authToken = Cookies.get('authToken');
+    const [loading, setLoading] = useState(true);
+  const fetchMockData = async () => {
     try {
       const response = await fetch(
-        `https://localhost:7049/api/Interview/mock/${params.id}`,
+        `https://${DOMAIN_NAME}/api/Interview/mock/${params.id}`,
         {
           method: 'GET',
           headers: {
@@ -21,16 +21,19 @@ function MainComponent({ params }) {
           },
         }
       );
-      if (response.ok) {
-        const data = await response.json();
-        setMockData(data);
-        setFullQuestionList(data.questions);
-        setQuestionVideos(data.questions.map((question) => question.url));
-        setQVideo(data.questions[0].url);
+      if (!response.ok) {
+        throw new Error('Failed to fetch mock data');
       }
-      setLoading(false);
+      const data = await response.json();
+      setMockData(data);
+      setFullQuestionList(data.questions);
+      setQuestionVideos(data.questions.map((question) => question.url));
+      setQVideo(data.questions[0].url);
+      // Initialize recordedVideos with an array of nulls based on the number of questions
+      setRecordedVideos(Array(data.questions.length).fill(null));
     } catch (error) {
-      console.log('error : ', error);
+      console.error('Error fetching mock data:', error);
+      // TODO: Display a user-friendly error message
     }
   };
   
@@ -42,6 +45,7 @@ function MainComponent({ params }) {
   const [isListVisible, setIsListVisible] = React.useState(true);
   const [isRecording, setIsRecording] = React.useState(false);
   const [recordingTime, setRecordingTime] = React.useState(0);
+  const [recorded, setRecorded] = React.useState(false);
   const [stream, setStream] = useState(null);
   const videoRef = useRef(null);
   const [arrow, setArrow] = useState(false);
@@ -49,7 +53,9 @@ function MainComponent({ params }) {
     Array(fullQuestionList.length).fill(null)
   );
   const mediaRecorderRef = useRef(null);
-  const [userVideo, setUserVideo] = useState([]);
+  const [finished, setFinished] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+
   useEffect(() => {
     fetchMockData();
   }, []);
@@ -98,7 +104,6 @@ function MainComponent({ params }) {
           newRecordedVideos[currentIndex] = blob;
           setRecordedVideos(newRecordedVideos);
           const blobUrl = URL.createObjectURL(blob);
-          setUserVideo(blobUrl);
           console.log(recordedVideos);
         }
       };
@@ -122,16 +127,16 @@ function MainComponent({ params }) {
   };
 
   //next button code...
-  const recordedVideosLength = recordedVideos.filter(
-    (video) => video !== null
-  ).length;
+  const recordedVideosLength = recordedVideos.filter(Boolean).length;
+
   const handleNextQuestion = () => {
     if (currentIndex < fullQuestionList.length - 1) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
       setQVideo(questionVideos[currentIndex + 1]);
       setRecordingTime(0);
-      setRecordingTime(0);
+      setRecorded(false);
     }
+    uploadVideo(recordedVideos[currentIndex], selectedQuestion.id, params.id);
   };
 
   //prev button code....
@@ -139,7 +144,6 @@ function MainComponent({ params }) {
   const handlePrevious = () => {
     setCurrentIndex(currentIndex - 1);
     setQVideo(questionVideos[currentIndex - 1]);
-    setRecordingTime(0);
     setRecordingTime(0);
   };
 
@@ -149,11 +153,11 @@ function MainComponent({ params }) {
   recordedVideos.forEach((video, index) => {
     formData.append(`video${index}`, video);
   });
-  const handleUploadVideos = HandleUploadVideos(formData);
   useEffect(() => {
     if (recordingTime === 59) {
       handleStopRecording();
       console.log('stop');
+      handleNextQuestion();
     }
   }, [recordingTime]);
 
@@ -269,17 +273,22 @@ function MainComponent({ params }) {
                 {isRecording === true ? (
                   <button
                     className="text-white font-roboto py-2 px-4 rounded-full bg-red-500"
-                    onClick={handleStopRecording}
+                    onClick={() => {
+                      handleStopRecording();
+                      setRecorded(true);
+                    }}
                   >
                     Stop Recording
                   </button>
                 ) : (
-                  <button
-                    className="text-white font-roboto py-2 px-4 rounded-full bg-green-500"
-                    onClick={handleStartRecording}
-                  >
-                    Start Recording
-                  </button>
+                  !recorded && (
+                    <button
+                      className="text-white font-roboto py-2 px-4 rounded-full bg-green-500"
+                      onClick={handleStartRecording}
+                    >
+                      Start Recording
+                    </button>
+                  )
                 )}
                 <span
                   className={`font-roboto text-lg rounded-full ${
@@ -306,39 +315,102 @@ function MainComponent({ params }) {
             )}
           </div>
         </div>
-        <div className="flex justify-between mt-4">
-          <button
+        <div className="d-flex flex-wrap gap-2 justify-content-start align-items-center row mt-4">
+          {/* <button
             className="bg-gray-300 text-gray-800 font-roboto py-2 px-4 rounded-l-lg"
             disabled={currentIndex <= 0}
             onClick={handlePrevious}
           >
             Previous
-          </button>
+          </button> */}
+          <div className="col-6"></div>
           {currentIndex < fullQuestionList.length - 1 ? (
-            <button
-              className="bg-gray-300 text-gray-800 font-roboto py-2 px-4 rounded-r-lg"
+            <Button
+              gradientDuoTone="purpleToBlue"
+              className="col-6 font-roboto py-2 px-4 m-2 flex-1 rounded-lg ml-auto"
               disabled={
                 isRecording || recordedVideosLength !== currentIndex + 1
               }
               onClick={() => {
+                uploadVideo(
+                  recordedVideos[currentIndex],
+                  selectedQuestion.id,
+                  params.id
+                );
                 handleNextQuestion();
               }}
             >
               Next
-            </button>
+            </Button>
           ) : (
-            <button
-              className="bg-gray-300 text-gray-800 font-roboto py-2 px-4 rounded-r-lg"
-              onClick={handleUploadVideos}
+            <Button
+              isProcessing={finished}
+              gradientDuoTone="greenToBlue"
+              className="col-3 font-roboto py-2 px-4 m-2 flex-1 rounded-lg ml-auto"
+              size="md"
+              onClick={() => {
+                setFinished(true);
+                uploadVideo(
+                  recordedVideos[currentIndex],
+                  selectedQuestion.id,
+                  params.id
+                );
+              }}
               disabled={
                 isRecording || recordedVideosLength !== currentIndex + 1
               }
             >
-              Submit
-            </button>
+              Finish
+            </Button>
           )}
         </div>
       </div>
+      <>
+        <Modal
+          show={openModal}
+          size="lg"
+          // onClose={() => setOpenModal(false)}
+          popup
+        >
+          {/* <Modal.Header /> */}
+          <Modal.Body className="mt-4">
+            <div className="text-center">
+              <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                <svg
+                  className="h-6 w-6 text-green-600"
+                  stroke="currentColor"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
+                </svg>
+              </div>
+              <h3 className="mb-5 mt-1 text-lg font-normal text-black-500 ">
+                Your interview has been successfully completed.
+              </h3>
+              <h5 className="mb-5 text-sm font-normal text-black-500 ">
+                You can now close the window.
+                <br /> We will contact you soon !
+              </h5>
+              <div className="flex justify-center gap-4">
+                <Link href="/job/user-jobs" as={`/job/user-jobs`} passHref>
+                  <Button
+                    gradientMonochrome="success"
+                    // onClick={() => setOpenModal(false)}
+                  >
+                    {'Done'}
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
+      </>
     </div>
   );
 
@@ -347,27 +419,28 @@ function MainComponent({ params }) {
   }
   
   return RenderStep();
+  async function uploadVideo(blob, questionId, mockid) {
+    const formData = new FormData();
+    formData.append('video', blob);
+    console.log(blob);
+    console.log(authToken);
+    const response = await fetch(
+      `https://${DOMAIN_NAME}/api/Interview/mock/${mockid}/question/${questionId}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: formData,
+      }
+    );
+    if (currentIndex === fullQuestionList.length - 1) {
+      setOpenModal(true);
+    }
+    if (!response.ok) {
+      throw new Error('Upload failed');
+    }
+  }
 }
-
 
 export default MainComponent;
-function HandleUploadVideos(formData) {
- 
-  return async () => {
-    try {
-      const response = await fetch('/upload-videos', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (response.ok) {
-        console.log('Videos uploaded successfully');
-        redirect(`/job/${params.id}`);
-      } else {
-        console.error('Failed to upload videos');
-      }
-    } catch (error) {
-      console.error('Error uploading videos:', error);
-    }
-  };
-}

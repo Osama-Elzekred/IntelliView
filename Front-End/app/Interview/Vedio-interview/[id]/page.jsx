@@ -4,10 +4,12 @@ import { StartInterview } from '../../../components/components';
 import Cookies from 'js-cookie';
 import { Button, Modal } from 'flowbite-react';
 import Link from 'next/link';
+import Loading from "../../../components/loading";
 
 const DOMAIN_NAME = 'localhost:7049';
 function MainComponent({ params }) {
-  const authToken = Cookies.get('authToken');
+    const authToken = Cookies.get('authToken');
+    const [loading, setLoading] = useState(true);
   const fetchMockData = async () => {
     try {
       const response = await fetch(
@@ -34,7 +36,8 @@ function MainComponent({ params }) {
       // TODO: Display a user-friendly error message
     }
   };
-
+  
+  
   const [mockData, setMockData] = useState({});
   const [fullQuestionList, setFullQuestionList] = useState([]);
   const [questionVideos, setQuestionVideos] = useState([]);
@@ -56,7 +59,7 @@ function MainComponent({ params }) {
   useEffect(() => {
     fetchMockData();
   }, []);
-
+  
   React.useEffect(() => {
     let timer;
     if (isRecording) {
@@ -77,7 +80,7 @@ function MainComponent({ params }) {
     setIsListVisible(!isListVisible);
     setArrow(!arrow);
   };
-
+  
   // start recording code
   const handleStartRecording = async () => {
     try {
@@ -411,6 +414,10 @@ function MainComponent({ params }) {
     </div>
   );
 
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
+  
   return RenderStep();
   async function uploadVideo(blob, questionId, mockid) {
     const formData = new FormData();

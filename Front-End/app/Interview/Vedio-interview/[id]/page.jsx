@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useRef, useEffect } from 'react';
-import { StartInterview } from '../../../components/components';
+import { StartInterview, UserAlert } from '../../../components/components';
 import Cookies from 'js-cookie';
 import { Button, Modal } from 'flowbite-react';
 import Link from 'next/link';
@@ -8,6 +8,8 @@ import Loading from '../../../components/loading';
 
 const DOMAIN_NAME = 'localhost:7049';
 function MainComponent({ params }) {
+  const [error, setError] = useState(false);
+
   const authToken = Cookies.get('authToken');
   const [loading, setLoading] = useState(true);
   const fetchMockData = async () => {
@@ -22,7 +24,14 @@ function MainComponent({ params }) {
         }
       );
       if (!response.ok) {
-        throw new Error('Failed to fetch mock data');
+        return response.text().then((errorMessage) => {
+          console.error('Error: ', errorMessage);
+          if (errorMessage === null || errorMessage === false) {
+            errorMessage = 'Something went wrong. Please try again later.';
+          }
+          setError(errorMessage);
+          // Display the error message to the user, or handle it in some other way
+        });
       }
       const data = await response.json();
       setMockData(data);
@@ -32,7 +41,6 @@ function MainComponent({ params }) {
       // Initialize recordedVideos with an array of nulls based on the number of questions
       setRecordedVideos(Array(data.questions.length).fill(null));
     } catch (error) {
-      console.error('Error fetching mock data:', error);
       // TODO: Display a user-friendly error message
     }
     setLoading(false);
@@ -157,7 +165,8 @@ function MainComponent({ params }) {
     if (recordingTime === 59) {
       handleStopRecording();
       console.log('stop');
-      handleNextQuestion();
+      setRecorded(true);
+      // handleNextQuestion();
     }
   }, [recordingTime]);
 
@@ -332,11 +341,6 @@ function MainComponent({ params }) {
                 isRecording || recordedVideosLength !== currentIndex + 1
               }
               onClick={() => {
-                uploadVideo(
-                  recordedVideos[currentIndex],
-                  selectedQuestion.id,
-                  params.id
-                );
                 handleNextQuestion();
               }}
             >
@@ -413,7 +417,17 @@ function MainComponent({ params }) {
       </>
     </div>
   );
-
+  if (error) {
+    return (
+      <div className="p-2 m-3">
+        <UserAlert
+          Color="red"
+          Message={error}
+          onDismissClick={() => setError(null)}
+        />
+      </div>
+    );
+  }
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
   }

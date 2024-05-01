@@ -1,6 +1,10 @@
-import Layout from '../components/Layout';
-import Link from 'next/link';
+import Layout from "../components/Layout";
+import Link from "next/link";
+import { Button } from "flowbite-react";
 export default function IndexPage() {
+  const redirectJob = () => {
+    window.location.href = "/job";
+  };
   return (
     <>
       <Layout>
@@ -45,79 +49,26 @@ export default function IndexPage() {
                     Find your dream jobs in our powerful AI-driven platform.
                   </p>
                 </div>
-                <form method="post" className="search-jobs-form">
-                  <div className="row mb-5">
-                    <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                      <input
-                        type="text"
-                        className="form-control form-control-lg"
-                        placeholder="Job title, Company..."
-                      />
-                    </div>
-                    <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                      <select
-                        className="selectpicker"
-                        data-style="btn-white btn-lg"
-                        data-width="100%"
-                        data-live-search="true"
-                        title="Select Region"
-                      >
-                        <option>Anywhere</option>
-                        <option>San Francisco</option>
-                        <option>Palo Alto</option>
-                        <option>New York</option>
-                        <option>Manhattan</option>
-                        <option>Ontario</option>
-                        <option>Toronto</option>
-                        <option>Kansas</option>
-                        <option>Mountain View</option>
-                      </select>
-                    </div>
-                    <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                      <select
-                        className="selectpicker"
-                        data-style="btn-white btn-lg"
-                        data-width="100%"
-                        data-live-search="true"
-                        title="Select Job Type"
-                      >
-                        <option>Part Time</option>
-                        <option>Full Time</option>
-                      </select>
-                    </div>
-                    <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                      <button
-                        type="submit"
-                        className="btn btn-primary btn-lg btn-block text-white btn-search"
-                      >
-                        <span className="icon-search icon mr-2" />
-                        Search Job
-                      </button>
-                    </div>
+                <div className="flex">
+                  <div className="flex flex-wrap justify-end gap-2 w-1/2 m-2 ">
+                    <Link
+                      href="/job"
+                      className="btn btn-primary border-width-2 d-none ml-2 d-lg-inline-block w-1/2 font-bold "
+                    >
+                      <span className="mr-2" />
+                      Get a Job
+                    </Link>
                   </div>
-                  <div className="row">
-                    <div className="col-md-12 popular-keywords">
-                      <h3>Trending Keywords:</h3>
-                      <ul className="keywords list-unstyled m-0 p-0">
-                        <li>
-                          <a href="#" className="m-0.5">
-                            UI Designer
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#" className="m-0.5">
-                            Python
-                          </a>
-                        </li>
-                        <li>
-                          <a href="#" className="m-0.5">
-                            Developer
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
+                  <div className="flex flex-wrap gap-2  w-1/2 m-2">
+                    <Link
+                      href="/Interview/mocks"
+                      className="btn btn-primary border-width-2 d-none ml-2 d-lg-inline-block w-1/2 font-bold "
+                    >
+                      <span className="mr-2" />
+                      Practice With AI
+                    </Link>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>
@@ -238,7 +189,7 @@ export default function IndexPage() {
                         </div>
                         <h4 className="feat-title">Efficiency</h4>
                         <p className="u-text u-text-5">
-                          {' '}
+                          {" "}
                           AI can quickly analyze candidate responses and provide
                           immediate feedback or scoring, saving time and
                           resources for both recruiters and candidates.
@@ -248,7 +199,7 @@ export default function IndexPage() {
                     <div className="u-align-left u-container-style u-list-item u-palette-1-base u-radius-20 u-repeater-item u-shape-round u-video-cover feat-hov">
                       <div className="u-container-layout u-similar-container u-valign-top u-container-layout-3">
                         <div className="feat-">
-                          {' '}
+                          {" "}
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width={80}
@@ -316,7 +267,7 @@ export default function IndexPage() {
                         </div>
                         <h4 className="feat-title">Cost-Effectiveness</h4>
                         <p className="u-text u-text-11">
-                          {' '}
+                          {" "}
                           AI-driven interviews reduce the need for human
                           interviewers, leading to cost savings in recruitment
                           resources and time.

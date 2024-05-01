@@ -1,6 +1,6 @@
-"use client";
-import React from "react";
-import { Badge } from "flowbite-react";
+'use client';
+import React from 'react';
+import { Badge } from 'flowbite-react';
 function CardComp({
   title,
   jobTime,
@@ -12,7 +12,6 @@ function CardComp({
   companyImageUrl,
   onClick,
   status,
-
 }) {
   // const categoriesList = categories.map((category, index) => (
   //   <span
@@ -22,7 +21,7 @@ function CardComp({
   //     {category.trim()}
   //   </span>
   // ));
-  // 
+  //
 
   return (
     <div
@@ -59,11 +58,13 @@ function CardComp({
         <div className="flex flex-wrap gap-2">
           <Badge
             color={
-              status === "Rejected"
-                ? "red"
-                : status === "Accpted"
-                ? "green"
-                : status === "Pending" ?  "warning" : null 
+              status === 'Rejected'
+                ? 'red'
+                : status === 'Accpted'
+                ? 'green'
+                : status === 'Pending'
+                ? 'warning'
+                : null
             }
             size="sm"
           >
@@ -71,31 +72,44 @@ function CardComp({
           </Badge>
         </div>
       </div>
-      <div className="flex flex-wrap gap-1">{categories}</div>
+      <div className="flex flex-wrap gap-1">
+        {' '}
+        <div className="flex flex-wrap gap-1">
+          {' '}
+          <div className="flex flex-wrap gap-1">
+            {categories.map((category, index) => (
+              <span key={index} className=" py-1 text-sm ">
+                {category.trim()}
+                {index < categories.length - 1 ? ',' : ''}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
 function StoryComponent() {
   const jobInfo = {
-    title: "Payroll Specialist - Middle East",
-    company: "Remote Technology, Inc.",
-    location: "Cairo, Egypt",
-    timePosted: "20 minutes ago",
-    employmentType: "Full Time",
+    title: 'Payroll Specialist - Middle East',
+    company: 'Remote Technology, Inc.',
+    location: 'Cairo, Egypt',
+    timePosted: '20 minutes ago',
+    employmentType: 'Full Time',
     categories: [
-      "Not specified",
-      "Accounting/Finance",
-      "Administration",
-      "Human Resources Payroll",
-      "Human Resources (HR)",
-      "Personnel",
-      "Accounting",
-      "Microsoft Office",
-      "Labor Law HR",
+      'Not specified',
+      'Accounting/Finance',
+      'Administration',
+      'Human Resources Payroll',
+      'Human Resources (HR)',
+      'Personnel',
+      'Accounting',
+      'Microsoft Office',
+      'Labor Law HR',
     ],
-    companyImageUrl: "./images/company-logo.png",
-    onClick: () => (window.location.href = "/job-details"),
+    companyImageUrl: './images/company-logo.png',
+    onClick: () => (window.location.href = '/job-details'),
   };
 
   return (

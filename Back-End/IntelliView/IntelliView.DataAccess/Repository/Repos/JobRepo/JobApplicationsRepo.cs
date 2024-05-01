@@ -61,7 +61,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
                 .Where(ua => ua.UserId == userId)
                 .Select(ua => new GetAppliedJobsDTO
                 {
-                    jobDto= new JobDTO
+                    jobDto = new JobDTO
                     {
                         Id = ua.Job.Id,
                         Title = ua.Job.Title,
@@ -75,7 +75,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
                         IsActive = ua.Job.IsActive,
                         Description = ua.Job.Description,
                         Location = ua.Job.Location,
-                        JobType = ua.Job.JobType,                       
+                        JobType = ua.Job.JobType,
                         CreatedAt = ua.Job.CreatedAt,
                         UpdatedAt = ua.Job.UpdatedAt,
                         EndedAt = ua.Job.EndedAt,
@@ -85,7 +85,23 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
                 .ToListAsync();
             return userApplications;
         }
-        
+        // get user applied job with its interviewQuestionAnswers
+        //public async Task<JobApplication> GetApplicationWithJobQuestionAnswersAsync(int jobId, string userId)
+        //{
+        //    return await _db.JobApplications
+        //        .Include(ua => ua.MockVideoAnswers)
+        //        .SingleOrDefaultAsync(ua => ua.JobId == jobId && ua.UserId == userId);
+
+        //}
+
+
+        //public async Task<JobApplication> GetApplicationWithJobQuestionAnswersAsync(int jobId, string userId)
+        //{
+        //    return await _db.JobApplications
+        //        .Include(ua => ua.UserAnswers)
+        //        .Include(ua => ua.Job)
+        //        .SingleOrDefaultAsync(ua => ua.JobId == jobId && ua.UserId == userId);
+        //}
     }
 
 }

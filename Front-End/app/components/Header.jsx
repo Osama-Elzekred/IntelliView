@@ -148,6 +148,11 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
+                    <Link href="/job/user-jobs" replace>
+                      Job of User
+                    </Link>
+                  </li>
+                  <li>
                     <Link href="/job/job-company" replace>
                       Job of Company
                     </Link>

@@ -8,7 +8,6 @@ namespace IntelliView.DataAccess.Repository.IRepository
     {
         ICompanyUserRepo CompanyUsers { get; }
         IIndividualUserRepo IndividualUsers { get; }
-        IInterviewApplicationRepo InterviewApplications { get; }
         IInterviewQuestionRepo InterviewQuestions { get; }
         IInterviewSessionRepo InterviewSessions { get; }
         IJobApplicationsRepo JobApplications { get; }
@@ -17,7 +16,8 @@ namespace IntelliView.DataAccess.Repository.IRepository
         IInterestedTopicRepo InterestedTopics { get; }
         IInterviewMockRepo InterviewMocks { get; }
         IInterviewMockTopicRepo InterviewMockTopics { get; }
-
+        IMockVideoAnswerRepo MockVideoAnswers { get; }
+        IUserMockSessionRepo UserMockSessions { get; }
 
         Task SaveAsync();
     }

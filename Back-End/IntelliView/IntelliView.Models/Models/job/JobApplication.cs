@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using IntelliView.Models.Models.Interview;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IntelliView.Models.Models
 {
     [PrimaryKey(nameof(JobId), nameof(UserId))]
+
     public class JobApplication
     {
 
@@ -32,13 +34,19 @@ namespace IntelliView.Models.Models
 
         // User's answers to the job questions
         public virtual ICollection<UserJobAnswer>? UserAnswers { get; set; }
-        //public virtual ICollection<>
+        //public int MockId { get; set; }
+
+        //[ForeignKey($"UserId,MockId")]
+        public virtual UserMockSession? UserMockSession { get; set; }
+
         // Documents uploaded by the user (e.g., resume)
         //public virtual string ResumeURL { get; set; }
         public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
         public bool IsApproved { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal CVScore { get; set; } = 0;
     }
+
     public enum ApplicationStatus
     {
         Pending,

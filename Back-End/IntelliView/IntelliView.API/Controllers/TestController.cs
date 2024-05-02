@@ -19,14 +19,17 @@ namespace IntelliView.API.Controllers
         private readonly IConfiguration Configuration;
         private readonly IAvatarService _avatarService;
         private readonly IAIModelApiService _aiModelApiService;
+        private readonly IUploadFilesToCloud _uploadFilesToCloud;
         public TestController(IConfiguration configuration, IAiSearchService aiBasedSearchService,
-             IWebHostEnvironment webHostEnvironment, IAvatarService avatarService, IAIModelApiService aIModelApiService)
+             IWebHostEnvironment webHostEnvironment, IAvatarService avatarService, IAIModelApiService aIModelApiService,
+             IUploadFilesToCloud uploadFilesToCloud)
         {
             Configuration = configuration;
             _aiBasedSearchService = aiBasedSearchService;
             _webHostEnvironment = webHostEnvironment;
             _avatarService = avatarService;
             _aiModelApiService = aIModelApiService;
+            _uploadFilesToCloud = uploadFilesToCloud;
         }
 
         [HttpGet]
@@ -52,34 +55,9 @@ namespace IntelliView.API.Controllers
         [HttpPost("cloudinary")]
         public async Task<IActionResult> TestCloudinary(IFormFile formFile)
         {
-            try
-            {
-                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
-                cloudinary.Api.Secure = true;
-                var uploadParams = new ImageUploadParams
-                {
-                    File = new FileDescription(formFile.FileName, formFile.OpenReadStream()),
-                    PublicId = Path.GetFileNameWithoutExtension(formFile.FileName), // Optionally, set the PublicId
-                    Overwrite = true
-                };
+            string res = await _uploadFilesToCloud.UploadVideo(formFile, formFile.FileName);
 
-                var uploadResult = await cloudinary.UploadAsync(uploadParams);
-                if (uploadResult.SecureUri != null)
-                {
-                    string url = uploadResult.SecureUri.ToString();
-
-                    // add /f_auto,q_auto to the url after /upload
-                    url = url.Insert(url.IndexOf("/upload") + 7, "/f_auto,q_auto");
-
-                    return Ok(url);
-                }
-                else
-                    return BadRequest();
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            return Ok(res );
         }
 
         [HttpPost("DeleteCloudinary")]

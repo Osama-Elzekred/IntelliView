@@ -106,8 +106,8 @@ namespace IntelliView.API.Controllers
                 return NotFound("Question not found");
             }
             // mocks without job or jobApplication
-            //var AnswerVideoLink = await _uploadFilesToCloud.UploadVideo(video, $"{userId}_{mockId}_{question.Id}");
-            var AnswerVideoLink = "https://res.cloudinary.com/djvcgnkbn/video/upload/v1714341443/cddda85e-d5df-4d46-9442-4e44281720b8_1_1.mkv";
+            var AnswerVideoLink = await _uploadFilesToCloud.UploadVideo(video, $"{userId}_{mockId}_{question.Id}");
+            // var AnswerVideoLink = "https://res.cloudinary.com/djvcgnkbn/video/upload/v1714341443/cddda85e-d5df-4d46-9442-4e44281720b8_1_1.mkv";
 
             if (AnswerVideoLink == string.Empty)
             {

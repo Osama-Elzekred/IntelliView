@@ -14,6 +14,7 @@ namespace IntelliView.Models.Models.Interview
         [Column(Order = 1)]
         public int MockId { get; set; }
         [ForeignKey(nameof(MockId))]
+        //public DateTime CreatedAt { get; set; } = DateTime.Now;
         public virtual InterviewMock InterviewMock { get; set; }
 
         // Optional: ID of the job application this mock interview is associated with

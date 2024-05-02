@@ -7,6 +7,7 @@ import SelectMulti from './SelectMulti';
 import Toastitem from './Toast';
 import Layout from './Layout';
 import StartInterview from './StartInterview';
+import UserAlert from './Alert';
 export {
   Card,
   StartInterview,
@@ -15,4 +16,5 @@ export {
   SelectMulti,
   Toastitem,
   Layout,
+  UserAlert,
 };

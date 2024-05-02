@@ -44,7 +44,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasKey("InterviewQuestionAnswerId");
 
-                    b.ToTable("VideoAiScore");
+                    b.ToTable("VideoAiScore", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.ApplicationUser", b =>
@@ -162,7 +162,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InterestedTopics");
+                    b.ToTable("InterestedTopics", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.Interview.MockVideoAnswer", b =>
@@ -200,7 +200,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("UserId", "MockId");
 
-                    b.ToTable("MockVideoAnswer");
+                    b.ToTable("MockVideoAnswer", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.Interview.UserMockSession", b =>
@@ -224,7 +224,7 @@ namespace IntelliView.DataAccess.Migrations
                         .IsUnique()
                         .HasFilter("[JobId] IS NOT NULL");
 
-                    b.ToTable("UserMockSessions");
+                    b.ToTable("UserMockSessions", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.InterviewMock", b =>
@@ -264,7 +264,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("JobId");
 
-                    b.ToTable("InterviewMocks");
+                    b.ToTable("InterviewMocks", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.InterviewMockTopic", b =>
@@ -289,7 +289,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("InterviewMockTopic");
+                    b.ToTable("InterviewMockTopic", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.Job", b =>
@@ -368,7 +368,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("MockId");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.JobApplication", b =>
@@ -414,7 +414,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("JobApplication");
+                    b.ToTable("JobApplication", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.JobQuestion", b =>
@@ -439,7 +439,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("JobId");
 
-                    b.ToTable("JobQuestions");
+                    b.ToTable("JobQuestions", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.MCQOption", b =>
@@ -461,7 +461,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("MCQOptions");
+                    b.ToTable("MCQOptions", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.UserJobAnswer", b =>
@@ -496,7 +496,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("JobId", "UserId");
 
-                    b.ToTable("UserJobAnswer");
+                    b.ToTable("UserJobAnswer", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.job.CustQuestion", b =>
@@ -518,7 +518,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("JobId");
 
-                    b.ToTable("CustQuestion");
+                    b.ToTable("CustQuestion", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.job.InterviewQuestion", b =>
@@ -550,7 +550,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("MockId");
 
-                    b.ToTable("InterviewQuestions");
+                    b.ToTable("InterviewQuestions", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.job.JobInterestedTopic", b =>
@@ -567,7 +567,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("InterestedTopicId");
 
-                    b.ToTable("JobInterestedTopics");
+                    b.ToTable("JobInterestedTopics", (string)null);
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.job.UserInterestedTopic", b =>
@@ -584,7 +584,7 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasIndex("InterestedTopicId");
 
-                    b.ToTable("UserInterestedTopics");
+                    b.ToTable("UserInterestedTopics", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -793,7 +793,7 @@ namespace IntelliView.DataAccess.Migrations
 
             modelBuilder.Entity("IntelliView.Models.Models.ApplicationUser", b =>
                 {
-                    b.OwnsMany("IntelliView.Models.DTO.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("IntelliView.Models.Models.ApplicationUser.RefreshTokens#IntelliView.Models.DTO.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("ApplicationUserId")
                                 .HasColumnType("nvarchar(450)");
@@ -819,7 +819,7 @@ namespace IntelliView.DataAccess.Migrations
 
                             b1.HasKey("ApplicationUserId", "Id");
 
-                            b1.ToTable("RefreshToken");
+                            b1.ToTable("RefreshToken", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");

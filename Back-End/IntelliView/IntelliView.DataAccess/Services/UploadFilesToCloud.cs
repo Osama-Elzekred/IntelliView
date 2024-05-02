@@ -101,7 +101,8 @@ namespace IntelliView.DataAccess.Services
                 {
                     File = new FileDescription(fileName, videoFile.OpenReadStream()),
                     PublicId = Path.GetFileNameWithoutExtension(fileName), // Optionally, set the PublicId
-                    Overwrite = true
+                    Overwrite = true,
+                    Format = "mp4"
                 };
 
                 var uploadResult = await cloudinary.UploadAsync(uploadParams);
@@ -137,32 +138,33 @@ namespace IntelliView.DataAccess.Services
                 return false;
             }
         }
-        public async Task<VideoUploadResult?> UploadVideo(string downloadUrl, dynamic VideoId)
-        {
-            var response = await _httpClient.GetAsync(downloadUrl).ConfigureAwait(false);
-            if (!response.IsSuccessStatusCode) return null;
+        //public async Task<VideoUploadResult?> UploadVideo(string downloadUrl, dynamic VideoId)
+        //{
+        //    var response = await _httpClient.GetAsync(downloadUrl).ConfigureAwait(false);
+        //    if (!response.IsSuccessStatusCode) return null;
 
-            using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
-            {
-                // Upload the video to Cloudinary
-                Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
-                cloudinary.Api.Secure = true;
+        //    using (var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
+        //    {
+        //        // Upload the video to Cloudinary
+        //        Cloudinary cloudinary = new Cloudinary(Configuration.GetSection("CLOUDINARY_URL").Value);
+        //        cloudinary.Api.Secure = true;
 
-                cloudinary.Api.UrlVideoUp.Transform(new Transformation()
-                  .Width(500).Crop("scale").Chain()
-                  .Quality(35).Chain()
-                  .FetchFormat("auto")).BuildVideoTag("intersection_aerial");
+        //        cloudinary.Api.UrlVideoUp.Transform(new Transformation()
+        //          .Width(500).Crop("scale").Chain()
+        //          .Quality(35).Chain()
+        //          .FetchFormat("auto")).BuildVideoTag("intersection_aerial");
 
-                var uploadParams = new VideoUploadParams
-                {
-                    File = new FileDescription($"{VideoId}.webm", stream),
-                    PublicId = VideoId, // Optionally, set the PublicId
-                    Overwrite = true
-                };
+        //        var uploadParams = new VideoUploadParams
+        //        {
+        //            File = new FileDescription($"{VideoId}.webm", stream),
+        //            PublicId = VideoId, // Optionally, set the PublicId
+        //            Overwrite = true,
+        //            Format = ""
+        //        };
 
-                return await cloudinary.UploadAsync(uploadParams).ConfigureAwait(false);
+        //        return await cloudinary.UploadAsync(uploadParams).ConfigureAwait(false);
 
-            }
-        }
+        //    }
+        //}
     }
 }

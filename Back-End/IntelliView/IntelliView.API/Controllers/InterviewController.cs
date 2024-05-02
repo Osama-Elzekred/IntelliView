@@ -34,12 +34,17 @@ namespace IntelliView.API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                //return Unauthorized();
+                return Unauthorized("The user dosnt exist");
             }
             var mock = await _unitOfWork.InterviewMocks.GetFirstOrDefaultAsync(m => m.Id == id, properties: m => m.InterviewQuestions);
             if (mock is null)
             {
                 return NotFound("Mock not found");
+            }
+            var mockSession = await _unitOfWork.UserMockSessions.GetByIdAsync(userId, id);
+            if (mockSession is not null)
+            {
+                return BadRequest("You have already joined this mock interview");
             }
 
             JobApplication? jobApplication = null;
@@ -131,7 +136,8 @@ namespace IntelliView.API.Controllers
                 {
                     UserId = userId,
                     MockId = mock.Id,
-                    JobId = mock.JobId
+                    JobId = mock.JobId,
+                    //CreatedAt = DateTime.Now,
                 };
 
                 // Add the UserMockSession to the context for saving

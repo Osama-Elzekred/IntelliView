@@ -10,11 +10,8 @@ namespace IntelliView.Models.Models.Interview
     {
         [Key]
         public int Id { get; set; }
-        public string UserId { get; set; }
-
-        // ID of the mock interview
-        public int MockId { get; set; }
-        [ForeignKey("UserId,MockId")]
+        public int UserMockSessionId { get; set; }
+        [ForeignKey(nameof(UserMockSessionId))]
         public virtual UserMockSession? UserMockSession { get; set; }
 
         public int InterviewQuestionId { get; set; }

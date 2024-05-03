@@ -1,12 +1,10 @@
-﻿using System.Text.Json.Serialization;
-
-namespace IntelliView.API.Controllers
+﻿namespace IntelliView.API.Controllers
 {
     public class MockVideoAnswerDTO
     {
         public int Id { get; set; }
-        [JsonIgnore]
-        public int MockInterviewSessionId { get; set; }
+        //[JsonIgnore]
+        public int UserMockSessionId { get; set; }
         public int InterviewQuestionId { get; set; }
         public string AnswerVideoURL { get; set; }
         public string AnswerText { get; set; }

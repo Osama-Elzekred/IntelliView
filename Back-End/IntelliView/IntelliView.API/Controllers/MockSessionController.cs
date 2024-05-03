@@ -19,19 +19,18 @@ namespace IntelliView.API.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet("/UserMockSession/{userId?}/mock/{mockId}")]
-        public async Task<ActionResult<UserMockSessionDTO>> UserMockSession(int mockId, string? userId)
+        [HttpGet("/UserMockSession/{id}")]
+        public async Task<ActionResult<UserMockSessionDTO>> UserMockSession(int id)
         {
-            if (userId == null)
-            {
-                userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            }
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
 
-            var UserMockSession = await _unitOfWork.UserMockSessions.GetUserMockSessionAsync(mockId, userId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            //if (userId == null)
+            //{
+            //    return Unauthorized();
+            //}
+
+            var UserMockSession = await _unitOfWork.UserMockSessions.GetUserMockSessionAsync(id);
             if (UserMockSession == null)
             {
                 return BadRequest("No Mock Session Available ");
@@ -41,11 +40,11 @@ namespace IntelliView.API.Controllers
             return Ok(userMockSessionDTO);
         }
         // get all the users with their answers for a specific mock
-        [HttpGet("/UserMockSession/mock/{mockId}")]
+        [HttpGet("/UserMockSessions/mock/{mockId}/user/{UserId}")]
 
-        public async Task<ActionResult<IEnumerable<UserMockSessionDTO>>> UserMockSession(int mockId)
+        public async Task<ActionResult<IEnumerable<UserMockSessionDTO>>> UserMockSessions(int mockId, string UserId)
         {
-            var UserMockSession = await _unitOfWork.UserMockSessions.GetAllAsync(a => a.MockId == mockId, properties: a => a.Answers);
+            var UserMockSession = await _unitOfWork.UserMockSessions.GetAllAsync(a => a.MockId == mockId && a.UserId == UserId, properties: a => a.Answers);
             if (UserMockSession == null)
             {
                 return BadRequest("No Mock Session Available ");
@@ -56,7 +55,7 @@ namespace IntelliView.API.Controllers
         }
 
         // delete the user answers for a specific mock
-        [HttpDelete("/UserMockSession/{userId?}/mock/{mockId}")]
+        [HttpDelete("/UserMockSessions/{userId?}/mock/{mockId}")]
         public async Task<ActionResult> DeleteUserMockSession(int mockId, string? userId)
         {
             if (userId == null)
@@ -68,13 +67,13 @@ namespace IntelliView.API.Controllers
                 return Unauthorized();
             }
 
-            var UserMockSession = await _unitOfWork.UserMockSessions.GetUserMockSessionAsync(mockId, userId);
+            var UserMockSession = await _unitOfWork.UserMockSessions.GetUserMockSessionsAsync(userId, mockId);
             if (UserMockSession == null)
             {
                 return BadRequest("No Mock Session Available ");
             }
 
-            await _unitOfWork.UserMockSessions.RemoveAsync(UserMockSession);
+            await _unitOfWork.UserMockSessions.RemoveRangeAsync(UserMockSession);
             await _unitOfWork.SaveAsync();
             return Ok();
         }

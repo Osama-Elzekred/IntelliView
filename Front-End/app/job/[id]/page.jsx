@@ -3,7 +3,7 @@
 import Cookies from 'js-cookie';
 import Layout from '../../components/Layout';
 import Link from 'next/link';
-import {useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Loading from '../../components/loading';
 
 const DOMAIN_NAME = 'localhost:7049';
@@ -65,11 +65,10 @@ export default function Job_details({ params }) {
     fetchData();
   }, []);
 
-
   // if (!data) {
   //   return <Loading />;
   // }
-  
+
   //const jobData = Object.keys(data).length > 0 ? [data] : [];
   //console.log(jobData);
 
@@ -81,7 +80,6 @@ export default function Job_details({ params }) {
   const options1 = { year: 'numeric', month: 'short', day: 'numeric' };
   const formattedDate1 = date1.toLocaleDateString('en-US', options1);
 
-
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
   }
@@ -89,13 +87,12 @@ export default function Job_details({ params }) {
   return (
     <Layout>
       <>
-
-      <link
+        <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
           integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-          crossorigin="anonymous"
-          referrerpolicy="no-referrer"
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
         />
 
         {/* <div id="overlayer" /> */}
@@ -147,45 +144,47 @@ export default function Job_details({ params }) {
                     <div className="border p-2 d-inline-block mr-3 rounded">
                       <img src={data.imageURL} alt="Image" />
                     </div>
-                    
+
+                    <div>
+                      {/* {data.map((item) => ( */}
+                      <h2>{data.title}</h2>
+                      {/* ))} */}
                       <div>
-                        {/* {data.map((item) => ( */}
-                          <h2>{data.title}</h2>
-                        {/* ))} */}
-                        <div>
-                          <Link href={`/company-details/${data.companyUserId}`}>
-                            <span className="ml-0 mr-2 mb-2">
-                              <span className="icon-briefcase mr-2" />
-                              {data.companyName}
-                            </span>
-                          </Link>
-                          <span className="m-2">
-                            <span className="icon-room mr-2" />
-                            {data.location}
+                        <Link href={`/company-details/${data.companyUserId}`}>
+                          <span className="ml-0 mr-2 mb-2">
+                            <span className="icon-briefcase mr-2" />
+                            {data.companyName}
                           </span>
-                          <span className="m-2">
-                            <span className="icon-clock-o mr-2" />
-                            <span className="text-primary">{data.jobTime}</span>
-                          </span>
-                        </div>
+                        </Link>
+                        <span className="m-2">
+                          <span className="icon-room mr-2" />
+                          {data.location}
+                        </span>
+                        <span className="m-2">
+                          <span className="icon-clock-o mr-2" />
+                          <span className="text-primary">{data.jobTime}</span>
+                        </span>
                       </div>
-                    
+                    </div>
                   </div>
                 </div>
                 <div className="col-lg-4">
                   <div className="row">
-                    
                     <div className="col-6">
-                      <Link href={`/job/post/${params.id}`} className="btn btn-block btn-light btn-md">
-                        <span className="fa-solid fa-pen-to-square mr-2"/>
+                      <Link
+                        href={`/job/post/${params.id}`}
+                        className="btn btn-block btn-light btn-md"
+                      >
+                        <span className="fa-solid fa-pen-to-square mr-2" />
                         Edit job
                       </Link>
                     </div>
 
                     <div className="col-6">
-                      <Link href={`/job/${params.id}/apply`}
+                      <Link
+                        href={`/job/${params.id}/apply`}
                         className="btn btn-block btn-primary btn-md"
-                        target='_blank'
+                        target="_blank"
                       >
                         Apply Now
                       </Link>
@@ -208,7 +207,7 @@ export default function Job_details({ params }) {
                       Job Description
                     </h3>
                     {/* {data.map((item) => ( */}
-                      <span>{data.description}</span>
+                    <span>{data.description}</span>
                     {/* ))} */}
                   </div>
                   <div className="mb-5">
@@ -218,11 +217,14 @@ export default function Job_details({ params }) {
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
                       {data?.responsibilities
-                        ?.split(';') 
+                        ?.split(';')
                         .map((responsibility, index) => (
-                          <li key={index} className="d-flex align-items-baseline mb-2">
+                          <li
+                            key={index}
+                            className="d-flex align-items-baseline mb-2"
+                          >
                             <span className="icon-check_circle mr-2 text-muted" />
-                            <span className='pb-1'>{responsibility}</span>
+                            <span className="pb-1">{responsibility}</span>
                           </li>
                         ))}
                     </ul>
@@ -234,18 +236,21 @@ export default function Job_details({ params }) {
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
                       {data?.requirements
-                        ?.split(/\.(?=\S)/) 
+                        ?.split(/\.(?=\S)/)
                         .map((requirement, index) => (
-                          <li key={index} className="d-flex align-items-baseline mb-2">
+                          <li
+                            key={index}
+                            className="d-flex align-items-baseline mb-2"
+                          >
                             <span className="icon-check_circle mr-2 text-muted" />
-                            <span className='pb-1'>{requirement.trim()}</span>
+                            <span className="pb-1">{requirement.trim()}</span>
                           </li>
                         ))}
                     </ul>
                   </div>
 
                   <div className="row mb-5">
-                  <div className="col-6">
+                    <div className="col-6">
                       <Link href="#" className="btn btn-block btn-light btn-md">
                         <span className="icon-heart-o mr-2 text-danger" />
                         Save Job
@@ -253,9 +258,9 @@ export default function Job_details({ params }) {
                     </div>
                     <div className="col-6">
                       <Link
-                         href={`/job/${params.id}/apply`}
+                        href={`/job/${params.id}/apply`}
                         className="btn btn-block btn-primary btn-md"
-                        target='_blank'
+                        target="_blank"
                       >
                         Apply Now
                       </Link>
@@ -318,7 +323,6 @@ export default function Job_details({ params }) {
               </div>
             </div>
           </section>
-         
           <section
             className="pt-5 bg-image overlay-primary fixed overlay"
             style={{ backgroundImage: 'url("/images/hero_1.jpg")' }}

@@ -12,6 +12,7 @@
         public List<InterviewSessionQuestionsDto> Questions { get; set; }
         public string? Title { get; set; }
         public int? JobId { get; set; }
+        public int MockSessionId { get; set; }
         public bool Authorized { get; set; }
 
     }

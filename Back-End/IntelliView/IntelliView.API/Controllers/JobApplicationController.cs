@@ -161,7 +161,7 @@ namespace IntelliView.API.Controllers
             decimal scoreValue = 0; // Default score value
             if (!string.IsNullOrEmpty(jobApplication.CVURL))
             {
-                score =await _aiModelApiService.GetCVmatch(model.CV,job.Title +"  "+ job.Description +"  "+ job.Requirements );
+                score = await _aiModelApiService.GetCVmatch(model.CV, job.Title + "  " + job.Description + "  " + job.Requirements);
                 decimal.TryParse(score, out scoreValue);
             }
             // Update the application status based on the score

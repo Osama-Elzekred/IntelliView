@@ -19,12 +19,26 @@ namespace IntelliView.DataAccess.Repository.Repos.InterviewRepo
         {
             //_db.InterviewSessionQuestion.Update(interviewQuestion);
         }
-        public async Task<UserMockSession?> GetUserMockSessionAsync(int mockId, string userId)
+        public async Task<UserMockSession?> GetUserMockSessionAsync(int id)
         {
             return await _dbSet
                 .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores)
-                .SingleOrDefaultAsync(ums => ums.MockId == mockId && ums.UserId == userId);
+                .SingleOrDefaultAsync(ums => ums.Id == id);
             //return await _db.UserMockSessions.FindAsync(userId, mockId);
+        }
+        // get all user mock session by user id and mock id
+        public async Task<ICollection<UserMockSession>> GetUserMockSessionsAsync(string userId, int mockId)
+        {
+            return await _dbSet
+                .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores)
+                .Where(ums => ums.UserId == userId && ums.MockId == mockId).AsNoTracking().ToListAsync();
+        }
+        // get all sessions by mock id  
+        public async Task<ICollection<UserMockSession>> GetSessionsAsync(int mockId)
+        {
+            return await _dbSet
+                .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores)
+                .Where(ums => ums.MockId == mockId).AsNoTracking().ToListAsync();
         }
         //get all user for one mock
         public async Task<IEnumerable<UserMockSession>> GetAllUserMockSessionAsync(int mockId)

@@ -37,6 +37,8 @@ namespace IntelliView.Models.Models
         //public int MockId { get; set; }
 
         //[ForeignKey($"UserId,MockId")]
+        public int? MockSessionId { get; set; }
+        [ForeignKey(nameof(MockSessionId))]
         public virtual UserMockSession? UserMockSession { get; set; }
 
         // Documents uploaded by the user (e.g., resume)

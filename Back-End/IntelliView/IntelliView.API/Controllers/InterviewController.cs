@@ -41,18 +41,33 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound("Mock not found");
             }
-            var mockSession = await _unitOfWork.UserMockSessions.GetByIdAsync(userId, id);
-            if (mockSession is not null)
-            {
-                return BadRequest("You have already joined this mock interview");
-            }
-
             JobApplication? jobApplication = null;
             // for jobs 
             if (mock.JobId is not null)
             {
                 jobApplication = await _unitOfWork.JobApplications.GetByIdAsync(mock.JobId, userId);
             }
+
+            //var mockSession = await _unitOfWork.UserMockSessions.GetByIdAsync(userId, id);
+            if (jobApplication?.MockSessionId is not null)
+            {
+                return BadRequest("You have already joined this mock interview");
+            }
+            var userMockInterviewSession = new UserMockSession
+            {
+                UserId = userId,
+                MockId = mock.Id,
+                CreatedAt = DateTime.Now
+            };
+            // Add the UserMockSession to the context for saving
+            await _unitOfWork.UserMockSessions.AddAsync(userMockInterviewSession);
+            // assign the mock session id to the job application
+            if (jobApplication is not null)
+            {
+                jobApplication.MockSessionId = userMockInterviewSession.Id;
+            }
+            await _unitOfWork.SaveAsync();
+
             var questions = _mapper.Map<List<InterviewSessionQuestionsDto>>(mock.InterviewQuestions);
 
 
@@ -61,6 +76,7 @@ namespace IntelliView.API.Controllers
                 Questions = questions ?? new List<InterviewSessionQuestionsDto>(),
                 Title = mock.Title,
                 JobId = mock.JobId,
+                MockSessionId = userMockInterviewSession.Id,
                 Authorized = true ? jobApplication is not null || mock.JobId is null : false,
             });
         }
@@ -90,8 +106,8 @@ namespace IntelliView.API.Controllers
 
         // start interview mock , return session id , and first question Dto
         // update the videoAnswer of a user for a question then upload it to cloudinary
-        [HttpPost("mock/{mockId}/question/{questionId}")]
-        public async Task<IActionResult> UploadVideo(IFormFile video, int mockId, int questionId)
+        [HttpPost("MockSession/{MockSessionId}/mock/{mockId}/question/{questionId}")]
+        public async Task<IActionResult> UploadVideo(IFormFile video, int mockId, int questionId, int MockSessionId)
         {
             if (video == null || video.Length == 0)
                 return BadRequest("No file uploaded");
@@ -127,23 +143,11 @@ namespace IntelliView.API.Controllers
 
 
             var userMockInterviewSession = await _unitOfWork.UserMockSessions
-                   .GetFirstOrDefaultAsync(s => s.UserId == userId && s.MockId == mock.Id);
+                   .GetUserMockSessionAsync(MockSessionId);
 
             if (userMockInterviewSession == null)
             {
-                // Create a new UserMockSession with an empty answer
-                userMockInterviewSession = new UserMockSession
-                {
-                    UserId = userId,
-                    MockId = mock.Id,
-                    JobId = mock.JobId,
-                    //CreatedAt = DateTime.Now,
-                };
-
-                // Add the UserMockSession to the context for saving
-                await _unitOfWork.UserMockSessions.AddAsync(userMockInterviewSession);
-                await _unitOfWork.SaveAsync();
-
+                return BadRequest("No Mock Session Available ");
             }
 
             if (userMockInterviewSession.Answers.Any(a => a.InterviewQuestionId == questionId))
@@ -152,13 +156,12 @@ namespace IntelliView.API.Controllers
                 return BadRequest("An answer for this question already exists in the session.");
             }
             // Update the existing UserMockSession by adding a new answer
-            userMockInterviewSession.Answers.Add(new MockVideoAnswer
+            await _unitOfWork.MockVideoAnswers.AddAsync(new MockVideoAnswer
             {
                 InterviewQuestionId = question.Id, // Assuming InterviewQuestion has a navigation property for InterviewQuestionId
                 AnswerText = "",
+                UserMockSessionId = MockSessionId,
                 AnswerVideoURL = AnswerVideoLink,
-                UserId = userId,
-                MockId = mock.Id,
                 AnswerAiEvaluationScores = AnswersEvaluationScores,
                 AnsweredAt = DateTime.Now,
             });
@@ -167,6 +170,20 @@ namespace IntelliView.API.Controllers
             await _unitOfWork.SaveAsync();
 
             return Ok("Upload successful");
+        }
+        [HttpDelete("DeleteAllSessionsWithAnswers/")]
+        public async Task<IActionResult> DeleteAllMockSession()
+        {
+
+            var userMockInterviewSession = await _unitOfWork.UserMockSessions
+                .GetAllAsync();
+            if (userMockInterviewSession == null)
+            {
+                return NotFound("No session found");
+            }
+            await _unitOfWork.UserMockSessions.RemoveRangeAsync(userMockInterviewSession);
+            await _unitOfWork.SaveAsync();
+            return Ok("Sessions deleted");
         }
 
     }

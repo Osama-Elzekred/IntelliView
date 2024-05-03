@@ -128,12 +128,10 @@ export default function Header() {
 
       // Update state with the retrieved profile photo URL
       setProfilePhotoUrl(storedProfilePhotoUrl || '');
-      
+
       localStorage.setItem('profilePhotoUrl', storedProfilePhotoUrl);
-      
     }
   }, []); // Empty dependency array ensures this effect runs only once after component mounts
-
 
   return (
     <header className="site-navbar mt-3" id="top">

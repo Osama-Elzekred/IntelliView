@@ -7,5 +7,6 @@ namespace IntelliView.DataAccess.Repository.IRepository.IInterviewRepo
 
         void Update(UserMockSession interviewApplication);
         Task<UserMockSession?> GetUserMockSessionAsync(int mockId, string userId);
+        Task<IEnumerable<UserMockSession>> GetAllUserMockSessionAsync(int mockId);
     }
 }

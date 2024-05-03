@@ -26,6 +26,13 @@ namespace IntelliView.DataAccess.Repository.Repos.InterviewRepo
                 .SingleOrDefaultAsync(ums => ums.MockId == mockId && ums.UserId == userId);
             //return await _db.UserMockSessions.FindAsync(userId, mockId);
         }
+        //get all user for one mock
+        public async Task<IEnumerable<UserMockSession>> GetAllUserMockSessionAsync(int mockId)
+        {
+            return await _dbSet
+                .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores)
+                .Where(ums => ums.MockId == mockId).ToListAsync();
+        }
 
     }
 }

@@ -257,6 +257,25 @@ namespace IntelliView.API.Controllers
 
             return Ok("Job application approved successfully");
         }
+        [Authorize(Roles = SD.ROLE_COMPANY)] 
+        [HttpPatch("approveInterview/job/{jobId}/user/{userId}")]
+        public async Task<IActionResult> ApproveInterview(int jobId, string userId)
+        {
+            var jobApplication = await _unitOfWork.JobApplications.GetApplicationByIdAsync(jobId, userId);
+
+            if (jobApplication == null)
+            {
+                return NotFound(new { message = "Job application not found" });
+            }
+
+            jobApplication.IsInterviewApproved = true; // Update approval status
+
+            _unitOfWork.JobApplications.Update(jobApplication);
+            await _unitOfWork.SaveAsync();
+
+            return Ok("Job application approved successfully");
+        }
+
         [Authorize(Roles = SD.ROLE_COMPANY)]
         [HttpPatch("reject/job/{jobId}/user/{userId}")]
         public async Task<IActionResult> RejectJobApplication(int jobId, string userId)

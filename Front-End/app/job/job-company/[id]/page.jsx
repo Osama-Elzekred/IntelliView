@@ -250,6 +250,11 @@ export default function JobApplicants({ params }) {
                             Send Interview Emails
                           </button>
                       </div>
+                      <div className="form-group col-md ">
+                          <button type="button" className="btn btn-primary" onClick={handleSendInterviewEmail}>
+                            Open Interview Emails
+                          </button>
+                      </div>
                     </form>
                   </div>
                 </div>
@@ -319,6 +324,7 @@ export default function JobApplicants({ params }) {
                             </td>
                             <td className="px-6 py-4">{applicant.cvScore}</td>
                             <td className="px-6 py-4">
+                            {!applicant.approve ? (
                               <button
                                 onClick={() =>
                                   handleApprove(
@@ -330,6 +336,11 @@ export default function JobApplicants({ params }) {
                               >
                                 Approve
                               </button>
+                            ) : (
+                              <span className="bg-green-500 text-white rounded p-1">
+                                Approved
+                              </span>
+                            )}
                             </td>
                           </tr>
                         ))}

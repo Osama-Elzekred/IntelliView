@@ -138,7 +138,6 @@ export default function Header() {
     }
   }, []); // Empty dependency array ensures this effect runs only once after component mounts
 
-
   return (
     <header className="site-navbar mt-3" id="top">
       <div className="container-fluid">

@@ -168,6 +168,15 @@ namespace IntelliView.API.Controllers
 
             return Ok("Upload successful");
         }
-
+        // get all users who had joined a mock interview to one job
+        [HttpGet("mock/{mockId}/users")]
+        public async Task<ActionResult<IEnumerable<UserListDTO>>> GetUsersForMock(int mockId)
+        {
+            var users = await _unitOfWork.UserMockSessions.GetAllUserMockSessionAsync(mockId);
+            if (users == null)
+                return NotFound();
+            var applicants = await _unitOfWork.IndividualUsers.GetByIdAsync(users.Select(u => u.UserId));
+            return Ok(applicants);
+        }
     }
 }

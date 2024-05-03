@@ -43,6 +43,7 @@ namespace IntelliView.Models.Models
         //public virtual string ResumeURL { get; set; }
         public ApplicationStatus Status { get; set; } = ApplicationStatus.Pending;
         public bool IsApproved { get; set; }
+        public bool IsInterviewApproved { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal CVScore { get; set; } = 0;
     }

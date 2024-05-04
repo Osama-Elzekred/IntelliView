@@ -1,36 +1,36 @@
-"use client";
-import React, { useState, useEffect, useRef } from "react";
-import Layout from "../../components/Layout";
-import Phone from "../../components/Phone";
-import Cookies from "js-cookie";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import Loading from "../../components/loading";
+'use client';
+import React, { useState, useEffect, useRef } from 'react';
+import Layout from '../../components/Layout';
+import Phone from '../../components/Phone';
+import Cookies from 'js-cookie';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import Loading from '../../components/loading';
 
 export default function EditProfile() {
-  let [message,setMessage] = useState(""); 
-  let [color,setColor] = useState(""); 
-  const [authToken, setAuthToken] = useState("");
-  const role = Cookies.get("role"); 
-  const authTokenCookie = Cookies.get("authToken");
+  let [message, setMessage] = useState('');
+  let [color, setColor] = useState('');
+  const [authToken, setAuthToken] = useState('');
+  const role = Cookies.get('role');
+  const authTokenCookie = Cookies.get('authToken');
   // const [userId ,setUserId] = useState("")
 
-  if (!authTokenCookie || (role != "company")){
-    redirect("/"); 
+  if (!authTokenCookie || role != 'company') {
+    redirect('/');
   }
   const [formData, setFormData] = useState({
-    companyName: "",
-    companyType: "",
-    companyOverview: "",
-    companyWebsite: "",
-    companySize: "",
-    companyFounded: "",
-    phoneNumber: "",
+    companyName: '',
+    companyType: '',
+    companyOverview: '',
+    companyWebsite: '',
+    companySize: '',
+    companyFounded: '',
+    phoneNumber: '',
   });
   const [passwordForm, setPasswordForm] = useState({
-    currentPassword: "",
-    newPassword: "",
-    newPasswordConfirm: "",
+    currentPassword: '',
+    newPassword: '',
+    newPasswordConfirm: '',
   });
   const [imageURL, setPhotoUrl] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -41,17 +41,17 @@ export default function EditProfile() {
     if (phoneInputGfgRef.current) {
       return phoneInputGfgRef.current.getPhoneInputValue();
     }
-    return "";
+    return '';
   };
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (authTokenCookie) {
           setAuthToken(authTokenCookie);
-          const response = await fetch("https://localhost:7049/api/Profile", {
-            method: "GET",
+          const response = await fetch('https://localhost:7049/api/Profile', {
+            method: 'GET',
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
               Authorization: `Bearer ${authTokenCookie}`,
             },
           });
@@ -66,16 +66,14 @@ export default function EditProfile() {
               companySize: data.companySize,
               companyFounded: data.companyFounded,
             });
-            setPhotoUrl(
-              `${data.imageURl}`
-            );
+            setPhotoUrl(`${data.imageURl}`);
           } else {
-            console.error("Failed to fetch user data");
+            console.error('Failed to fetch user data');
           }
         }
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error('Error fetching user data:', error);
       }
     };
 
@@ -88,29 +86,29 @@ export default function EditProfile() {
 
   const handleDataSubmit = async () => {
     // to make the post of form user data
-    const phoneNumber = getPhoneNumberValue();
-    setFormData((FormData) => ({
-      ...FormData,
-      phoneNumber: phoneNumber,
-    }));
+    // // const phoneNumber = getPhoneNumberValue();
+    // setFormData((FormData) => ({
+    //   ...FormData,
+    //   phoneNumber: phoneNumber,
+    // }));
 
     try {
-      const response = await fetch("https://localhost:7049/api/Profile", {
-        method: "PUT",
+      const response = await fetch('https://localhost:7049/api/Profile', {
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
       if (response.ok) {
-        console.log("Profile updated successfully");
+        console.log('Profile updated successfully');
       } else {
-        console.error("Failed to update profile");
+        console.error('Failed to update profile');
       }
       setLoading(false);
     } catch (error) {
-      console.error("Error updating profile:", error);
+      console.error('Error updating profile:', error);
     }
   };
 
@@ -119,29 +117,27 @@ export default function EditProfile() {
     setPasswordForm({ ...passwordForm, [field]: value });
   };
   const handlePasswordSubmit = async () => {
-    console.log("password part here ");
+    console.log('password part here ');
     if (
-      passwordForm.currentPassword === "" ||
-      passwordForm.newPassword === "" ||
-      passwordForm.newPasswordConfirm === ""
+      passwordForm.currentPassword === '' ||
+      passwordForm.newPassword === '' ||
+      passwordForm.newPasswordConfirm === ''
     ) {
-      setColor("red");
-      setMessage("Fill All Fields");
-      
+      setColor('red');
+      setMessage('Fill All Fields');
     } else if (passwordForm.newPassword != passwordForm.newPasswordConfirm) {
-      setColor("blue");
-      setMessage("Password not match"); 
-      
+      setColor('blue');
+      setMessage('Password not match');
     } else {
-      const userId = Cookies.get("user_id");
+      const userId = Cookies.get('user_id');
       try {
         const response = await fetch(
-          "https://localhost:7049/api/Password/change-password",
+          'https://localhost:7049/api/Password/change-password',
           {
-            method: "POST",
+            method: 'POST',
             headers: {
               Authoriazation: `Bearer ${authToken}`,
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               userId: userId,
@@ -151,17 +147,16 @@ export default function EditProfile() {
           }
         );
         if (response.ok) {
-          setColor("green"); 
-          setMessage( "Password Changed Successfully");
-          
+          setColor('green');
+          setMessage('Password Changed Successfully');
         } else {
-          setColor("red");
-          setMessage ("Password Not Change");
+          setColor('red');
+          setMessage('Password Not Change');
         }
       } catch (error) {
-        setColor("red");
-        setMessage (error);
-        console.error("error", error);
+        setColor('red');
+        setMessage(error);
+        console.error('error', error);
       }
     }
   };
@@ -172,14 +167,14 @@ export default function EditProfile() {
 
     // Create a new FormData object
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
 
     // Send the POST request to the server
     try {
       const response = await fetch(
-        "https://localhost:7049/api/Profile/updatePicture",
+        'https://localhost:7049/api/Profile/updatePicture',
         {
-          method: "PATCH",
+          method: 'PATCH',
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
@@ -189,16 +184,14 @@ export default function EditProfile() {
       if (response.ok) {
         const data = await response.json();
 
-        setPhotoUrl(
-          `${data.imageURl}`
-        );
-        console.log("Photo uploaded successfully");
+        setPhotoUrl(`${data.imageURl}`);
+        console.log('Photo uploaded successfully');
       } else {
-        console.error("Failed to upload photo");
+        console.error('Failed to upload photo');
       }
       setLoading(false);
     } catch (error) {
-      console.error("Error uploading photo:", error);
+      console.error('Error uploading photo:', error);
     }
   };
   const profilePhotoUrl = imageURL;
@@ -219,10 +212,9 @@ export default function EditProfile() {
             </div>
           </div>
           <div className="site-mobile-menu-body" />
-        </div>{" "}
+        </div>{' '}
         {/* .site-mobile-menu */}
         {/* NAVBAR */}
-
         {/* HOME */}
         <section
           className="section-hero overlay inner-page bg-image"
@@ -237,7 +229,8 @@ export default function EditProfile() {
               <div className="col-md-7">
                 <h1 className="text-white font-weight-bold">Edit Profile</h1>
                 <div className="custom-breadcrumbs">
-                  <Link href="#">Home</Link> <span className="mx-2 slash">/</span>
+                  <Link href="#">Home</Link>{' '}
+                  <span className="mx-2 slash">/</span>
                   <span className="text-white">
                     <strong>Edit Peofile</strong>
                   </span>
@@ -311,7 +304,7 @@ export default function EditProfile() {
                             className="account-settings-fileinput"
                             onChange={handleFileChange}
                           />
-                        </label>{" "}
+                        </label>{' '}
                         &nbsp;
                         <button
                           type="button"
@@ -327,89 +320,96 @@ export default function EditProfile() {
                     <hr className="border-light m-0" />
                     <div className="card-body">
                       <form className="Company">
-                        <div className="form-company">
-                          <div className="name-type">
-                            <div className="company-name">
+                        <div className="form-company flex flex-col space-y-5">
+                          <div className="flex space-x-5">
+                            <div className="flex-1">
                               <label htmlFor="company-name">name</label>
                               <br />
                               <input
                                 id="company-name"
                                 type="text"
+                                className="form-control"
                                 value={formData.companyName}
                                 onChange={(e) =>
-                                  handleChange("companyName", e.target.value)
+                                  handleChange('companyName', e.target.value)
                                 }
                               />
                             </div>
-                            <div className="companyType">
+                            <div className="flex-1">
                               <label htmlFor="companyType">type</label>
                               <br />
                               <input
                                 type="text"
                                 id="companyType"
+                                className="form-control"
                                 value={formData.companyType}
                                 onChange={(e) =>
-                                  handleChange("companyType", e.target.value)
+                                  handleChange('companyType', e.target.value)
                                 }
                               />
                             </div>
                           </div>
-                          <div className="companyOverview">
+                          <div className="flex-1">
                             <label htmlFor="companyOverview">overview</label>
                             <br />
                             <textarea
-                              className="overview_"
-                              defaultValue={""}
+                              className="w-full h-full rounded-sm"
                               value={formData.companyOverview}
                               onChange={(e) =>
-                                handleChange("companyOverview", e.target.value)
+                                handleChange('companyOverview', e.target.value)
                               }
                             />
                           </div>
-                          <div className="companyWebsite">
-                            <label htmlFor="companyWebsite">Website</label>
+                          <div className="flex-1">
                             <br />
+                            <label htmlFor="companyWebsite">Website</label>
                             <input
                               type="text"
                               id="companyWebsite"
+                              className="form-control"
                               value={formData.companyWebsite}
                               onChange={(e) =>
-                                handleChange("companyWebsite", e.target.value)
+                                handleChange('companyWebsite', e.target.value)
                               }
                             />
                           </div>
-                          {/* <div className="phone-company"> */}
-                          <label htmlFor="phone">phone number</label>
+                          <div className="flex-1">
+                            {/* <div className="phone-company"> */}
+                            <label htmlFor="phone">phone number</label>
 
-                          <Phone
-                            value={formData.phoneNumber}
-                            // onChange={(e) =>
-                            //   handleChange("phoneNumber", e.target.value)
-                            // }
-                          />
+                            <Phone
+                              className="w-full h-full "
+                              value={formData.phoneNumber}
+                              handlePhoneChange={(phone) =>
+                                handleChange('phoneNumber', phone)
+                              }
+                            />
+                          </div>
                           {/* </div> */}
-                          <div className="size-founded">
-                            <div className="companySize">
+                          <div className="flex flex-row space-x-2">
+                            <div className="flex-1">
                               <label htmlFor="companySize">companySize</label>
                               <br />
                               <input
                                 type="text"
                                 id="companySize"
+                                className="form-control"
                                 value={formData.companySize}
                                 onChange={(e) =>
-                                  handleChange("companySize", e.target.value)
+                                  handleChange('companySize', e.target.value)
                                 }
                               />
                             </div>
-                            <div className="companyFounded">
+                            <div className="flex-1">
                               <label htmlFor="companyFounded">founded</label>
                               <br />
                               <input
                                 type="year"
                                 id="companyFounded"
+                                className="form-control"
                                 value={formData.companyFounded}
                                 onChange={(e) =>
-                                  handleChange("companyFounded", e.target.value)
+                                  handleChange('companyFounded', e.target.value)
                                 }
                               />
                             </div>
@@ -443,7 +443,7 @@ export default function EditProfile() {
                             className="form-control"
                             onChange={(e) =>
                               handlePasswordChange(
-                                "currentPassword",
+                                'currentPassword',
                                 e.target.value
                               )
                             }
@@ -456,7 +456,7 @@ export default function EditProfile() {
                             className="form-control"
                             onChange={(e) =>
                               handlePasswordChange(
-                                "newPassword",
+                                'newPassword',
                                 e.target.value
                               )
                             }
@@ -471,7 +471,7 @@ export default function EditProfile() {
                             className="form-control"
                             onChange={(e) =>
                               handlePasswordChange(
-                                "newPasswordConfirm",
+                                'newPasswordConfirm',
                                 e.target.value
                               )
                             }
@@ -492,11 +492,11 @@ export default function EditProfile() {
                         </div>
                         <div
                           style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
                             color: color,
-                            fontWeight: "bold",
+                            fontWeight: 'bold',
                           }}
                         >
                           {message}
@@ -512,7 +512,7 @@ export default function EditProfile() {
                           className="form-control"
                           rows={5}
                           defaultValue={
-                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus."
+                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus.'
                           }
                         />
                       </div>
@@ -528,7 +528,7 @@ export default function EditProfile() {
                         <label className="form-label-">Country</label>
                         <select className="custom-select">
                           <option>USA</option>
-                          <option selected="">Canada</option>
+                          <option value="">Canada</option>
                           <option>UK</option>
                           <option>Germany</option>
                           <option>France</option>
@@ -610,7 +610,7 @@ export default function EditProfile() {
                     <div className="card-body">
                       <h5 className="mb-2">
                         <Link
-                          href="javascript:void(0)"
+                          href="#"
                           className="float-right text-muted text-tiny"
                         >
                           <i className="ion ion-md-close" /> Remove
@@ -741,7 +741,6 @@ export default function EditProfile() {
             </div>
           </div>
         </div>
-        
       </div>
     </Layout>
   );

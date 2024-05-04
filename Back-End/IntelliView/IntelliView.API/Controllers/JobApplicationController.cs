@@ -222,14 +222,15 @@ namespace IntelliView.API.Controllers
         }
         // view one application for a job
         [HttpGet("Application/{jobId}/{userId}")]
-        public async Task<ActionResult<JobApplication>> GetJobApplication(int jobId, string userId)
+        public async Task<ActionResult<JobApplicationDto>> GetJobApplication(int jobId, string userId)
         {
-            var application = await _unitOfWork.JobApplications.GetApplicationByIdAsync(jobId, userId);
+            var application = await _unitOfWork.JobApplications.GetApplicationWithAnswersByIdAsync(jobId, userId);
             if (application == null)
             {
                 return NotFound("Job application not found");
             }
-            return Ok(application);
+            var jobApplication = _mapper.Map<JobApplicationDto>(application);
+            return Ok(jobApplication);
         }
         // view all applications for a user
         [HttpGet("UserApplications")]

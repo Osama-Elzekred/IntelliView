@@ -6,5 +6,7 @@ namespace IntelliView.DataAccess.Services.IService
     {
         Task<string> SendRequestAsync(MultipartFormDataContent content, string url, string apiKey);
         Task<string> GetCVmatch(IFormFile? resumePath, string jd);
+
+        Task<string> GetFaceDetectionInfo(string videoLink);
     }
 }

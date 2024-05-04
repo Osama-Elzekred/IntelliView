@@ -6,7 +6,7 @@ import { Rating } from "flowbite-react";
 export default function MockCard({
   icon,
   title,
-  topic,
+  category,
   description,
   onClick,
   overallScore,
@@ -27,7 +27,7 @@ export default function MockCard({
       <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
         {title}
       </h5>
-      <h6 className="font-normal text-gray-700 dark:text-gray-400">{topic}</h6>
+      <h6 className="font-normal text-gray-700 dark:text-gray-400">{category}</h6>
       <p className="font-normal text-[#393a3a]  text-lg">{description}</p>
       {/* <span className="icon-star flex justify-end font-bold text-lg text-black">  {overallScore} </span> */}
      

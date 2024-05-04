@@ -91,11 +91,10 @@ namespace InteliView.DataAccess.Data
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<MockVideoAnswer>()
-                .HasOne(mva => mva.UserMockSession)
-                .WithMany(a => a.Answers) // Adjust this according to the inverse navigation property, if any
-               .HasForeignKey(mva => mva.UserMockSessionId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
+                 .HasOne(mva => mva.UserMockSession)
+                 .WithMany(a => a.Answers)
+                 .HasForeignKey(mva => mva.UserMockSessionId)
+                    .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<InterestedTopic>()

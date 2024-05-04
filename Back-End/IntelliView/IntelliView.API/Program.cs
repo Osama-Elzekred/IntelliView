@@ -31,8 +31,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // for database sql server
 
-//builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("MonsterASPConnection")));
+//builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 //builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
 //      options.UseSqlServer(builder.Configuration.GetConnectionString("MonsterASPConnection")));
 

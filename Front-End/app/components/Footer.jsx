@@ -1,9 +1,11 @@
 export default function Footer() {
   return (
     <footer className="site-footer">
-      <a href="#top" className="smoothscroll scroll-top">
-        <span className="icon-keyboard_arrow_up" />
-      </a>
+      <div className="smoothscroll scroll-top">
+        <span className="icon-keyboard_arrow_up " style={{cursor : "pointer"}} onClick={() => {
+               window.scrollTo({ top: 0, behavior: "smooth" });
+              }}/>
+      </div>
       <div className="container">
         <div className="row mb-5">
           <div className="col-6 col-md-3 mb-4 mb-md-0">

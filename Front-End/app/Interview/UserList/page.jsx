@@ -7,8 +7,8 @@ import Cookies from "js-cookie";
 import Loading from "../../components/loading";
 import { Toast } from "flowbite-react";
 import { HiCheck, HiExclamation, HiX } from "react-icons/hi";
-function MainComponent() {
-  const DOMAIN_NAME = "//localhost:7049/api";
+function MainComponent({params}) {
+  const DOMAIN_NAME = '//localhost:7049/api';
   const [userApprove, setUserApprove] = useState([
     false,
     false,
@@ -20,112 +20,112 @@ function MainComponent() {
     false,
     false,
   ]);
-  const usersData = [
-    {
-      id: 1,
-      name: "Ahmed",
-      email: "ahemd@mm.com",
-      status: "active",
-      location: "Cairo",
-      contact: "+912457874589",
-      image: "/images/ava.jpg",
-      score: "4.3",
-      approve: userApprove[0],
-    },
-    {
-      id: 2,
-      name: "Mohamed",
-      email: "mohamed@mm.com",
-      status: "Alexandria",
-      location: "Bangalore",
-      contact: "+912457874589",
-      image: "/images/ava.jpg",
-      score: "2.9",
-      approve: userApprove[1],
-    },
-    {
-      id: 3,
-      name: "Ali",
-      email: "ali@mm.com",
-      status: "active",
-      location: "Mansoura",
-      contact: "+912457874589",
-      image: "/images/ava.jpg",
-      score: "4.3",
-      approve: userApprove[2],
-    },
-    {
-      id: 4,
-      name: "Ahmed",
-      email: "ahemd@mm.com",
-      status: "active",
-      location: "Cairo",
-      contact: "+912457874589",
-      image: "/images/ava.jpg",
-      score: "4.3",
-      approve: userApprove[3],
-    },
-    {
-      id: 5,
-      name: "Mohamed",
-      email: "mohamed@mm.com",
-      status: "Alexandria",
-      location: "Bangalore",
-      contact: "+912457874589",
-      image: "/images/ava.jpg",
-      score: "2.9",
-      approve: userApprove[4],
-    },
-    {
-      id: 6,
-      name: "Ali",
-      email: "ali@mm.com",
-      status: "active",
-      location: "Mansoura",
-      contact: "+912457874589",
-      image: "/images/ava.jpg",
-      score: "4.3",
-      approve: userApprove[5],
-    },
-    {
-      id: 7,
-      name: "Ahmed",
-      email: "ahemd@mm.com",
-      status: "active",
-      location: "Cairo",
-      contact: "+912457874589",
-      image: "/images/ava.jpg",
-      score: "4.3",
-      approve: userApprove[6],
-    },
-    {
-      id: 8,
-      name: "Mohamed",
-      email: "mohamed@mm.com",
-      status: "Alexandria",
-      location: "Bangalore",
-      contact: "+912457874589",
-      image: "/images/ava.jpg",
-      score: "2.9",
-      approve: userApprove[7],
-    },
-    {
-      id: 9,
-      name: "Ali",
-      email: "ali@mm.com",
-      status: "active",
-      location: "Mansoura",
-      contact: "+912457874589",
-      image: "/images/ava.jpg",
-      score: "4.3",
-      approve: userApprove[8],
-    },
-  ];
+  // const usersData = [
+  //   {
+  //     id: 1,
+  //     name: "Ahmed",
+  //     email: "ahemd@mm.com",
+  //     status: "active",
+  //     location: "Cairo",
+  //     contact: "+912457874589",
+  //     image: "/images/ava.jpg",
+  //     score: "4.3",
+  //     approve: userApprove[0],
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Mohamed",
+  //     email: "mohamed@mm.com",
+  //     status: "Alexandria",
+  //     location: "Bangalore",
+  //     contact: "+912457874589",
+  //     image: "/images/ava.jpg",
+  //     score: "2.9",
+  //     approve: userApprove[1],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Ali",
+  //     email: "ali@mm.com",
+  //     status: "active",
+  //     location: "Mansoura",
+  //     contact: "+912457874589",
+  //     image: "/images/ava.jpg",
+  //     score: "4.3",
+  //     approve: userApprove[2],
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Ahmed",
+  //     email: "ahemd@mm.com",
+  //     status: "active",
+  //     location: "Cairo",
+  //     contact: "+912457874589",
+  //     image: "/images/ava.jpg",
+  //     score: "4.3",
+  //     approve: userApprove[3],
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Mohamed",
+  //     email: "mohamed@mm.com",
+  //     status: "Alexandria",
+  //     location: "Bangalore",
+  //     contact: "+912457874589",
+  //     image: "/images/ava.jpg",
+  //     score: "2.9",
+  //     approve: userApprove[4],
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Ali",
+  //     email: "ali@mm.com",
+  //     status: "active",
+  //     location: "Mansoura",
+  //     contact: "+912457874589",
+  //     image: "/images/ava.jpg",
+  //     score: "4.3",
+  //     approve: userApprove[5],
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "Ahmed",
+  //     email: "ahemd@mm.com",
+  //     status: "active",
+  //     location: "Cairo",
+  //     contact: "+912457874589",
+  //     image: "/images/ava.jpg",
+  //     score: "4.3",
+  //     approve: userApprove[6],
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "Mohamed",
+  //     email: "mohamed@mm.com",
+  //     status: "Alexandria",
+  //     location: "Bangalore",
+  //     contact: "+912457874589",
+  //     image: "/images/ava.jpg",
+  //     score: "2.9",
+  //     approve: userApprove[7],
+  //   },
+  //   {
+  //     id: 9,
+  //     name: "Ali",
+  //     email: "ali@mm.com",
+  //     status: "active",
+  //     location: "Mansoura",
+  //     contact: "+912457874589",
+  //     image: "/images/ava.jpg",
+  //     score: "4.3",
+  //     approve: userApprove[8],
+  //   },
+  // ];
   const [currentPage, setCurrentPage] = useState(1);
-  const [userData, setUserData] = useState([]); // this is the usedata will come from server
+  const [usersData, setUserData] = useState([]); // this is the usedata will come from server
   const [loading, setLoading] = useState(true);
   const [approved, setApproved] = useState(false);
-
+  // const [numberOfApplications, setNumberOfApplications] = useState('');
   const [totalPages, setTotalPages] = useState(0);
   const updateUserApprove = [...userApprove];
   const [usersPreview, setUsersPreview] = useState([]);
@@ -134,17 +134,17 @@ function MainComponent() {
     const fetchUsers = async () => {
       const authToken = Cookies.get("authToken");
       try {
-        // const response = await fetch("https://localhost:7049/api/Job/GetAll", {
-        //   method: "GET",
-        //   headers: {
-        //     Authorization: `Bearer ${authToken}`,
-        //   },
-        // });
-        // if (response.ok) {
-        //   const users = await response.json();
-        //   setUserData(users);
-        // }
-        console.log("dsfdssfsd");
+        const response = await fetch(`https://${DOMAIN_NAME}/Interview/mock/${params.mockId}/users`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+        if (response.ok) {
+          const users = await response.json();
+          setUserData(users);
+        }
+        //console.log("dsfdssfsd");
         // setLoading(false);
       } catch (error) {
         console.log("error : ", error);
@@ -182,12 +182,12 @@ function MainComponent() {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to approve job application");
+        throw new Error("Failed to approve job interview.");
       }
       setLoading(false);
       // Handle success response
     } catch (error) {
-      console.error("Error approving job application:", error);
+      console.error("Error approving job interview:", error);
     }
   };
   // if (loading) {

@@ -43,7 +43,7 @@ namespace IntelliView.DataAccess.Services
             else
             {
                 // Handle error response
-                return $"Error: {response.StatusCode}";
+                return $"Error: xxxxxxxx {response.StatusCode}";
             }
         }
         public async Task<string> GetCVmatch(IFormFile? rawCV, string jd)
@@ -67,6 +67,18 @@ namespace IntelliView.DataAccess.Services
                 var result = await SendRequestAsync(content, "https://inteliview.pythonanywhere.com/cvmatch", apiKey!);
                 return result;
             }
+        }
+
+        public async Task<string> GetFaceDetectionInfo(string videoLink)
+        {
+            // get api key from appsettings
+            var apiKey = _configuration.GetSection("cvMatchAPIKey").Value;
+
+            var content = new MultipartFormDataContent();
+            content.Add(new StringContent(videoLink), "videolink");
+
+            var result = await SendRequestAsync(content, "https://inteliview.pythonanywhere.com/faceDetection", apiKey!);
+            return result;
         }
     }
 }

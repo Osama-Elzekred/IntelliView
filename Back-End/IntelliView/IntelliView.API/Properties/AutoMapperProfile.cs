@@ -71,7 +71,10 @@ namespace ANWAAR.CORE
             // Mapping from VideoAiScore entity to VideoAiScoreDto
             CreateMap<VideoAiScore, VideoAiScoreDto>().ReverseMap();
 
-
+            //map question and answer
+            CreateMap<UserJobAnswer, QuestionsAndAnswersDTO>()
+           .ForMember(dest => dest.Question, opt => opt.MapFrom(src => src.CustQuestion.Question))
+           .ForMember(dest => dest.Answer, opt => opt.MapFrom(src => src.Answer));
 
 
         }

@@ -27,7 +27,7 @@ namespace InteliView.DataAccess.Data
         //public DbSet<InterviewVideo> InterviewVideos { get; set; }
         public DbSet<InterviewMockTopic> InterviewTopics { get; set; }
         public DbSet<InterviewMockTopic> InterviewMockTopics { get; set; }
-
+        public DbSet<MockVideoAnswer> MockVideoAnswers { get; set; }
         public DbSet<UserMockSession> UserMockSessions { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -91,11 +91,10 @@ namespace InteliView.DataAccess.Data
                 .OnDelete(DeleteBehavior.SetNull);
 
             modelBuilder.Entity<MockVideoAnswer>()
-                .HasOne(mva => mva.UserMockSession)
-                .WithMany(a => a.Answers) // Adjust this according to the inverse navigation property, if any
-                .HasForeignKey(mva => new { mva.UserId, mva.MockId })
-                .OnDelete(DeleteBehavior.Restrict); // Set to Restrict to prevent cascade delete issues
-
+                 .HasOne(mva => mva.UserMockSession)
+                 .WithMany(a => a.Answers)
+                 .HasForeignKey(mva => mva.UserMockSessionId)
+                    .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<InterestedTopic>()

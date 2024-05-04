@@ -40,13 +40,20 @@ function MainComponent({ params }) {
       setQVideo(data.questions[0].url);
       // Initialize recordedVideos with an array of nulls based on the number of questions
       setRecordedVideos(Array(data.questions.length).fill(null));
+      console.log(data);
     } catch (error) {
       // TODO: Display a user-friendly error message
     }
     setLoading(false);
   };
 
-  const [mockData, setMockData] = useState({});
+  const [mockData, setMockData] = useState({
+    questions: [],
+    title: null,
+    jobId: null,
+    mockSessionId: null,
+    authorized: false,
+  });
   const [fullQuestionList, setFullQuestionList] = useState([]);
   const [questionVideos, setQuestionVideos] = useState([]);
   const [currentIndex, setCurrentIndex] = React.useState(0);
@@ -144,7 +151,12 @@ function MainComponent({ params }) {
       setRecordingTime(0);
       setRecorded(false);
     }
-    uploadVideo(recordedVideos[currentIndex], selectedQuestion.id, params.id);
+    uploadVideo(
+      recordedVideos[currentIndex],
+      selectedQuestion.id,
+      params.id,
+      mockData.mockSessionId
+    );
   };
 
   //prev button code....
@@ -357,7 +369,8 @@ function MainComponent({ params }) {
                 uploadVideo(
                   recordedVideos[currentIndex],
                   selectedQuestion.id,
-                  params.id
+                  params.id,
+                  mockData.mockSessionId
                 );
               }}
               disabled={
@@ -432,14 +445,13 @@ function MainComponent({ params }) {
     return <Loading />; // Display loading indicator while data is being fetched
   }
 
-  return RenderStep();
-  async function uploadVideo(blob, questionId, mockid) {
+  async function uploadVideo(blob, questionId, mockid, mockSessionId) {
     const formData = new FormData();
     formData.append('video', blob);
     console.log(blob);
     console.log(authToken);
     const response = await fetch(
-      `https://${DOMAIN_NAME}/api/Interview/mock/${mockid}/question/${questionId}`,
+      `https://${DOMAIN_NAME}/api/Interview/MockSession/${mockSessionId}/mock/${mockid}/question/${questionId}`,
       {
         method: 'POST',
         headers: {
@@ -455,6 +467,7 @@ function MainComponent({ params }) {
       throw new Error('Upload failed');
     }
   }
+  return RenderStep();
 }
 
 export default MainComponent;

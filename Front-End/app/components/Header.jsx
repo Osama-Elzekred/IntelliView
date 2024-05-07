@@ -128,8 +128,14 @@ export default function Header() {
 
       // Update state with the retrieved profile photo URL
       setProfilePhotoUrl(storedProfilePhotoUrl || '');
-
-      localStorage.setItem('profilePhotoUrl', storedProfilePhotoUrl);
+      if (storedProfilePhotoUrl === null) {
+        localStorage.setItem(
+          'profilePhotoUrl',
+          'https://res.cloudinary.com/djvcgnkbn/image/upload/v1714246729/qcicrkq2tjflesksdsat.jpg'
+        );
+      } else {
+        localStorage.setItem('profilePhotoUrl', storedProfilePhotoUrl);
+      }
     }
   }, []); // Empty dependency array ensures this effect runs only once after component mounts
 
@@ -177,7 +183,7 @@ export default function Header() {
                 </ul>
               </li>
               <li className="has-children">
-                <Link href="/Interview" replace>
+                <Link href="#" replace>
                   Interview
                 </Link>
                 <ul className="dropdown">
@@ -243,7 +249,11 @@ export default function Header() {
                     label={
                       <Avatar
                         alt="User settings"
-                        img={profilePhotoUrl}
+                        img={
+                          profilePhotoUrl
+                            ? profilePhotoUrl
+                            : 'https://res.cloudinary.com/djvcgnkbn/image/upload/v1714246729/qcicrkq2tjflesksdsat.jpg'
+                        }
                         rounded
                       />
                     }

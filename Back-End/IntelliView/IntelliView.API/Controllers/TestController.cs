@@ -217,5 +217,11 @@ namespace IntelliView.API.Controllers
                 " required MVC .Net Core and Blazor knowledge would be beneficial");
             return Ok(result);
         }
+        [HttpPost("getFaceDetectionInfo") ]
+        public async Task<IActionResult> GetFaceDetectionInfo(string videoLink)
+        {
+            var result = await _aiModelApiService.GetFaceDetectionInfo(videoLink);
+            return Ok(result);
+        }
     }
 }

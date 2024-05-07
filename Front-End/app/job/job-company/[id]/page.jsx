@@ -251,9 +251,11 @@ export default function JobApplicants({ params }) {
                           </button>
                       </div>
                       <div className="form-group col-md ">
-                          <button type="button" className="btn btn-primary" onClick={handleSendInterviewEmail}>
+                      <div className="form-group col-md">
+                          <Link href={`/Interview/UserList${applicant.mockId}`} target="_blank">
                             Open Interview Emails
-                          </button>
+                          </Link>
+                        </div>
                       </div>
                     </form>
                   </div>
@@ -326,15 +328,16 @@ export default function JobApplicants({ params }) {
                             <td className="px-6 py-4">
                             {!applicant.approve ? (
                               <button
-                                onClick={() =>
-                                  handleApprove(
-                                    applicant.jobId,
-                                    applicant.userId
-                                  )
-                                }
-                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                              >
-                                Approve
+                                className="bg-[#17a9c3] text-white p-1 rounded hover:bg-[#20c997]"
+                            onClick={() => {
+                              handleApprove(
+                                applicant.jobId,
+                                applicant.userId
+                              );
+                            }}
+                          >
+                            {" "}
+                            Approve{" "}
                               </button>
                             ) : (
                               <span className="bg-green-500 text-white rounded p-1">
@@ -424,9 +427,10 @@ export default function JobApplicants({ params }) {
                                 }
                                 className="font-medium text-red-600 dark:text-red-500 hover:underline"
                               >
-                                Reject
-                              </button>
-                            </td>
+                              {" "}
+                              Reject{" "}
+                                </button>
+                              </td>
                           </tr>
                         ))}
                       </tbody>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntelliView.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240501011148_UserMockSession")]
-    partial class UserMockSession
+    [Migration("20240503235924_fristMigration")]
+    partial class fristMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -190,42 +190,39 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<int>("InterviewQuestionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("MockId")
+                    b.Property<int>("UserMockSessionId")
                         .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("InterviewQuestionId");
 
-                    b.HasIndex("UserId", "MockId");
+                    b.HasIndex("UserMockSessionId");
 
-                    b.ToTable("MockVideoAnswer");
+                    b.ToTable("MockVideoAnswers");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.Interview.UserMockSession", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnOrder(0);
-
-                    b.Property<int>("MockId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
-
-                    b.Property<int?>("JobId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.HasKey("UserId", "MockId");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MockId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("MockId");
-
-                    b.HasIndex("JobId", "UserId")
-                        .IsUnique()
-                        .HasFilter("[JobId] IS NOT NULL");
 
                     b.ToTable("UserMockSessions");
                 });
@@ -406,6 +403,9 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("MockSessionId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Phone")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -414,6 +414,10 @@ namespace IntelliView.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("JobId", "UserId");
+
+                    b.HasIndex("MockSessionId")
+                        .IsUnique()
+                        .HasFilter("[MockSessionId] IS NOT NULL");
 
                     b.HasIndex("UserId");
 
@@ -841,8 +845,8 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.HasOne("IntelliView.Models.Models.Interview.UserMockSession", "UserMockSession")
                         .WithMany("Answers")
-                        .HasForeignKey("UserId", "MockId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("UserMockSessionId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("InterviewQuestion");
@@ -858,13 +862,7 @@ namespace IntelliView.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("IntelliView.Models.Models.JobApplication", "UserApplication")
-                        .WithOne("UserMockSession")
-                        .HasForeignKey("IntelliView.Models.Models.Interview.UserMockSession", "JobId", "UserId");
-
                     b.Navigation("InterviewMock");
-
-                    b.Navigation("UserApplication");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.InterviewMock", b =>
@@ -906,6 +904,10 @@ namespace IntelliView.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("IntelliView.Models.Models.Interview.UserMockSession", "UserMockSession")
+                        .WithOne("UserApplication")
+                        .HasForeignKey("IntelliView.Models.Models.JobApplication", "MockSessionId");
+
                     b.HasOne("IntelliView.Models.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -915,6 +917,8 @@ namespace IntelliView.DataAccess.Migrations
                     b.Navigation("Job");
 
                     b.Navigation("User");
+
+                    b.Navigation("UserMockSession");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.JobQuestion", b =>
@@ -1084,6 +1088,8 @@ namespace IntelliView.DataAccess.Migrations
             modelBuilder.Entity("IntelliView.Models.Models.Interview.UserMockSession", b =>
                 {
                     b.Navigation("Answers");
+
+                    b.Navigation("UserApplication");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.InterviewMock", b =>
@@ -1108,8 +1114,6 @@ namespace IntelliView.DataAccess.Migrations
             modelBuilder.Entity("IntelliView.Models.Models.JobApplication", b =>
                 {
                     b.Navigation("UserAnswers");
-
-                    b.Navigation("UserMockSession");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.JobQuestion", b =>

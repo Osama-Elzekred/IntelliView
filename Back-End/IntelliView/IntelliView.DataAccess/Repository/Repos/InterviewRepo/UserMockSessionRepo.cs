@@ -34,12 +34,19 @@ namespace IntelliView.DataAccess.Repository.Repos.InterviewRepo
                 .Where(ums => ums.UserId == userId && ums.MockId == mockId).AsNoTracking().ToListAsync();
         }
         // get all sessions by mock id  
-        public async Task<ICollection<UserMockSession>> GetSessionsAsync(int mockId)
+        public async Task<IEnumerable<UserMockSession>> GetSessionsAsync(int mockId)
         {
             return await _dbSet
                 .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores)
                 .Where(ums => ums.MockId == mockId).AsNoTracking().ToListAsync();
         }
+        //get all user for one mock
+        //public async Task<IEnumerable<UserMockSession>> GetAllUserMockSessionAsync(int mockId)
+        //{
+        //    return await _dbSet
+        //        .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores)
+        //        .Where(ums => ums.MockId == mockId).ToListAsync();
+        //}
 
     }
 }

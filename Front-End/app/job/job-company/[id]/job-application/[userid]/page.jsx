@@ -37,6 +37,7 @@ export default function Job_Application_details({ params }) {
         }
         const result = await response.json();
         setApplicantDetails(result);
+        console.log(result);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -51,9 +52,9 @@ export default function Job_Application_details({ params }) {
     return <div>Loading...</div>; // You can render a loading indicator while data is being fetched
   }*/
 
-  if (loading) {
-    return <Loading />; // Display loading indicator while data is being fetched
-  }
+  // if (loading) {
+  //   return <Loading />; // Display loading indicator while data is being fetched
+  // }
   return (
     <Layout>
       <>
@@ -126,6 +127,7 @@ export default function Job_Application_details({ params }) {
                     </div>
                   </div>
                 </div>
+
                 {applicantDetails && (
                   <div className="col-lg-4">
                     <div className="row">
@@ -141,6 +143,44 @@ export default function Job_Application_details({ params }) {
                     </div>
                   </div>
                 )}
+
+                <div className="w-full mx-auto p-5 bg-white rounded-lg m-5">
+                  <div className="flex items-center justify-between">
+                    <div className="w-2/3">
+                      <h2 className="section-heading text-bold">Questions and Answer</h2>
+                    </div>
+                    
+                  </div>
+                  <div className="mt-8 space-y-8">
+                    <div>
+                      {applicantDetails?.questionsAndAnswers?.map((item, index) => (
+                        <div key={index}>
+                          {/* Question */}
+                          <div className="flex items-start">
+                            <div>
+                              <span className="inline-flex justify-center items-center w-6 h-6 rounded bg-green-500 text-white font-medium text-sm">
+                                Q
+                              </span>
+                            </div>
+                            <p className="ml-4 md:ml-6 text-bold">{item.question}</p>
+                          </div>
+                          {/* Answer */}
+                          <div className="flex items-start mt-3">
+                            <div>
+                              <span className="inline-flex justify-center items-center w-6 h-6 rounded bg-gray-200 text-gray-800 font-medium text-sm">
+                                A
+                              </span>
+                            </div>
+                            <p className="ml-4 md:ml-6 text-bold text-gray-800">{item.answer}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                </div>
+
+                
               </div>
             </div>
           </section>

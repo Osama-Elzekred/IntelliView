@@ -31,7 +31,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
         {
             return await _db.JobApplications
                 .Include(ua => ua.UserAnswers)
-                               .Where(ua => ua.JobId == jobId)
+                .Where(ua => ua.JobId == jobId)
                 .ToListAsync();
         }
 
@@ -52,6 +52,14 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
         public async Task<JobApplication> GetApplicationByIdAsync(int jobId, string userId)
         {
             return await _db.JobApplications.FindAsync(jobId, userId);
+        }
+
+        public async Task<JobApplication> GetApplicationWithAnswersByIdAsync(int jobId, string userId)
+        {
+            return await _db.JobApplications
+                .Include(ua => ua.UserAnswers)
+                .ThenInclude(ua => ua.CustQuestion)
+                .SingleOrDefaultAsync(ua => ua.JobId == jobId && ua.UserId == userId);
         }
         //get user applied jobs with its status
         public async Task<IEnumerable<GetAppliedJobsDTO>> GetAppliedJobsAsync(string userId)

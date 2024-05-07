@@ -13,7 +13,7 @@ namespace IntelliView.API.Controllers
 {
     [Route("api/[Controller]")]
     [ApiController]
-    [Authorize(policy: "UserOrCompany")]
+    //[Authorize(policy: "UserOrCompany")]
     public class ProfileController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -32,7 +32,7 @@ namespace IntelliView.API.Controllers
         [HttpGet]
         public async Task<ActionResult<ProfileDTO>> GetProfile()
         {
-            
+
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             var userId = userIdClaim?.Value;
             var user = await _userManager.FindByIdAsync(userId!);
@@ -93,7 +93,7 @@ namespace IntelliView.API.Controllers
                         return BadRequest(new { message = "This file extension is not allowed!" });
                     }
 
-                    string fileName = "image-"+Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string fileName = "image-" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
                     // Delete the old cv if it exists
                     //if (!string.IsNullOrEmpty(user.ImageURl))
@@ -107,10 +107,10 @@ namespace IntelliView.API.Controllers
 
                     string ImageUri = await _uploadFilesToCloud.UploadImage(file, fileName);
 
-                    if(ImageUri == String.Empty)
+                    if (ImageUri == String.Empty)
                     {
                         return BadRequest(new { message = "Failed to upload the image!" });
-                    }   
+                    }
 
                     // Update the user's profile picture URL
                     user.ImageURl = ImageUri;
@@ -122,7 +122,7 @@ namespace IntelliView.API.Controllers
 
             return BadRequest("No file or user found.");
         }
-        
+
         [HttpPatch("updateCV")]
         [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> UploadCV(IFormFile file)
@@ -143,7 +143,7 @@ namespace IntelliView.API.Controllers
                         return BadRequest(new { message = "This file extension is not allowed!" });
                     }
 
-                    string fileName = "cv-"+ Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string fileName = "cv-" + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
 
                     // Delete the old cv if it exists
                     if (!string.IsNullOrEmpty(individualUser.CVURL))
@@ -154,7 +154,7 @@ namespace IntelliView.API.Controllers
                             return BadRequest(new { message = "Failed to delete the old CV!" });
                         }
                     }
-                    
+
                     string CVUri = await _uploadFilesToCloud.UploadFile(file, fileName);
 
                     if (CVUri == String.Empty)

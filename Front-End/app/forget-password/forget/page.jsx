@@ -6,6 +6,7 @@ const Forget_password = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [showResetForm, setShowResetForm] = useState(false); // State to manage form visibility
+  const [isPending, setIsPending] = useState(true);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,17 +25,21 @@ const Forget_password = () => {
       if (response.ok) {
         setMessage('Check your inbox to reset your password.');
         setShowResetForm(true); // Display the reset form
+        setIsPending(false);
+          setError(null);
       } else {
         setError('An error occurred. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
       setError('An error occurred. Please try again.');
+      setIsPending(false);
     }
   };
 
   return (
     <>
+      {error &&<div>{alert}</div>}
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Forgot Password</title>

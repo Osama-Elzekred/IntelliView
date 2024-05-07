@@ -10,6 +10,8 @@ function CompanyDetails({ params }) {
   const authToken = Cookies.get('authToken');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const[error, setError] = useState(null);
+  const [isPending, setIsPending] = useState(true);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -24,11 +26,14 @@ function CompanyDetails({ params }) {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        const result = await response.json();
-        setData(result);
-        setLoading(false);
+          const result = await response.json();
+          setData(result);
+          setLoading(false);
+          setIsPending(false);
+          setError(null);
       } catch (error) {
-        console.error('Error fetching data:', error);
+          setIsPending(false);
+          setError(error.message);
       }
     };
 
@@ -50,8 +55,9 @@ function CompanyDetails({ params }) {
   }
 
   return (
-    <Layout>
+  <Layout>
     <><></>
+    {error &&<div>{alert}</div>}
     <link rel="stylesheet" href="/css/style.css"/>  
     <link rel="stylesheet" href="/css/edit-profile.css"/>
     

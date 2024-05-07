@@ -175,11 +175,26 @@ namespace IntelliView.API.Controllers
         [HttpGet("mock/{mockId}/users")]
         public async Task<ActionResult<IEnumerable<UserListDTO>>> GetUsersForMock(int mockId)
         {
-            var users = await _unitOfWork.UserMockSessions.GetAllUserMockSessionAsync(mockId);
-            if (users == null)
+            var applicants = await _unitOfWork.UserMockSessions.GetSessionsAsync(mockId);
+            if (applicants == null)
                 return NotFound();
-            var applicants = await _unitOfWork.IndividualUsers.GetByIdAsync(users.Select(u => u.UserId));
-            return Ok(applicants);
+            // Extract UserId values from the applicants collection
+            var userIds = applicants.Select(u => u.UserId).ToList();
+
+            // Query JobApplications based on userIds
+            var applications = await _unitOfWork.JobApplications.GetAllAsync(j => userIds.Contains(j.UserId));
+
+            //var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == applicants.select(u => u.UserId));
+            var users = applications.Select(a => new UserListDTO
+            {
+                UserId = a.UserId,
+                Email = a.Email,
+                Name = a.FullName,
+                PhoneNumber = a.Phone,
+                score = 0,
+                IsApproved = a.IsInterviewApproved,
+            });
+            return Ok(users);
         }
     }
 }

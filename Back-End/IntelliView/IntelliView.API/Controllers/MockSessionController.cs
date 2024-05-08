@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
+using IntelliView.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -77,6 +78,20 @@ namespace IntelliView.API.Controllers
             await _unitOfWork.SaveAsync();
             return Ok();
         }
+        [HttpPost("/MockVideoAnswer/{id}/SetAiScores")]
 
+        public async Task<ActionResult> SetAiScores(int id, [FromBody] VideoAiScoreDto videoAiScoreDto)
+        {
+
+            var videoAnswer = await _unitOfWork.MockVideoAnswers.GetByIdAsync(id);
+            if (videoAnswer == null)
+            {
+                return BadRequest("No Mock Session Available ");
+            }
+            var AiScore = _mapper.Map<VideoAiScore>(videoAiScoreDto);
+            videoAnswer.AnswerAiEvaluationScores = AiScore;
+            await _unitOfWork.SaveAsync();
+            return Ok();
+        }
     }
 }

@@ -183,31 +183,29 @@ function MainComponent() {
       </p> */}
       {filteredMocks.map((Mock) => (
         <>
-          
-            <div
-              key={Mock.Id}
-              href={`/Interview/Vedio-interview/${Mock.Id}`}
-              className={`inline-flex flex-col items-center text-center p-4 bg-gray-50 rounded shadow cursor-pointer ${
-                selectedTopic === Mock.topic
-                  ? 'ring-2 ring-offset-2 ring-[#6366F1]'
-                  : 'hover:bg-gray-100'
-              }`}
-            >
-              <i
-                className={`fas ${ClickedTopicIcon} text-3xl mb-3 text-gray-700`}
-              ></i>
-              <Link href={`/Interview/Vedio-interview/${Mock.Id}`}>
-                <p className="font-semibold text-sm text-[#121212] line-clamp-2 w-full max-w-40 ">
-                  {Mock.Title}
-                  <br />
-                  <span className="font-normal text-sm text-[#121212] line-clamp-1">{`(${Mock.Level})`}</span>
-                </p>
-              </Link>
-              <p className="text-sm text-gray-500 line-clamp-2 w-full max-w-md">
-                {Mock.Description}
+          <div
+            key={Mock.Id}
+            href={`/Interview/Vedio-interview/${Mock.Id}`}
+            className={`inline-flex flex-col items-center text-center p-4 bg-gray-50 rounded shadow cursor-pointer ${
+              selectedTopic === Mock.topic
+                ? 'ring-2 ring-offset-2 ring-[#6366F1]'
+                : 'hover:bg-gray-100'
+            }`}
+          >
+            <i
+              className={`fas ${ClickedTopicIcon} text-3xl mb-3 text-gray-700`}
+            ></i>
+            <Link href={`/Interview/Vedio-interview/${Mock.Id}`}>
+              <p className="font-semibold text-sm text-[#121212] line-clamp-2 w-full max-w-40 ">
+                {Mock.Title}
+                <br />
+                <span className="font-normal text-sm text-[#121212] line-clamp-1">{`(${Mock.Level})`}</span>
               </p>
-            </div>
-          
+            </Link>
+            <p className="text-sm text-gray-500 line-clamp-2 w-full max-w-md">
+              {Mock.Description}
+            </p>
+          </div>
         </>
       ))}
     </>
@@ -221,7 +219,7 @@ function MainComponent() {
       default:
         return (
           <div>
-            {/* <h3 className="font-semibold mb-4 text-[#17a9c3]">Thank you!</h3> */}
+            {/* <h3 className="font-semibold mb-4 text-[##17a9c3]">Thank you!</h3> */}
             <p>NO mocks available</p>
             <Link href="/job">Back to job list</Link>
           </div>
@@ -250,7 +248,7 @@ function MainComponent() {
         {/* .site-mobile-menu */}
         {/* NAVBAR */}
         {/* HOME */}
-        <section
+        {/* <section
           className="section-hero overlay inner-page bg-image"
           style={{ backgroundImage: 'url("/images/hero_1.jpg")' }}
           id="home-section"
@@ -258,7 +256,7 @@ function MainComponent() {
           <div className="container">
             <div className="row"></div>
           </div>
-        </section>
+        </section> */}
         <div className="flex flex-col lg:flex-row gap-4 ">
           <div
             className="lg:w-1/4 bg-white rounded-lg shadow p-4 overflow-auto"
@@ -291,7 +289,7 @@ function MainComponent() {
               ))}
             </ul>
           </div>
-          <div className="lg:w-3/4 bg-white rounded-lg shadow p-4">
+          <div className="lg:w-3/4 bg-white rounded-lg  p-4">
             <div className="flex flex-wrap justify-between items-center gap-4 mb-4">
               <h2 className="flex-1 text-lg font-semibold text-[#121212]">
                 {currentStep !== 1 && (
@@ -305,7 +303,7 @@ function MainComponent() {
                 <div className="flex items-center bg-gray-100 rounded overflow-hidden">
                   <i className="fas fa-search text-gray-400 p-2"></i>
                   <input
-                    className="bg-transparent p-2 outline-none w-full"
+                    className="bg-transparent p-2 outline-none w-full border-none"
                     placeholder="Search"
                     type="search"
                     name="search"
@@ -317,7 +315,7 @@ function MainComponent() {
               <div className="flex-1">
                 <select
                   name="difficulty"
-                  className="bg-gray-100 p-2 rounded outline-none cursor-pointer w-full"
+                  className="bg-gray-100 p-2 rounded outline-none cursor-pointer w-full border-none"
                   value={difficulty}
                   onChange={handleDifficultyChange}
                 >

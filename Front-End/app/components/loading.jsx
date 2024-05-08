@@ -1,4 +1,4 @@
-export default function Loading() {
+function Loading() {
   return (
     <>
       <div className="loader">
@@ -9,3 +9,4 @@ export default function Loading() {
     </>
   );
 }
+export default Loading;

@@ -5,7 +5,7 @@ import Layout from '../../components/Layout';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Loading from '../../components/loading';
-
+import { Breadcrumb } from '../../components/components';
 const DOMAIN_NAME = 'localhost:7049';
 
 // const jobData =
@@ -63,6 +63,7 @@ export default function Job_details({ params }) {
     };
 
     fetchData();
+    console.log(data);
   }, []);
 
   // if (!data) {
@@ -112,43 +113,27 @@ export default function Job_details({ params }) {
           </div>{' '}
           {/* .site-mobile-menu */}
           {/* HOME */}
-          <section
-            className="section-hero overlay inner-page bg-image"
-            style={{
-              backgroundImage: 'url("/images/hero_1.jpg")',
-            }}
-            id="home-section"
-          >
-            <div className="container">
-              <div className="row">
-                <div className="col-md-7">
-                  <h1 className="text-white font-weight-bold" />
-                  <div className="custom-breadcrumbs">
-                    <Link href="/Home">Home</Link>{' '}
-                    <span className="mx-2 slash">/</span>
-                    <Link href="/job">Job</Link>{' '}
-                    <span className="mx-2 slash">/</span>
-                    <span className="text-white">
-                      <strong />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section className="site-section">
+          <Breadcrumb
+            links={[
+              { name: 'Jobs', link: '/job' },
+              { name: 'Job Details', link: `/job/${params.id}` },
+            ]}
+          />
+          <section className="">
             <div className="container">
               <div className="row align-items-center mb-5">
                 <div className="col-lg-8 mb-4 mb-lg-0">
                   <div className="d-flex align-items-center">
-                    <div className="border p-2 d-inline-block mr-3 rounded">
-                      <img src={data.imageURL} alt="Image" />
-                    </div>
+                    <img
+                      className="size-20 object-cover rounded-full border  d-inline-block mr-3 flex"
+                      src={data.imageURl}
+                      alt="CompanyImage"
+                      width="20"
+                      height="20"
+                    />
 
                     <div>
-                      {/* {data.map((item) => ( */}
                       <h2>{data.title}</h2>
-                      {/* ))} */}
                       <div>
                         <Link href={`/company-details/${data.companyUserId}`}>
                           <span className="ml-0 mr-2 mb-2">
@@ -209,25 +194,6 @@ export default function Job_details({ params }) {
                     {/* {data.map((item) => ( */}
                     <span>{data.description}</span>
                     {/* ))} */}
-                  </div>
-                  <div className="mb-5">
-                    <h3 className="h5 d-flex align-items-center mb-4 text-primary">
-                      <span className="icon-rocket mr-3" />
-                      Responsibilities
-                    </h3>
-                    <ul className="list-unstyled m-0 p-0">
-                      {data?.responsibilities
-                        ?.split(';')
-                        .map((responsibility, index) => (
-                          <li
-                            key={index}
-                            className="d-flex align-items-baseline mb-2"
-                          >
-                            <span className="icon-check_circle mr-2 text-muted" />
-                            <span className="pb-1">{responsibility}</span>
-                          </li>
-                        ))}
-                    </ul>
                   </div>
                   <div className="mb-5">
                     <h3 className="h5 d-flex align-items-center mb-4 text-primary">

@@ -1,8 +1,9 @@
-"use client";
-import Layout from "../../../components/Layout";
-import MockCard from "../../../components/MockCard";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+'use client';
+import Layout from '../../../components/Layout';
+import MockCard from '../../../components/MockCard';
+import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import { Breadcrumb } from '../../../components/components';
 function UserMocks() {
   const [searchState, setSearchState] = useState(false);
   const [searchTerm, setSearchTerm] = useState();
@@ -11,91 +12,91 @@ function UserMocks() {
   const dataMocks = [
     {
       id: 1,
-      icon: "aaa",
-      title: "Coach",
-      category: "Sports",
-      description: " ay hewar kpeer wekhlas ahla klam bye men gheer salam ",
+      icon: 'aaa',
+      title: 'Coach',
+      category: 'Sports',
+      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
       score: 4.5,
     },
     {
       id: 2,
-      icon: "aaa",
-      title: "Coach",
-      category: "Sports",
-      description: " ay hewar kpeer wekhlas ahla klam bye men gheer salam ",
+      icon: 'aaa',
+      title: 'Coach',
+      category: 'Sports',
+      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
       score: 4.5,
     },
     {
       id: 3,
-      icon: "aaa",
-      title: "FrontEnd Developer",
-      category: "techno",
-      description: " ay hewar kpeer wekhlas ahla klam bye men gheer salam ",
+      icon: 'aaa',
+      title: 'FrontEnd Developer',
+      category: 'techno',
+      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
       score: 4.5,
     },
     {
       id: 4,
-      icon: "aaa",
-      title: "FrontEnd Developer",
-      category: "techno",
-      description: " ay hewar kpeer wekhlas ahla klam bye men gheer salam ",
+      icon: 'aaa',
+      title: 'FrontEnd Developer',
+      category: 'techno',
+      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
       score: 4.5,
     },
     {
       id: 5,
-      icon: "aaa",
-      title: "Doctor ",
-      category: "Medicine",
-      description: " ay hewar kpeer wekhlas ahla klam bye men gheer salam ",
+      icon: 'aaa',
+      title: 'Doctor ',
+      category: 'Medicine',
+      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
       score: 4.5,
     },
     {
       id: 6,
-      icon: "aaa",
-      title: "Coach",
-      category: "Sports",
-      description: " ay hewar kpeer wekhlas ahla klam bye men gheer salam ",
+      icon: 'aaa',
+      title: 'Coach',
+      category: 'Sports',
+      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
       score: 4.5,
     },
     {
       id: 7,
-      icon: "aaa",
-      title: "BackEnd Developer",
-      category: "Techno",
-      description: " ay hewar kpeer wekhlas ahla klam bye men gheer salam ",
+      icon: 'aaa',
+      title: 'BackEnd Developer',
+      category: 'Techno',
+      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
       score: 4.5,
     },
     {
       id: 8,
-      icon: "aaa",
-      title: "BackEnd Developer",
-      category: "Techno",
-      description: " ay hewar kpeer wekhlas ahla klam bye men gheer salam ",
+      icon: 'aaa',
+      title: 'BackEnd Developer',
+      category: 'Techno',
+      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
       score: 4.5,
     },
     {
       id: 9,
-      icon: "aaa",
-      title: "BackEnd Developer",
-      category: "Techno",
-      description: " ay hewar kpeer wekhlas ahla klam bye men gheer salam ",
+      icon: 'aaa',
+      title: 'BackEnd Developer',
+      category: 'Techno',
+      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
       score: 4.5,
     },
     {
       id: 10,
-      icon: "aaa",
-      title: "BackEnd Developer",
-      category: "Techno",
-      description: " ay hewar kpeer wekhlas ahla klam bye men gheer salam ",
+      icon: 'aaa',
+      title: 'BackEnd Developer',
+      category: 'Techno',
+      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
       score: 4.5,
     },
   ];
   useEffect(() => {
     const fetchMocksData = async () => {
-      const authToken = Cookies.get("authToken");
+      const authToken = Cookies.get('authToken');
       try {
-        const response = await fetch("https://localhost:7049/api/Job/GetAll", {
-          method: "GET",
+        const response = await fetch('https://localhost:7049/api/Job/GetAll', {
+          method: 'GET',
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
@@ -105,7 +106,7 @@ function UserMocks() {
           setMocksData(mocks);
         }
       } catch (error) {
-        console.log("error : ", error);
+        console.log('error : ', error);
       }
     };
     fetchMocksData();
@@ -126,7 +127,6 @@ function UserMocks() {
           item.title.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setSearchResult(filteredResults);
-      
     }
   };
   const redirectToReview = (userId) => {
@@ -143,20 +143,20 @@ function UserMocks() {
               </div>
             </div>
             <div className="site-mobile-menu-body" />
-          </div>{" "}
+          </div>{' '}
           {/* .site-mobile-menu */}
           {/* NAVBAR */}
           {/* HOME */}
           <section
-            className="section-hero home-section overlay inner-page bg-image"
-            style={{ backgroundImage: 'url("/images/hero_1.jpg")' }}
+            // className="section-hero home-section overlay inner-page bg-image"
+            // style={{ backgroundImage: 'url("/images/hero_1.jpg")' }}
             id="home-section"
           >
             <div className="container">
               <div className="row align-items-center justify-content-center">
                 <div className="col-md-12">
                   <div className="mb-5 text-center">
-                    <h3 className="font-bold text-white">Your Mocks</h3>
+                    <h3 className="font-bold text-black">Your Mocks</h3>
                   </div>
 
                   <form
@@ -167,11 +167,12 @@ function UserMocks() {
                       e.stopPropagation();
                     }}
                   >
+                    <Breadcrumb links={[{ name: 'My Mocks', url: '#' }]} />
                     <div className="d-flex align-items-center justify-content-center">
                       <input
                         type="text"
                         className="form-control mr-2"
-                        style={{ width: "500px" }}
+                        style={{ width: '500px' }}
                         placeholder="Category-Title ...."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -190,16 +191,16 @@ function UserMocks() {
             <div
               className="scroll-button smoothscroll"
               style={{
-                position: "absolute",
-                bottom: "-26px",
-                left: "49.9%",
-                transform: "translateX(-50%)",
-                cursor: "pointer",
+                position: 'absolute',
+                bottom: '-26px',
+                left: '49.9%',
+                transform: 'translateX(-50%)',
+                cursor: 'pointer',
               }}
               onClick={() => {
                 window.scrollTo({
                   top: document.body.scrollHeight,
-                  behavior: "smooth",
+                  behavior: 'smooth',
                 });
               }}
             >
@@ -222,10 +223,8 @@ function UserMocks() {
                   />
                 ))
               ) : searchState === true && searchResult.length === 0 ? (
-                <div className=" d-flex align-items-center justify-content-center"> 
-                    <h4>
-                        No Mocks Found 
-                    </h4>
+                <div className=" d-flex align-items-center justify-content-center">
+                  <h4>No Mocks Found</h4>
                 </div>
               ) : (
                 dataMocks.map((mock) => (

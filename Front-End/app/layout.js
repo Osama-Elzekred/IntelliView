@@ -17,18 +17,18 @@ export default function RootLayout({ children }) {
       <CustomHead />
       <body>{children}</body>
 
-      <Script src="/js/jquery.min.js"></Script>
-      <Script src="/js/bootstrap.bundle.min.js"></Script>
-      <Script src="/js/isotope.pkgd.min.js"></Script>
-      <Script src="/js/stickyfill.min.js"></Script>
+      {/* <Script src="/js/jquery.min.js"></Script> */}
+      {/* <Script src="/js/bootstrap.bundle.min.js"></Script> */}
+      {/* <Script src="/js/isotope.pkgd.min.js"></Script> */}
+      {/* <Script src="/js/stickyfill.min.js"></Script>
       <Script src="/js/jquery.fancybox.min.js"></Script>
       <Script src="/js/jquery.easing.1.3.js"></Script>
-      <Script src="/js/jquery.waypoints.min.js"></Script>
-      <Script src="/js/jquery.animateNumber.min.js"></Script>
-      <Script src="/js/owl.carousel.min.js"></Script>
-      <Script src="/js/quill.min.js"></Script>
-      <Script src="/js/bootstrap-select.min.js"></Script>
-      <Script src="/js/custom.js"></Script>
+      <Script src="/js/jquery.waypoints.min.js"></Script> */}
+      {/* <Script src="/js/jquery.animateNumber.min.js"></Script> */}
+      {/* <Script src="/js/owl.carousel.min.js"></Script>
+      <Script src="/js/quill.min.js"></Script> */}
+      {/* <Script src="/js/bootstrap-select.min.js"></Script> */}
+      {/* <Script src="/js/custom.js"></Script> */}
     </html>
   );
 }

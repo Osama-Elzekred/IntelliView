@@ -171,20 +171,30 @@ namespace IntelliView.API.Controllers
 
             return Ok("Upload successful");
         }
-        [HttpDelete("DeleteAllSessionsWithAnswers/")]
-        public async Task<IActionResult> DeleteAllMockSession()
+        // get all users who had joined a mock interview to one job
+        [HttpGet("mock/{mockId}/users")]
+        public async Task<ActionResult<IEnumerable<UserListDTO>>> GetUsersForMock(int mockId)
         {
+            var applicants = await _unitOfWork.UserMockSessions.GetSessionsAsync(mockId);
+            if (applicants == null)
+                return NotFound();
+            // Extract UserId values from the applicants collection
+            var userIds = applicants.Select(u => u.UserId).ToList();
 
-            var userMockInterviewSession = await _unitOfWork.UserMockSessions
-                .GetAllAsync();
-            if (userMockInterviewSession == null)
+            // Query JobApplications based on userIds
+            var applications = await _unitOfWork.JobApplications.GetAllAsync(j => userIds.Contains(j.UserId));
+
+            //var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == applicants.select(u => u.UserId));
+            var users = applications.Select(a => new UserListDTO
             {
-                return NotFound("No session found");
-            }
-            await _unitOfWork.UserMockSessions.RemoveRangeAsync(userMockInterviewSession);
-            await _unitOfWork.SaveAsync();
-            return Ok("Sessions deleted");
+                UserId = a.UserId,
+                Email = a.Email,
+                Name = a.FullName,
+                PhoneNumber = a.Phone,
+                score = 0,
+                IsApproved = a.IsInterviewApproved,
+            });
+            return Ok(users);
         }
-
     }
 }

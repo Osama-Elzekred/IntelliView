@@ -220,8 +220,9 @@ export default function Jobs() {
                 </div>
               </div>
               <ul className="job-listings m-5 space-y-2 py-2">
-                {jobs.map((job) => (
+                {jobs.map((job, index) => (
                   <Card
+                    key={index}
                     title={job.title}
                     company={job.companyName}
                     location={job.location}

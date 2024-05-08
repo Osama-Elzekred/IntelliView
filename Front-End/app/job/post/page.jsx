@@ -61,50 +61,50 @@ export default function Post_job(JobId) {
     categories: [],
   });
 
-  useEffect(() => {
-    const fetchJobData = async () => {
-      try {
-        const response = await fetch(
-          `https://localhost:7049/api/job/CompanyJob/${JobId}`,
-          {
-            method: 'get',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${authTokenCookie}`,
-            },
-          }
-        );
+  // useEffect(() => {
+  //   const fetchJobData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `https://localhost:7049/api/job/CompanyJob/${JobId}`,
+  //         {
+  //           method: 'get',
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //             Authorization: `Bearer ${authTokenCookie}`,
+  //           },
+  //         }
+  //       );
 
-        if (!response.ok) {
-          console.error('Failed to fetch job data');
-          return;
-        }
+  //       if (!response.ok) {
+  //         console.error('Failed to fetch job data');
+  //         return;
+  //       }
 
-        const data = await response.json();
+  //       const data = await response.json();
 
-        // Update jobInfo state with the fetched data
-        setJobInfo({
-          Title: data.Title,
-          JobType: data.JobType,
-          JobTime: data.JobTime,
-          Location: data.Location,
-          MinimumExperience: data.MinimumExperience,
-          Description: data.Description,
-          Requirements: data.Requirements,
-          // Add other mappings...
-          // Add arrays to the state
-          Questionitems: data.Questionitems,
-          CustQuestions: data.CustQuestions,
-          JobInterestedTopics: data.JobInterestedTopics,
-          EndDate: data.EndDate,
-        });
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch job data', error);
-      }
-    };
-    if (JobId) fetchJobData();
-  }, []);
+  //       // Update jobInfo state with the fetched data
+  //       setJobInfo({
+  //         Title: data.Title,
+  //         JobType: data.JobType,
+  //         JobTime: data.JobTime,
+  //         Location: data.Location,
+  //         MinimumExperience: data.MinimumExperience,
+  //         Description: data.Description,
+  //         Requirements: data.Requirements,
+  //         // Add other mappings...
+  //         // Add arrays to the state
+  //         Questionitems: data.Questionitems,
+  //         CustQuestions: data.CustQuestions,
+  //         JobInterestedTopics: data.JobInterestedTopics,
+  //         EndDate: data.EndDate,
+  //       });
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error('Failed to fetch job data', error);
+  //     }
+  //   };
+  //   if (JobId) fetchJobData();
+  // }, []);
 
   const handleDateChange = (date) => {
     const dateString = new Date(date).toLocaleDateString();
@@ -352,7 +352,7 @@ export default function Post_job(JobId) {
                               className="form-control"
                               id="email"
                               name="Email"
-                              value={jobInfo.Email}
+                              value={jobInfo?.Email}
                               onChange={(e) => handleChange(e)}
                               placeholder="you@yourdomain.com"
                               required
@@ -365,7 +365,7 @@ export default function Post_job(JobId) {
                               className="form-control"
                               id="job-title"
                               name="JobTitle"
-                              value={jobInfo.JobTitle}
+                              value={jobInfo?.JobTitle}
                               onChange={handleChange}
                               placeholder="Product Designer"
                               required
@@ -378,7 +378,7 @@ export default function Post_job(JobId) {
                               className="form-control"
                               id="job-location"
                               name="Location"
-                              value={jobInfo.Location}
+                              value={jobInfo?.Location}
                               onChange={handleChange}
                               placeholder="e.g. New York"
                               required
@@ -392,7 +392,7 @@ export default function Post_job(JobId) {
                               <SelectInput
                                 options={['on-site', 'remote', 'hybrid']}
                                 name="JobType"
-                                value={jobInfo.JobType}
+                                value={jobInfo?.JobType}
                                 onChange={handleChange}
                                 // defaultValue="choose a job type"
                               />
@@ -414,7 +414,7 @@ export default function Post_job(JobId) {
                                   'Freelance',
                                 ]}
                                 name="JobTime"
-                                value={jobInfo.JobTime}
+                                value={jobInfo?.JobTime}
                                 onChange={handleChange}
                                 // defaultValue="choose a job time"
                               />
@@ -438,7 +438,7 @@ export default function Post_job(JobId) {
                                   '5 or more years',
                                 ]}
                                 name="Experiance"
-                                value={jobInfo.Experiance}
+                                value={jobInfo?.Experiance}
                                 onChange={handleChange}
                               />
                             </div>
@@ -507,7 +507,7 @@ export default function Post_job(JobId) {
                             <Textarea
                               placeholder="Job Requirements"
                               name="JobRequirements"
-                              value={jobInfo.JobRequirements}
+                              value={jobInfo?.JobRequirements}
                               onChange={handleChange} // Replace with your actual handler function
                             />
                           </div>
@@ -522,7 +522,7 @@ export default function Post_job(JobId) {
                               <Textarea
                                 id="job-description"
                                 name="JobDescription"
-                                value={jobInfo.JobDescription}
+                                value={jobInfo?.JobDescription}
                                 onChange={handleChange}
                                 placeholder="Write Job Description!"
                                 required

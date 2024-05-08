@@ -1,13 +1,12 @@
 // Import Layout component
 'use client';
 import Link from 'next/link';
-import Layout from '../../../components/Layout';
+import { Layout, Loading, Breadcrumb } from '../../../components/components';
 import React, { useState, useEffect, Suspense } from 'react';
 import { Tabs } from 'flowbite-react';
-import { HiAdjustments, HiClipboardList, HiUserCircle } from 'react-icons/hi';
+import { HiUserCircle } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
 import Cookies from 'js-cookie';
-import Loading from '../../../components/loading';
 
 export default function JobApplicants({ params }) {
   const DOMAIN_NAME = '//localhost:7049/api';
@@ -69,18 +68,18 @@ export default function JobApplicants({ params }) {
     try {
       // Convert numberOfApplications to integer
       const count = parseInt(numberOfApplications);
-      
+
       // Make sure count is a valid number
       if (isNaN(count) || count <= 0) {
         alert('Please enter a valid positive number.');
         return;
       }
-      
+
       // Filter applications based on cvScore and select the top ones to approve
       const applicationsToApprove = allApplications
         .sort((a, b) => b.CVcvScore - a.CVcvScore) // Sort applications by cvScore in descending order
         .slice(0, count); // Select the top 'count' applications
-      
+
       // Approve the selected applications
       for (const application of applicationsToApprove) {
         try {
@@ -88,13 +87,15 @@ export default function JobApplicants({ params }) {
         } catch (error) {
           // Handle error (optional)
           console.error('Error approving job application:', error);
-          alert('Failed to approve some job applications. Please try again later.');
+          alert(
+            'Failed to approve some job applications. Please try again later.'
+          );
         }
       }
-      
+
       // If all applications are approved successfully, fetch data
       fetchData();
-      
+
       // Handle success response
       alert(`${count} application(s) approved successfully based on cvScore.`);
     } catch (error) {
@@ -157,19 +158,22 @@ export default function JobApplicants({ params }) {
   // };
   const sendInterviewEmail = async (jobId, interviewData) => {
     try {
-      const response = await fetch(`https://${DOMAIN_NAME}/JobApplication/interview/job/${jobId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${authToken}`, 
-        },
-        body: JSON.stringify(interviewData),
-      });
-  
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/JobApplication/interview/job/${jobId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify(interviewData),
+        }
+      );
+
       if (!response.ok) {
         throw new Error('Failed to send interview emails');
       }
-  
+
       const data = await response.json();
       alert(`${data.count} Email(s) sent successfully.`);
       console.log('Interview emails sent successfully:', data);
@@ -193,7 +197,6 @@ export default function JobApplicants({ params }) {
     return <Loading />; // Display loading indicator while data is being fetched
   }
 
-
   return (
     <Layout>
       <>
@@ -213,46 +216,65 @@ export default function JobApplicants({ params }) {
             <div className="site-mobile-menu-body" />
           </div>{' '}
           {/* .site-mobile-menu */}
-          {/* NAVBAR */}
-          {/* HOME */}
-          <section
-            className="section-hero home-section overlay inner-page bg-image"
-            style={{ backgroundImage: 'url("/images/background.jpg")' }}
-            id="home-section"
-          >
+          <Breadcrumb
+            links={[
+              {
+                name: 'Job Company',
+                link: '/job/job-company',
+              },
+              {
+                name: 'Job Applicants',
+                link: '#',
+              },
+            ]}
+          />
+          <section className="" id="next">
             <div className="container">
               <div className="row align-items-center justify-content-center">
                 <div className="col-md-12">
-                  <div className="mb-5 text-center">
-                    <h1 className="text-white font-weight-bold">
+                  <div className="mb-2 text-center">
+                    <h1 className="text-black font-weight-bold">
                       Job Applicants
                     </h1>
                     <p>Find applicants for job!</p>
                     <form>
-                      <div className="row mb-5 -flex align-items-end justify-content-center">
+                      <div className="row mb-2 -flex align-items-end justify-content-center">
                         <div className="form-group col-md-3">
                           <input
                             type="number"
                             className="form-control"
                             placeholder="Enter number of applications"
                             value={numberOfApplications}
-                            onChange={(e) => setNumberOfApplications(e.target.value)}
+                            onChange={(e) =>
+                              setNumberOfApplications(e.target.value)
+                            }
                           />
                         </div>
                         <div className="form-group col-md-3 ">
-                          <button type="button" className="btn btn-primary" onClick={handleSubmit}>
+                          <button
+                            type="button"
+                            className="btn btn-primary"
+                            onClick={handleSubmit}
+                          >
                             Approve Applications
                           </button>
                         </div>
                       </div>
                       <div className="form-group col-md ">
-                          <button type="button" className="btn btn-primary" onClick={handleSendInterviewEmail}>
-                            Send Interview Emails
-                          </button>
+                        <button
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={handleSendInterviewEmail}
+                        >
+                          Send Interview Emails
+                        </button>
                       </div>
                       <div className="form-group col-md ">
-                      <div className="form-group col-md">
-                          <Link href={`/Interview/UserList${applicant.mockId}`} target="_blank">
+                        <div className="form-group col-md">
+                          <Link
+                            href={`/Interview/UserList/${data.mockId}`}
+                            target="_blank"
+                          >
                             Open Interview Emails
                           </Link>
                         </div>
@@ -262,13 +284,16 @@ export default function JobApplicants({ params }) {
                 </div>
               </div>
             </div>
-            <Link href="#next" className="scroll-button smoothscroll">
-              <span className=" icon-keyboard_arrow_down" />
-            </Link>
-          </section>
-          <section className="site-section p-2" id="next">
-            <Tabs aria-label="Tabs with icons"className="p-0 m-0" style="underline">
-              <Tabs.Item className="p-0 m-0" title="All applicants" icon={HiUserCircle}>
+            <Tabs
+              aria-label="Tabs with icons"
+              className="p-0 m-0"
+              style="underline"
+            >
+              <Tabs.Item
+                className="p-0 m-0"
+                title="All applicants"
+                icon={HiUserCircle}
+              >
                 <div className="p-0 m-0">
                   <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -301,20 +326,23 @@ export default function JobApplicants({ params }) {
                               scope="row"
                               className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                             >
-                              <Link href={`/job/job-company/${applicant.jobId}/job-application/${applicant.userId}`} target="_blank">
-                              <img
-                                className="w-10 h-10 rounded-full"
-                                src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
-                                alt="image"
-                              />
-                              <div className="ps-3">
-                                <div className="text-base font-semibold">
-                                  {applicant.fullName}
+                              <Link
+                                href={`/job/job-company/${applicant.jobId}/job-application/${applicant.userId}`}
+                                target="_blank"
+                              >
+                                <img
+                                  className="w-10 h-10 rounded-full"
+                                  src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
+                                  alt="image"
+                                />
+                                <div className="ps-3">
+                                  <div className="text-base font-semibold">
+                                    {applicant.fullName}
+                                  </div>
+                                  <div className="font-normal text-gray-500">
+                                    {applicant.email}
+                                  </div>
                                 </div>
-                                <div className="font-normal text-gray-500">
-                                  {applicant.email}
-                                </div>
-                              </div>
                               </Link>
                             </th>
                             <td className="px-6 py-4">{applicant.position}</td>
@@ -326,24 +354,24 @@ export default function JobApplicants({ params }) {
                             </td>
                             <td className="px-6 py-4">{applicant.cvScore}</td>
                             <td className="px-6 py-4">
-                            {!applicant.approve ? (
-                              <button
-                                className="bg-[#17a9c3] text-white p-1 rounded hover:bg-[#20c997]"
-                            onClick={() => {
-                              handleApprove(
-                                applicant.jobId,
-                                applicant.userId
-                              );
-                            }}
-                          >
-                            {" "}
-                            Approve{" "}
-                              </button>
-                            ) : (
-                              <span className="bg-green-500 text-white rounded p-1">
-                                Approved
-                              </span>
-                            )}
+                              {!applicant.approve ? (
+                                <button
+                                  className="bg-[#17a9c3] text-white p-1 rounded hover:bg-[#20c997]"
+                                  onClick={() => {
+                                    handleApprove(
+                                      applicant.jobId,
+                                      applicant.userId
+                                    );
+                                  }}
+                                >
+                                  {' '}
+                                  Approve{' '}
+                                </button>
+                              ) : (
+                                <span className="bg-green-500 text-white rounded p-1">
+                                  Approved
+                                </span>
+                              )}
                             </td>
                           </tr>
                         ))}
@@ -372,7 +400,10 @@ export default function JobApplicants({ params }) {
                           <th scope="col" className="px-6 py-3">
                             Position
                           </th>
-                          <th scope="col" className="flex items-center justify-center px-6 py-3">
+                          <th
+                            scope="col"
+                            className="flex items-center justify-center px-6 py-3"
+                          >
                             Status
                           </th>
                           <th scope="col" className="px-6 py-3">
@@ -393,20 +424,23 @@ export default function JobApplicants({ params }) {
                               scope="row"
                               className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                             >
-                              <Link href={`/job/job-company/${applicant.jobId}/job-application/${applicant.userId}`} target="_blank">
-                              <img
-                                className="w-10 h-10 rounded-full"
-                                src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
-                                alt="image"
-                              />
-                              <div className="ps-3">
-                                <div className="text-base font-semibold">
-                                  {applicant.fullName}
+                              <Link
+                                href={`/job/job-company/${applicant.jobId}/job-application/${applicant.userId}`}
+                                target="_blank"
+                              >
+                                <img
+                                  className="w-10 h-10 rounded-full"
+                                  src="/images/default-avatar-profile-icon-of-social-media-user-vector.jpg"
+                                  alt="image"
+                                />
+                                <div className="ps-3">
+                                  <div className="text-base font-semibold">
+                                    {applicant.fullName}
+                                  </div>
+                                  <div className="font-normal text-gray-500">
+                                    {applicant.email}
+                                  </div>
                                 </div>
-                                <div className="font-normal text-gray-500">
-                                  {applicant.email}
-                                </div>
-                              </div>
                               </Link>
                             </th>
                             <td className="px-6 py-4">{applicant.position}</td>
@@ -427,10 +461,10 @@ export default function JobApplicants({ params }) {
                                 }
                                 className="font-medium text-red-600 dark:text-red-500 hover:underline"
                               >
-                              {" "}
-                              Reject{" "}
-                                </button>
-                              </td>
+                                {' '}
+                                Reject{' '}
+                              </button>
+                            </td>
                           </tr>
                         ))}
                       </tbody>

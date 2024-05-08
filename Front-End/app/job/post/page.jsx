@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { Button, Label, Modal, Textarea, Datepicker } from 'flowbite-react';
-import { useRef, useState,useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import '../../../public/css/stepper.css';
 import { TiTick } from 'react-icons/ti';
 import {
@@ -9,9 +9,9 @@ import {
   SelectMulti,
   Toastitem,
   Layout,
+  Breadcrumb,
 } from '../../components/components';
 import Cookies from 'js-cookie';
-import { redirect } from 'next/navigation';
 import Loading from '../../components/loading';
 
 export default function Post_job(JobId) {
@@ -30,9 +30,9 @@ export default function Post_job(JobId) {
   const authTokenCookie = Cookies.get('authToken');
   const role = Cookies.get('role');
   const [loading, setLoading] = useState(true);
-  if (!authTokenCookie || role != 'company') {
-    redirect('/');
-  }
+  // if (!authTokenCookie || role != 'company') {
+  //   redirect('/');
+  // }
   const categories = [
     'Data Structures & Algorithms',
     'C/C++',
@@ -299,29 +299,8 @@ export default function Post_job(JobId) {
             {/* .site-mobile-menu */}
             {/* NAVBAR */}
             {/* HOME */}
-            <section
-              className="section-hero overlay inner-page bg-image"
-              style={{ backgroundImage: 'url("/images/hero_1.jpg")' }}
-              id="home-section"
-            >
-              <div className="container">
-                <div className="row">
-                  <div className="col-md-7">
-                    <h1 className="text-white font-weight-bold">Post a Job</h1>
-                    <div className="custom-breadcrumbs">
-                      <Link href="/Home">Home</Link>{' '}
-                      <span className="mx-2 slash">/</span>
-                      <Link href="/job">Job</Link>{' '}
-                      <span className="mx-2 slash">/</span>
-                      <span className="text-white">
-                        <strong>Post a Job</strong>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-            <section className="site-section">
+            <Breadcrumb links={[{ name: 'Post a Job', link: '/job/post' }]} />
+            <section className="mt-2 pl-2">
               <div className="container">
                 <div className="row align-items-center mb-5">
                   <div className="col-lg-8 mb-4 mb-lg-0">

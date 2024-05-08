@@ -1,9 +1,6 @@
 'use client';
-import Image from 'next/image';
-import Head from 'next/head';
 import React from 'react';
-import Script from 'next/script';
-import Layout from '../components/Layout';
+import { Layout, Breadcrumb } from '../components/components';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -57,12 +54,12 @@ export default function login() {
           document.cookie = `authToken=${data.token};path=/`;
           document.cookie = `user_id=${data.id};path=/`;
           localStorage.setItem('roleFromServer', data.roles);
-          localStorage.setItem('profilePhotoUrl', data.imageURL)
+          localStorage.setItem('profilePhotoUrl', data.imageURL);
           document.cookie = `role=${data.roles[0].toLowerCase()};path=/`;
           document.cookie = `userName=${data.username};path=/`;
-          if(data.roles[0].toLowerCase() === 'company'){
+          if (data.roles[0].toLowerCase() === 'company') {
             window.location.href = `/profile/Edit-company-profile`;
-          }else{
+          } else {
             window.location.href = `/profile/Edit-user-profile`;
           }
         } else if (data.message) {
@@ -161,9 +158,9 @@ export default function login() {
             PasswordConfirm: '',
             Role: 'User',
           });
-          if(data.roles[0].toLowerCase() === 'company'){
+          if (data.roles[0].toLowerCase() === 'company') {
             window.location.href = `/profile/Edit-company-profile`;
-          }else{
+          } else {
             window.location.href = `/profile/Edit-user-profile`;
           }
         } else if (data.message) {
@@ -197,24 +194,17 @@ export default function login() {
           {/* NAVBAR */}
           {/* HOME */}
           <section
-            className="section-hero overlay inner-page bg-image"
-            style={{
-              backgroundImage:
-                'url("/images/ai-background-business-technology-digital-transformation.jpg")',
-            }}
+            // className="section-hero overlay inner-page bg-image"
+            // style={{
+            //   backgroundImage:
+            //     'url("/images/ai-background-business-technology-digital-transformation.jpg")',
+            // }}
             id="home-section"
           >
             <div className="container ">
               <div className="row">
                 <div className="col-md-7">
-                  <h1 className="text-white font-weight-bold">Sign Up/Login</h1>
-                  <div className="custom-breadcrumbs">
-                    <Link href="/Home">Home</Link>{' '}
-                    <span className="mx-2 slash">/</span>
-                    <span className="text-white">
-                      <strong>Log In</strong>
-                    </span>
-                  </div>
+                  <Breadcrumb links={[{ name: 'Login', link: '/login' }]} />
                 </div>
               </div>
             </div>
@@ -232,7 +222,7 @@ export default function login() {
                             Don't have an account?{' '}
                             <a
                               href="#"
-                              className="text-blue-600"
+                              className="text-primary"
                               onClick={() => {
                                 setIsFlipped(!isFlipped);
                                 window.scrollTo({
@@ -288,14 +278,14 @@ export default function login() {
                               </label>
                               <Link
                                 href="/forget-password/forget"
-                                className="text-sm text-blue-600"
+                                className="text-sm text-primary"
                               >
                                 Forgot Password?
                               </Link>
                             </div>
                           </div>
                           <button
-                            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300"
+                            className="mt-6 w-full bg-primary hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300"
                             type="submit"
                           >
                             Sign in
@@ -517,7 +507,7 @@ export default function login() {
                           </p>
 
                           <button
-                            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300"
+                            className="mt-6 w-full bg-primary hover:bg-blue-700 text-white py-3 rounded-lg transition duration-300"
                             type="submit"
                             // defaultValue="sign up"
                             value="sign up"
@@ -549,7 +539,7 @@ export default function login() {
                           <p className="mt-3 mr-1 flex justify-end items-end">
                             <a
                               href="#"
-                              className="text-blue-600"
+                              className="text-primary"
                               onClick={() => {
                                 setIsFlipped(!isFlipped);
                                 window.scrollTo({

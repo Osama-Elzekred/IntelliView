@@ -12,7 +12,7 @@ namespace IntelliView.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(policy: "UserOrCompany")]
+    //[Authorize(policy: "UserOrCompany")]
     public class JobController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -1,17 +1,10 @@
-// import React from 'react'
 import Link from 'next/link';
 import Layout from '../components/Layout';
-import Script from 'next/script';
+import { Breadcrumb } from '../components/components';
 export default function Service() {
   return (
     <Layout>
       <>
-        {/* <div id="overlayer" />
-      <div className="loader">
-        <div className="spinner-border text-primary" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
-      </div> */}
         <div className="site-wrap">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">
@@ -21,29 +14,12 @@ export default function Service() {
             </div>
             <div className="site-mobile-menu-body" />
           </div>{' '}
-          {/* .site-mobile-menu */}
-          {/* NAVBAR */}
-          {/* HOME */}
-          <section
-            className="section-hero overlay inner-page bg-image"
-            style={{ backgroundImage: 'url("images/hero_1.jpg")' }}
-            id="home-section"
-          >
-            <div className="container">
-              <div className="row">
-                <div className="col-md-7">
-                  <h1 className="text-white font-weight-bold">Services</h1>
-                  <div className="custom-breadcrumbs">
-                    <Link href="/Home">Home</Link>{' '}
-                    <span className="mx-2 slash">/</span>
-                    <span className="text-white">
-                      <strong>Services</strong>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <Breadcrumb
+            links={[
+              // { name: 'Home', url: '/' },
+              { name: 'Services', url: '#' },
+            ]}
+          />
           <section
             className="site-section services-section bg-light block__62849"
             id="next-section"

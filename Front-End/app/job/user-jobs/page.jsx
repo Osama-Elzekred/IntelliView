@@ -3,11 +3,9 @@ import Layout from '../../components/Layout';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { HiCheck, HiClock } from 'react-icons/hi';
 import CardComp from '../../components/Card';
-import { Badge } from 'flowbite-react';
 import Loading from '../../components/loading';
-
+import { Breadcrumb } from '../../components/components';
 export default function userJobs() {
   const DOMAIN_NAME = 'localhost:7049';
   const [jobListings, setJobListings] = useState([]);
@@ -28,12 +26,14 @@ export default function userJobs() {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-
         const jobs = await response.json();
         setJobListings(jobs);
         console.log(jobs);
         setLoading(false);
       } catch (error) {
+        console.log(authToken);
+        setJobListings(jobs);
+
         console.log('error : ', error);
       }
     };
@@ -160,101 +160,7 @@ export default function userJobs() {
           {/* .site-mobile-menu */}
           {/* NAVBAR */}
           {/* HOME */}
-          <section
-            className="section-hero home-section overlay inner-page bg-image"
-            style={{ backgroundImage: 'url("/images/hero_1.jpg")' }}
-            id="home-section"
-          >
-            <div className="container">
-              <div className="row align-items-center justify-content-center">
-                <div className="col-md-12">
-                  <div className="mb-5 text-center">
-                    <h1 className="text-white font-weight-bold">
-                      The Easiest Way To Get Your Dream Job
-                    </h1>
-                    <p>Find your dream job!</p>
-                  </div>
-                  <form method="post" className="search-jobs-form">
-                    <div className="row mb-5">
-                      <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                        <input
-                          type="text"
-                          className="form-control form-control-lg"
-                          placeholder="Job title, Company..."
-                          onChange={(e) => {
-                            handleChange('title', e.target.value);
-                          }}
-                        />
-                      </div>
-                      <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                        <select
-                          className="selectpicker"
-                          data-style="btn-white btn-lg"
-                          data-width="100%"
-                          title=" Remote/On Site Job "
-                          onChange={(e) => {
-                            handleChange('jobType', e.target.value);
-                          }}
-                        >
-                          <option>Remote</option>
-                          <option>On Site</option>
-                        </select>
-                      </div>
-                      <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                        <select
-                          onChange={(e) => {
-                            handleChange('jobTime', e.target.value);
-                          }}
-                          className="selectpicker"
-                          data-style="btn-white btn-lg"
-                          data-width="100%"
-                          title=" Part Time/Full Time "
-                        >
-                          <option>Part Time</option>
-                          <option>Full Time</option>
-                        </select>
-                      </div>
-                      <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                        <button
-                          type="button"
-                          onClick={handleSearch}
-                          className="btn btn-primary btn-lg btn-block text-white btn-search"
-                        >
-                          <span className="icon-search icon mr-2" />
-                          Search Job
-                        </button>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-12 popular-keywords">
-                        <h3>Trending Keywords:</h3>
-                        <ul className="keywords list-unstyled m-0 p-0">
-                          <li>
-                            <Link href="#" className="">
-                              UI Designer
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="#" className="">
-                              Python
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="#" className="">
-                              Developer
-                            </Link>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <Link href="#next" className="scroll-button smoothscroll">
-              <span className=" icon-keyboard_arrow_down" />
-            </Link>
-          </section>
+          <Breadcrumb links={[{ name: 'My Jobs', url: '#' }]} />
           <section className="site-section" id="next">
             <div className="container" id="job-listings">
               <div className="row mb-5 justify-content-center">
@@ -330,27 +236,6 @@ export default function userJobs() {
                         )
                       : null}
                   </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section
-            className="py-5 bg-image overlay-primary fixed overlay"
-            style={{ backgroundImage: 'url("/images/background.jpg")' }}
-          >
-            <div className="container" id="ayklam">
-              <div className="row align-items-center">
-                <div className="col-md-8">
-                  <h2 className="text-white">Looking For A Job?</h2>
-                  <p className="mb-0 text-white lead"> Find your dream job.</p>
-                </div>
-                <div className="col-md-3 ml-auto">
-                  <Link
-                    href="/login"
-                    className="btn btn-warning btn-block btn-lg"
-                  >
-                    Sign Up
-                  </Link>
                 </div>
               </div>
             </div>

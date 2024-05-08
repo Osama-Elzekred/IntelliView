@@ -14,7 +14,7 @@ const Filterbar = () => {
                     id="FROM"
                     className="h-12 border border-gray-300 text-gray-900 text-xs font-medium rounded-full block w-full py-2.5 px-4 appearance-none relative focus:outline-none bg-white"
                   >
-                    <option selected="">Min</option>
+                    <option value="">Min</option>
                     <option value="option 1">option 1</option>
                     <option value="option 2">option 2</option>
                     <option value="option 3">option 3</option>
@@ -45,7 +45,7 @@ const Filterbar = () => {
                     id="FROM"
                     className="h-12 border border-gray-300 text-gray-900 text-xs font-medium rounded-full block w-full py-2.5 px-4 appearance-none relative focus:outline-none bg-white"
                   >
-                    <option selected="">Max</option>
+                    <option value="">Max</option>
                     <option value="option 1">option 1</option>
                     <option value="option 2">option 2</option>
                     <option value="option 3">option 3</option>
@@ -80,7 +80,7 @@ const Filterbar = () => {
                   id="FROM"
                   className="h-12 border border-gray-300 text-gray-900 text-xs font-medium rounded-full block w-full py-2.5 px-4 appearance-none relative focus:outline-none bg-white"
                 >
-                  <option selected="">Write code</option>
+                  <option value="">Write code</option>
                   <option value="option 1">option 1</option>
                   <option value="option 2">option 2</option>
                   <option value="option 3">option 3</option>
@@ -225,7 +225,7 @@ const Filterbar = () => {
                   id="Offer"
                   className="h-12 border border-gray-300 text-gray-900 text-xs font-medium rounded-full block w-full py-2.5 px-4 appearance-none relative focus:outline-none bg-white"
                 >
-                  <option selected="">5% off upi discount</option>
+                  <option value="">5% off upi discount</option>
                   <option value="option 1">option 1</option>
                   <option value="option 2">option 2</option>
                   <option value="option 3">option 3</option>

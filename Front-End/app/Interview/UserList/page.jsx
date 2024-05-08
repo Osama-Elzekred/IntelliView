@@ -134,7 +134,7 @@ function MainComponent({params}) {
     const fetchUsers = async () => {
       const authToken = Cookies.get("authToken");
       try {
-        const response = await fetch(`https://${DOMAIN_NAME}/Interview/mock/${params.mockId}/users`, {
+        const response = await fetch(`https://${DOMAIN_NAME}/Interview/mock/${mockId}/users`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -144,21 +144,20 @@ function MainComponent({params}) {
           const users = await response.json();
           setUserData(users);
         }
-        //console.log("dsfdssfsd");
-        // setLoading(false);
       } catch (error) {
         console.log("error : ", error);
       }
     };
     fetchUsers();
-
+  }, []); // Empty dependency array means this effect runs once on mount
+  
+  useEffect(() => {
     const startIndex = (currentPage - 1) * usersPerPage;
     const endIndex = Math.min(startIndex + usersPerPage, usersData.length);
     const sortedusersData = [...usersData].sort((a, b) => b.score - a.score); // Sort usersData based on score
     setUsersPreview(sortedusersData.slice(startIndex, endIndex));
     setTotalPages(Math.ceil(usersData.length / usersPerPage));
-  }, [currentPage, usersData, usersPerPage]);
-
+  }, [currentPage, usersData, usersPerPage]); // This effect runs when currentPage, usersData, or usersPerPage changes
   const handleApprove = async (userId) => {
     const updatedApprove = [...userApprove];
     const index = usersData.findIndex((user) => user.id === userId);
@@ -290,7 +289,7 @@ function MainComponent({params}) {
                         <span className="flex items-center">{user.email}</span>
                       </td>
                       <td className="px-4 py-2">{user.location}</td>
-                      <td className="px-4 py-2">{user.contact}</td>
+                      <td className="px-4 py-2">{user.phoneNumber}</td>
                       <td className="px-4 py-2 ">
                         <span
                           className={` font-bold  ${

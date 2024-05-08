@@ -10,6 +10,7 @@ namespace IntelliView.DataAccess.Repository.IRepository.IJobRepos
         Task<IEnumerable<JobApplication>> GetUserApplicationsByUserIdAsync(string userId);
 
         Task<IEnumerable<JobApplication>> GetApplicationsByJobIdAsync(int jobId);
+        Task<JobApplication> GetApplicationWithAnswersByIdAsync(int jobId, string userId);
 
         void Update(JobApplication userApplication);
 

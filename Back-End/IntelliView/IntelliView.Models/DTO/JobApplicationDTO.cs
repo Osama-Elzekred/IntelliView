@@ -14,8 +14,14 @@ namespace IntelliView.Models.DTO
         public string CVURL { get; set; } = string.Empty;
         public string QuestionsAnswers { get; set; } = string.Empty;
         public int CVScore { get; set; } = 0;
+        public List<QuestionsAndAnswersDTO>? QuestionsAndAnswers { get; set; }
 
         public IFormFile? CV { get; set; }
+    }
+    public class QuestionsAndAnswersDTO
+    {
+        public string Question { get; set; } = string.Empty;
+        public string Answer { get; set; } = string.Empty;
     }
 
 }

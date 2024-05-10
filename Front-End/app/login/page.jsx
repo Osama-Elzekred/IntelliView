@@ -218,9 +218,9 @@ export default function login() {
                       <form className="form2" onSubmit={handleSubmit}>
                         <div className="w-full  p-6">
                           <h1 className="text-4xl font-bold mb-6">Sign in</h1>
-                          <p className="mt-2">
+                          <div className="mt-2">
                             Don't have an account?{' '}
-                            <a
+                            <span
                               href="#"
                               className="text-primary"
                               onClick={() => {
@@ -232,8 +232,8 @@ export default function login() {
                               }}
                             >
                               Register here
-                            </a>
-                          </p>
+                            </span>
+                          </div>
                           <div className="space-y-4 mt-6">
                             <div className="w-full">
                               <label

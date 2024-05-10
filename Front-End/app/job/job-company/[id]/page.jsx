@@ -32,17 +32,6 @@ export default function JobApplicants({ params }) {
         throw new Error('Network response was not ok');
       }
       const result = await response.json();
-
-      // // Process each application and extract jobId and userId
-      // result.forEach((application) => {
-      //   const { jobId, userId } = application;
-      //   // Call handleApprove function with jobId, userId, and onActionSuccess
-      //   handleApprove(jobId, userId);
-      //   // Call handleReject function with jobId, userId, and onActionSuccess
-      //   handleReject(jobId, userId);
-      // });
-
-      // Set the fetched data to the state
       setData(result);
       setLoading(false);
     } catch (error) {

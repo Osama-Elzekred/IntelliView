@@ -57,6 +57,7 @@ namespace IntelliView.API.Controllers
             {
                 UserId = userId,
                 MockId = mock.Id,
+                InterviewMock = mock,
                 CreatedAt = DateTime.Now
             };
             // Add the UserMockSession to the context for saving

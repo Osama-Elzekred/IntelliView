@@ -3,114 +3,47 @@ import Layout from '../../../components/Layout';
 import MockCard from '../../../components/MockCard';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { Breadcrumb } from '../../../components/components';
+import { Breadcrumb, Loading } from '../../../components/components';
 function UserMocks() {
   const [searchState, setSearchState] = useState(false);
   const [searchTerm, setSearchTerm] = useState();
   const [searchResult, setSearchResult] = useState([]);
-  const [mocksData, setMocksData] = useState([]);
-  const dataMocks = [
-    {
-      id: 1,
-      icon: 'aaa',
-      title: 'Coach',
-      category: 'Sports',
-      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
-      score: 4.5,
-    },
-    {
-      id: 2,
-      icon: 'aaa',
-      title: 'Coach',
-      category: 'Sports',
-      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
-      score: 4.5,
-    },
-    {
-      id: 3,
-      icon: 'aaa',
-      title: 'FrontEnd Developer',
-      category: 'techno',
-      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
-      score: 4.5,
-    },
-    {
-      id: 4,
-      icon: 'aaa',
-      title: 'FrontEnd Developer',
-      category: 'techno',
-      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
-      score: 4.5,
-    },
-    {
-      id: 5,
-      icon: 'aaa',
-      title: 'Doctor ',
-      category: 'Medicine',
-      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
-      score: 4.5,
-    },
-    {
-      id: 6,
-      icon: 'aaa',
-      title: 'Coach',
-      category: 'Sports',
-      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
-      score: 4.5,
-    },
-    {
-      id: 7,
-      icon: 'aaa',
-      title: 'BackEnd Developer',
-      category: 'Techno',
-      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
-      score: 4.5,
-    },
-    {
-      id: 8,
-      icon: 'aaa',
-      title: 'BackEnd Developer',
-      category: 'Techno',
-      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
-      score: 4.5,
-    },
-    {
-      id: 9,
-      icon: 'aaa',
-      title: 'BackEnd Developer',
-      category: 'Techno',
-      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
-      score: 4.5,
-    },
-    {
-      id: 10,
-      icon: 'aaa',
-      title: 'BackEnd Developer',
-      category: 'Techno',
-      description: ' ay hewar kpeer wekhlas ahla klam bye men gheer salam ',
-      score: 4.5,
-    },
-  ];
+  const [mocksData, setMocksData] = useState();
+  const [filter, setFilter] = useState('');
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchMocksData = async () => {
       const authToken = Cookies.get('authToken');
       try {
-        const response = await fetch('https://localhost:7049/api/Job/GetAll', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+        const response = await fetch(
+          'https://localhost:7049/api/mockSession/userAppliedMocks',
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
         if (response.ok) {
           const mocks = await response.json();
           setMocksData(mocks);
+          setLoading(false);
         }
       } catch (error) {
+        setMocksData(response);
         console.log('error : ', error);
       }
     };
     fetchMocksData();
-  }, [mocksData]);
+  }, []);
+  const handleFilterChange = (e) => setFilter(e.target.value);
+
+  const filteredMocks = mocksData?.filter(
+    (mock) =>
+      mock.mock.title &&
+      mock.mock.title.toLowerCase().includes(filter.toLowerCase())
+  );
 
   const handleSearch = () => {
     setSearchState(true);
@@ -121,7 +54,7 @@ function UserMocks() {
       setSearchResult([]);
     } else {
       // If search term is not empty, filter the data based on the search term
-      const filteredResults = dataMocks.filter(
+      const filteredResults = mocksData.filter(
         (item) =>
           item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
           item.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -132,6 +65,10 @@ function UserMocks() {
   const redirectToReview = (userId) => {
     window.location.href = `/Interview/UserList/${userId}`;
   };
+
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
   return (
     <Layout>
       <>
@@ -174,8 +111,8 @@ function UserMocks() {
                         className="form-control mr-2"
                         style={{ width: '500px' }}
                         placeholder="Category-Title ...."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={filter}
+                        onChange={handleFilterChange}
                       />
                       <button
                         type="submit"
@@ -209,41 +146,22 @@ function UserMocks() {
           </section>
           <section>
             <div className=" m-2 mt-4 mb-4 p-2 grid grid-cols-4 gap-4">
-              {searchState === true && searchResult.length != 0 ? (
-                searchResult.map((mock) => (
-                  <MockCard
-                    icon={mock.icon}
-                    title={mock.title}
-                    category={mock.category}
-                    description={mock.description}
-                    overallScore={mock.score}
-                    onClick={() => {
-                      redirectToReview(mock.id);
-                    }}
-                  />
-                ))
-              ) : searchState === true && searchResult.length === 0 ? (
-                <div className=" d-flex align-items-center justify-content-center">
-                  <h4>No Mocks Found</h4>
-                </div>
-              ) : (
-                dataMocks.map((mock) => (
-                  <MockCard
-                    icon={mock.icon}
-                    title={mock.title}
-                    category={mock.category}
-                    description={mock.description}
-                    overallScore={mock.score}
-                    onClick={() => {
-                      redirectToReview(mock.id);
-                    }}
-                  />
-                ))
-              )}
+              {filteredMocks?.map((mock, index) => (
+                <MockCard
+                  key={index}
+                  icon={mock.mock.icon}
+                  title={mock.mock.title}
+                  category={mock.mock.category}
+                  description={mock.mock.description}
+                  overallScore={mock.totalScore}
+                  onClick={() => {
+                    redirectToReview(mock.id);
+                  }}
+                />
+              ))}
             </div>
           </section>
         </div>
-        <div id="footer"></div>
       </>
     </Layout>
   );

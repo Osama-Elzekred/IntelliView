@@ -21,6 +21,8 @@ namespace IntelliView.Models.Models
         public string Description { get; set; } // e.g., "This is a mock interview for a software developer position."
         public InterviewLevel Level { get; set; }
         public MockLang Language { get; set; } = MockLang.English;
+        public string? Icon { get; set; } = "fa-play-circle";
+
         public int? JobId { get; set; }
 
         [ForeignKey(nameof(JobId))]

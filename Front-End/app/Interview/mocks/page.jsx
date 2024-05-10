@@ -78,12 +78,13 @@ function MainComponent() {
         return response.json();
       })
       .then((data) => {
-        data.forEach((topic) => {
-          topic.IconClass = topic.IconClass =
-            IconClasses[Math.floor(Math.random() * IconClasses.length)];
-        });
+        // data.forEach((topic) => {
+        //   topic.IconClass = topic.IconClass =
+        //     IconClasses[Math.floor(Math.random() * IconClasses.length)];
+        // });
 
         setTopics(data);
+        console.log(data);
       })
       .catch((error) =>
         console.error(
@@ -112,6 +113,7 @@ function MainComponent() {
             Title: item.title, // Changed to lowercase
             Description: item.description, // Changed to lowercase
             Level: item.level, // Changed to lowercase
+            IconClasses: item.icon,
           }))
         );
         setIsLoading(false);
@@ -165,10 +167,10 @@ function MainComponent() {
               ? 'ring-2 ring-offset-2 ring-[#6366F1]'
               : 'hover:bg-gray-100'
           }`}
-          onClick={() => handleTopicClick(Topic.id, Topic.IconClass)}
+          onClick={() => handleTopicClick(Topic.id, Topic.iconClass)}
         >
           <i
-            className={`fas ${Topic.IconClass} text-3xl mb-3 text-gray-700`}
+            className={`fa ${Topic.iconClass} text-3xl mb-3 text-gray-700`}
           ></i>
           <p className="font-semibold text-sm text-[#121212]">{Topic.topic}</p>
         </div>
@@ -193,7 +195,7 @@ function MainComponent() {
             }`}
           >
             <i
-              className={`fas ${ClickedTopicIcon} text-3xl mb-3 text-gray-700`}
+              className={`fa ${ClickedTopicIcon} text-3xl mb-3 text-gray-700`}
             ></i>
             <Link href={`/Interview/Vedio-interview/${Mock.Id}`}>
               <p className="font-semibold text-sm text-[#121212] line-clamp-2 w-full max-w-40 ">
@@ -266,9 +268,9 @@ function MainComponent() {
               Question Sets
             </h2>
             <ul>
-              {questionSets.map((set) => (
+              {questionSets.map((set, index) => (
                 <li
-                  key={set.title}
+                  key={index}
                   className={`flex items-center mb-4 cursor-pointer ${
                     selectedSet === set.title
                       ? 'ring-2 ring-offset-2 ring-[#6366F1] bg-gray-100 rounded'
@@ -279,7 +281,7 @@ function MainComponent() {
                   <span
                     className={`text-2xl rounded-full p-3 mr-3 text-white ${set.bgColor}`}
                   >
-                    <i className={`fas ${set.icon}`}></i>
+                    <i className={`fa ${set.icon}`}></i>
                   </span>
                   <div>
                     <h3 className="font-medium text-[#121212]">{set.title}</h3>

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.Models.DTO;
+using IntelliView.Models.DTO.Interview;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -78,6 +79,35 @@ namespace IntelliView.API.Controllers
             await _unitOfWork.SaveAsync();
             return Ok();
         }
+
+        // get user applied mocks with their total score
+        [HttpGet("userAppliedMocks")]
+
+        public async Task<ActionResult<IEnumerable<UserAppliedMocksDto>>> UserAppliedMocks()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId is null)
+            {
+                return Unauthorized();
+            }
+            var UserAppliedMocks = await _unitOfWork.UserMockSessions.GetUserMocksWithMock(a => a.UserId == userId);
+            if (UserAppliedMocks == null)
+            {
+                return BadRequest("No Mock Session Available ");
+            }
+            IEnumerable<UserAppliedMocksDto> InterviewMocks = UserAppliedMocks.Select(a => new UserAppliedMocksDto
+            {
+                Id = a.Id,
+                Mock = _mapper.Map<DisplayInterviewMockDto>(a.InterviewMock),
+                //TotalScore= a.Answers.Sum(a => a.AnswerAiEvaluationScores?.AnswerSimilarityScore)
+                TotalScore = 3.7m
+
+            }
+            );
+            return Ok(InterviewMocks);
+        }
+
+
         [HttpPost("/MockVideoAnswer/{id}/SetAiScores")]
 
         public async Task<ActionResult> SetAiScores(int id, [FromBody] VideoAiScoreDto videoAiScoreDto)

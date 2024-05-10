@@ -27,11 +27,11 @@ export default function IndexPage() {
                   <p className="mt-4 text-base text-black lg:mt-8 sm:text-xl tracking-tighter">
                     Find your dream jobs in our powerful AI-driven platform.
                   </p>
-                  <div className="flex-row space-x-3">
+                  <div className="flex flex-row space-x-3">
                     <a
-                      href="#"
+                      href="/login"
                       title=""
-                      className="inline-flex items-center px-6 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-black rounded-full lg:mt-16 hover:bg-black focus:bg-black"
+                      className="inline-flex items-center px-4 py-3  mt-8 font-semibold text-white transition-all duration-200 bg-black rounded-full lg:mt-16 hover:bg-black focus:bg-black"
                       role="button"
                     >
                       Practise mocks Now
@@ -51,9 +51,9 @@ export default function IndexPage() {
                       </svg>
                     </a>
                     <a
-                      href="#"
+                      href="/login"
                       title=""
-                      className="inline-flex items-center px-6 py-4 mt-8 font-semibold text-dark transition-all duration-200 bg-white rounded-full lg:mt-16 hover:bg-white focus:bg-white"
+                      className="inline-flex items-center px-4 py-3 mt-8 font-semibold text-dark transition-all duration-200 bg-white rounded-full lg:mt-16 hover:bg-white focus:bg-white"
                       role="button"
                     >
                       Sign as a business

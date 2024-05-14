@@ -23,6 +23,6 @@ namespace IntelliView.Models.Models.job
         [ForeignKey(nameof(JobId))]
         public virtual Job Job { get; set; }
 
-        public virtual UserJobAnswer UserJobAnswer { get; set; }
+        public virtual ICollection<UserJobAnswer> UserJobAnswers { get; set; }
     }
 }

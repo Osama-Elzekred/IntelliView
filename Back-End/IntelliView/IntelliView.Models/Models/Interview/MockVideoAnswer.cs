@@ -6,7 +6,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace IntelliView.Models.Models.Interview
 {
     public class MockVideoAnswer
-
     {
         [Key]
         public int Id { get; set; }

@@ -39,14 +39,14 @@ builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
 
 // for database in memory
 
-builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
-{
-    // Use In-Memory Database
-    options.UseInMemoryDatabase("InMemoryDatabase");
+//builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
+//{
+//    // Use In-Memory Database
+//    options.UseInMemoryDatabase("InMemoryDatabase");
 
-    // If you still want to seed data, you can do it here
-    // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
-});
+//    // If you still want to seed data, you can do it here
+//    // options.UseInMemoryDatabase("InMemoryDatabaseName").UseSeedData();
+//});
 
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();

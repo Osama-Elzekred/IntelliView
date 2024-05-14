@@ -259,11 +259,8 @@ export default function JobApplicants({ params }) {
                         </button>
                       </div>
                       <div className="form-group col-md ">
-                        <div className="form-group col-md">
-                          <Link
-                            href={`/Interview/UserList/${data.mockId}`}
-                            target="_blank"
-                          >
+                      <div className="form-group col-md">
+                          <Link href={`/Interview/UserList/${data[0].jobId}`} target="_blank">
                             Open Interview Emails
                           </Link>
                         </div>
@@ -343,24 +340,24 @@ export default function JobApplicants({ params }) {
                             </td>
                             <td className="px-6 py-4">{applicant.cvScore}</td>
                             <td className="px-6 py-4">
-                              {!applicant.approve ? (
-                                <button
-                                  className="bg-[#17a9c3] text-white p-1 rounded hover:bg-[#20c997]"
-                                  onClick={() => {
-                                    handleApprove(
-                                      applicant.jobId,
-                                      applicant.userId
-                                    );
-                                  }}
-                                >
-                                  {' '}
-                                  Approve{' '}
-                                </button>
-                              ) : (
-                                <span className="bg-green-500 text-white rounded p-1">
-                                  Approved
-                                </span>
-                              )}
+                            {!applicant.isApproved ? (
+                              <button
+                                className="bg-[#17a9c3] text-white p-1 rounded hover:bg-[#20c997]"
+                            onClick={() => {
+                              handleApprove(
+                                applicant.jobId,
+                                applicant.userId
+                              );
+                            }}
+                          >
+                            {" "}
+                            Approve{" "}
+                              </button>
+                            ) : (
+                              <span className="bg-green-500 text-white rounded p-1">
+                                Approved
+                              </span>
+                            )}
                             </td>
                           </tr>
                         ))}

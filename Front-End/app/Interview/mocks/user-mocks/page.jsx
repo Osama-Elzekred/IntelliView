@@ -5,9 +5,6 @@ import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { Breadcrumb, Loading } from '../../../components/components';
 function UserMocks() {
-  const [searchState, setSearchState] = useState(false);
-  const [searchTerm, setSearchTerm] = useState();
-  const [searchResult, setSearchResult] = useState([]);
   const [mocksData, setMocksData] = useState();
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(true);
@@ -45,23 +42,6 @@ function UserMocks() {
       mock.mock.title.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const handleSearch = () => {
-    setSearchState(true);
-
-    if (!searchTerm) {
-      // If search term is empty, reset search state and clear search results
-      setSearchState(false);
-      setSearchResult([]);
-    } else {
-      // If search term is not empty, filter the data based on the search term
-      const filteredResults = mocksData.filter(
-        (item) =>
-          item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          item.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setSearchResult(filteredResults);
-    }
-  };
   const redirectToReview = (userId) => {
     window.location.href = `/Interview/UserList/${userId}`;
   };
@@ -98,11 +78,11 @@ function UserMocks() {
 
                   <form
                     className="search-jobs-form "
-                    onSubmit={(e) => {
-                      handleSearch();
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
+                    // onSubmit={(e) => {
+                    //   handleSearch();
+                    //   e.preventDefault();
+                    //   e.stopPropagation();
+                    // }}
                   >
                     <Breadcrumb links={[{ name: 'My Mocks', url: '#' }]} />
                     <div className="d-flex align-items-center justify-content-center">

@@ -1,11 +1,9 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import Layout from '../../components/Layout';
 import Phone from '../../components/Phone';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
-import Loading from '../../components/loading';
+import { Loading, Breadcrumb, Layout } from '../../components/components';
 
 export default function EditProfile() {
   let [message, setMessage] = useState('');
@@ -13,11 +11,11 @@ export default function EditProfile() {
   const [authToken, setAuthToken] = useState('');
   const role = Cookies.get('role');
   const authTokenCookie = Cookies.get('authToken');
-  // const [userId ,setUserId] = useState("")
+  const [pagenum, setPagenum] = useState(1);
 
-  if (!authTokenCookie || role != 'company') {
-    redirect('/');
-  }
+  // if (!authTokenCookie || role != 'company') {
+  //   redirect('/');
+  // }
   const [formData, setFormData] = useState({
     companyName: '',
     companyType: '',
@@ -160,16 +158,15 @@ export default function EditProfile() {
       }
     }
   };
-  const [file, setFile] = useState(null);
-  const handleFileChange = async (event) => {
+  const handleUploadPhoto = async (event) => {
     const selectedFile = event.target.files[0];
-    setFile(selectedFile);
-
+    console.log(selectedFile);
     // Create a new FormData object
     const formData = new FormData();
-    formData.append('file', file);
-
+    formData.append('file', selectedFile);
     // Send the POST request to the server
+    console.log(formData);
+
     try {
       const response = await fetch(
         'https://localhost:7049/api/Profile/updatePicture',
@@ -213,32 +210,7 @@ export default function EditProfile() {
           </div>
           <div className="site-mobile-menu-body" />
         </div>{' '}
-        {/* .site-mobile-menu */}
-        {/* NAVBAR */}
-        {/* HOME */}
-        <section
-          className="section-hero overlay inner-page bg-image"
-          style={{
-            backgroundImage:
-              'url("/images/ai-background-business-technology-digital-transformation.jpg")',
-          }}
-          id="home-section"
-        >
-          <div className="container">
-            <div className="row">
-              <div className="col-md-7">
-                <h1 className="text-white font-weight-bold">Edit Profile</h1>
-                <div className="custom-breadcrumbs">
-                  <Link href="#">Home</Link>{' '}
-                  <span className="mx-2 slash">/</span>
-                  <span className="text-white">
-                    <strong>Edit Peofile</strong>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Breadcrumb links={[{ name: 'Profile', link: '#' }]} />
         <div className="container light-style flex-grow-1 container-p-y">
           <div className="card overflow-hidden">
             <div className="row no-gutters row-bordered row-border-light">
@@ -248,6 +220,7 @@ export default function EditProfile() {
                     className="list-group-item list-group-item-action active"
                     data-toggle="list"
                     href="#account-general"
+                    onClick={() => setPagenum(1)}
                   >
                     General
                   </Link>
@@ -255,6 +228,7 @@ export default function EditProfile() {
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-change-password"
+                    onClick={() => setPagenum(2)}
                   >
                     Change password
                   </Link>
@@ -262,6 +236,7 @@ export default function EditProfile() {
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-info"
+                    onClick={() => setPagenum(3)}
                   >
                     Info
                   </Link>
@@ -269,6 +244,7 @@ export default function EditProfile() {
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-social-links"
+                    onClick={() => setPagenum(4)}
                   >
                     Social links
                   </Link>
@@ -276,6 +252,7 @@ export default function EditProfile() {
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-connections"
+                    onClick={() => setPagenum(5)}
                   >
                     Connections
                   </Link>
@@ -283,6 +260,7 @@ export default function EditProfile() {
                     className="list-group-item list-group-item-action"
                     data-toggle="list"
                     href="#account-notifications"
+                    onClick={() => setPagenum(6)}
                   >
                     Notifications
                   </Link>
@@ -294,350 +272,386 @@ export default function EditProfile() {
                     className="tab-pane fade active show"
                     id="account-general"
                   >
-                    <div className="card-body media align-items-center">
-                      <img src={imageURL} alt="" className="d-block ui-w-80" />
-                      <div className="media-body ml-4">
-                        <label className="btn btn-outline-primary">
-                          Upload new photo
-                          <input
-                            type="file"
-                            className="account-settings-fileinput"
-                            onChange={handleFileChange}
+                    {pagenum === 1 && (
+                      <>
+                        <div className="card-body media align-items-center">
+                          <img
+                            src={imageURL}
+                            alt=""
+                            className="d-block ui-w-80"
                           />
-                        </label>{' '}
-                        &nbsp;
-                        <button
-                          type="button"
-                          className="btn btn-default md-btn-flat"
-                        >
-                          Reset
-                        </button>
-                        <div className="text-light small mt-1">
-                          Allowed JPG or PNG. Max size of 800K
+                          <div className="media-body ml-4">
+                            <label className="btn btn-outline-primary">
+                              Upload new photo
+                              <input
+                                type="file"
+                                className="account-settings-fileinput"
+                                onChange={(e) => handleUploadPhoto(e)}
+                              />
+                            </label>{' '}
+                            &nbsp;
+                            <button
+                              type="button"
+                              className="btn btn-default md-btn-flat"
+                            >
+                              Reset
+                            </button>
+                            <div className="text-light small mt-1">
+                              Allowed JPG or PNG. Max size of 800K
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <hr className="border-light m-0" />
-                    <div className="card-body">
-                      <form className="Company">
-                        <div className="form-company flex flex-col space-y-5">
-                          <div className="flex space-x-5">
-                            <div className="flex-1">
-                              <label htmlFor="company-name">name</label>
-                              <br />
-                              <input
-                                id="company-name"
-                                type="text"
-                                className="form-control"
-                                value={formData.companyName}
-                                onChange={(e) =>
-                                  handleChange('companyName', e.target.value)
-                                }
-                              />
-                            </div>
-                            <div className="flex-1">
-                              <label htmlFor="companyType">type</label>
-                              <br />
-                              <input
-                                type="text"
-                                id="companyType"
-                                className="form-control"
-                                value={formData.companyType}
-                                onChange={(e) =>
-                                  handleChange('companyType', e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div className="flex-1">
-                            <label htmlFor="companyOverview">overview</label>
-                            <br />
-                            <textarea
-                              className="w-full h-full rounded-sm"
-                              value={formData.companyOverview}
-                              onChange={(e) =>
-                                handleChange('companyOverview', e.target.value)
-                              }
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <br />
-                            <label htmlFor="companyWebsite">Website</label>
-                            <input
-                              type="text"
-                              id="companyWebsite"
-                              className="form-control"
-                              value={formData.companyWebsite}
-                              onChange={(e) =>
-                                handleChange('companyWebsite', e.target.value)
-                              }
-                            />
-                          </div>
-                          <div className="flex-1">
-                            {/* <div className="phone-company"> */}
-                            <label htmlFor="phone">phone number</label>
+                        <hr className="border-light m-0" />
 
-                            <Phone
-                              className="w-full h-full "
-                              value={formData.phoneNumber}
-                              handlePhoneChange={(phone) =>
-                                handleChange('phoneNumber', phone)
+                        <div className="card-body">
+                          <form className="Company">
+                            <div className="form-company flex flex-col space-y-5">
+                              <div className="flex space-x-5">
+                                <div className="flex-1">
+                                  <label htmlFor="company-name">name</label>
+                                  <br />
+                                  <input
+                                    id="company-name"
+                                    type="text"
+                                    className="form-control"
+                                    value={formData.companyName}
+                                    onChange={(e) =>
+                                      handleChange(
+                                        'companyName',
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </div>
+                                <div className="flex-1">
+                                  <label htmlFor="companyType">type</label>
+                                  <br />
+                                  <input
+                                    type="text"
+                                    id="companyType"
+                                    className="form-control"
+                                    value={formData.companyType}
+                                    onChange={(e) =>
+                                      handleChange(
+                                        'companyType',
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex-1">
+                                <label htmlFor="companyOverview">
+                                  overview
+                                </label>
+                                <br />
+                                <textarea
+                                  className="w-full h-full rounded-sm"
+                                  value={formData.companyOverview}
+                                  onChange={(e) =>
+                                    handleChange(
+                                      'companyOverview',
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                              <div className="flex-1">
+                                <br />
+                                <label htmlFor="companyWebsite">Website</label>
+                                <input
+                                  type="text"
+                                  id="companyWebsite"
+                                  className="form-control"
+                                  value={formData.companyWebsite}
+                                  onChange={(e) =>
+                                    handleChange(
+                                      'companyWebsite',
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                              <div className="flex-1">
+                                {/* <div className="phone-company"> */}
+                                <label htmlFor="phone">phone number</label>
+
+                                <Phone
+                                  className="w-full h-full "
+                                  value={formData.phoneNumber}
+                                  handlePhoneChange={(phone) =>
+                                    handleChange('phoneNumber', phone)
+                                  }
+                                />
+                              </div>
+                              {/* </div> */}
+                              <div className="flex flex-row space-x-2">
+                                <div className="flex-1">
+                                  <label htmlFor="companySize">
+                                    companySize
+                                  </label>
+                                  <br />
+                                  <input
+                                    type="text"
+                                    id="companySize"
+                                    className="form-control"
+                                    value={formData.companySize}
+                                    onChange={(e) =>
+                                      handleChange(
+                                        'companySize',
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </div>
+                                <div className="flex-1">
+                                  <label htmlFor="companyFounded">
+                                    founded
+                                  </label>
+                                  <br />
+                                  <input
+                                    type="year"
+                                    id="companyFounded"
+                                    className="form-control"
+                                    value={formData.companyFounded}
+                                    onChange={(e) =>
+                                      handleChange(
+                                        'companyFounded',
+                                        e.target.value
+                                      )
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div className="text-right mt-3">
+                              <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={handleDataSubmit}
+                              >
+                                Save Changes
+                              </button>
+                              &nbsp;
+                              <button type="button" className="btn btn-default">
+                                Cancel
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </>
+                    )}
+                    {pagenum === 2 && (
+                      <div className="card-body pb-2">
+                        <form>
+                          <div className="form-group-">
+                            <label className="form-label-">
+                              Current password
+                            </label>
+                            <input
+                              type="password"
+                              className="form-control"
+                              onChange={(e) =>
+                                handlePasswordChange(
+                                  'currentPassword',
+                                  e.target.value
+                                )
                               }
                             />
                           </div>
-                          {/* </div> */}
-                          <div className="flex flex-row space-x-2">
-                            <div className="flex-1">
-                              <label htmlFor="companySize">companySize</label>
-                              <br />
-                              <input
-                                type="text"
-                                id="companySize"
-                                className="form-control"
-                                value={formData.companySize}
-                                onChange={(e) =>
-                                  handleChange('companySize', e.target.value)
-                                }
-                              />
-                            </div>
-                            <div className="flex-1">
-                              <label htmlFor="companyFounded">founded</label>
-                              <br />
-                              <input
-                                type="year"
-                                id="companyFounded"
-                                className="form-control"
-                                value={formData.companyFounded}
-                                onChange={(e) =>
-                                  handleChange('companyFounded', e.target.value)
-                                }
-                              />
-                            </div>
+                          <div className="form-group-">
+                            <label className="form-label">New password</label>
+                            <input
+                              type="password"
+                              className="form-control"
+                              onChange={(e) =>
+                                handlePasswordChange(
+                                  'newPassword',
+                                  e.target.value
+                                )
+                              }
+                            />
                           </div>
-                        </div>
-                        <div className="text-right mt-3">
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={handleDataSubmit}
+                          <div className="form-group-">
+                            <label className="form-label-">
+                              Repeat new password
+                            </label>
+                            <input
+                              type="password"
+                              className="form-control"
+                              onChange={(e) =>
+                                handlePasswordChange(
+                                  'newPasswordConfirm',
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="text-right mt-3">
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              onClick={handlePasswordSubmit}
+                            >
+                              Change Password
+                            </button>
+                            &nbsp;
+                            <button type="button" className="btn btn-default">
+                              Cancel
+                            </button>
+                          </div>
+                          <div
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              color: color,
+                              fontWeight: 'bold',
+                            }}
                           >
-                            Save Changes
+                            {message}
+                          </div>
+                        </form>
+                      </div>
+                    )}
+                    {pagenum === 3 && (
+                      <div className="card-body pb-2">
+                        <div className="form-group-">
+                          <label className="form-label-">Bio</label>
+                          <textarea
+                            className="form-control"
+                            rows={5}
+                            defaultValue={
+                              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus.'
+                            }
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label-">Birthday</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            defaultValue="May 3, 1995"
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label-">Country</label>
+                          <select className="custom-select">
+                            <option>USA</option>
+                            <option value="">Canada</option>
+                            <option>UK</option>
+                            <option>Germany</option>
+                            <option>France</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
+                    {pagenum === 4 && (
+                      <div className="card-body pb-2">
+                        <h6 className="mb-4">Contacts</h6>
+                        <div className="form-group-">
+                          <label className="form-label-">Phone</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            defaultValue="+0 (123) 456 7891"
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label-">Website</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            defaultValue=""
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {pagenum === 5 && (
+                      <div className="card-body pb-2">
+                        <div className="form-group-">
+                          <label className="form-label-">Twitter</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            defaultValue="https://twitter.com/user"
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label-">Facebook</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            defaultValue="https://www.facebook.com/user"
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label-">Google+</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            defaultValue=""
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label-">LinkedIn</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            defaultValue=""
+                          />
+                        </div>
+                        <div className="form-group-">
+                          <label className="form-label-">Instagram</label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            defaultValue="https://www.instagram.com/user"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {pagenum === 6 && (
+                      <div>
+                        <div className="card-body">
+                          <button type="button" className="btn btn-twitter">
+                            Connect to <strong>Twitter</strong>
                           </button>
-                          &nbsp;
-                          <button type="button" className="btn btn-default">
-                            Cancel
-                          </button>
                         </div>
-                      </form>
-                    </div>
-                  </div>
-                  <div className="tab-pane fade" id="account-change-password">
-                    <div className="card-body pb-2">
-                      <form>
-                        <div className="form-group-">
-                          <label className="form-label-">
-                            Current password
-                          </label>
-                          <input
-                            type="password"
-                            className="form-control"
-                            onChange={(e) =>
-                              handlePasswordChange(
-                                'currentPassword',
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                        <div className="form-group-">
-                          <label className="form-label">New password</label>
-                          <input
-                            type="password"
-                            className="form-control"
-                            onChange={(e) =>
-                              handlePasswordChange(
-                                'newPassword',
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                        <div className="form-group-">
-                          <label className="form-label-">
-                            Repeat new password
-                          </label>
-                          <input
-                            type="password"
-                            className="form-control"
-                            onChange={(e) =>
-                              handlePasswordChange(
-                                'newPasswordConfirm',
-                                e.target.value
-                              )
-                            }
-                          />
-                        </div>
-                        <div className="text-right mt-3">
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={handlePasswordSubmit}
+                        <hr className="border-light m-0" />
+                        <div className="card-body">
+                          <h5 className="mb-2">
+                            <Link
+                              href="#"
+                              className="float-right text-muted text-tiny"
+                            >
+                              <i className="ion ion-md-close" /> Remove
+                            </Link>
+                            <i className="ion ion-logo-google text-google" />
+                            You are connected to Google:
+                          </h5>
+                          <Link
+                            href="/cdn-cgi/l/email-protection"
+                            className="__cf_email__"
+                            data-cfemail="523c3f332a25373e3e123f333b3e7c313d3f"
                           >
-                            Change Password
-                          </button>
-                          &nbsp;
-                          <button type="button" className="btn btn-default">
-                            Cancel
+                            [email&nbsp;protected]
+                          </Link>
+                        </div>
+                        <hr className="border-light m-0" />
+                        <div className="card-body">
+                          <button type="button" className="btn btn-facebook">
+                            Connect to <strong>Facebook</strong>
                           </button>
                         </div>
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            color: color,
-                            fontWeight: 'bold',
-                          }}
-                        >
-                          {message}
+                        <hr className="border-light m-0" />
+                        <div className="card-body">
+                          <button type="button" className="btn btn-instagram">
+                            Connect to <strong>Instagram</strong>
+                          </button>
                         </div>
-                      </form>
-                    </div>
-                  </div>
-                  <div className="tab-pane fade" id="account-info">
-                    <div className="card-body pb-2">
-                      <div className="form-group-">
-                        <label className="form-label-">Bio</label>
-                        <textarea
-                          className="form-control"
-                          rows={5}
-                          defaultValue={
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris nunc arcu, dignissim sit amet sollicitudin iaculis, vehicula id urna. Sed luctus urna nunc. Donec fermentum, magna sit amet rutrum pretium, turpis dolor molestie diam, ut lacinia diam risus eleifend sapien. Curabitur ac nibh nulla. Maecenas nec augue placerat, viverra tellus non, pulvinar risus.'
-                          }
-                        />
                       </div>
-                      <div className="form-group-">
-                        <label className="form-label-">Birthday</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          defaultValue="May 3, 1995"
-                        />
-                      </div>
-                      <div className="form-group-">
-                        <label className="form-label-">Country</label>
-                        <select className="custom-select">
-                          <option>USA</option>
-                          <option value="">Canada</option>
-                          <option>UK</option>
-                          <option>Germany</option>
-                          <option>France</option>
-                        </select>
-                      </div>
-                    </div>
-                    <hr className="border-light m-0" />
-                    <div className="card-body pb-2">
-                      <h6 className="mb-4">Contacts</h6>
-                      <div className="form-group-">
-                        <label className="form-label-">Phone</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          defaultValue="+0 (123) 456 7891"
-                        />
-                      </div>
-                      <div className="form-group-">
-                        <label className="form-label-">Website</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          defaultValue=""
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="tab-pane fade" id="account-social-links">
-                    <div className="card-body pb-2">
-                      <div className="form-group-">
-                        <label className="form-label-">Twitter</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          defaultValue="https://twitter.com/user"
-                        />
-                      </div>
-                      <div className="form-group-">
-                        <label className="form-label-">Facebook</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          defaultValue="https://www.facebook.com/user"
-                        />
-                      </div>
-                      <div className="form-group-">
-                        <label className="form-label-">Google+</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          defaultValue=""
-                        />
-                      </div>
-                      <div className="form-group-">
-                        <label className="form-label-">LinkedIn</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          defaultValue=""
-                        />
-                      </div>
-                      <div className="form-group-">
-                        <label className="form-label-">Instagram</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          defaultValue="https://www.instagram.com/user"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="tab-pane fade" id="account-connections">
-                    <div className="card-body">
-                      <button type="button" className="btn btn-twitter">
-                        Connect to <strong>Twitter</strong>
-                      </button>
-                    </div>
-                    <hr className="border-light m-0" />
-                    <div className="card-body">
-                      <h5 className="mb-2">
-                        <Link
-                          href="#"
-                          className="float-right text-muted text-tiny"
-                        >
-                          <i className="ion ion-md-close" /> Remove
-                        </Link>
-                        <i className="ion ion-logo-google text-google" />
-                        You are connected to Google:
-                      </h5>
-                      <Link
-                        href="/cdn-cgi/l/email-protection"
-                        className="__cf_email__"
-                        data-cfemail="523c3f332a25373e3e123f333b3e7c313d3f"
-                      >
-                        [email&nbsp;protected]
-                      </Link>
-                    </div>
-                    <hr className="border-light m-0" />
-                    <div className="card-body">
-                      <button type="button" className="btn btn-facebook">
-                        Connect to <strong>Facebook</strong>
-                      </button>
-                    </div>
-                    <hr className="border-light m-0" />
-                    <div className="card-body">
-                      <button type="button" className="btn btn-instagram">
-                        Connect to <strong>Instagram</strong>
-                      </button>
-                    </div>
+                    )}
                   </div>
                   <div className="tab-pane fade" id="account-notifications">
                     <div className="card-body pb-2">

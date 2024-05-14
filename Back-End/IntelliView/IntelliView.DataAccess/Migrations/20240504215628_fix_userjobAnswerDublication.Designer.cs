@@ -4,6 +4,7 @@ using InteliView.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntelliView.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240504215628_fix_userjobAnswerDublication")]
+    partial class fix_userjobAnswerDublication
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,9 +239,6 @@ namespace IntelliView.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Icon")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("InterviewMockTopicId")
                         .HasColumnType("int");
 
@@ -401,9 +401,6 @@ namespace IntelliView.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsInterviewApproved")
                         .HasColumnType("bit");
 
                     b.Property<int?>("MockSessionId")

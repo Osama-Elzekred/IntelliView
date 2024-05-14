@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { Button, Label, Modal, Textarea, Datepicker } from 'flowbite-react';
-import { useRef, useState,useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import '../../../public/css/stepper.css';
 import { TiTick } from 'react-icons/ti';
 import {
@@ -9,9 +9,9 @@ import {
   SelectMulti,
   Toastitem,
   Layout,
+  Breadcrumb,
 } from '../../components/components';
 import Cookies from 'js-cookie';
-import { redirect } from 'next/navigation';
 import Loading from '../../components/loading';
 
 export default function Post_job(JobId) {
@@ -30,9 +30,9 @@ export default function Post_job(JobId) {
   const authTokenCookie = Cookies.get('authToken');
   const role = Cookies.get('role');
   const [loading, setLoading] = useState(true);
-  if (!authTokenCookie || role != 'company') {
-    redirect('/');
-  }
+  // if (!authTokenCookie || role != 'company') {
+  //   redirect('/');
+  // }
   const categories = [
     'Data Structures & Algorithms',
     'C/C++',
@@ -61,50 +61,50 @@ export default function Post_job(JobId) {
     categories: [],
   });
 
-  useEffect(() => {
-    const fetchJobData = async () => {
-      try {
-        const response = await fetch(
-          `https://localhost:7049/api/job/CompanyJob/${JobId}`,
-          {
-            method: 'get',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${authTokenCookie}`,
-            },
-          }
-        );
+  // useEffect(() => {
+  //   const fetchJobData = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         `https://localhost:7049/api/job/CompanyJob/${JobId}`,
+  //         {
+  //           method: 'get',
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //             Authorization: `Bearer ${authTokenCookie}`,
+  //           },
+  //         }
+  //       );
 
-        if (!response.ok) {
-          console.error('Failed to fetch job data');
-          return;
-        }
+  //       if (!response.ok) {
+  //         console.error('Failed to fetch job data');
+  //         return;
+  //       }
 
-        const data = await response.json();
+  //       const data = await response.json();
 
-        // Update jobInfo state with the fetched data
-        setJobInfo({
-          Title: data.Title,
-          JobType: data.JobType,
-          JobTime: data.JobTime,
-          Location: data.Location,
-          MinimumExperience: data.MinimumExperience,
-          Description: data.Description,
-          Requirements: data.Requirements,
-          // Add other mappings...
-          // Add arrays to the state
-          Questionitems: data.Questionitems,
-          CustQuestions: data.CustQuestions,
-          JobInterestedTopics: data.JobInterestedTopics,
-          EndDate: data.EndDate,
-        });
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch job data', error);
-      }
-    };
-    if (JobId) fetchJobData();
-  }, []);
+  //       // Update jobInfo state with the fetched data
+  //       setJobInfo({
+  //         Title: data.Title,
+  //         JobType: data.JobType,
+  //         JobTime: data.JobTime,
+  //         Location: data.Location,
+  //         MinimumExperience: data.MinimumExperience,
+  //         Description: data.Description,
+  //         Requirements: data.Requirements,
+  //         // Add other mappings...
+  //         // Add arrays to the state
+  //         Questionitems: data.Questionitems,
+  //         CustQuestions: data.CustQuestions,
+  //         JobInterestedTopics: data.JobInterestedTopics,
+  //         EndDate: data.EndDate,
+  //       });
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.error('Failed to fetch job data', error);
+  //     }
+  //   };
+  //   if (JobId) fetchJobData();
+  // }, []);
 
   const handleDateChange = (date) => {
     const dateString = new Date(date).toLocaleDateString();
@@ -299,29 +299,8 @@ export default function Post_job(JobId) {
             {/* .site-mobile-menu */}
             {/* NAVBAR */}
             {/* HOME */}
-            <section
-              className="section-hero overlay inner-page bg-image"
-              style={{ backgroundImage: 'url("/images/hero_1.jpg")' }}
-              id="home-section"
-            >
-              <div className="container">
-                <div className="row">
-                  <div className="col-md-7">
-                    <h1 className="text-white font-weight-bold">Post a Job</h1>
-                    <div className="custom-breadcrumbs">
-                      <Link href="/Home">Home</Link>{' '}
-                      <span className="mx-2 slash">/</span>
-                      <Link href="/job">Job</Link>{' '}
-                      <span className="mx-2 slash">/</span>
-                      <span className="text-white">
-                        <strong>Post a Job</strong>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-            <section className="site-section">
+            <Breadcrumb links={[{ name: 'Post a Job', link: '/job/post' }]} />
+            <section className="mt-2 pl-2">
               <div className="container">
                 <div className="row align-items-center mb-5">
                   <div className="col-lg-8 mb-4 mb-lg-0">
@@ -373,7 +352,7 @@ export default function Post_job(JobId) {
                               className="form-control"
                               id="email"
                               name="Email"
-                              value={jobInfo.Email}
+                              value={jobInfo?.Email}
                               onChange={(e) => handleChange(e)}
                               placeholder="you@yourdomain.com"
                               required
@@ -386,7 +365,7 @@ export default function Post_job(JobId) {
                               className="form-control"
                               id="job-title"
                               name="JobTitle"
-                              value={jobInfo.JobTitle}
+                              value={jobInfo?.JobTitle}
                               onChange={handleChange}
                               placeholder="Product Designer"
                               required
@@ -399,7 +378,7 @@ export default function Post_job(JobId) {
                               className="form-control"
                               id="job-location"
                               name="Location"
-                              value={jobInfo.Location}
+                              value={jobInfo?.Location}
                               onChange={handleChange}
                               placeholder="e.g. New York"
                               required
@@ -413,7 +392,7 @@ export default function Post_job(JobId) {
                               <SelectInput
                                 options={['on-site', 'remote', 'hybrid']}
                                 name="JobType"
-                                value={jobInfo.JobType}
+                                value={jobInfo?.JobType}
                                 onChange={handleChange}
                                 // defaultValue="choose a job type"
                               />
@@ -435,7 +414,7 @@ export default function Post_job(JobId) {
                                   'Freelance',
                                 ]}
                                 name="JobTime"
-                                value={jobInfo.JobTime}
+                                value={jobInfo?.JobTime}
                                 onChange={handleChange}
                                 // defaultValue="choose a job time"
                               />
@@ -459,7 +438,7 @@ export default function Post_job(JobId) {
                                   '5 or more years',
                                 ]}
                                 name="Experiance"
-                                value={jobInfo.Experiance}
+                                value={jobInfo?.Experiance}
                                 onChange={handleChange}
                               />
                             </div>
@@ -528,7 +507,7 @@ export default function Post_job(JobId) {
                             <Textarea
                               placeholder="Job Requirements"
                               name="JobRequirements"
-                              value={jobInfo.JobRequirements}
+                              value={jobInfo?.JobRequirements}
                               onChange={handleChange} // Replace with your actual handler function
                             />
                           </div>
@@ -543,7 +522,7 @@ export default function Post_job(JobId) {
                               <Textarea
                                 id="job-description"
                                 name="JobDescription"
-                                value={jobInfo.JobDescription}
+                                value={jobInfo?.JobDescription}
                                 onChange={handleChange}
                                 placeholder="Write Job Description!"
                                 required

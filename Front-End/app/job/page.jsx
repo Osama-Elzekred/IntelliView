@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import CardComp from '../components/Card';
 import Loading from '../components/loading';
+import { Breadcrumb, Filterbar } from '../components/components';
 
 export default function Jobs() {
   //const imageURl = 'images/job_logo_1.jpg';
@@ -26,7 +27,7 @@ export default function Jobs() {
   const [loading, setLoading] = useState(true);
   const handleSearch = async () => {
     setTest(true);
-    
+
     const filteredJobs = jobListings.filter((job) => {
       // Filter by title
       if (
@@ -150,178 +151,135 @@ export default function Jobs() {
             </div>
             <div className="site-mobile-menu-body" />
           </div>{' '}
-          {/* .site-mobile-menu */}
-          {/* NAVBAR */}
-          {/* HOME */}
-          <section
-            className="section-hero home-section overlay inner-page bg-image"
-            style={{ backgroundImage: 'url("/images/hero_1.jpg")' }}
-            id="home-section"
-          >
-            <div className="container">
-              <div className="row align-items-center justify-content-center">
-                <div className="col-md-12">
-                  <div className="mb-5 text-center">
-                    <h1 className="text-white font-weight-bold">
-                      The Easiest Way To Get Your Dream Job
-                    </h1>
-                    <p>Find your dream job!</p>
-                  </div>
-                  <form method="post" className="search-jobs-form">
-                    <div className="row mb-5">
-                      <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                        <input
-                          type="text"
-                          className="form-control form-control-lg"
-                          placeholder="Job title, Company..."
-                          onChange={(e) => {
-                            handleChange('title', e.target.value);
-                          }}
-                        />
-                      </div>
-                      <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                        <select
-                          className="selectpicker"
-                          data-style="btn-white btn-lg"
-                          data-width="100%"
-                          title=" Remote/On Site Job "
-                          onChange={(e) => {
-                            handleChange('jobType', e.target.value);
-                          }}
-                        >
-                          <option>Remote</option>
-                          <option>On Site</option>
-                          <option>Hybrid</option>
-                        </select>
-                      </div>
-                      <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                        <select
-                          onChange={(e) => {
-                            handleChange('jobTime', e.target.value);
-                          }}
-                          className="selectpicker"
-                          data-style="btn-white btn-lg"
-                          data-width="100%"
-                          title=" Part Time/Full Time "
-                        >
-                          <option>Part Time</option>
-                          <option>Full Time</option>
-                        </select>
-                      </div>
-                      <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                        <button
-                          type="button"
-                          onClick={handleSearch}
-                          className="btn btn-primary btn-lg btn-block text-white btn-search"
-                        >
-                          <span className="icon-search icon mr-2" />
-                          Search Job
-                        </button>
-                      </div>
-                    </div>
-                    <div className="row">
-                      <div className="col-md-12 popular-keywords">
-                        <h3>Trending Keywords:</h3>
-                        <ul className="keywords list-unstyled m-0 p-0">
-                          <li>
-                            <Link href="#" className="">
-                              UI Designer
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="#" className="">
-                              Python
-                            </Link>
-                          </li>
-                          <li>
-                            <Link href="#" className="">
-                              Developer
-                            </Link>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </form>
+          <Breadcrumb
+            links={[
+              // { name: 'Home', url: '/' },
+              { name: 'Jobs', url: '/job' },
+            ]}
+          />
+          {/* <section className="site-section" id="next"> */}
+          <div className="container" id="job-listings">
+            <div className="mb-3 text-center">
+              <h1 className="text-black font-weight-bold">
+                The Easiest Way To Get Your
+                <span className="text-transparent bg-clip-text bg-gradient-to-r to-emerald-600 from-sky-400">
+                  {' '}
+                  Dream Job
+                </span>
+              </h1>
+            </div>
+            <form method="post" className="search-jobs-form">
+              <div className="row mb-5">
+                <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  <input
+                    type="text"
+                    className="form-control form-control-lg"
+                    placeholder="Job title, Company..."
+                    onChange={(e) => {
+                      handleChange('title', e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0 flex justify-center align-items-center">
+                  <button
+                    type="button"
+                    onClick={handleSearch}
+                    className="btn btn-primary btn-lg btn-block text-white btn-search"
+                  >
+                    <span className="icon-search icon mr-2" />
+                    Search Job
+                  </button>
+                </div>
+              </div>
+            </form>
+            <svg
+              className="my-7 w-full"
+              xmlns="http://www.w3.org/2000/svg"
+              width={1216}
+              height={2}
+              viewBox="0 0 1216 2"
+              fill="none"
+            >
+              <path d="M0 1H1216" stroke="#E5E7EB" />
+            </svg>
+            <div className="row mb-2 justify-content-center">
+              <div className="col-md-7 text-center">
+                <h2 className="section-title mb-2">
+                  {searchResult.length > 0 ||
+                  (searchResult.length === 0 && test === true)
+                    ? searchResult.length
+                    : jobListings.length}{' '}
+                  Job Listed
+                </h2>
+              </div>
+            </div>
+            <div className="flex flex-col-reverse md:flex-row">
+              <div className="w-full md:w-1/4">
+                <Filterbar />
+              </div>
+              <ul className="m-2 space-y-2 py-2 flex-grow">
+                {jobs.map((job, index) => (
+                  <CardComp
+                    key={index}
+                    title={job.title}
+                    company={job.companyName}
+                    location={job.location}
+                    timePosted={new Date(job.createdAt).toDateString()}
+                    employmentType={job.jobType}
+                    categories={job.jobInterestedTopic} // There's no equivalent in the jobData
+                    jobTime={job.jobTime}
+                    companyImageUrl={job.imageURl}
+                    onClick={() => (window.location.href = `/job/${job.id}`)}
+                  />
+                ))}
+              </ul>
+            </div>
+
+            <div className="row pagination-wrap">
+              <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
+                <span>
+                  Showing{' '}
+                  {jobs.length === 0 ? 0 : jobs.length - (jobs.length - 1)}-
+                  {jobs.length} Of{' '}
+                  {searchResult.length > 0 ||
+                  (searchResult.length === 0 && test === true)
+                    ? searchResult.length
+                    : jobListings.length}{' '}
+                  Jobs
+                </span>
+              </div>
+              <div className="col-md-6 text-center text-md-right">
+                <div className="custom-pagination ml-auto">
+                  {currentPage !== 1 && (
+                    <Link href="#" className="prev" onClick={prevPage}>
+                      Prev
+                    </Link>
+                  )}
+                  {[...Array(totalPages).keys()].map((page) => (
+                    <Link
+                      key={page + 1}
+                      href="#"
+                      className={page + 1 === currentPage ? 'active' : ''}
+                      onClick={() => changePage(page + 1)}
+                    >
+                      {page + 1}
+                    </Link>
+                  ))}
+                  {currentPage !==
+                    Math.ceil(
+                      (searchResult.length > 0
+                        ? searchResult.length
+                        : jobListings.length) / jobsPerPage
+                    ) && (
+                    <Link href="#" className="next" onClick={nextPage}>
+                      Next
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
-            <Link href="#next" className="scroll-button smoothscroll">
-              <span className=" icon-keyboard_arrow_down" />
-            </Link>
-          </section>
-          <section className="site-section" id="next">
-            
-              <div className="container" id="job-listings">
-                <div className="row mb-5 justify-content-center">
-                  <div className="col-md-7 text-center">
-                    <h2 className="section-title mb-2">
-                      {searchResult.length > 0 ||
-                      (searchResult.length === 0 && test === true)
-                        ? searchResult.length
-                        : jobListings.length}{' '}
-                      Job Listed
-                    </h2>
-                  </div>
-                </div>
-                <ul className="job-listings m-5 space-y-2 py-2">
-                  {jobs.map((job) => (
-                    <CardComp
-                      title={job.title}
-                      company={job.companyName}
-                      location={job.location}
-                      timePosted={new Date(job.createdAt).toDateString()}
-                      employmentType={job.jobType}
-                      categories={job.jobInterestedTopic} // There's no equivalent in the jobData
-                      jobTime={job.jobTime}
-                      companyImageUrl={job.imageURl}
-                      onClick={() => (window.location.href = `/job/${job.id}`)}
-                    />
-                  ))}
-                </ul>
-                <div className="row pagination-wrap">
-                  <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
-                    <span>
-                      Showing {jobs.length === 0 ? (0) : (jobs.length - (jobs.length-1))}-{jobs.length} Of{' '}
-                      {searchResult.length > 0 ||
-                      (searchResult.length === 0 && test === true)
-                        ? searchResult.length
-                        : jobListings.length}{' '}
-                      Jobs
-                    </span>
-                  </div>
-                  <div className="col-md-6 text-center text-md-right">
-                    <div className="custom-pagination ml-auto">
-                      {currentPage !== 1 && (
-                        <Link href="#" className="prev" onClick={prevPage}>
-                          Prev
-                        </Link>
-                      )}
-                      {[...Array(totalPages).keys()].map((page) => (
-                        <Link
-                          key={page + 1}
-                          href="#"
-                          className={page + 1 === currentPage ? 'active' : ''}
-                          onClick={() => changePage(page + 1)}
-                        >
-                          {page + 1}
-                        </Link>
-                      ))}
-                      {currentPage !==
-                        Math.ceil(
-                          (searchResult.length > 0
-                            ? searchResult.length
-                            : jobListings.length) / jobsPerPage
-                        )  && (
-                        <Link href="#" className="next" onClick={nextPage}>
-                          Next
-                        </Link>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            
-          </section>
+          </div>
+          {/* </section> */}
           <section
             className="py-5 bg-image overlay-primary fixed overlay"
             style={{ backgroundImage: 'url("/images/background.jpg")' }}

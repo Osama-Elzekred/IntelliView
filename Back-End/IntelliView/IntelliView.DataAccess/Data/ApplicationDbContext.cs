@@ -76,9 +76,10 @@ namespace InteliView.DataAccess.Data
                 .HasForeignKey(ji => ji.InterestedTopicId);
 
             modelBuilder.Entity<UserJobAnswer>()
-               .HasOne(p => p.CustQuestion)
-               .WithOne(b => b.UserJobAnswer)
-               .OnDelete(DeleteBehavior.Restrict);
+              .HasOne(p => p.CustQuestion)
+              .WithMany(b => b.UserJobAnswers)
+              .OnDelete(DeleteBehavior.Restrict);
+
 
             modelBuilder.Entity<JobApplication>()
                 .HasOne(p => p.Job)

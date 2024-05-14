@@ -1,9 +1,9 @@
 // import { useNavigation } from 'next/navigation';
 'use client';
-import Layout from '../../../../../components/Layout';
+import { Layout, Breadcrumb } from '../../../../../components/components';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import Loading from '../../../../../components/loading';
 export default function Job_Application_details({ params }) {
   const [applicantDetails, setApplicantDetails] = useState();
@@ -52,18 +52,13 @@ export default function Job_Application_details({ params }) {
     return <div>Loading...</div>; // You can render a loading indicator while data is being fetched
   }*/
 
-  // if (loading) {
-  //   return <Loading />; // Display loading indicator while data is being fetched
-  // }
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
   return (
     <Layout>
       <>
         {/* <div id="overlayer" /> */}
-        <div className="loader">
-          <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Loading...</span>
-          </div>
-        </div>
         <div className="site-wrap">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">
@@ -74,32 +69,17 @@ export default function Job_Application_details({ params }) {
             <div className="site-mobile-menu-body" />
           </div>{' '}
           {/* .site-mobile-menu */}
-          {/* HOME */}
-          <section
-            className="section-hero overlay inner-page bg-image"
-            style={{
-              backgroundImage: 'url("/images/background.jpg")',
-            }}
-            id="home-section"
-          >
-            <div className="container">
-              <div className="row">
-                <div className="col-md-7">
-                  <h1 className="text-white font-weight-bold" />
-                  <div className="custom-breadcrumbs">
-                    <Link href="#">Home</Link>{' '}
-                    <span className="mx-2 slash">/</span>
-                    <Link href="#">Job</Link>{' '}
-                    <span className="mx-2 slash">/</span>
-                    <span className="text-white">
-                      <strong />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-          <section className="site-section">
+          <Breadcrumb
+            links={[
+              { name: 'Job Company', link: '/job/job-company' },
+              {
+                name: 'Job Application',
+                link: `/job/job-company/${params.id}`,
+              },
+              { name: 'Applicant Details', link: '#' },
+            ]}
+          />
+          <section className="">
             <div className="container">
               <div className="row align-items-center mb-5">
                 <div className="col-lg-8 mb-4 mb-lg-0">
@@ -147,40 +127,44 @@ export default function Job_Application_details({ params }) {
                 <div className="w-full mx-auto p-5 bg-white rounded-lg m-5">
                   <div className="flex items-center justify-between">
                     <div className="w-2/3">
-                      <h2 className="section-heading text-bold">Questions and Answer</h2>
+                      <h2 className="section-heading text-bold">
+                        Questions and Answer
+                      </h2>
                     </div>
-                    
                   </div>
                   <div className="mt-8 space-y-8">
                     <div>
-                      {applicantDetails?.questionsAndAnswers?.map((item, index) => (
-                        <div key={index}>
-                          {/* Question */}
-                          <div className="flex items-start">
-                            <div>
-                              <span className="inline-flex justify-center items-center w-6 h-6 rounded bg-green-500 text-white font-medium text-sm">
-                                Q
-                              </span>
+                      {applicantDetails?.questionsAndAnswers?.map(
+                        (item, index) => (
+                          <div key={index}>
+                            {/* Question */}
+                            <div className="flex items-start">
+                              <div>
+                                <span className="inline-flex justify-center items-center w-6 h-6 rounded bg-green-500 text-white font-medium text-sm">
+                                  Q
+                                </span>
+                              </div>
+                              <p className="ml-4 md:ml-6 text-bold">
+                                {item.question}
+                              </p>
                             </div>
-                            <p className="ml-4 md:ml-6 text-bold">{item.question}</p>
-                          </div>
-                          {/* Answer */}
-                          <div className="flex items-start mt-3">
-                            <div>
-                              <span className="inline-flex justify-center items-center w-6 h-6 rounded bg-gray-200 text-gray-800 font-medium text-sm">
-                                A
-                              </span>
+                            {/* Answer */}
+                            <div className="flex items-start mt-3">
+                              <div>
+                                <span className="inline-flex justify-center items-center w-6 h-6 rounded bg-gray-200 text-gray-800 font-medium text-sm">
+                                  A
+                                </span>
+                              </div>
+                              <p className="ml-4 md:ml-6 text-bold text-gray-800">
+                                {item.answer}
+                              </p>
                             </div>
-                            <p className="ml-4 md:ml-6 text-bold text-gray-800">{item.answer}</p>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      )}
                     </div>
                   </div>
-                  
                 </div>
-
-                
               </div>
             </div>
           </section>

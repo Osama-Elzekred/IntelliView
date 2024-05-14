@@ -2,6 +2,7 @@
 using IntelliView.DataAccess.Repository.IRepository.IInterviewRepo;
 using IntelliView.Models.Models.Interview;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace IntelliView.DataAccess.Repository.Repos.InterviewRepo
 {
@@ -48,5 +49,11 @@ namespace IntelliView.DataAccess.Repository.Repos.InterviewRepo
         //        .Where(ums => ums.MockId == mockId).ToListAsync();
         //}
 
+        // get AppliedMocks with interviewMocks
+        public async Task<IEnumerable<UserMockSession>> GetUserMocksWithMock(Expression<Func<UserMockSession, bool>> filter)
+        {
+
+            return await _dbSet.Include(Um => Um.InterviewMock).Where(filter).AsNoTracking().ToListAsync();
+        }
     }
 }

@@ -176,7 +176,11 @@ namespace IntelliView.API.Controllers
         [HttpGet("mock/{mockId}/users")]
         public async Task<ActionResult<IEnumerable<UserListDTO>>> GetUsersForMock(int mockId)
         {
-            var applicants = await _unitOfWork.UserMockSessions.GetSessionsAsync(mockId);
+            var job = await _unitOfWork.Jobs.GetByIdAsync(mockId);
+            if (job == null)
+                return NotFound();
+            int id = (int)job.MockId;
+            var applicants = await _unitOfWork.UserMockSessions.GetSessionsAsync(id);
             if (applicants == null)
                 return NotFound();
             // Extract UserId values from the applicants collection

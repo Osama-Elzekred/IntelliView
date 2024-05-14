@@ -252,7 +252,7 @@ export default function JobApplicants({ params }) {
                       </div>
                       <div className="form-group col-md ">
                       <div className="form-group col-md">
-                          <Link href={`/Interview/UserList${applicant.mockId}`} target="_blank">
+                          <Link href={`/Interview/UserList/${data[0].jobId}`} target="_blank">
                             Open Interview Emails
                           </Link>
                         </div>
@@ -326,7 +326,7 @@ export default function JobApplicants({ params }) {
                             </td>
                             <td className="px-6 py-4">{applicant.cvScore}</td>
                             <td className="px-6 py-4">
-                            {!applicant.approve ? (
+                            {!applicant.isApproved ? (
                               <button
                                 className="bg-[#17a9c3] text-white p-1 rounded hover:bg-[#20c997]"
                             onClick={() => {

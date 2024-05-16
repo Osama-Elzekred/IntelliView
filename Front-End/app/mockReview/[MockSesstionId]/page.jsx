@@ -1,14 +1,22 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Layout, Breadcrumb } from '../../../components/components';
-import FullScreenModal from '../../../components/FullScreenModal';
+import {
+  Layout,
+  Breadcrumb,
+  Loading,
+  VideoReview,
+} from '../../components/components';
+import FullScreenModal from '../../components/FullScreenModal';
 import Cookies from 'js-cookie';
+import VideoTable from './VideosTable';
 function MainComponent({ params }) {
-  const [userScores, setUsersScores] = useState();
+  const [loading, setLoading] = useState(true);
+  const DOMAIN_NAME = '//localhost:7049/api';
+
   const [data, setData] = useState([
     {
       id: 1,
-      videoUrl: '/images/vid1.mp4',
+      videoUrl: '',
       title: 'Walk me through your resume and your background.',
       date: '30 Apr 2021',
       aiRating: 4.7,
@@ -17,19 +25,41 @@ function MainComponent({ params }) {
       notes: 'learn more about soft skills',
       checked: false,
     },
-    {
-      id: 2,
-      videoUrl: '/images/vid2.mp4',
-      title: 'What makes you qualified for this position?',
-      date: '30 Mar 2021',
-      aiRating: 3.6,
-      duration: '00:15',
-      level: 'Level 3',
-      notes: 'your language need to improved',
-      checked: false,
-    },
   ]);
+  const transformData = (userMockSessionDTO) => {
+    if (!userMockSessionDTO || !userMockSessionDTO.answers) {
+      return [];
+    }
 
+    return userMockSessionDTO.answers.map((answer, index) => {
+      const date = new Date(answer.answeredAt);
+      const formattedDate = date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+
+      return {
+        id: answer.id,
+        videoUrl: answer.answerVideoURL,
+        title: answer.answerText,
+        date: formattedDate,
+        InterviewQuestion: {
+          Id: answer.interviewQuestion.id,
+          Question: answer.interviewQuestion.question,
+          answer: answer.interviewQuestion.modelAnswer,
+          VideoId: answer.interviewQuestion.videoId,
+        },
+        aiRating: answer.answerAiEvaluationScore
+          ? answer.answerAiEvaluationScore.answerSimilarityScore
+          : null,
+        duration: '00:00', // You'll need to get this from somewhere
+        level: 'Level 3', // You'll need to get this from somewhere
+        notes: 'No notes', // You'll need to get this from somewhere
+        checked: false,
+      };
+    });
+  };
   const toggleCheck = (id) =>
     setData(
       data.map((item) =>
@@ -49,7 +79,7 @@ function MainComponent({ params }) {
   };
   const [selectedRow, setSelectedRow] = useState(null);
   const [detailsVisible, setDetailsVisible] = useState(false);
-
+  const [sessionData, setSessionData] = useState({}); // Add sessionData state
   const [modalVisible, setModalVisible] = useState(false); // Add modalVisible state
   const [selectedRowData, setSelectedRowData] = useState(null);
 
@@ -65,25 +95,43 @@ function MainComponent({ params }) {
     setDetailsVisible(false);
   };
   useEffect(() => {
-    const fetchUserScores = async () => {
+    const fetchUsers = async () => {
       const authToken = Cookies.get('authToken');
       try {
-        const response = await fetch('https://localhost:7049/api/Job/GetAll', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+        const response = await fetch(
+          `https://${DOMAIN_NAME}/MockSession/UserMockSession/${params.MockSesstionId}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
         if (response.ok) {
-          const Scores = await response.json();
-          setUsersScores(Scores);
+          const userMockSessionDTO = await response.json();
+
+          console.log('userMockSessionDTO : ', userMockSessionDTO);
+          // Transform the UserMockSessionDTO into the shape of the data object
+          const data = transformData(userMockSessionDTO);
+          console.log('data : ', data);
+          setSessionData({
+            mockid: userMockSessionDTO.mockId,
+            jobid: userMockSessionDTO.jobId,
+            // mockname: userMockSessionDTO.mockSessionName,
+          });
+          // Set the state
+          setData(data);
         }
       } catch (error) {
         console.log('error : ', error);
       }
+      setLoading(false);
     };
-    fetchUserScores();
+    fetchUsers();
   }, []);
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <Layout>
       <div className="font-roboto bg-white">
@@ -108,8 +156,12 @@ function MainComponent({ params }) {
         <Breadcrumb
           links={[
             {
-              name: 'UserList',
-              link: '/Interview/UserList',
+              name: 'Applicants Mock Sessions',
+              link: `${
+                sessionData.jobid !== null
+                  ? `/Interview/mockApplicants/${sessionData.jobid}`
+                  : `#`
+              }`,
             },
             {
               name: 'User Analysis',
@@ -117,8 +169,8 @@ function MainComponent({ params }) {
             },
           ]}
         />
-        <div className="bg-gray-200 flex items-center justify-center ">
-          <div className="mx-auto space-y-2 py-2 p-4" style={{ width: '70%' }}>
+        <div className=" flex items-center justify-center ">
+          <div className="mx-auto space-y-2  p-4" style={{ width: '90%' }}>
             <div className="flex justify-center space-x-4 ">
               <div className="flex flex-row bg-white shadow-sm rounded p-4 ">
                 <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-blue-100 text-blue-500">
@@ -156,7 +208,9 @@ function MainComponent({ params }) {
                   </div>
                   <div className="flex flex-col flex-grow ml-4">
                     <div className="text-sm text-gray-500">Average Score</div>
-                    <div className="font-bold text-lg">{getAverage()}</div>
+                    <div className="font-bold text-lg">
+                      {data.length > 0 && getAverage()}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -167,86 +221,14 @@ function MainComponent({ params }) {
                 rowData={selectedRowData}
               />
             )}
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-left text-sm text-[#121212]">
-                <thead className="bg-[#17a9c3] text-[#fff]">
-                  <tr>
-                    <th scope="col" className="px-6 py-3">
-                      Video
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      Recorded on
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                      AI Score
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((row, index) => (
-                    <tr
-                      key={index}
-                      className={`border-b bg-white cursor-pointer ${
-                        selectedRow === row.id ? 'bg-gray-200' : ''
-                      }`}
-                      onClick={() => handleRowClick(row)}
-                    >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
-                          <div className="relative mr-4">
-                            <div
-                              id={`checked-${index}`}
-                              onClick={(e) => {
-                                e.stopPropagation(); // Stop event propagation
-                                toggleCheck(row.id);
-                              }}
-                              className={`w-[20px] h-[20px] rounded-[6px] border-[1px] cursor-pointer ${
-                                row.checked
-                                  ? 'border-[#17a9c3] bg-[#17a9c3]'
-                                  : 'border-[#d0d5dd] bg-transparent'
-                              } flex items-center justify-center`}
-                            >
-                              {row.checked && (
-                                <i className="fas fa-check text-[#fff]"></i>
-                              )}
-                            </div>
-                          </div>
-                          <div className="flex-shrink-0">
-                            <video
-                              src={row.videoUrl}
-                              className="w-[75px] h-[52px] object-cover rounded border border-gray-300"
-                              title={row.title}
-                            ></video>
-                          </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-[#121212]">
-                              {row.title}
-                            </div>
-                            <div className="text-sm text-gray-500">
-                              {row.duration}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {row.level}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {row.date}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`text-xs inline-flex leading-5 font-semibold rounded-full bg-green-100 text-green-800 py-1 px-2`}
-                        >
-                          {row.aiRating}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <style jsx global>{`
+            {/* <VideoReview
+              resumeScore={3}
+              videoScores={43}
+              workmapScores={55}
+              key={1}
+            /> */}
+            <VideoTable Data={data} handleRowClick={handleRowClick} />
+            {/* <style jsx global>{`
               input[type='checkbox']:checked + label {
                 border-color: #17a9c3;
                 background-color: #17a9c3;
@@ -270,7 +252,7 @@ function MainComponent({ params }) {
               svg {
                 color: #fff;
               }
-            `}</style>
+            `}</style> */}
           </div>
         </div>
       </div>

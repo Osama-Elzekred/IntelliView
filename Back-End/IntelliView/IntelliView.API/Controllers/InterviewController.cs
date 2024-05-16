@@ -28,6 +28,15 @@ namespace IntelliView.API.Controllers
             _interviewService = interviewService;
             _uploadFilesToCloud = uploadFilesToCloud;
         }
+
+        [HttpGet("mockTitle/{id}")]
+        public async Task<ActionResult<string>> GetMockTitle(int id)
+        {
+            var mock = await _unitOfWork.InterviewMocks.GetByIdAsync(id);
+            if (mock == null)
+                return NotFound();
+            return Ok(new { mock.Title });
+        }
         [HttpGet("Mock/{id}")]
         public async Task<IActionResult> StartInterviewMock(int id)
         {
@@ -55,6 +64,7 @@ namespace IntelliView.API.Controllers
             }
             var userMockInterviewSession = new UserMockSession
             {
+                JobId = mock.JobId,
                 UserId = userId,
                 MockId = mock.Id,
                 InterviewMock = mock,
@@ -65,10 +75,16 @@ namespace IntelliView.API.Controllers
             // assign the mock session id to the job application
             if (jobApplication is not null)
             {
-                jobApplication.MockSessionId = userMockInterviewSession.Id;
+                userMockInterviewSession.UserApplication = jobApplication;
             }
             await _unitOfWork.SaveAsync();
-
+            // Update the JobApplication with the new UserMockSession ID
+            if (jobApplication is not null)
+            {
+                // Set jobApplication.MockSessionId to the ID of the new UserMockSession
+                jobApplication.MockSessionId = userMockInterviewSession.Id;
+                await _unitOfWork.SaveAsync();
+            }
             var questions = _mapper.Map<List<InterviewSessionQuestionsDto>>(mock.InterviewQuestions);
 
 
@@ -180,24 +196,25 @@ namespace IntelliView.API.Controllers
             if (job == null)
                 return NotFound();
             int id = (int)job.MockId;
-            var applicants = await _unitOfWork.UserMockSessions.GetSessionsAsync(id);
-            if (applicants == null)
+            var applicants = await _unitOfWork.UserMockSessions.GetSessionsWithJobApplicationAsync(id);
+            if (applicants == null || applicants.Count() == 0)
                 return NotFound();
             // Extract UserId values from the applicants collection
-            var userIds = applicants.Select(u => u.UserId).ToList();
+            //var userIds = applicants.Select(u => u.UserId).ToList();
 
-            // Query JobApplications based on userIds
-            var applications = await _unitOfWork.JobApplications.GetAllAsync(j => userIds.Contains(j.UserId));
+            //// Query JobApplications based on userIds
+            //var applications = await _unitOfWork.JobApplications.GetAllAsync(j => userIds.Contains(j.UserId));
 
             //var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == applicants.select(u => u.UserId));
-            var users = applications.Select(a => new UserListDTO
+            var users = applicants.Select(a => new UserListDTO
             {
+                userMockSessionId = a.Id,
                 UserId = a.UserId,
-                Email = a.Email,
-                Name = a.FullName,
-                PhoneNumber = a.Phone,
+                Email = a.UserApplication?.Email ?? "",
+                Name = a.UserApplication?.FullName ?? "",
+                PhoneNumber = a.UserApplication?.Phone ?? "",
                 score = 0,
-                IsApproved = a.IsInterviewApproved,
+                IsApproved = a.UserApplication?.IsInterviewApproved ?? false,
             });
             return Ok(users);
         }

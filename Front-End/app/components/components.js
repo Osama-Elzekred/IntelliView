@@ -13,6 +13,7 @@ import Testimonial from './Testimonial';
 import Breadcrumb from './breadcrumb';
 import Filterbar from './Filterbar';
 import Loading from './loading';
+import VideoReview from './VideoReview';
 export {
   Card,
   StartInterview,
@@ -27,4 +28,5 @@ export {
   Breadcrumb,
   Filterbar,
   Loading,
+  VideoReview,
 };

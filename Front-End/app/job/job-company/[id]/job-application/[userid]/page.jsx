@@ -88,7 +88,7 @@ export default function Job_Application_details({ params }) {
                       <img src={ApplicantPhoto} alt="Applicant Photo" />
                     </div>
 
-                    <div>
+                    <div className="">
                       <h2>{applicantDetails?.fullName}</h2>
                       <div>
                         <span className="ml-0 mr-2 mb-2">
@@ -138,7 +138,7 @@ export default function Job_Application_details({ params }) {
                         (item, index) => (
                           <div key={index}>
                             {/* Question */}
-                            <div className="flex items-start">
+                            <div className="flex items-start mt-2">
                               <div>
                                 <span className="inline-flex justify-center items-center w-6 h-6 rounded bg-green-500 text-white font-medium text-sm">
                                   Q
@@ -149,7 +149,7 @@ export default function Job_Application_details({ params }) {
                               </p>
                             </div>
                             {/* Answer */}
-                            <div className="flex items-start mt-3">
+                            <div className="flex items-start ">
                               <div>
                                 <span className="inline-flex justify-center items-center w-6 h-6 rounded bg-gray-200 text-gray-800 font-medium text-sm">
                                   A

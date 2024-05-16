@@ -1,4 +1,6 @@
-﻿namespace IntelliView.API.Controllers
+﻿using IntelliView.Models.DTO.Interview;
+
+namespace IntelliView.API.Controllers
 {
     public class MockVideoAnswerDTO
     {
@@ -10,8 +12,10 @@
         public string AnswerText { get; set; }
         // Assuming VideoAiScore is a complex type, you might want to include a simplified version or just an ID/reference
         public VideoAiScoreDto AnswerAiEvaluationScore { get; set; }
+        public InterviewQuestionDTO InterviewQuestion { get; set; }
         public DateTime AnsweredAt { get; set; }
     }
+
     public class VideoAiScoreDto
     {
         public decimal AnswerSimilarityScore { get; set; }

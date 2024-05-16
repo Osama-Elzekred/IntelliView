@@ -66,8 +66,9 @@ namespace ANWAAR.CORE
             CreateMap<UserMockSession, UserMockSessionDTO>()
                 .ForMember(dest => dest.Answers, opt => opt.MapFrom(src => src.Answers));
             CreateMap<MockVideoAnswer, MockVideoAnswerDTO>()
-                .ForMember(dest => dest.AnswerAiEvaluationScore, opt => opt.MapFrom(src => src.AnswerAiEvaluationScores)).ReverseMap();
-
+                .ForMember(dest => dest.AnswerAiEvaluationScore, opt => opt.MapFrom(src => src.AnswerAiEvaluationScores))
+                .ForMember(dest => dest.InterviewQuestion, opt => opt.MapFrom(src => src.InterviewQuestion))
+                .ReverseMap();
             // Mapping from VideoAiScore entity to VideoAiScoreDto
             CreateMap<VideoAiScore, VideoAiScoreDto>().ReverseMap();
 

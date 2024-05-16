@@ -21,16 +21,10 @@ namespace IntelliView.API.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet("/UserMockSession/{id}")]
+        [HttpGet("UserMockSession/{id}")]
         public async Task<ActionResult<UserMockSessionDTO>> UserMockSession(int id)
         {
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            //if (userId == null)
-            //{
-            //    return Unauthorized();
-            //}
 
             var UserMockSession = await _unitOfWork.UserMockSessions.GetUserMockSessionAsync(id);
             if (UserMockSession == null)
@@ -74,6 +68,8 @@ namespace IntelliView.API.Controllers
             {
                 return BadRequest("No Mock Session Available ");
             }
+            // remove the answers for the user
+            await _unitOfWork.MockVideoAnswers.RemoveRangeAsync(UserMockSession.SelectMany(a => a.Answers));
 
             await _unitOfWork.UserMockSessions.RemoveRangeAsync(UserMockSession);
             await _unitOfWork.SaveAsync();
@@ -106,8 +102,6 @@ namespace IntelliView.API.Controllers
             );
             return Ok(InterviewMocks);
         }
-
-
         [HttpPost("/MockVideoAnswer/{id}/SetAiScores")]
 
         public async Task<ActionResult> SetAiScores(int id, [FromBody] VideoAiScoreDto videoAiScoreDto)

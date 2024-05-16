@@ -4,7 +4,7 @@ const Filterbar = () => {
       <div className="w-full ">
         <div className=" grid-cols-12 flex">
           <div className="col-span-12 md:col-span-3 w-full max-md:max-w-md max-md:mx-auto">
-            <div className="mt-7 box rounded-xl border border-gray-300 bg-white p-6 w-full md:max-w-sm">
+            <div className=" box rounded-xl border border-gray-300 bg-white p-6 w-full md:max-w-sm">
               <h6 className="font-medium text-base leading-7 text-black mb-5">
                 Your Workspace
               </h6>

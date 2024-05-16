@@ -4,6 +4,7 @@ using InteliView.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntelliView.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240514165955_addingUserMockSession_JobApplictionId")]
+    partial class addingUserMockSession_JobApplictionId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,6 +212,9 @@ namespace IntelliView.DataAccess.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("JobApplicationId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("JobId")
                         .HasColumnType("int");
@@ -861,10 +867,6 @@ namespace IntelliView.DataAccess.Migrations
 
             modelBuilder.Entity("IntelliView.Models.Models.Interview.UserMockSession", b =>
                 {
-                    b.HasOne("IntelliView.Models.Models.Job", "Job")
-                        .WithMany()
-                        .HasForeignKey("JobId");
-
                     b.HasOne("IntelliView.Models.Models.InterviewMock", "InterviewMock")
                         .WithMany()
                         .HasForeignKey("MockId")
@@ -876,8 +878,6 @@ namespace IntelliView.DataAccess.Migrations
                         .HasForeignKey("JobId", "UserId");
 
                     b.Navigation("InterviewMock");
-
-                    b.Navigation("Job");
 
                     b.Navigation("UserApplication");
                 });

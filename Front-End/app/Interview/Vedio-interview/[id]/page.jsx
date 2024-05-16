@@ -5,13 +5,43 @@ import Cookies from 'js-cookie';
 import { Button, Modal } from 'flowbite-react';
 import Link from 'next/link';
 import Loading from '../../../components/loading';
+import { compileString } from 'sass';
 
 const DOMAIN_NAME = 'localhost:7049';
 function MainComponent({ params }) {
   const [error, setError] = useState(false);
-
+  const [title, setTitle] = useState('');
   const authToken = Cookies.get('authToken');
   const [loading, setLoading] = useState(true);
+  const fetchMockTitle = async () => {
+    try {
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/api/Interview/mockTitle/${params.id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+      if (!response.ok) {
+        return response.text().then((errorMessage) => {
+          console.error('Error: ', errorMessage);
+          if (errorMessage === null || errorMessage === false) {
+            errorMessage = 'Something went wrong. Please try again later.';
+          }
+          setError(errorMessage);
+          // Display the error message to the user, or handle it in some other way
+        });
+      }
+      const data = await response.json();
+      setTitle(data.title);
+      // console.log(data);
+    } catch (error) {
+      console.log('error : ', error);
+    }
+    setLoading(false);
+  };
   const fetchMockData = async () => {
     try {
       const response = await fetch(
@@ -72,7 +102,8 @@ function MainComponent({ params }) {
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-    fetchMockData();
+    fetchMockTitle();
+    console.log('fetching mock title');
   }, []);
 
   React.useEffect(() => {
@@ -193,10 +224,14 @@ function MainComponent({ params }) {
       case 1:
         return (
           <StartInterview
-            title={`Welcome to the interview on ${mockData.title}`}
+            title={`Welcome to the interview on ${title}`}
             subtitle="We are excited to have you here. Let's get started with the interview."
             startButtonText="Start Interview"
-            onInitiateConversation={() => setCurrentStep(2)}
+            onInitiateConversation={() => {
+              setLoading(true);
+              setCurrentStep(2);
+              fetchMockData();
+            }}
           />
         );
       case 2:

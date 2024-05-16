@@ -43,7 +43,7 @@ function UserMocks() {
   );
 
   const redirectToReview = (userId) => {
-    window.location.href = `/Interview/UserList/${userId}`;
+    window.location.href = `/mockReview/${userId}`;
   };
 
   if (loading) {

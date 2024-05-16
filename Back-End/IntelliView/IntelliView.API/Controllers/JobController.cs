@@ -249,7 +249,7 @@ namespace IntelliView.API.Controllers
                 JobId = job.Id
             }).ToList();
 
-            job.InterviewMock = new InterviewMock
+            var interviewMock = new InterviewMock
             {
                 InterviewQuestions = jobDto.QuestionItems != null ? jobDto.QuestionItems.Select(q => new InterviewQuestion
                 {
@@ -258,12 +258,16 @@ namespace IntelliView.API.Controllers
                 }).ToList() : new List<InterviewQuestion>(),
                 Title = jobDto.Title,
                 Description = jobDto.Description,
-                Level = InterviewLevel.None
+                Level = InterviewLevel.None,
             };
+            job.InterviewMock = interviewMock;
 
 
             await _unitOfWork.Jobs.AddAsync(job);
             await _unitOfWork.SaveAsync();
+            job.InterviewMock.JobId = job.Id;
+            await _unitOfWork.SaveAsync();
+
             Task.Run(() => _interviewService.AddInterviewVideos(job.InterviewMock));
 
             return Ok(new { id = job.Id });

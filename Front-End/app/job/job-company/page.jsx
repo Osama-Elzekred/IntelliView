@@ -219,24 +219,26 @@ export default function Jobs() {
                   </h2>
                 </div>
               </div>
-              <ul className="job-listings m-5 space-y-2 py-2">
-                {jobs.map((job, index) => (
-                  <Card
-                    key={index}
-                    title={job.title}
-                    company={job.companyName}
-                    location={job.location}
-                    timePosted={new Date(job.createdAt).toDateString()}
-                    employmentType={job.jobType}
-                    categories={['marketing', 'finance']} // There's no equivalent in the jobData
-                    jobTime={job.jobTime}
-                    companyImageUrl={job.imageURl}
-                    onClick={() =>
-                      (window.location.href = `/job/job-company/${job.id}`)
-                    }
-                  />
-                ))}
-              </ul>
+              <div className="flex-1 bg-white shadow-md p-4">
+                <ul className=" m-5 space-y-2 py-2">
+                  {jobs.map((job, index) => (
+                    <Card
+                      key={index}
+                      title={job.title}
+                      company={job.companyName}
+                      location={job.location}
+                      timePosted={new Date(job.createdAt).toDateString()}
+                      employmentType={job.jobType}
+                      categories={['marketing', 'finance']} // There's no equivalent in the jobData
+                      jobTime={job.jobTime}
+                      companyImageUrl={job.imageURl}
+                      onClick={() =>
+                        (window.location.href = `/job/job-company/${job.id}`)
+                      }
+                    />
+                  ))}
+                </ul>
+              </div>
               <div className="row pagination-wrap">
                 <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">
                   <span>
@@ -249,7 +251,7 @@ export default function Jobs() {
                   </span>
                 </div>
                 <div className="col-md-6 text-center text-md-right">
-                  <div className="custom-pagination ml-auto">
+                  <div className="custom-pagination ml-auto mt-2">
                     {currentPage !== 1 && (
                       <Link href="#" className="prev" onClick={prevPage}>
                         Prev

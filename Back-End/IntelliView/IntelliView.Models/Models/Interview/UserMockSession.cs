@@ -21,9 +21,13 @@ namespace IntelliView.Models.Models.Interview
         public virtual InterviewMock InterviewMock { get; set; }
 
         // Optional: ID of the job application this mock interview is associated with
-        //public int? JobId { get; set; }
+        public int? JobId { get; set; }
         //// Assuming JobApplication has a composite key, this property won't be directly mapped
-        //[ForeignKey("JobId,UserId")]
+        [ForeignKey(nameof(JobId))]
+        public virtual Job? Job { get; set; }
+        //public int? JobApplicationId { get; set; }
+
+        [ForeignKey($"{nameof(JobId)}, {nameof(UserId)}")]
         public virtual JobApplication? UserApplication { get; set; }
 
         // Collection of answers given during the mock interview

@@ -9,7 +9,23 @@ function MainComponent() {
   const [InterviewQuestions, setInterviewQuestions] = React.useState([
     { Question: '', ModelAnswer: '' },
   ]);
-
+  const IconClasses = [
+    'fa-calculator',
+    'fa-palette',
+    'fa-dna',
+    'fa-headset',
+    'fa-tshirt',
+    'fa-user-tie',
+    'fa-bullhorn',
+    'fa-plane',
+    'fa-hard-hat',
+    'fa-tools',
+    'fa-comments',
+    'fa-fire',
+    'fa-gears',
+    'fa-landmark',
+    'fa-stethoscope',
+  ];
   const addVideoField = () => {
     setInterviewQuestions([
       ...InterviewQuestions,
@@ -91,7 +107,10 @@ function MainComponent() {
     e.preventDefault();
     const topic = e.target.Topic.value;
     const description = e.target.Description.value;
-    const iconClass = e.target.IconClass.value;
+    let iconClass = e.target.IconClass.value;
+    if (iconClass === null || iconClass === '' || iconClass === undefined) {
+      iconClass = IconClasses[Math.floor(Math.random() * IconClasses.length)];
+    }
     const addJobDto = {
       topic: topic,
       description: description,

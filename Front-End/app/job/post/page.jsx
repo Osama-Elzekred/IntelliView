@@ -312,13 +312,13 @@ export default function Post_job(JobId) {
                   <div className="col-lg-4">
                     <div className="row">
                       <div className="col-6">
-                        <Link
+                        {/* <Link
                           href="#"
                           className="btn btn-block btn-light btn-md"
                         >
                           <span className="icon-open_in_new mr-2" />
                           Preview
-                        </Link>
+                        </Link> */}
                       </div>
                       <div className="col-6">
                         <Link

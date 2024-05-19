@@ -247,27 +247,32 @@ export default function JobApplicants({ params }) {
                           >
                             Approve Applications
                           </button>
+                          
                         </div>
                       </div>
-                      <div className="form-group col-md ">
+                      <div className='row mb-2 -flex align-items-end justify-content-center'>
+                      <div className="form-group col-md-3">
                         <button
                           type="button"
-                          className="btn btn-primary"
+                          className="btn btn-outline-primary py-2 px-4 rounded"
                           onClick={handleSendInterviewEmail}
                         >
                           Send Interview Emails
                         </button>
                       </div>
-                      <div className="form-group col-md ">
-                        <div className="form-group col-md">
+                        <div className="form-group col-md-3">
+                        <button
+                          type="button"
+                          className="">
                           <Link
                             href={`/Interview/mockApplicants/${data[0].jobId}`}
                             target="_blank"
                           >
                             Open Interview Emails
                           </Link>
+                          </button>
                         </div>
-                      </div>
+                        </div>
                     </form>
                   </div>
                 </div>

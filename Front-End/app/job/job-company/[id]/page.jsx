@@ -470,27 +470,7 @@ export default function JobApplicants({ params }) {
               </Tabs.Item>
             </Tabs>
           </section>
-          <section
-            className="py-5 bg-image overlay-primary fixed overlay"
-            style={{ backgroundImage: 'url("/images/background.jpg")' }}
-          >
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-md-8">
-                  <h2 className="text-white">Looking For A Job?</h2>
-                  <p className="mb-0 text-white lead"> Find your dream job.</p>
-                </div>
-                <div className="col-md-3 ml-auto">
-                  <Link
-                    href="/login"
-                    className="btn btn-warning btn-block btn-lg"
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </section>
+         
         </div>
       </>
     </Layout>

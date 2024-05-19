@@ -52,6 +52,7 @@ namespace IntelliView.Models.Models
 
     public enum ApplicationStatus
     {
+        InterviewStage,
         Pending,
         Accepted,
         Rejected

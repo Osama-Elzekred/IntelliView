@@ -10,6 +10,7 @@ import {
   FooterLinkGroup,
   FooterTitle,
 } from 'flowbite-react';
+import Link from 'next/link';
 import {
   BsDribbble,
   BsFacebook,
@@ -155,7 +156,8 @@ export default function UserFooter() {
           </div>
           <div>
             <p className="text-sm font-semibold tracking-widest text-gray-400 uppercase">
-              Help
+              <Link href={"/contact"}>Help</Link>
+              
             </p>
             <ul className="mt-6 space-y-4">
               <li>
@@ -228,7 +230,7 @@ export default function UserFooter() {
         </div>
         <hr className="mt-16 mb-10 border-gray-200" />
         <p className="text-sm text-center text-gray-600">
-          © Copyright 2021, All Rights Reserved by Postcraft
+          © Copyright 2021, All Rights Reserved by Intilliview
         </p>
       </div>
     </section>

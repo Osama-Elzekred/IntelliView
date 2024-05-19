@@ -197,7 +197,7 @@ namespace IntelliView.API.Controllers
                 return NotFound();
             int id = (int)job.MockId;
             var applicants = await _unitOfWork.UserMockSessions.GetSessionsWithJobApplicationAsync(id);
-            if (applicants == null || applicants.Count() == 0)
+            if (applicants == null )
                 return NotFound();
             // Extract UserId values from the applicants collection
             //var userIds = applicants.Select(u => u.UserId).ToList();

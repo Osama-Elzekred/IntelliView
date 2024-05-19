@@ -305,7 +305,7 @@ namespace IntelliView.API.Controllers
             }
 
             jobApplication.IsApproved = false; // Update approval status
-            jobApplication.Status= ApplicationStatus.Pending;
+            //jobApplication.Status= ApplicationStatus.Pending;
             _unitOfWork.JobApplications.Update(jobApplication);
             await _unitOfWork.SaveAsync();
 

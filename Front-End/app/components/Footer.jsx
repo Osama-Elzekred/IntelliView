@@ -31,8 +31,8 @@ export default function UserFooter() {
               alt=""
             />
             <p className="text-base leading-relaxed text-gray-600 mt-7">
-              Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-              amet sint. Velit officia consequat duis enim velit mollit.
+            Welcome to Intelliview, the ultimate platform for intelligent job interview preparation and evaluation. 
+            Whether you are a job seeker looking to enhance your interview skills or a company aiming to streamline your hiring process.
             </p>
             <ul className="flex items-center space-x-3 mt-9">
               <li>

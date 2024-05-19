@@ -57,6 +57,7 @@ namespace IntelliView.API.Controllers
         }
 
         [HttpPost("submitAnswers")]
+        [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> SubmitAnswers([FromForm] JobApplicationDto model)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -209,12 +210,19 @@ namespace IntelliView.API.Controllers
 
         // view all applications for a job
         [HttpGet("Applications/{jobId}")]
+        [Authorize(Roles = SD.ROLE_COMPANY)]
         public async Task<ActionResult<IEnumerable<JobApplication>>> GetJobApplications(int jobId)
         {
+
             var job = await _unitOfWork.Jobs.GetByIdAsync(jobId);
             if (job == null)
             {
                 return NotFound("Job not found");
+            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null || job.CompanyUserId != userId)
+            {
+                return Unauthorized();
             }
 
             var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.JobId == jobId);
@@ -232,14 +240,14 @@ namespace IntelliView.API.Controllers
             //var jobApplication = _mapper.Map<JobApplicationDto>(application);
             JobApplicationDto jobApplication = new JobApplicationDto
             {
-                JobId= application.JobId,
-                FullName= application.FullName,
-                Email= application.Email,
-                Phone= application.Phone,
-                Gender= application.Gender,
-                CVURL= application.CVURL,
-                QuestionsAndAnswers= application.UserAnswers
-                .Select(a => new QuestionsAndAnswersDTO { Question=a.CustQuestion.Question, Answer=a.Answer })
+                JobId = application.JobId,
+                FullName = application.FullName,
+                Email = application.Email,
+                Phone = application.Phone,
+                Gender = application.Gender,
+                CVURL = application.CVURL,
+                QuestionsAndAnswers = application.UserAnswers
+                .Select(a => new QuestionsAndAnswersDTO { Question = a.CustQuestion.Question, Answer = a.Answer })
                 .ToList()
 
             };
@@ -265,13 +273,14 @@ namespace IntelliView.API.Controllers
             }
 
             jobApplication.IsApproved = true; // Update approval status
+          //  jobApplication.Status= ApplicationStatus.InterviewStage; 
 
-            _unitOfWork.JobApplications.Update(jobApplication);
+            //_unitOfWork.JobApplications.Update(jobApplication);
             await _unitOfWork.SaveAsync();
 
             return Ok("Job application approved successfully");
         }
-        [Authorize(Roles = SD.ROLE_COMPANY)] 
+        [Authorize(Roles = SD.ROLE_COMPANY)]
         [HttpPatch("approveInterview/job/{jobId}/user/{userId}")]
         public async Task<IActionResult> ApproveInterview(int jobId, string userId)
         {
@@ -283,6 +292,8 @@ namespace IntelliView.API.Controllers
             }
 
             jobApplication.IsInterviewApproved = true; // Update approval status
+            jobApplication.Status= ApplicationStatus.Accepted;
+            
 
             _unitOfWork.JobApplications.Update(jobApplication);
             await _unitOfWork.SaveAsync();
@@ -302,7 +313,7 @@ namespace IntelliView.API.Controllers
             }
 
             jobApplication.IsApproved = false; // Update approval status
-
+            //jobApplication.Status= ApplicationStatus.Pending;
             _unitOfWork.JobApplications.Update(jobApplication);
             await _unitOfWork.SaveAsync();
 
@@ -318,12 +329,20 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound("Job not found");
             }
-            var jobApplications = await _unitOfWork.JobApplications.GetAllAsync(j => j.JobId == jobId && j.IsApproved);
+            var alljobApplications = await _unitOfWork.JobApplications.GetAllAsync(j => j.JobId == jobId );
+            var jobApplications= alljobApplications.Where(j => j.IsApproved == true).ToList();
+            var rejectedApplications= alljobApplications.Where(j => j.IsApproved == false).ToList();
+            foreach (var application in rejectedApplications)
+            {
+                application.Status= ApplicationStatus.Rejected;
+                
+            }
+            await _unitOfWork.SaveAsync();
             if (jobApplications == null || !jobApplications.Any())
             {
                 return NotFound("No job applications found");
             }
-            interview.InterviewLink = "https://localhost:7049/InterviewMock/" + job.MockId;
+            interview.InterviewLink = "http://localhost:3000/Interview/Vedio-interview/" + job.MockId;
             foreach (var application in jobApplications)
             {
                 var user = await _unitOfWork.IndividualUsers.GetByIdAsync(application.UserId);
@@ -331,7 +350,11 @@ namespace IntelliView.API.Controllers
                 {
                     var email = application.Email.Trim('"');
                     var subject = "Interview Invitation";
-                    var body = "You have been approved for the job: " + job.Title + ".the link to interview is  " + interview.InterviewLink;
+                    var body = $@"
+                        <p>You have been approved for the job: 
+                        <a href=""#"">{job.Title}</a>.
+                        The link to the interview is 
+                        <a href=""{interview.InterviewLink}"">{interview.InterviewLink}</a>.</p>";
 
                     var emailDto = new EmailDTO
                     {

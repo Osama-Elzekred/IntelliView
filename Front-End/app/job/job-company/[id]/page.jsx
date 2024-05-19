@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Layout, Loading, Breadcrumb } from '../../../components/components';
 import React, { useState, useEffect, Suspense } from 'react';
-import { Tabs } from 'flowbite-react';
+import { Button, Tabs } from 'flowbite-react';
 import { HiUserCircle } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
 import Cookies from 'js-cookie';
@@ -33,6 +33,7 @@ export default function JobApplicants({ params }) {
       }
       const result = await response.json();
       setData(result);
+      console.log(result);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -409,7 +410,7 @@ export default function JobApplicants({ params }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {approvedApplications.map((applicant, index) => (
+                        {approvedApplications?.map((applicant, index) => (
                           <tr
                             key={index}
                             className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -475,7 +476,6 @@ export default function JobApplicants({ params }) {
               </Tabs.Item>
             </Tabs>
           </section>
-         
         </div>
       </>
     </Layout>

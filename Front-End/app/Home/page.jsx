@@ -55,7 +55,7 @@ export default function IndexPage() {
                       className="inline-flex items-center px-4 py-3 mt-8 font-semibold text-dark transition-all duration-200 bg-white rounded-full lg:mt-16 hover:bg-white focus:bg-white"
                       role="button"
                     >
-                      Sign as a business
+                      Sign as a company
                       <svg
                         className="w-6 h-6 ml-8 -mr-2"
                         xmlns="http://www.w3.org/2000/svg"
@@ -76,7 +76,7 @@ export default function IndexPage() {
                   <p className="mt-5 text-gray-600">
                     Already joined us?{' '}
                     <a
-                      href="#"
+                      href="/login"
                       title=""
                       className="text-black transition-all duration-200 hover:underline"
                     >

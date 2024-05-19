@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.DataAccess.Services.IService;
-using IntelliView.Models.DTO;
 using IntelliView.Models.DTO.Interview;
 using IntelliView.Models.Models;
 using IntelliView.Models.Models.Interview;
+using IntelliView.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -38,6 +38,7 @@ namespace IntelliView.API.Controllers
             return Ok(new { mock.Title });
         }
         [HttpGet("Mock/{id}")]
+        [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> StartInterviewMock(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -98,13 +99,6 @@ namespace IntelliView.API.Controllers
             });
         }
 
-
-        [HttpPost("answer")]
-        public IActionResult SubmitAnswer([FromBody] InterviewAnswerDto answerDto)
-        {
-            var nextQuestion = _interviewService.ProcessAnswer(answerDto);
-            return Ok(new { Question = nextQuestion });
-        }
         [HttpGet("getMock")]
         public async Task<ActionResult<InterviewMock>> getMock(int id)
         {
@@ -123,7 +117,9 @@ namespace IntelliView.API.Controllers
 
         // start interview mock , return session id , and first question Dto
         // update the videoAnswer of a user for a question then upload it to cloudinary
+
         [HttpPost("MockSession/{MockSessionId}/mock/{mockId}/question/{questionId}")]
+        [Authorize(Roles = SD.ROLE_USER)]
         public async Task<IActionResult> UploadVideo(IFormFile video, int mockId, int questionId, int MockSessionId)
         {
             if (video == null || video.Length == 0)
@@ -190,11 +186,18 @@ namespace IntelliView.API.Controllers
         }
         // get all users who had joined a mock interview to one job
         [HttpGet("mock/{mockId}/users")]
+        [Authorize(Roles = SD.ROLE_COMPANY)]
         public async Task<ActionResult<IEnumerable<UserListDTO>>> GetUsersForMock(int mockId)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var job = await _unitOfWork.Jobs.GetByIdAsync(mockId);
-            if (job == null)
-                return NotFound();
+            if (job == null || job.MockId is null)
+                return NotFound("Job not found");
+
+            if (userId == null || userId != job.CompanyUserId)
+            {
+                return Unauthorized("The user dosn`t exist");
+            }
             int id = (int)job.MockId;
             var applicants = await _unitOfWork.UserMockSessions.GetSessionsWithJobApplicationAsync(id);
             if (applicants == null || applicants.Count() == 0)

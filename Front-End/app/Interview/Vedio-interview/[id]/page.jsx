@@ -5,7 +5,6 @@ import Cookies from 'js-cookie';
 import { Button, Modal } from 'flowbite-react';
 import Link from 'next/link';
 import Loading from '../../../components/loading';
-import { compileString } from 'sass';
 
 const DOMAIN_NAME = 'localhost:7049';
 function MainComponent({ params }) {
@@ -409,7 +408,9 @@ function MainComponent({ params }) {
                 );
               }}
               disabled={
-                isRecording || recordedVideosLength !== currentIndex + 1
+                isRecording ||
+                recordedVideosLength !== currentIndex + 1 ||
+                finished
               }
             >
               Finish

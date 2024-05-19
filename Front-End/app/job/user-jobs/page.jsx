@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import CardComp from '../../components/Card';
 import Loading from '../../components/loading';
 import { Breadcrumb } from '../../components/components';
+import {Badge} from 'flowbite-react';
 export default function userJobs() {
   const DOMAIN_NAME = 'localhost:7049';
   const [jobListings, setJobListings] = useState([]);
@@ -141,6 +142,8 @@ export default function userJobs() {
   let badgeColor;
   let statusText;
 
+  
+
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
   }
@@ -189,9 +192,6 @@ export default function userJobs() {
                     onClick={() => (window.location.href = `/job/user-jobs`)}
                   />
                 ))}
-                {/* <div className='flex flex-wrap gap-2'>                
-                    <Badge color={badgeColor}>{statusText}</Badge>
-                  </div> */}
               </ul>
               <div className="row pagination-wrap">
                 <div className="col-md-6 text-center text-md-left mb-4 mb-md-0">

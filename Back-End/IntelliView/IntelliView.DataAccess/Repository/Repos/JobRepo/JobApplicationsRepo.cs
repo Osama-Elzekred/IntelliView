@@ -89,6 +89,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
                         EndedAt = ua.Job.EndedAt,
                     },
                     Status = ua.Status.ToString()
+                    //Status= ua.IsApproved==false?ApplicationStatus.Pending.ToString(): ua.IsInterviewApproved==true? ApplicationStatus.Accepted.ToString() : ApplicationStatus.InterviewStage.ToString()
                 })
                 .ToListAsync();
             return userApplications;

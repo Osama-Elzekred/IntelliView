@@ -52,10 +52,12 @@ function CardComp({
             color={
               status === 'Rejected'
                 ? 'red'
-                : status === 'Accpted'
+                : status === 'Accepted'
                 ? 'green'
                 : status === 'Pending'
                 ? 'warning'
+                : status === 'InterviewStage'
+                  ?'warning'
                 : null
             }
             size="sm"

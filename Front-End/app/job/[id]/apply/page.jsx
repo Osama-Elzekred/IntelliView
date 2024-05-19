@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
-import Loading from '../../../components/loading';
+import { Button } from 'flowbite-react';
+import { Loading, PhoneInputGfg } from '../../../components/components';
 function Apply({ params }) {
   const [currentStep, setCurrentStep] = React.useState(1);
   const [answers, setAnswers] = useState({
@@ -16,6 +17,8 @@ function Apply({ params }) {
   const [loading, setLoading] = useState(true);
   const [questionslist, setQuestionslist] = useState([]);
   const [answerslist, setQuesionsAnswers] = useState({});
+  const [finished, setFinished] = useState(false);
+
   const DOMAIN_NAME = 'localhost:7049/api';
   function handleNext() {
     setCurrentStep((prevStep) => prevStep + 1);
@@ -55,20 +58,20 @@ function Apply({ params }) {
           );
           setQuesionsAnswers(initialAnswers);
         });
-      if (!response.ok) {
-        throw new Error('Failed to fetch questions');
-      }
-      setLoading(false);
+      // if (!response.ok) {
+      //   throw new Error('Failed to fetch questions');
+      // }
     } catch (error) {
       console.error('Error fetching questions:', error.message);
       // Handle the error appropriately, e.g., display an error message to the user
       setError('Failed to fetch questions. Please try again later.');
     }
+    setLoading(false);
   };
 
   useEffect(() => {
     fetchQuestions(params.id); // Pass the jobId parameter
-  }, [params.id]); // Add jobId to the dependency array
+  }, []); // Add jobId to the dependency array
 
   // Function to handle input change and update personalInfo state
   const handleChange = (e) => {
@@ -199,7 +202,7 @@ function Apply({ params }) {
           onChange={handleChange}
           required // Add required attribute for input validation
         />
-        <input
+        {/* <input
           name="phone"
           className="w-full p-2 mb-4 border rounded"
           placeholder="Phone"
@@ -207,7 +210,18 @@ function Apply({ params }) {
           value={answers.phone}
           onChange={handleChange}
           required // Add required attribute for input validation
-        />
+        /> */}
+        <div className="m-2">
+          <PhoneInputGfg
+            name="phone"
+            placeholder="Phone"
+            type="tel"
+            value={answers.phone}
+            handlePhoneChange={(phone) =>
+              handleChange({ target: { name: 'phone', value: phone } })
+            }
+          />
+        </div>
         <div className="mb-4">
           <label className="mr-4">Gender: </label>
           <input
@@ -261,9 +275,11 @@ function Apply({ params }) {
 
   const StepTwo = (
     <div>
-      <h3 className="font-semibold mb-4 ">Answer Questions</h3>
+      {questionslist.length > 0 && (
+        <h3 className="font-semibold mb-4 ">Answer Questions</h3>
+      )}
       <form>{renderQuestions()}</form>
-      <div className="flex justify-between mb-4">
+      <div className="flex justify-between mb-4 space-x-2">
         <button
           type="button"
           className="bg-gray-200 text-black py-2 px-4 rounded hover:bg-gray-300"
@@ -271,13 +287,20 @@ function Apply({ params }) {
         >
           Back
         </button>
-        <button
+        <Button
           type="button"
           className="bg-[#17a9c3] text-white py-2 px-4 rounded hover:bg-[#17a162]"
-          onClick={sendAnswers} // Call handleSubmit when submitting answers
+          isProcessing={finished}
+          gradientDuoTone="greenToBlue"
+          size="sm"
+          onClick={() => {
+            // console.log(answers);
+            setFinished(true);
+            sendAnswers();
+          }} // Call handleSubmit when submitting answers
         >
           submit
-        </button>
+        </Button>
       </div>
       <div className=" mb-4">
         <span
@@ -304,10 +327,9 @@ function Apply({ params }) {
     }
   };
 
-  
-  // if (loading) {
-  //   return <Loading />; // Display loading indicator while data is being fetched
-  // }
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
 
   return (
     <div className="flex h-screen bg-[#f7f7f7]">
@@ -340,7 +362,7 @@ function Apply({ params }) {
             alt="image"
             className="w-50 h-60"
           />
-          <h1 className="font-bold text-4xl my-4">We are Hiring</h1>
+          <h1 className="font-bold text-white text-4xl my-4">We are Hiring</h1>
           <p className="mb-4">please fill the form to apply for the job</p>
           <div className="text-sm mt-32">&copy; 2024 Intelliview</div>
         </div>

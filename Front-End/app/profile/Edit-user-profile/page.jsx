@@ -33,11 +33,11 @@ export default function EditProfile() {
   });
   const [imageURL, setPhotoUrl] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authToken, setAuthToken] = useState(Cookies.get('authToken'));
 
   // Function to retrieve the phone number value
   useEffect(() => {
     const role = Cookies.get('role');
-    const authToken = Cookies.get('authToken');
     // const [userId ,setUserId] = useState("")
 
     if (!authToken || role != 'user') {

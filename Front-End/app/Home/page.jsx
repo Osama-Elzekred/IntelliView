@@ -1,6 +1,5 @@
 import Layout from '../components/Layout';
 import Link from 'next/link';
-import { Button } from 'flowbite-react';
 import { Features, Testimonial } from '../components/components';
 export default function IndexPage() {
   return (

@@ -41,7 +41,7 @@ function MainComponent() {
       bgColor: 'bg-[#a78bfa]',
     },
   ]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const IconClasses = [
     'fa-calculator',
@@ -94,7 +94,6 @@ function MainComponent() {
       );
   };
   const fetchMocks = (id) => {
-    setIsLoading(true);
     fetch(
       `https://localhost:7049/api/InterviewMock/GetInterviewMocks/${parseInt(
         id
@@ -116,20 +115,19 @@ function MainComponent() {
             IconClasses: item.icon,
           }))
         );
-        setIsLoading(false);
       })
       .catch((error) => {
         console.error(
           'There has been a problem with your fetch operation:',
           error
         );
-        setIsLoading(false);
       });
   };
   useEffect(() => {
     if (fristTime) {
       setFristTime(false);
       fetchTopics();
+      setIsLoading(false);
     }
     if (currentStep === 2) {
       setIsLoading(true);
@@ -159,7 +157,7 @@ function MainComponent() {
 
   const TopicStep = (
     <>
-      {filteredOccupations.map((Topic) => (
+      {filteredOccupations.map((Topic, index) => (
         <div
           key={Topic.id}
           className={`flex flex-col items-center text-center p-4 bg-gray-50 rounded shadow cursor-pointer ${
@@ -228,6 +226,9 @@ function MainComponent() {
         );
     }
   };
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <Layout>
       <>

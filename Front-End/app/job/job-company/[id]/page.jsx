@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Layout, Loading, Breadcrumb } from '../../../components/components';
 import React, { useState, useEffect, Suspense } from 'react';
-import { Tabs } from 'flowbite-react';
+import { Button, Tabs } from 'flowbite-react';
 import { HiUserCircle } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
 import Cookies from 'js-cookie';
@@ -33,6 +33,7 @@ export default function JobApplicants({ params }) {
       }
       const result = await response.json();
       setData(result);
+      console.log(result);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -260,12 +261,15 @@ export default function JobApplicants({ params }) {
                       </div>
                       <div className="form-group col-md ">
                         <div className="form-group col-md">
-                          <Link
-                            href={`/Interview/mockApplicants/${data[0].jobId}`}
-                            target="_blank"
-                          >
-                            Open Interview Emails
-                          </Link>
+                          <Button type="button" className="btn btn-secondary">
+                            <Link
+                              className="text-white"
+                              href={`/Interview/mockApplicants/${data[0]?.jobId}`}
+                              target="_blank"
+                            >
+                              Open Interview Emails
+                            </Link>
+                          </Button>
                         </div>
                       </div>
                     </form>
@@ -404,7 +408,7 @@ export default function JobApplicants({ params }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {approvedApplications.map((applicant, index) => (
+                        {approvedApplications?.map((applicant, index) => (
                           <tr
                             key={index}
                             className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -469,27 +473,6 @@ export default function JobApplicants({ params }) {
                 </div>
               </Tabs.Item>
             </Tabs>
-          </section>
-          <section
-            className="py-5 bg-image overlay-primary fixed overlay"
-            style={{ backgroundImage: 'url("/images/background.jpg")' }}
-          >
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-md-8">
-                  <h2 className="text-white">Looking For A Job?</h2>
-                  <p className="mb-0 text-white lead"> Find your dream job.</p>
-                </div>
-                <div className="col-md-3 ml-auto">
-                  <Link
-                    href="/login"
-                    className="btn btn-warning btn-block btn-lg"
-                  >
-                    Sign Up
-                  </Link>
-                </div>
-              </div>
-            </div>
           </section>
         </div>
       </>

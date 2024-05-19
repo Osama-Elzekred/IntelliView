@@ -77,10 +77,8 @@ function MainComponent({ params }) {
     let average = sum / data.length;
     return average;
   };
-  const [selectedRow, setSelectedRow] = useState(null);
   const [detailsVisible, setDetailsVisible] = useState(false);
   const [sessionData, setSessionData] = useState({}); // Add sessionData state
-  const [modalVisible, setModalVisible] = useState(false); // Add modalVisible state
   const [selectedRowData, setSelectedRowData] = useState(null);
 
   // Function to handle row click and display details screen

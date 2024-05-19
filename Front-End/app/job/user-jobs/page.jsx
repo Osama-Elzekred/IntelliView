@@ -177,6 +177,7 @@ export default function userJobs() {
               <ul className="job-listings m-5 space-y-2 py-2">
                 {jobListings.map((job) => (
                   <CardComp
+                    key={job.jobDto.id}
                     title={job.jobDto.title}
                     company={job.jobDto.companyName}
                     location={job.jobDto.location}

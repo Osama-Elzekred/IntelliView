@@ -23,7 +23,6 @@ export default function Post_job(JobId) {
   const AnswerInputRef = useRef(null);
   const steps = ['Job info', `Custom Q&A`, 'Interview Q&A'];
   const [currentStep, setCurrentStep] = useState(1);
-  const [complete, setComplete] = useState(false);
   const [Questionitems, setItems] = useState([]);
   const [CustQuestions, setQuestions] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -60,6 +59,7 @@ export default function Post_job(JobId) {
     CustQuestions: [],
     categories: [],
   });
+  const [finished, setFinished] = useState(false);
 
   // useEffect(() => {
   //   const fetchJobData = async () => {
@@ -172,7 +172,6 @@ export default function Post_job(JobId) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     // Validation
     let errors = {};
     if (!jobInfo.Email) errors.Email = 'Email is required';
@@ -643,12 +642,10 @@ export default function Post_job(JobId) {
                             key={i}
                             className={`step-item ${
                               currentStep === i + 1 && 'active'
-                            } ${
-                              (i + 1 < currentStep || complete) && 'complete'
-                            } `}
+                            } ${i + 1 < currentStep && 'complete'} `}
                           >
                             <div className="step">
-                              {i + 1 < currentStep || complete ? (
+                              {i + 1 < currentStep ? (
                                 <TiTick size={24} />
                               ) : (
                                 i + 1
@@ -680,7 +677,7 @@ export default function Post_job(JobId) {
                         )}
                       </div>
                       <div className="col-6">
-                        {!complete && (
+                        {currentStep != 3 ? (
                           <button
                             className={`btn btn-block  ${
                               currentStep !== steps.length
@@ -690,14 +687,26 @@ export default function Post_job(JobId) {
                               currentStep > steps.length && 'disabled'
                             }`}
                             onClick={(event) => {
-                              currentStep === steps.length
-                                ? handleSubmit(event)
-                                : setCurrentStep((prev) => prev + 1);
+                              setCurrentStep((prev) => prev + 1);
                               window.scrollTo({ top: 300, behavior: 'smooth' });
                             }}
                           >
                             {currentStep === steps.length ? 'Finish' : 'Next'}
                           </button>
+                        ) : (
+                          <Button
+                            isProcessing={finished}
+                            gradientDuoTone="greenToBlue"
+                            className="font-roboto py-2.5 px-6   flex-1 rounded-lg w-full bg-[#17a9c3] text-white"
+                            size="sm"
+                            onClick={(event) => {
+                              setFinished(true);
+                              handleSubmit(event);
+                            }}
+                            disabled={finished}
+                          >
+                            Finish
+                          </Button>
                         )}
                       </div>
                     </div>

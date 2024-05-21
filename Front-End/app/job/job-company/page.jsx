@@ -267,16 +267,11 @@ export default function Jobs() {
                         {page + 1}
                       </Link>
                     ))}
-                    {currentPage !==
-                      Math.ceil(
-                        (searchResult.length > 0
-                          ? searchResult.length
-                          : jobListings.length) / jobsPerPage
-                      ) && (
-                      <Link href="#" className="next" onClick={nextPage}>
-                        Next
-                      </Link>
-                    )}
+                    {currentPage < totalPages && (
+                  <Link href="" className="next" onClick={nextPage}>
+                    Next
+                  </Link>
+                )}
                   </div>
                 </div>
               </div>

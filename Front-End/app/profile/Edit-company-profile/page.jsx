@@ -4,7 +4,7 @@ import Phone from '../../components/Phone';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { Loading, Breadcrumb, Layout } from '../../components/components';
-
+import { redirect } from 'next/navigation';
 export default function EditProfile() {
   let [message, setMessage] = useState('');
   let [color, setColor] = useState('');
@@ -13,9 +13,7 @@ export default function EditProfile() {
   const authTokenCookie = Cookies.get('authToken');
   const [pagenum, setPagenum] = useState(1);
 
-  // if (!authTokenCookie || role != 'company') {
-  //   redirect('/');
-  // }
+  
   const [formData, setFormData] = useState({
     companyName: '',
     companyType: '',
@@ -42,6 +40,9 @@ export default function EditProfile() {
     return '';
   };
   useEffect(() => {
+    if (!authTokenCookie || role != 'company') {
+      redirect('/');
+    }
     const fetchData = async () => {
       try {
         if (authTokenCookie) {

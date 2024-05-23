@@ -83,9 +83,9 @@ export default function MainComponent({ params }) {
       console.error('Error approving job interview:', error);
     }
   };
-  // if (loading) {
-  //   return <Loading />; // Display loading indicator while data is being fetched
-  // }
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
 
   const changePage = (page) => {
     setCurrentPage(page);

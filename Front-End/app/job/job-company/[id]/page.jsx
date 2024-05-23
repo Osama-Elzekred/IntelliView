@@ -16,7 +16,15 @@ export default function JobApplicants({ params }) {
   const [approvedApplications, setApprovedApplications] = useState([]);
   const [fristTime, setFristTime] = useState(true);
   const [numberOfApplications, setNumberOfApplications] = useState('');
+  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [approvedTotalPages, setApprovedTotalPages] = useState(0);
+  const [approvedCurrentPage, setApprovedCurrentPage] = useState(1);
+  const [applicationsDisplayed, setApplicationsDisplayed] = useState([]);
+  const [approvedApplicationsDisplayed, setApprovedApplicationsDisplayed] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState(0);
+  const applicationsPerPage = 5;
   const fetchData = async () => {
     try {
       const response = await fetch(
@@ -182,11 +190,67 @@ export default function JobApplicants({ params }) {
       console.error('Job ID is not available');
     }
   };
-
+  useEffect(() => {
+    const updateDisplayedApplications = () => {
+      if (activeTab === 1) {
+        const startIndex = (approvedCurrentPage - 1) * applicationsPerPage;
+        const endIndex = Math.min(startIndex + applicationsPerPage, approvedApplications.length);
+        setApplicationsDisplayed(approvedApplications.slice(startIndex, endIndex));
+        setApprovedTotalPages(Math.ceil(approvedApplications.length / applicationsPerPage));
+      } else {
+        const startIndex = (currentPage - 1) * applicationsPerPage;
+        const endIndex = Math.min(startIndex + applicationsPerPage, allApplications.length);
+        setApplicationsDisplayed(allApplications.slice(startIndex, endIndex));
+        setTotalPages(Math.ceil(allApplications.length / applicationsPerPage));
+      }
+    };
+  
+    updateDisplayedApplications();
+  }, [currentPage, approvedCurrentPage, allApplications, approvedApplications, activeTab]);
+  
+  const changePage = (page) => {
+    if (activeTab === 1) {
+      setApprovedCurrentPage(page);
+    } else {
+      setCurrentPage(page);
+    }
+    setTimeout(() => {
+      document.getElementById('scroll').scrollIntoView({ behavior: 'smooth' });
+    }, 200);
+  };
+  
+  const prevPage = () => {
+    if (activeTab === 1) {
+      if (approvedCurrentPage > 1) {
+        setApprovedCurrentPage(approvedCurrentPage - 1);
+      }
+    } else {
+      if (currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
+    }
+    setTimeout(() => {
+      document.getElementById('scroll').scrollIntoView({ behavior: 'smooth' });
+    }, 200);
+  };
+  
+  const nextPage = () => {
+    if (activeTab === 1) {
+      if (approvedCurrentPage < approvedTotalPages) {
+        setApprovedCurrentPage(approvedCurrentPage + 1);
+      }
+    } else {
+      if (currentPage < totalPages) {
+        setCurrentPage(currentPage + 1);
+      }
+    }
+    setTimeout(() => {
+      document.getElementById('scroll').scrollIntoView({ behavior: 'smooth' });
+    }, 200);
+  };
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
   }
-
   return (
     <Layout>
       <>
@@ -219,7 +283,7 @@ export default function JobApplicants({ params }) {
             ]}
           />
           <section className="" id="next">
-            <div className="container">
+            <div className="container" id='scroll'>
               <div className="row align-items-center justify-content-center">
                 <div className="col-md-12">
                   <div className="mb-2 text-center">
@@ -266,7 +330,7 @@ export default function JobApplicants({ params }) {
                           type="button"
                           className="">
                           <Link
-                            href={`/Interview/mockApplicants/${data[0].jobId}`}
+                            href={`/Interview/mockApplicants/`}
                             target="_blank"
                           >
                             Open Interview Emails
@@ -283,11 +347,13 @@ export default function JobApplicants({ params }) {
               aria-label="Tabs with icons"
               className="p-0 m-0"
               style="underline"
+              onActiveTabChange={(tab) => setActiveTab(tab)}
             >
               <Tabs.Item
                 className="p-0 m-0"
                 title="All applicants"
                 icon={HiUserCircle}
+              
               >
                 <div className="p-0 m-0">
                   <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -312,7 +378,7 @@ export default function JobApplicants({ params }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {allApplications.map((applicant, index) => (
+                        {applicationsDisplayed.map((applicant, index) => (
                           <tr
                             key={index}
                             className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -382,8 +448,35 @@ export default function JobApplicants({ params }) {
                     </div>
                   </div>
                 </div>
+                {activeTab===0 && (<div className="relative p-2">
+            <div className="pagination-wrap absolute bottom-1 right-20">
+              <div className="custom-pagination">
+                    {currentPage !== 1 && (
+                      <Link href="#" className="prev" onClick={prevPage}>
+                        Prev
+                      </Link>
+                    )}
+                    {[...Array(totalPages).keys()].map((page) => (
+                      <Link
+                        key={page + 1}
+                        href="#"
+                        className={page + 1 === currentPage ? 'active' : ''}
+                        onClick={() => changePage(page + 1)}
+                      >
+                        {page + 1}
+                      </Link>
+                    ))}
+                    {currentPage < totalPages && (
+                  <Link href="" className="next" onClick={nextPage}>
+                    Next
+                  </Link>
+                )}
+                  </div>
+                </div>
+                </div>)}
+                
               </Tabs.Item>
-              <Tabs.Item title="Approved applicants" icon={MdDashboard}>
+              <Tabs.Item title="Approved applicants" icon={MdDashboard} >
                 <div className="">
                   <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -410,7 +503,7 @@ export default function JobApplicants({ params }) {
                         </tr>
                       </thead>
                       <tbody>
-                        {approvedApplications?.map((applicant, index) => (
+                        {applicationsDisplayed.map((applicant, index) => (
                           <tr
                             key={index}
                             className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -473,8 +566,37 @@ export default function JobApplicants({ params }) {
                     </div>
                   </div>
                 </div>
+                {activeTab ===1 &&(<div className="relative p-2">
+            <div className="pagination-wrap absolute bottom-2 right-20">
+              <div className="custom-pagination">
+                    {approvedCurrentPage !== 1 && (
+                      <Link href="#" className="prev" onClick={prevPage}>
+                        Prev
+                      </Link>
+                    )}
+                    {[...Array(approvedTotalPages).keys()].map((page) => (
+                      <Link
+                        key={page + 1}
+                        href="#"
+                        className={page + 1 === approvedCurrentPage ? 'active' : ''}
+                        onClick={() => changePage(page + 1)}
+                      >
+                        {page + 1}
+                      </Link>
+                    ))}
+                    {approvedCurrentPage < approvedTotalPages && (
+                  <Link href="" className="next" onClick={nextPage}>
+                    Next
+                  </Link>
+                )}
+                  </div>
+                </div>
+                </div>)}
+                
               </Tabs.Item>
             </Tabs>
+                  {/* {approvedTab  && !applicationsTab ? () : () } */}
+            
           </section>
         </div>
       </>

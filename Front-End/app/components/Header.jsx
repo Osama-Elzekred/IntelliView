@@ -43,7 +43,7 @@ export default function Header() {
     Cookies.remove('userName');
     localStorage.removeItem('profilePhotoUrl');
     localStorage.removeItem('cvName');
-
+    localStorage.removeItem('roleFromServer');
     window.location.href = '/login';
   };
 

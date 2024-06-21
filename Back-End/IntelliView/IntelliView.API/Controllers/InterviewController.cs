@@ -44,7 +44,13 @@ namespace IntelliView.API.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
             {
-                return Unauthorized("The user dosnt exist");
+                return Unauthorized("The user does not exist");
+            }
+            var user = User.FindFirstValue(userId);
+            //check if user is approved to this job
+            if (user == null)
+            {
+
             }
             var mock = await _unitOfWork.InterviewMocks.GetFirstOrDefaultAsync(m => m.Id == id, properties: m => m.InterviewQuestions);
             if (mock is null)

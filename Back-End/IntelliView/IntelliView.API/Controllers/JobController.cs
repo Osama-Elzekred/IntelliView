@@ -322,7 +322,7 @@ namespace IntelliView.API.Controllers
 
             // Map jobDto to Mock
             _mapper.Map(jobDto, job);
-
+            job.UpdatedAt = DateTime.Now;
             // Update the Mock
             await _unitOfWork.Jobs.Update(job);
             await _unitOfWork.SaveAsync();
@@ -343,9 +343,26 @@ namespace IntelliView.API.Controllers
                 return NotFound();
             }
 
-            await _unitOfWork.Jobs.RemoveAsync(job);
+            //await _unitOfWork.Jobs.RemoveAsync(job);
+            job.IsDeleted = true;
+            job.IsActive = false;
             await _unitOfWork.SaveAsync();
-
+            return NoContent();
+        }
+        // end job using endedAt
+        [HttpPut("{id}/end")]
+        [Authorize(Roles = SD.ROLE_COMPANY)]
+        public async Task<IActionResult> EndJob(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.Id == id && j.CompanyUserId == userId);
+            if (job == null)
+            {
+                return NotFound();
+            }
+            job.EndedAt = DateTime.Now;
+            await _unitOfWork.Jobs.Update(job);
+            await _unitOfWork.SaveAsync();
             return NoContent();
         }
         #region NotTested

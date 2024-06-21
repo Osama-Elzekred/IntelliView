@@ -73,7 +73,8 @@ export default function Jobs() {
         });
         if (response.ok) {
           const jobs = await response.json();
-          setJobListings(jobs);
+          const filteredJobs = jobs.filter(job => job.isActive);
+          setJobListings(filteredJobs);
         }
         setLoading(false);
       } catch (error) {
@@ -137,9 +138,9 @@ export default function Jobs() {
     }
   };
 
-  if (loading) {
-    return <Loading />; // Display loading indicator while data is being fetched
-  }
+  // if (loading) {
+  //   return <Loading />; // Display loading indicator while data is being fetched
+  // }
 
   return (
     <Layout>
@@ -228,6 +229,7 @@ export default function Jobs() {
                     location={job.location}
                     timePosted={new Date(job.createdAt).toDateString()}
                     employmentType={job.jobType}
+                    EndDate={job.endedAt}
                     categories={job.jobInterestedTopic} // There's no equivalent in the jobData
                     jobTime={job.jobTime}
                     companyImageUrl={job.imageURl}

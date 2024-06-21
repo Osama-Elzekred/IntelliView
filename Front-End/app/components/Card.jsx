@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { Badge } from 'flowbite-react';
+
 function CardComp({
   title,
   jobTime,
@@ -8,10 +9,14 @@ function CardComp({
   location,
   timePosted,
   employmentType,
+  EndDate,
   categories,
   companyImageUrl,
   onClick,
+  onDelete,
+  onEnd,
   status,
+  IsCompany,
 }) {
   return (
     <div
@@ -30,7 +35,6 @@ function CardComp({
           </p>
           <p className="font-roboto text-[#6B7280] text-sm">{timePosted}</p>
         </div>
-        {/* <div className="w-[50px] h-[50px]"> */}
         <img
           className="size-20 object-cover rounded-full border  d-inline-block mr-3 flex justify-center align-items-center"
           src={companyImageUrl}
@@ -38,7 +42,6 @@ function CardComp({
           width="50"
           height="50"
         />
-        {/* </div> */}
       </div>
       <div className="font-roboto text-[#121212] space-x-2 flex">
         <span className="bg-[#E5E7EB] rounded px-2 py-1 text-sm">
@@ -47,6 +50,10 @@ function CardComp({
         <span className="bg-[#E5E7EB] rounded px-2 py-1 text-sm">
           {jobTime}
         </span>
+        {EndDate && new Date(EndDate) <= Date.now() && (
+        <span className="bg-red-500 rounded px-2 py-1 text-white">
+          Closed
+        </span>)}
         <div className="flex flex-wrap gap-2">
           <Badge
             color={
@@ -57,7 +64,7 @@ function CardComp({
                 : status === 'Pending'
                 ? 'warning'
                 : status === 'InterviewStage'
-                  ?'warning'
+                ? 'warning'
                 : null
             }
             size="sm"
@@ -67,19 +74,34 @@ function CardComp({
         </div>
       </div>
       <div className="flex flex-wrap gap-1">
-        {' '}
-        <div className="flex flex-wrap gap-1">
-          {' '}
-          <div className="flex flex-wrap gap-1">
-            {categories.map((category, index) => (
-              <span key={index} className=" py-1 text-sm ">
-                {category.trim()}
-                {index < categories.length - 1 ? ',' : ''}
-              </span>
-            ))}
-          </div>
-        </div>
+        {categories.map((category, index) => (
+          <span key={index} className="py-1 text-sm">
+            {category.trim()}
+            {index < categories.length - 1 ? ',' : ''}
+          </span>
+        ))}
       </div>
+      {IsCompany && (
+      <div className="flex space-x-2 mt-2">
+        <button
+          className="bg-red-500 text-white px-2 py-1 rounded"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+        >
+          Delete Job
+        </button>
+        <button
+          className="bg-blue-500 text-white px-2 py-1 rounded"
+          onClick={(e) => {
+            e.stopPropagation();
+            onEnd();
+          }}
+        >
+          End Job
+        </button>
+      </div>)}
     </div>
   );
 }
@@ -104,6 +126,8 @@ function StoryComponent() {
     ],
     companyImageUrl: './images/company-logo.png',
     onClick: () => (window.location.href = '/job-details'),
+    onDelete: () => console.log('Delete job clicked'),
+    onEnd: () => console.log('End job clicked'),
   };
 
   return (

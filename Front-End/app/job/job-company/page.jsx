@@ -7,6 +7,7 @@ import { Card, Loading, Breadcrumb } from '../../components/components';
 
 export default function Jobs() {
   // const imageURl = 'images/job_logo_1.jpg';
+  const DOMAIN_NAME = '//localhost:7049/api';
   const [jobListings, setJobListings] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -14,6 +15,7 @@ export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const jobsPerPage = 5;
   const [test, setTest] = useState(false);
+  const authToken = Cookies.get('authToken');
   const [searchForm, setSearchForm] = useState({
     title: '',
     jobType: '',
@@ -56,28 +58,28 @@ export default function Jobs() {
       .scrollIntoView({ behavior: 'smooth' });
   };
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      const authToken = Cookies.get('authToken');
-      try {
-        const response = await fetch(
-          'https://localhost:7049/api/Job/CompanyJobs',
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-        if (response.ok) {
-          const jobs = await response.json();
-          setJobListings(jobs);
+  const fetchJobs = async () => {
+    try {
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/Job/CompanyJobs`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
         }
-        setLoading(false);
-      } catch (error) {
-        console.log('error : ', error);
+      );
+      if (response.ok) {
+        const jobs = await response.json();
+        const filteredJobs = jobs.filter(job => !job.isDeleted);
+        setJobListings(filteredJobs);
       }
-    };
+      setLoading(false);
+    } catch (error) {
+      console.log('error : ', error);
+    }
+  };
+  useEffect(() => {
     fetchJobs();
   }, [currentPage, searchResult]);
 
@@ -134,7 +136,61 @@ export default function Jobs() {
       }, 200);
     }
   };
-
+  const handleDeleteJob = async (jobId) => {
+  
+    try {
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/Job/${jobId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error('Failed to delete job');
+      }
+  
+      fetchJobs(); // Call this function to refresh your job list or perform other updates
+  
+      setLoading(false); // Set loading state if you have one
+      // Handle success response (e.g., show a notification or update the UI)
+    } catch (error) {
+      console.error('Error deleting job:', error);
+    }
+  };
+  
+  const handleEndJob = async (jobId) => {
+  
+    try {
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/Job/${jobId}/end`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      if (!response.ok) {
+        throw new Error('Failed to end job');
+      }
+  
+      fetchJobs(); // Call this function to refresh your job list or perform other updates
+  
+      setLoading(false); // Set loading state if you have one
+      // Handle success response (e.g., show a notification or update the UI)
+    } catch (error) {
+      console.error('Error ending job:', error);
+    }
+  };
+  
+  
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
   }
@@ -231,10 +287,14 @@ export default function Jobs() {
                       employmentType={job.jobType}
                       categories={['marketing', 'finance']} // There's no equivalent in the jobData
                       jobTime={job.jobTime}
+                      EndDate={job.endedAt}
                       companyImageUrl={job.imageURl}
                       onClick={() =>
                         (window.location.href = `/job/job-company/${job.id}`)
                       }
+                      onDelete={() => handleDeleteJob(job.id)}
+                      onEnd={() => handleEndJob(job.id)}
+                      IsCompany={true}
                     />
                   ))}
                 </ul>

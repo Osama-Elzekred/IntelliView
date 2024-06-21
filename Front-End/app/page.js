@@ -9,7 +9,6 @@ import IndexPage from './Home/page';
 // import Layout from './components/Layout';
 // import Phone from './components/Phone';
 // import Job_details from './job/[id]/page.jsx';
-
 export default function Home() {
   return <IndexPage />;
 }

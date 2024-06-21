@@ -14,6 +14,7 @@ import Breadcrumb from './breadcrumb';
 import Filterbar from './Filterbar';
 import Loading from './loading';
 import VideoReview from './VideoReview';
+import Modal from './Modal';
 export {
   Card,
   StartInterview,
@@ -29,4 +30,5 @@ export {
   Filterbar,
   Loading,
   VideoReview,
+  Modal,
 };

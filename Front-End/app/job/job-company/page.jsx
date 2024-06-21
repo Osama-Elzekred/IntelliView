@@ -3,10 +3,18 @@ import Layout from '../../components/Layout';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { Card, Loading, Breadcrumb } from '../../components/components';
+import {
+  Card,
+  Loading,
+  Breadcrumb,
+  Modal,
+  Toastitem,
+} from '../../components/components';
+import { useToast } from '../../components/Toast/ToastContext';
 
 export default function Jobs() {
   // const imageURl = 'images/job_logo_1.jpg';
+  const { open } = useToast();
   const DOMAIN_NAME = '//localhost:7049/api';
   const [jobListings, setJobListings] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
@@ -16,11 +24,16 @@ export default function Jobs() {
   const jobsPerPage = 5;
   const [test, setTest] = useState(false);
   const authToken = Cookies.get('authToken');
+  const [Refresh, setRefresh] = useState(false);
   const [searchForm, setSearchForm] = useState({
     title: '',
     jobType: '',
     jobTime: '',
   });
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [jobIdSelected, setJobIdSelected] = useState(null);
+  const [modalAction, setModalAction] = useState(null); // 'delete' or 'end'
+  const [modalMessage, setModalMessage] = useState(null);
   const handleChange = async (field, value) => {
     setSearchForm({ ...searchForm, [field]: value });
   };
@@ -60,18 +73,15 @@ export default function Jobs() {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch(
-        `https://${DOMAIN_NAME}/Job/CompanyJobs`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-          },
-        }
-      );
+      const response = await fetch(`https://${DOMAIN_NAME}/Job/CompanyJobs`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
       if (response.ok) {
         const jobs = await response.json();
-        const filteredJobs = jobs.filter(job => !job.isDeleted);
+        const filteredJobs = jobs.filter((job) => !job.isDeleted).reverse();
         setJobListings(filteredJobs);
       }
       setLoading(false);
@@ -81,8 +91,23 @@ export default function Jobs() {
   };
   useEffect(() => {
     fetchJobs();
-  }, [currentPage, searchResult]);
+  }, [currentPage, searchResult, Refresh]);
 
+  // const toast = useToast();
+  const handleModalConfirm = () => {
+    if (jobIdSelected !== null) {
+      if (modalAction === 'delete') {
+        handleDeleteJob(jobIdSelected);
+      } else if (modalAction === 'end') {
+        handleEndJob(jobIdSelected);
+      }
+      open(' Job has been Altered successfully');
+
+      setIsModalVisible(false);
+      setJobIdSelected(null);
+      setModalAction(null); // Reset the action type
+    }
+  };
   // setTime out to make delay until the data come from server to store it in jobs . #hossam
   setTimeout(() => {
     if (
@@ -137,60 +162,52 @@ export default function Jobs() {
     }
   };
   const handleDeleteJob = async (jobId) => {
-  
     try {
-      const response = await fetch(
-        `https://${DOMAIN_NAME}/Job/${jobId}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-  
+      const response = await fetch(`https://${DOMAIN_NAME}/Job/${jobId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
       if (!response.ok) {
         throw new Error('Failed to delete job');
       }
-  
-      fetchJobs(); // Call this function to refresh your job list or perform other updates
-  
-      setLoading(false); // Set loading state if you have one
+
+      // fetchJobs(); // Call this function to refresh your job list or perform other updates
+      setRefresh(true);
+      // setLoading(false); // Set loading state if you have one
       // Handle success response (e.g., show a notification or update the UI)
     } catch (error) {
       console.error('Error deleting job:', error);
     }
   };
-  
+
   const handleEndJob = async (jobId) => {
-  
     try {
-      const response = await fetch(
-        `https://${DOMAIN_NAME}/Job/${jobId}/end`,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-  
+      const response = await fetch(`https://${DOMAIN_NAME}/Job/${jobId}/end`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log('response', response);
       if (!response.ok) {
         throw new Error('Failed to end job');
       }
-  
-      fetchJobs(); // Call this function to refresh your job list or perform other updates
-  
-      setLoading(false); // Set loading state if you have one
+
+      // fetchJobs(); // Call this function to refresh your job list or perform other updates
+      setRefresh(true);
+
+      // setLoading(false); // Set loading state if you have one
       // Handle success response (e.g., show a notification or update the UI)
     } catch (error) {
       console.error('Error ending job:', error);
     }
   };
-  
-  
+
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
   }
@@ -198,6 +215,13 @@ export default function Jobs() {
   return (
     <Layout>
       <>
+        <Modal
+          show={isModalVisible} // Pass show prop correctly
+          onClose={() => setIsModalVisible(false)} // Corrected to use setIsModalVisible
+          handleYes={handleModalConfirm}
+          Message={modalMessage} // You might need to adjust your Modal component to use this prop
+        />
+
         <div className="site-wrap">
           <div className="site-mobile-menu site-navbar-target">
             <div className="site-mobile-menu-header">
@@ -285,15 +309,29 @@ export default function Jobs() {
                       location={job.location}
                       timePosted={new Date(job.createdAt).toDateString()}
                       employmentType={job.jobType}
-                      categories={['marketing', 'finance']} // There's no equivalent in the jobData
+                      categories={[]} // There's no equivalent in the jobData
                       jobTime={job.jobTime}
                       EndDate={job.endedAt}
                       companyImageUrl={job.imageURl}
                       onClick={() =>
                         (window.location.href = `/job/job-company/${job.id}`)
                       }
-                      onDelete={() => handleDeleteJob(job.id)}
-                      onEnd={() => handleEndJob(job.id)}
+                      onDelete={() => {
+                        setJobIdSelected(job.id);
+                        setModalAction('delete');
+                        setModalMessage(
+                          'Are you sure you want to delete this job?'
+                        );
+                        setIsModalVisible(true);
+                      }}
+                      onEnd={() => {
+                        setJobIdSelected(job.id);
+                        setModalAction('end');
+                        setModalMessage(
+                          'Are you sure you want to end this job?'
+                        );
+                        setIsModalVisible(true);
+                      }}
                       IsCompany={true}
                     />
                   ))}
@@ -328,10 +366,10 @@ export default function Jobs() {
                       </Link>
                     ))}
                     {currentPage < totalPages && (
-                  <Link href="" className="next" onClick={nextPage}>
-                    Next
-                  </Link>
-                )}
+                      <Link href="" className="next" onClick={nextPage}>
+                        Next
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>

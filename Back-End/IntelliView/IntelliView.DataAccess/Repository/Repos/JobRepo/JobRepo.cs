@@ -61,7 +61,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
 
         public async Task<IEnumerable<Job>> GetAllAsyncWithTopics()
         {
-            return await _db.Jobs.Include(j => j.JobInterestedTopic).ThenInclude(jt => jt.InterestedTopic).AsNoTracking().ToListAsync();
+            return await _db.Jobs.Where(j => j.IsActive).Include(j => j.JobInterestedTopic).ThenInclude(jt => jt.InterestedTopic).AsNoTracking().ToListAsync();
         }
     }
 }

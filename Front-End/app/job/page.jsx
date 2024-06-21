@@ -73,7 +73,7 @@ export default function Jobs() {
         });
         if (response.ok) {
           const jobs = await response.json();
-          const filteredJobs = jobs.filter(job => job.isActive);
+          const filteredJobs = jobs.filter((job) => job.isActive).reverse();
           setJobListings(filteredJobs);
         }
         setLoading(false);
@@ -138,9 +138,9 @@ export default function Jobs() {
     }
   };
 
-  // if (loading) {
-  //   return <Loading />; // Display loading indicator while data is being fetched
-  // }
+  if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
 
   return (
     <Layout>

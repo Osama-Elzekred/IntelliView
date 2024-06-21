@@ -8,35 +8,13 @@ import Loading from '../../components/loading';
 import { Breadcrumb } from '../../components/components';
 const DOMAIN_NAME = 'localhost:7049';
 
-// const jobData =
-//   {
-//     id: 1,
-//     title: "Front End",
-//     jobType: "remote",
-//     jobTime: "full time",
-//     location: "Cairo",
-//     description: "ay klam ",
-//     requirements: "bla bla ",
-//     responsibilities: null,
-//     companyName: "Inteliview",
-//     notes: "",
-//     salary: "7000$",
-//     imageURl: "images/job_logo_1.jpg",
-//     isActive: true,
-//     isDeleted: false,
-//     companyUserId: "9e4fcedb-58bf-4592-b21f-5fcc54a51de5",
-//     companyUser: null,
-//     jobQuestions: null,
-//     jobInterestedTopics: null,
-//     createdAt: "2024-03-02T14:43:33.796Z",
-//     updatedAt: "2024-03-02T14:43:33.796Z",
-//     endedAt: "2024-03-02T14:43:33.796Z",
-//   }
-// ;
-
 export default function Job_details({ params }) {
   // console.log(parseInt(params.id));
   const authToken = Cookies.get('authToken');
+  const roleFromServer = localStorage.getItem('roleFromServer');
+// If roleFromServer was stored as a stringified object, parse it back to an object
+// const roleFromServer = JSON.parse(localStorage.getItem('roleFromServer'));
+  console.log(roleFromServer);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -61,7 +39,6 @@ export default function Job_details({ params }) {
         console.error('Error fetching data:', error);
       }
     };
-
     fetchData();
     console.log(data);
   }, []);
@@ -166,13 +143,16 @@ export default function Job_details({ params }) {
                     </div>
 
                     <div className="col-6">
-                      <Link
-                        href={`/job/${params.id}/apply`}
-                        className="btn btn-block btn-primary btn-md"
-                        target="_blank"
-                      >
+                      {roleFromServer== 'user' && new Date(data.endedAt) > Date.now() ? (
+                        <Link href={`/job/${params.id}/apply`} className="btn btn-block btn-primary btn-md" target="_blank">
+                            Apply Now
+                          
+                        </Link>
+                      ) : (
+                        <button className="btn btn-block btn-primary btn-md" disabled>
                         Apply Now
-                      </Link>
+                      </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -223,13 +203,15 @@ export default function Job_details({ params }) {
                       </Link>
                     </div>
                     <div className="col-6">
-                      <Link
-                        href={`/job/${params.id}/apply`}
-                        className="btn btn-block btn-primary btn-md"
-                        target="_blank"
-                      >
+                      {roleFromServer== 'user' && new Date(data.endedAt) > Date.now() ? (
+                        <Link href={`/job/${params.id}/apply`} className="btn btn-block btn-primary btn-md" target="_blank">
+                            Apply Now
+                        </Link>
+                      ) : (
+                        <button className="btn btn-block btn-primary btn-md" disabled>
                         Apply Now
-                      </Link>
+                      </button>
+                      )}
                     </div>
                   </div>
                 </div>

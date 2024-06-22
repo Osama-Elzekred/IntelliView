@@ -1,41 +1,30 @@
-
 'use client';
 
 import { Button, Modal } from 'flowbite-react';
-import { useState } from 'react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
-function Component({ handleDelete }) {
-  const [openModal, setOpenModal] = useState(false);
-  const [itemIdToDelete, setItemIdToDelete] = useState(null);
-
-  const toggleModal = (itemId) => {
-    setItemIdToDelete(itemId);
-    setOpenModal(!openModal);
-  };
-
-  const handleConfirmDelete = () => {
-    if (itemIdToDelete !== null) {
-      handleDelete(itemIdToDelete);
-      setOpenModal(false);
-    }
-  };
-
+function Component({ show, onClose, handleYes, Message }) {
   return (
     <>
-      <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
+      <Modal
+        show={show} // Use show prop to control visibility
+        size="md"
+        onClose={onClose} // Use onClose prop for closing the modal
+        popup
+      >
         <Modal.Header />
         <Modal.Body>
           <div className="text-center">
             <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this product?
+              {Message}
             </h3>
+
             <div className="flex justify-center gap-4">
-              <Button color="failure" onClick={handleConfirmDelete}>
+              <Button color="failure" onClick={handleYes}>
                 {"Yes, I'm sure"}
               </Button>
-              <Button color="gray" onClick={() => setOpenModal(false)}>
+              <Button color="gray" onClick={onClose}>
                 No, cancel
               </Button>
             </div>
@@ -47,4 +36,3 @@ function Component({ handleDelete }) {
 }
 
 export default Component;
-

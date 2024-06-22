@@ -95,7 +95,7 @@ namespace InteliView.DataAccess.Data
                  .HasOne(mva => mva.UserMockSession)
                  .WithMany(a => a.Answers)
                  .HasForeignKey(mva => mva.UserMockSessionId)
-                    .OnDelete(DeleteBehavior.NoAction);
+                 .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<InterestedTopic>()

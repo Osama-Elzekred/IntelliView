@@ -21,7 +21,6 @@ export default function JobApplicants({ params }) {
   const [approvedTotalPages, setApprovedTotalPages] = useState(0);
   const [approvedCurrentPage, setApprovedCurrentPage] = useState(1);
   const [applicationsDisplayed, setApplicationsDisplayed] = useState([]);
-  const [approvedApplicationsDisplayed, setApprovedApplicationsDisplayed] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
   const applicationsPerPage = 5;
@@ -595,7 +594,7 @@ export default function JobApplicants({ params }) {
                 
               </Tabs.Item>
             </Tabs>
-                  {/* {approvedTab  && !applicationsTab ? () : () } */}
+                
             
           </section>
         </div>

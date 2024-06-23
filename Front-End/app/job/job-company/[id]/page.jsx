@@ -7,7 +7,7 @@ import { Button, Tabs } from 'flowbite-react';
 import { HiUserCircle } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
 import Cookies from 'js-cookie';
-import { useToast } from '../../components/Toast/ToastContext';
+import { useToast } from '../../../components/Toast/ToastContext';
 
 export default function JobApplicants({ params }) {
   const DOMAIN_NAME = '//localhost:7049/api';

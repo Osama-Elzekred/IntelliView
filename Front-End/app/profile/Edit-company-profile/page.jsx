@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { Loading, Breadcrumb, Layout } from '../../components/components';
 import { redirect } from 'next/navigation';
+import { useToast } from '../../components/Toast/ToastContext';
 export default function EditProfile() {
   let [message, setMessage] = useState('');
   let [color, setColor] = useState('');
@@ -12,7 +13,7 @@ export default function EditProfile() {
   const role = Cookies.get('role');
   const authTokenCookie = Cookies.get('authToken');
   const [pagenum, setPagenum] = useState(1);
-
+  const { open } = useToast();
   
   const [formData, setFormData] = useState({
     companyName: '',
@@ -69,9 +70,11 @@ export default function EditProfile() {
           } else {
             console.error('Failed to fetch user data');
           }
+          open(' Company Data Saved Successfully', true);
         }
         setLoading(false);
       } catch (error) {
+        open(' Error while saving Company Data ', false);
         console.error('Error fetching user data:', error);
       }
     };
@@ -101,12 +104,15 @@ export default function EditProfile() {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
+        open(' Profile updated successfully', true);
         console.log('Profile updated successfully');
       } else {
+        open(' Failed to update profile', false);
         console.error('Failed to update profile');
       }
       setLoading(false);
     } catch (error) {
+      open(' Failed to update profile', false);
       console.error('Error updating profile:', error);
     }
   };
@@ -148,13 +154,16 @@ export default function EditProfile() {
         if (response.ok) {
           setColor('green');
           setMessage('Password Changed Successfully');
+          open(' Password updated successfully', true);
         } else {
           setColor('red');
           setMessage('Password Not Change');
+          open(' Failed to update Password', false);
         }
       } catch (error) {
         setColor('red');
         setMessage(error);
+        open(' Failed to update Password', false);
         console.error('error', error);
       }
     }
@@ -183,13 +192,16 @@ export default function EditProfile() {
         const data = await response.json();
 
         setPhotoUrl(`${data.imageURl}`);
-        console.log('Photo uploaded successfully');
+        open(' Photo uploaded successfully ', true);
+       // console.log('Photo uploaded successfully');
       } else {
-        console.error('Failed to upload photo');
+        open(' Failed to upload photo ', false);
+        //console.error('Failed to upload photo');
       }
       setLoading(false);
     } catch (error) {
-      console.error('Error uploading photo:', error);
+      open(' Failed to upload photo ', false);
+      //console.error('Error uploading photo:', error);
     }
   };
   const profilePhotoUrl = imageURL;

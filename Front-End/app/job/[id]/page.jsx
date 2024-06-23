@@ -148,7 +148,7 @@ export default function JobDetails({ params }) {
                       <span className="fa-solid fa-pen-to-square mr-2" />
                       Edit job
                     </Link>
-                    {roleFromServer.toLowerCase() === 'user' &&
+                    {roleFromServer && roleFromServer.toLowerCase() === 'user' &&
                     new Date(data.endedAt) > Date.now() ? (
                       <Link
                         href={`/job/${params.id}/apply`}
@@ -212,7 +212,7 @@ export default function JobDetails({ params }) {
                       </Link>
                     </div>
                     <div className="col-6">
-                      {roleFromServer.toLowerCase() === 'user' &&
+                      {roleFromServer && roleFromServer.toLowerCase() === 'user' &&
                       new Date(data.endedAt) > Date.now() ? (
                         <Link
                           href={`/job/${params.id}/apply`}

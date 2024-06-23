@@ -10,16 +10,19 @@ import { Badge } from 'flowbite-react';
 import { Breadcrumb } from '../../components/components';
 const DOMAIN_NAME = 'localhost:7049';
 
-export default function Job_details({ params }) {
-  // console.log(parseInt(params.id));
-  const authToken = Cookies.get('authToken');
-  const roleFromServer = localStorage.getItem('roleFromServer');
-  // If roleFromServer was stored as a stringified object, parse it back to an object
-  // const roleFromServer = JSON.parse(localStorage.getItem('roleFromServer'));
-  console.log(roleFromServer);
+export default function JobDetails({ params }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [roleFromServer, setRoleFromServer] = useState(null);
+  const authToken = Cookies.get('authToken');
+
   useEffect(() => {
+    // Access localStorage only on the client side
+    if (typeof window !== 'undefined') {
+      const role = localStorage.getItem('roleFromServer');
+      setRoleFromServer(role);
+    }
+
     const fetchData = async () => {
       try {
         const response = await fetch(
@@ -39,12 +42,12 @@ export default function Job_details({ params }) {
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setLoading(false);
       }
     };
-    fetchData();
-    console.log(data);
-  }, []);
 
+    fetchData();
+  }, [authToken, params.id]);
   // if (!data) {
   //   return <Loading />;
   // }
@@ -145,7 +148,7 @@ export default function Job_details({ params }) {
                       <span className="fa-solid fa-pen-to-square mr-2" />
                       Edit job
                     </Link>
-                    {roleFromServer == 'user' &&
+                    {roleFromServer.toLowerCase() === 'user' &&
                     new Date(data.endedAt) > Date.now() ? (
                       <Link
                         href={`/job/${params.id}/apply`}
@@ -209,7 +212,7 @@ export default function Job_details({ params }) {
                       </Link>
                     </div>
                     <div className="col-6">
-                      {roleFromServer == 'user' &&
+                      {roleFromServer.toLowerCase() === 'user' &&
                       new Date(data.endedAt) > Date.now() ? (
                         <Link
                           href={`/job/${params.id}/apply`}

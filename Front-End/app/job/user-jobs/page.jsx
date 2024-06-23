@@ -7,10 +7,15 @@ import CardComp from '../../components/Card';
 import Loading from '../../components/loading';
 import { Breadcrumb } from '../../components/components';
 import {Badge} from 'flowbite-react';
+import config from '../../../config';
+import config from '../../../config';
+
+const { DOMAIN_NAME } = config;
 export default function userJobs() {
-  const DOMAIN_NAME = 'localhost:7049';
+  // const DOMAIN_NAME = 'localhost:7049';
   const [jobListings, setJobListings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { DOMAIN_NAME } = config;
   useEffect(() => {
     const fetchJobs = async () => {
       const authToken = Cookies.get('authToken');

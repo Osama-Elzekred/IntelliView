@@ -11,11 +11,14 @@ import {
   Toastitem,
 } from '../../components/components';
 import { useToast } from '../../components/Toast/ToastContext';
+import config from '../../../config';
+
 
 export default function Jobs() {
   // const imageURl = 'images/job_logo_1.jpg';
   const { open } = useToast();
-  const DOMAIN_NAME = '//localhost:7049/api';
+  // const DOMAIN_NAME = '//localhost:7049/api';
+  const { DOMAIN_NAME } = config;
   const [jobListings, setJobListings] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -73,7 +76,7 @@ export default function Jobs() {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch(`https://${DOMAIN_NAME}/Job/CompanyJobs`, {
+      const response = await fetch(`https://${DOMAIN_NAME}/api/Job/CompanyJobs`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -163,7 +166,7 @@ export default function Jobs() {
   };
   const handleDeleteJob = async (jobId) => {
     try {
-      const response = await fetch(`https://${DOMAIN_NAME}/Job/${jobId}`, {
+      const response = await fetch(`https://${DOMAIN_NAME}/api/Job/${jobId}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -186,7 +189,7 @@ export default function Jobs() {
 
   const handleEndJob = async (jobId) => {
     try {
-      const response = await fetch(`https://${DOMAIN_NAME}/Job/${jobId}/end`, {
+      const response = await fetch(`https://${DOMAIN_NAME}/api/Job/${jobId}/end`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${authToken}`,

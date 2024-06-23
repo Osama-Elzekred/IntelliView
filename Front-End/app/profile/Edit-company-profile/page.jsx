@@ -5,12 +5,15 @@ import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { Loading, Breadcrumb, Layout } from '../../components/components';
 import { redirect } from 'next/navigation';
+import config from '../../../config';
+
 export default function EditProfile() {
   let [message, setMessage] = useState('');
   let [color, setColor] = useState('');
   const [authToken, setAuthToken] = useState('');
   const role = Cookies.get('role');
   const authTokenCookie = Cookies.get('authToken');
+  const { DOMAIN_NAME } = config;
   const [pagenum, setPagenum] = useState(1);
 
   
@@ -47,7 +50,7 @@ export default function EditProfile() {
       try {
         if (authTokenCookie) {
           setAuthToken(authTokenCookie);
-          const response = await fetch('https://localhost:7049/api/Profile', {
+          const response = await fetch(`https://${DOMAIN_NAME}/api/Profile`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -92,7 +95,7 @@ export default function EditProfile() {
     // }));
 
     try {
-      const response = await fetch('https://localhost:7049/api/Profile', {
+      const response = await fetch(`https://${DOMAIN_NAME}/api/Profile`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -131,7 +134,7 @@ export default function EditProfile() {
       const userId = Cookies.get('user_id');
       try {
         const response = await fetch(
-          'https://localhost:7049/api/Password/change-password',
+          `https://${DOMAIN_NAME}/api/Password/change-password`,
           {
             method: 'POST',
             headers: {
@@ -170,7 +173,7 @@ export default function EditProfile() {
 
     try {
       const response = await fetch(
-        'https://localhost:7049/api/Profile/updatePicture',
+        `https://${DOMAIN_NAME}/api/Profile/updatePicture`,
         {
           method: 'PATCH',
           headers: {

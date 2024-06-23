@@ -5,11 +5,13 @@ import { Layout, Breadcrumb, Loading } from '../../../components/components';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { useToast } from '../../../components/Toast/ToastContext';
+import config from '../../../../config';
+
 
 export default function MainComponent({ params }) {
   const { open } = useToast();
 
-  const DOMAIN_NAME = '//localhost:7049/api';
+  // const DOMAIN_NAME = '//localhost:7049/api';
   const [userApprove, setUserApprove] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [usersData, setUserData] = useState([]); // this is the usedata will come from server
@@ -19,6 +21,7 @@ export default function MainComponent({ params }) {
   const [totalPages, setTotalPages] = useState(0);
   const updateUserApprove = [...userApprove];
   const [usersPreview, setUsersPreview] = useState([]);
+  const { DOMAIN_NAME } = config;
 
   const usersPerPage = 5;
   useEffect(() => {
@@ -26,7 +29,7 @@ export default function MainComponent({ params }) {
       const authToken = Cookies.get('authToken');
       try {
         const response = await fetch(
-          `https://${DOMAIN_NAME}/Interview/mock/${params.id}/users`,
+          `https://${DOMAIN_NAME}/api/Interview/mock/${params.id}/users`,
           {
             method: 'GET',
             headers: {
@@ -65,7 +68,7 @@ export default function MainComponent({ params }) {
     try {
       const authToken = Cookies.get('authToken');
       const response = await fetch(
-        `https://${DOMAIN_NAME}/JobApplication/approveInterview/mock/${params.id}/user/${userId}`,
+        `https://${DOMAIN_NAME}/api/JobApplication/approveInterview/mock/${params.id}/user/${userId}`,
         {
           method: 'PATCH',
           headers: {

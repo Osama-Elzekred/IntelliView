@@ -4,17 +4,19 @@ import MockCard from '../../../components/MockCard';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { Breadcrumb, Loading } from '../../../components/components';
+import config from '../../../../config';
+
 function UserMocks() {
   const [mocksData, setMocksData] = useState();
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(true);
-
+  const { DOMAIN_NAME } = config;
   useEffect(() => {
     const fetchMocksData = async () => {
       const authToken = Cookies.get('authToken');
       try {
         const response = await fetch(
-          'https://localhost:7049/api/mockSession/userAppliedMocks',
+          `https://${DOMAIN_NAME}/api/mockSession/userAppliedMocks`,
           {
             method: 'GET',
             headers: {

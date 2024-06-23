@@ -4,6 +4,8 @@ import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { Button } from 'flowbite-react';
 import { Loading, PhoneInputGfg } from '../../../components/components';
+import config from '../../../../config';
+
 function Apply({ params }) {
   const [currentStep, setCurrentStep] = React.useState(1);
   const [answers, setAnswers] = useState({
@@ -19,7 +21,9 @@ function Apply({ params }) {
   const [answerslist, setQuesionsAnswers] = useState({});
   const [finished, setFinished] = useState(false);
 
-  const DOMAIN_NAME = 'localhost:7049/api';
+  // const DOMAIN_NAME = 'localhost:7049/api';
+
+  const { DOMAIN_NAME } = config;
   function handleNext() {
     setCurrentStep((prevStep) => prevStep + 1);
   }
@@ -40,7 +44,7 @@ function Apply({ params }) {
     const authToken = Cookies.get('authToken');
     try {
       const response = await fetch(
-        `https://${DOMAIN_NAME}/job/questions/${params.id}`,
+        `https://${DOMAIN_NAME}/api/job/questions/${params.id}`,
         {
           method: 'GET',
           headers: {
@@ -136,7 +140,7 @@ function Apply({ params }) {
       formData.append('questionsAnswers', JSON.stringify(answerslist));
       console.log(formData);
       const response = await fetch(
-        `https://${DOMAIN_NAME}/JobApplication/submitAnswers`,
+        `https://${DOMAIN_NAME}/api/JobApplication/submitAnswers`,
         {
           method: 'POST',
           headers: {

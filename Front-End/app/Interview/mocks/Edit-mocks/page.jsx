@@ -1,6 +1,8 @@
 'use client';
 import React from 'react';
 import { useState, useEffect } from 'react';
+import config from '../../../../config';
+
 
 function MainComponent() {
   const [modalVisible, setTopicModalVisible] = useState(false);
@@ -26,6 +28,7 @@ function MainComponent() {
     'fa-landmark',
     'fa-stethoscope',
   ];
+  const { DOMAIN_NAME } = config;
   const addVideoField = () => {
     setInterviewQuestions([
       ...InterviewQuestions,
@@ -33,7 +36,7 @@ function MainComponent() {
     ]);
   };
   const fetchTopics = async () => {
-    fetch('https://localhost:7049/api/InterviewMock/allInterviewTopics')
+    fetch(`https://${DOMAIN_NAME}/api/InterviewMock/allInterviewTopics`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -75,7 +78,7 @@ function MainComponent() {
     };
     try {
       const response = await fetch(
-        'https://localhost:7049/api/InterviewMock/AddInterviewMock',
+        `https://${DOMAIN_NAME}/api/InterviewMock/AddInterviewMock`,
         {
           method: 'POST',
           headers: {
@@ -118,7 +121,7 @@ function MainComponent() {
     };
     try {
       const response = fetch(
-        `https://localhost:7049/api/InterviewMock/AddInterviewTopic/`,
+        `https://${DOMAIN_NAME}/api/InterviewMock/AddInterviewTopic/`,
         {
           method: 'POST',
           headers: {

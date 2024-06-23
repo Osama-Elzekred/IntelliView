@@ -8,10 +8,13 @@ import {
 } from '../../components/components';
 import FullScreenModal from '../../components/FullScreenModal';
 import Cookies from 'js-cookie';
+import config from '../../../config';
+
 import VideoTable from './VideosTable';
 function MainComponent({ params }) {
   const [loading, setLoading] = useState(true);
-  const DOMAIN_NAME = '//localhost:7049/api';
+  const { DOMAIN_NAME } = config;
+  // const DOMAIN_NAME = '//localhost:7049/api';
 
   const [data, setData] = useState([
     {
@@ -97,7 +100,7 @@ function MainComponent({ params }) {
       const authToken = Cookies.get('authToken');
       try {
         const response = await fetch(
-          `https://${DOMAIN_NAME}/MockSession/UserMockSession/${params.MockSesstionId}`,
+          `https://${DOMAIN_NAME}/api/MockSession/UserMockSession/${params.MockSesstionId}`,
           {
             method: 'GET',
             headers: {

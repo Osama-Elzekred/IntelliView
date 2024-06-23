@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Cookies from 'js-cookie';
 import React, { useState, useEffect } from 'react';
 import Loading from '../../../../../components/loading';
+import config from '../../../../../../config';
+
 /**
  * Renders the details of a job application.
  *
@@ -25,14 +27,15 @@ export default function Job_Application_details({ params }) {
   //   email: 'example.gmail.com',
   //   cvUrl: '/path/to/cv',
   // };
-  const DOMAIN_NAME = 'localhost:7049/api';
+  // const DOMAIN_NAME = 'localhost:7049/api';
+  const { DOMAIN_NAME } = config;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const authToken = Cookies.get('authToken');
         const response = await fetch(
-          `https://${DOMAIN_NAME}/JobApplication/Application/${params.id}/${params.userid}`,
+          `https://${DOMAIN_NAME}/api/JobApplication/Application/${params.id}/${params.userid}`,
           {
             method: 'GET',
             headers: {

@@ -8,7 +8,9 @@ import { FileInput, Label, Badge, Button } from 'flowbite-react';
 import { Breadcrumb } from '../../components/components';
 import { redirect } from 'next/navigation';
 import Loading from '../../components/loading';
-const DOMAIN_NAME = 'localhost:7049';
+import config from '../../../config';
+
+// const DOMAIN_NAME = 'localhost:7049';
 
 export default function EditProfile() {
   let [message, setMessage] = useState('');
@@ -16,6 +18,7 @@ export default function EditProfile() {
   const [click, setClick] = useState();
   const [cvName, setCvName] = useState(null);
   const [pagenum, setPagenum] = useState(1);
+  const { DOMAIN_NAME } = config;
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -118,7 +121,7 @@ export default function EditProfile() {
 
     try {
       const response = await fetch(
-        'https://localhost:7049/api/Profile/updatePicture',
+        `https://${DOMAIN_NAME}/api/Profile/updatePicture`,
         {
           method: 'PATCH',
           headers: {
@@ -153,7 +156,7 @@ export default function EditProfile() {
 
     try {
       // console.log(userData);
-      const response = await fetch('https://localhost:7049/api/Profile', {
+      const response = await fetch(`https://${DOMAIN_NAME}/api/Profile`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${authToken}`,
@@ -231,7 +234,7 @@ export default function EditProfile() {
       const userId = Cookies.get('user_id');
       try {
         const response = await fetch(
-          'https://localhost:7049/api/Password/change-password',
+          `https://${DOMAIN_NAME}/api/Password/change-password`,
           {
             method: 'POST',
             headers: {

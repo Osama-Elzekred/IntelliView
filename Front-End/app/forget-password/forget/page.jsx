@@ -1,12 +1,15 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import config from '../../../config';
+
 
 const Forget_password = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [showResetForm, setShowResetForm] = useState(false); // State to manage form visibility
   const [isPending, setIsPending] = useState(true);
+  const { DOMAIN_NAME } = config;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,7 +17,7 @@ const Forget_password = () => {
     const email = formData.get('email');
     try {
       const response = await fetch(
-        'https://localhost:7049/api/Password/forget-password',
+        `https://${DOMAIN_NAME}/api/Password/forget-password`,
         {
           method: 'POST',
           body: JSON.stringify({

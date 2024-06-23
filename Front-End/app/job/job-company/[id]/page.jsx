@@ -7,9 +7,11 @@ import { Button, Tabs } from 'flowbite-react';
 import { HiUserCircle } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
 import Cookies from 'js-cookie';
+import { useToast } from '../../components/Toast/ToastContext';
 
 export default function JobApplicants({ params }) {
   const DOMAIN_NAME = '//localhost:7049/api';
+  const { open } = useToast();
   const authToken = Cookies.get('authToken');
   const [mockId, setMockId] = useState(null);
   const [data, setData] = useState([]);
@@ -87,10 +89,11 @@ export default function JobApplicants({ params }) {
           await handleApprove(application.jobId, application.userId);
         } catch (error) {
           // Handle error (optional)
-          console.error('Error approving job application:', error);
-          alert(
-            'Failed to approve some job applications. Please try again later.'
-          );
+          //console.error('Error approving job application:', error);
+          // alert(
+          //   'Failed to approve some job applications. Please try again later.'
+          // );
+          open(' Failed to approve some job applications. ', false);
         }
       }
 
@@ -98,10 +101,12 @@ export default function JobApplicants({ params }) {
       fetchData();
 
       // Handle success response
-      alert(`${count} application(s) approved successfully based on cvScore.`);
+      //alert(`${count} application(s) approved successfully based on cvScore.`);
+      open(`${count} application(s) approved successfully based on cvScore.`, true);
     } catch (error) {
       console.error('Error approving job applications:', error);
-      alert('Failed to approve job application(s). Please try again later.');
+      //alert('Failed to approve job application(s). Please try again later.');
+      open(' Failed to approve some job applications. ', false);
     }
   };
   const handleApprove = async (jobId, userId) => {
@@ -172,12 +177,13 @@ export default function JobApplicants({ params }) {
       );
 
       if (!response.ok) {
+        open(' Failed to send interview emails', false);
         throw new Error('Failed to send interview emails');
       }
 
       const data = await response.json();
-      alert(`${data.count} Email(s) sent successfully.`);
-      console.log('Interview emails sent successfully:', data);
+      // alert(`${data.count} Email(s) sent successfully.`);
+      open(`Emails sent successfully.`, true);
     } catch (error) {
       console.error('Error sending interview emails:', error);
     }

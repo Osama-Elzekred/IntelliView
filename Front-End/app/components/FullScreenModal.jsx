@@ -1,5 +1,8 @@
 'use client';
 import { useEffect } from 'react';
+import AIcharts from '../components/AiCharts/AIcharts';
+import { Button, Card } from 'flowbite-react';
+
 const FullScreenModal = ({ onClose, rowData }) => {
   // Mock video URL
 
@@ -13,10 +16,13 @@ const FullScreenModal = ({ onClose, rowData }) => {
     level,
     notes,
     videoUrl,
+    aiObjects,
   } = rowData;
   useEffect(() => {
     // Disable scrolling on the body element when the modal is opened
     document.body.style.overflow = 'hidden';
+    // console.log(rowData, 'rowData');
+    console.log(aiObjects, 'aiObjects');
 
     // Re-enable scrolling on the body element when the modal is closed
     return () => {
@@ -25,8 +31,8 @@ const FullScreenModal = ({ onClose, rowData }) => {
   }, []);
 
   return (
-    <div className="fixed top-[64px] right-0 w-1/2  bg-black bg-opacity-50 z-50  max-w-screen-md h-full ">
-      <div className="bg-slate-50 rounded-lg p-8 max-w-screen-md h-full overflow-y-auto  pb-60">
+    <div className="fixed top-[64px] right-0 w-2/3  bg-black bg-opacity-50 z-50  h-full ">
+      <div className="bg-slate-50 rounded-lg p-8  h-full overflow-y-auto  pb-60">
         <div className="flex justify-end">
           <div className="h-5 w-5 cursor-pointer" onClick={onClose}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
@@ -53,6 +59,7 @@ const FullScreenModal = ({ onClose, rowData }) => {
             Model Answer: {InterviewQuestion?.answer}
           </p>
         </div>
+        <AIcharts aiScores={aiObjects} />
         {/* Close Button */}
       </div>
     </div>

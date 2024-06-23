@@ -47,10 +47,10 @@ const FullScreenModal = ({ onClose, rowData }) => {
           <p className="text-lg font-semibold mb-2">Comments(notes) :{notes}</p>
           <p className="text-lg font-semibold mb-2">Recorded Date: {date}</p>
           <p className="text-lg font-semibold mb-2">
-            Question: {InterviewQuestion.Question}
+            Question: {InterviewQuestion?.Question}
           </p>
           <p className="text-lg font-semibold mb-2">
-            Model Answer: {InterviewQuestion.answer}
+            Model Answer: {InterviewQuestion?.answer}
           </p>
         </div>
         {/* Close Button */}

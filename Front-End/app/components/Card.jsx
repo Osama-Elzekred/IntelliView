@@ -76,24 +76,24 @@ function CardComp({
                 {'Closed'}
               </Badge>
             )}
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Badge
-              color={
-                status === 'Rejected'
-                  ? 'red'
-                  : status === 'Accepted'
-                  ? 'green'
-                  : status === 'Pending'
-                  ? 'warning'
-                  : status === 'InterviewStage'
-                  ? 'warning'
-                  : null
-              }
-              size="sm"
-            >
-              {status}
-            </Badge>
+            <div className="flex flex-wrap gap-2">
+              <Badge
+                color={
+                  status === 'Rejected'
+                    ? 'red'
+                    : status === 'Accepted'
+                    ? 'green'
+                    : status === 'Pending'
+                    ? 'warning'
+                    : status === 'InterviewStage'
+                    ? 'warning'
+                    : null
+                }
+                size="sm"
+              >
+                {status}
+              </Badge>
+            </div>
           </div>
         </div>
         {IsCompany && (

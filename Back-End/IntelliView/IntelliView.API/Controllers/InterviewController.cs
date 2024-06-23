@@ -196,17 +196,24 @@ namespace IntelliView.API.Controllers
         public async Task<ActionResult<IEnumerable<UserListDTO>>> GetUsersForMock(int mockId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var job = await _unitOfWork.Jobs.GetByIdAsync(mockId);
-            if (job == null || job.MockId is null)
+            var mock = await _unitOfWork.InterviewMocks.GetByIdAsync(mockId);
+            if (mock == null)
+                return NotFound("Mock not found");
+            if (mock.JobId is null)
+                return BadRequest("This mock is not associated with a job");
+
+
+
+            var job = await _unitOfWork.Jobs.GetByIdAsync(mock.JobId);
+            if (job == null)
                 return NotFound("Job not found");
 
             if (userId == null || userId != job.CompanyUserId)
             {
                 return Unauthorized("The user dosn`t exist");
             }
-            int id = (int)job.MockId;
-            var applicants = await _unitOfWork.UserMockSessions.GetSessionsWithJobApplicationAsync(id);
-            if (applicants == null )
+            var applicants = await _unitOfWork.UserMockSessions.GetSessionsWithJobApplicationAsync(mockId);
+            if (applicants == null)
                 return NotFound();
             // Extract UserId values from the applicants collection
             //var userIds = applicants.Select(u => u.UserId).ToList();

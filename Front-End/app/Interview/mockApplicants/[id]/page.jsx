@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { Layout, Breadcrumb, Loading } from '../../../components/components';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { Toast } from 'flowbite-react';
-import { HiCheck, HiExclamation, HiX } from 'react-icons/hi';
+import { useToast } from '../../../components/Toast/ToastContext';
 
 export default function MainComponent({ params }) {
+  const { open } = useToast();
+
   const DOMAIN_NAME = '//localhost:7049/api';
   const [userApprove, setUserApprove] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -53,19 +54,18 @@ export default function MainComponent({ params }) {
     setTotalPages(Math.ceil(usersData.length / usersPerPage));
   }, [currentPage, usersData, usersPerPage]); // This effect runs when currentPage, usersData, or usersPerPage changes
   const handleApprove = async (userId) => {
-    const updatedApprove = [...userApprove];
-    const index = usersData.findIndex((user) => user.id === userId);
-    console.log('user: ', userId);
-    updatedApprove[index] = true;
-    setUserApprove(updatedApprove);
-    setApproved(true);
-    setTimeout(() => {
-      setApproved(false);
-    }, 5000);
+    const index = usersPreview.findIndex((user) => user.userId === userId);
+    if (index === -1) return; // User not found
+
+    console.log('Approving user: ', userId);
+    const updatedUsers = [...usersPreview];
+    updatedUsers[index] = { ...updatedUsers[index], isApproved: true };
+    setUsersPreview(updatedUsers); // Assuming you have a state setter for usersPreview
+
     try {
       const authToken = Cookies.get('authToken');
       const response = await fetch(
-        `https://${DOMAIN_NAME}/JobApplication/approveInterview/job/${params.id}/user/${userId}`,
+        `https://${DOMAIN_NAME}/JobApplication/approveInterview/mock/${params.id}/user/${userId}`,
         {
           method: 'PATCH',
           headers: {
@@ -78,10 +78,11 @@ export default function MainComponent({ params }) {
       if (!response.ok) {
         throw new Error('Failed to approve job interview.');
       }
-      // Handle success response
+      // Optionally, refresh your data here to reflect the change from the server
     } catch (error) {
       console.error('Error approving job interview:', error);
     }
+    open(' Applicant have been approved successfully');
   };
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
@@ -194,15 +195,12 @@ export default function MainComponent({ params }) {
                         </span>
                       </td>
                       <td className="px-4 py-2">
-                        {!user.isApproved ? (
+                        {user && !user.isApproved ? (
                           <button
                             className="bg-[#17a9c3] text-white p-1 rounded hover:bg-[#20c997]"
-                            onClick={() => {
-                              handleApprove(user.userId);
-                            }}
+                            onClick={() => handleApprove(user.userId)}
                           >
-                            {' '}
-                            Approve{' '}
+                            Approve
                           </button>
                         ) : (
                           <span className="bg-green-500 text-white rounded p-1">
@@ -242,21 +240,6 @@ export default function MainComponent({ params }) {
               </div>
             </div>
           </div>
-          {approved ? (
-            <div className="fixed bottom-4 right-4 flex items-center justify-end">
-              <Toast>
-                <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
-                  <HiCheck className="h-5 w-5" />
-                </div>
-                <div className="ml-3 text-sm font-normal">
-                  User approved successfully.
-                </div>
-                <Toast.Toggle onDismiss={() => setApproved(false)} />
-              </Toast>
-            </div>
-          ) : (
-            ''
-          )}
         </div>
       </>
     </Layout>

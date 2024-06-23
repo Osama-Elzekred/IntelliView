@@ -11,6 +11,7 @@ import Cookies from 'js-cookie';
 export default function JobApplicants({ params }) {
   const DOMAIN_NAME = '//localhost:7049/api';
   const authToken = Cookies.get('authToken');
+  const [mockId, setMockId] = useState(null);
   const [data, setData] = useState([]);
   const [allApplications, setAllApplications] = useState([]);
   const [approvedApplications, setApprovedApplications] = useState([]);
@@ -21,7 +22,8 @@ export default function JobApplicants({ params }) {
   const [approvedTotalPages, setApprovedTotalPages] = useState(0);
   const [approvedCurrentPage, setApprovedCurrentPage] = useState(1);
   const [applicationsDisplayed, setApplicationsDisplayed] = useState([]);
-  const [approvedApplicationsDisplayed, setApprovedApplicationsDisplayed] = useState([]);
+  const [approvedApplicationsDisplayed, setApprovedApplicationsDisplayed] =
+    useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState(0);
   const applicationsPerPage = 5;
@@ -40,7 +42,8 @@ export default function JobApplicants({ params }) {
         throw new Error('Network response was not ok');
       }
       const result = await response.json();
-      setData(result);
+      setData(result.applications);
+      setMockId(result.mockId);
       console.log(result);
       setLoading(false);
     } catch (error) {
@@ -194,20 +197,36 @@ export default function JobApplicants({ params }) {
     const updateDisplayedApplications = () => {
       if (activeTab === 1) {
         const startIndex = (approvedCurrentPage - 1) * applicationsPerPage;
-        const endIndex = Math.min(startIndex + applicationsPerPage, approvedApplications.length);
-        setApplicationsDisplayed(approvedApplications.slice(startIndex, endIndex));
-        setApprovedTotalPages(Math.ceil(approvedApplications.length / applicationsPerPage));
+        const endIndex = Math.min(
+          startIndex + applicationsPerPage,
+          approvedApplications.length
+        );
+        setApplicationsDisplayed(
+          approvedApplications.slice(startIndex, endIndex)
+        );
+        setApprovedTotalPages(
+          Math.ceil(approvedApplications.length / applicationsPerPage)
+        );
       } else {
         const startIndex = (currentPage - 1) * applicationsPerPage;
-        const endIndex = Math.min(startIndex + applicationsPerPage, allApplications.length);
+        const endIndex = Math.min(
+          startIndex + applicationsPerPage,
+          allApplications.length
+        );
         setApplicationsDisplayed(allApplications.slice(startIndex, endIndex));
         setTotalPages(Math.ceil(allApplications.length / applicationsPerPage));
       }
     };
-  
+
     updateDisplayedApplications();
-  }, [currentPage, approvedCurrentPage, allApplications, approvedApplications, activeTab]);
-  
+  }, [
+    currentPage,
+    approvedCurrentPage,
+    allApplications,
+    approvedApplications,
+    activeTab,
+  ]);
+
   const changePage = (page) => {
     if (activeTab === 1) {
       setApprovedCurrentPage(page);
@@ -218,7 +237,7 @@ export default function JobApplicants({ params }) {
       document.getElementById('scroll').scrollIntoView({ behavior: 'smooth' });
     }, 200);
   };
-  
+
   const prevPage = () => {
     if (activeTab === 1) {
       if (approvedCurrentPage > 1) {
@@ -233,7 +252,7 @@ export default function JobApplicants({ params }) {
       document.getElementById('scroll').scrollIntoView({ behavior: 'smooth' });
     }, 200);
   };
-  
+
   const nextPage = () => {
     if (activeTab === 1) {
       if (approvedCurrentPage < approvedTotalPages) {
@@ -283,7 +302,7 @@ export default function JobApplicants({ params }) {
             ]}
           />
           <section className="" id="next">
-            <div className="container" id='scroll'>
+            <div className="container" id="scroll">
               <div className="row align-items-center justify-content-center">
                 <div className="col-md-12">
                   <div className="mb-2 text-center">
@@ -312,32 +331,29 @@ export default function JobApplicants({ params }) {
                           >
                             Approve Applications
                           </button>
-                          
                         </div>
                       </div>
-                      <div className='row mb-2 -flex align-items-end justify-content-center'>
-                      <div className="form-group col-md-3">
-                        <button
-                          type="button"
-                          className="btn btn-outline-primary py-2 px-4 rounded"
-                          onClick={handleSendInterviewEmail}
-                        >
-                          Send Interview Emails
-                        </button>
-                      </div>
+                      <div className="row mb-2 -flex align-items-end justify-content-center">
                         <div className="form-group col-md-3">
-                        <button
-                          type="button"
-                          className="">
-                          <Link
-                            href={`/Interview/mockApplicants/`}
-                            target="_blank"
+                          <button
+                            type="button"
+                            className="btn btn-outline-primary py-2 px-4 rounded"
+                            onClick={handleSendInterviewEmail}
                           >
-                            Open Interview Emails
-                          </Link>
+                            Send Interview Emails
                           </button>
                         </div>
+                        <div className="form-group col-md-3">
+                          <button type="button" className="">
+                            <Link
+                              href={`/Interview/mockApplicants/${mockId}`}
+                              target="_blank"
+                            >
+                              Mock interview applications
+                            </Link>
+                          </button>
                         </div>
+                      </div>
                     </form>
                   </div>
                 </div>
@@ -353,7 +369,6 @@ export default function JobApplicants({ params }) {
                 className="p-0 m-0"
                 title="All applicants"
                 icon={HiUserCircle}
-              
               >
                 <div className="p-0 m-0">
                   <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -448,35 +463,36 @@ export default function JobApplicants({ params }) {
                     </div>
                   </div>
                 </div>
-                {activeTab===0 && (<div className="relative p-2">
-            <div className="pagination-wrap absolute bottom-1 right-20">
-              <div className="custom-pagination">
-                    {currentPage !== 1 && (
-                      <Link href="#" className="prev" onClick={prevPage}>
-                        Prev
-                      </Link>
-                    )}
-                    {[...Array(totalPages).keys()].map((page) => (
-                      <Link
-                        key={page + 1}
-                        href="#"
-                        className={page + 1 === currentPage ? 'active' : ''}
-                        onClick={() => changePage(page + 1)}
-                      >
-                        {page + 1}
-                      </Link>
-                    ))}
-                    {currentPage < totalPages && (
-                  <Link href="" className="next" onClick={nextPage}>
-                    Next
-                  </Link>
-                )}
+                {activeTab === 0 && (
+                  <div className="relative p-2">
+                    <div className="pagination-wrap absolute bottom-1 right-20">
+                      <div className="custom-pagination">
+                        {currentPage !== 1 && (
+                          <Link href="#" className="prev" onClick={prevPage}>
+                            Prev
+                          </Link>
+                        )}
+                        {[...Array(totalPages).keys()].map((page) => (
+                          <Link
+                            key={page + 1}
+                            href="#"
+                            className={page + 1 === currentPage ? 'active' : ''}
+                            onClick={() => changePage(page + 1)}
+                          >
+                            {page + 1}
+                          </Link>
+                        ))}
+                        {currentPage < totalPages && (
+                          <Link href="" className="next" onClick={nextPage}>
+                            Next
+                          </Link>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                </div>)}
-                
+                )}
               </Tabs.Item>
-              <Tabs.Item title="Approved applicants" icon={MdDashboard} >
+              <Tabs.Item title="Approved applicants" icon={MdDashboard}>
                 <div className="">
                   <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -566,37 +582,39 @@ export default function JobApplicants({ params }) {
                     </div>
                   </div>
                 </div>
-                {activeTab ===1 &&(<div className="relative p-2">
-            <div className="pagination-wrap absolute bottom-2 right-20">
-              <div className="custom-pagination">
-                    {approvedCurrentPage !== 1 && (
-                      <Link href="#" className="prev" onClick={prevPage}>
-                        Prev
-                      </Link>
-                    )}
-                    {[...Array(approvedTotalPages).keys()].map((page) => (
-                      <Link
-                        key={page + 1}
-                        href="#"
-                        className={page + 1 === approvedCurrentPage ? 'active' : ''}
-                        onClick={() => changePage(page + 1)}
-                      >
-                        {page + 1}
-                      </Link>
-                    ))}
-                    {approvedCurrentPage < approvedTotalPages && (
-                  <Link href="" className="next" onClick={nextPage}>
-                    Next
-                  </Link>
-                )}
+                {activeTab === 1 && (
+                  <div className="relative p-2">
+                    <div className="pagination-wrap absolute bottom-2 right-20">
+                      <div className="custom-pagination">
+                        {approvedCurrentPage !== 1 && (
+                          <Link href="#" className="prev" onClick={prevPage}>
+                            Prev
+                          </Link>
+                        )}
+                        {[...Array(approvedTotalPages).keys()].map((page) => (
+                          <Link
+                            key={page + 1}
+                            href="#"
+                            className={
+                              page + 1 === approvedCurrentPage ? 'active' : ''
+                            }
+                            onClick={() => changePage(page + 1)}
+                          >
+                            {page + 1}
+                          </Link>
+                        ))}
+                        {approvedCurrentPage < approvedTotalPages && (
+                          <Link href="" className="next" onClick={nextPage}>
+                            Next
+                          </Link>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                </div>)}
-                
+                )}
               </Tabs.Item>
             </Tabs>
-                  {/* {approvedTab  && !applicationsTab ? () : () } */}
-            
+            {/* {approvedTab  && !applicationsTab ? () : () } */}
           </section>
         </div>
       </>

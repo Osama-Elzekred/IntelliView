@@ -18,10 +18,20 @@ namespace IntelliView.API.Controllers
 
     public class VideoAiScoreDto
     {
-        public decimal AnswerSimilarityScore { get; set; }
-        public string VideoInfo { get; set; }
-        public string AudioInfo { get; set; }
-        public string TextInfo { get; set; }
+        public int MockVideoAnswerId { get; set; }
+        public decimal? AnswerSimilarityScore { get; set; }
+        public string? AnswerText { get; set; }
+        public decimal? SentimentScore { get; set; }
+        public List<EmotionScoreDto>? EmotionScores { get; set; }
+        public decimal? ComparisonScore { get; set; }
     }
+
+    public class EmotionScoreDto
+    {
+        public DateTime Timestamp { get; set; }
+        public Dictionary<string, double>? Scores { get; set; }
+    }
+
+
 
 }

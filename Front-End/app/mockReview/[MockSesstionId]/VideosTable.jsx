@@ -77,7 +77,7 @@ const VideoTable = ({ Data, handleRowClick }) => {
                                   className="mb-1 font-semibold transition-colors duration-200 ease-in-out text-lg/normal text-secondary-inverse hover:text-primary"
                                 >
                                   {' '}
-                                  {video.InterviewQuestion.Question.substring(
+                                  {video?.InterviewQuestion?.Question.substring(
                                     0,
                                     20
                                   )}

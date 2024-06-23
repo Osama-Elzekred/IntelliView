@@ -58,9 +58,9 @@ export default function login() {
           document.cookie = `role=${data.roles[0].toLowerCase()};path=/`;
           document.cookie = `userName=${data.username};path=/`;
           if (data.roles[0].toLowerCase() === 'company') {
-            window.location.href = `/profile/Edit-company-profile`;
+            window.location.href = `/`;
           } else {
-            window.location.href = `/profile/Edit-user-profile`;
+            window.location.href = `/`;
           }
         } else if (data.message) {
           setMessageOfWrong(data.message);

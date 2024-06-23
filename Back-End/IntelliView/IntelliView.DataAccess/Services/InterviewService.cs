@@ -121,17 +121,52 @@ namespace IntelliView.DataAccess.Services
         // get the ai score of the answer video from the Ai models
         public async Task<VideoAiScore> GetAiVideoScores(string answerVideoLink, string modelAnswer)
         {
+            // Simulate an AI API call delay
             await Task.Delay(1000);
-            return new VideoAiScore
+
+            // Assuming you get a response from the AI API which contains TextAnalysis data.
+            // This is a mock example of the AI response.
+            var aiResponse = new
             {
-                AnswerSimilarityScore = 0.9m,
-                AudioInfo = "infoA1,infoA2",
-                VideoInfo = "infoV1,infoV2",
-                TextInfo = "infoT1,infoT2"
+                TextAnalysis = new Dictionary<string, dynamic>
+        {
+            { "AnswerText"," this is my answer for ur question"},
+            { "SentimentScore", -0.2 }
+        },
+                EmotionScores = new List<EmotionScore>
+                    {
+                        new EmotionScore { Timestamp = DateTime.Now, Scores = new Dictionary<string, double> { { "neutral", 0.58 } } },
+                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(1), Scores = new Dictionary<string, double> { { "happy", 0.74 } } },
+                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(2), Scores = new Dictionary<string, double> { { "neutral", 0.6 } } },
+                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(3), Scores = new Dictionary<string, double> { { "neutral", 0.57 } } },
+                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(4), Scores = new Dictionary<string, double> { { "fear", 0.28 } } },
+                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(5), Scores = new Dictionary<string, double> { { "sad", 0.57 } } },
+                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(6), Scores = new Dictionary<string, double> { { "neutral", 0.61 } } },
+                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(7), Scores = new Dictionary<string, double> { { "happy", 0.74 } } },
+                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(8), Scores = new Dictionary<string, double> { { "happy", 0.6 } } },
+                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(9), Scores = new Dictionary<string, double> { { "neutral", 0.5 } } },
+                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(10), Scores = new Dictionary<string, double> { { "neutral", 0.57 } } }
+                    }
+
+
 
             };
 
+            // Extract AnswerText and SentimentScore from the AI response
+            var AnswerText = aiResponse.TextAnalysis.ContainsKey("AnswerText") ? aiResponse.TextAnalysis["AnswerText"].ToString() : string.Empty;
+            var sentimentScore = aiResponse.TextAnalysis.ContainsKey("SentimentScore") ? (decimal)aiResponse.TextAnalysis["SentimentScore"] : 0;
+
+            return new VideoAiScore
+            {
+                AnswerSimilarityScore = 0.9m,
+                AnswerText = AnswerText,
+                SentimentScore = sentimentScore,
+                EmotionScores = aiResponse.EmotionScores,
+                ComparisonScore = 0.8m,
+
+            };
         }
+
     }
 }
 

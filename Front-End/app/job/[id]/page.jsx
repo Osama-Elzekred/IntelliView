@@ -5,6 +5,8 @@ import Layout from '../../components/Layout';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Loading from '../../components/loading';
+import { Badge } from 'flowbite-react';
+
 import { Breadcrumb } from '../../components/components';
 const DOMAIN_NAME = 'localhost:7049';
 
@@ -12,8 +14,8 @@ export default function Job_details({ params }) {
   // console.log(parseInt(params.id));
   const authToken = Cookies.get('authToken');
   const roleFromServer = localStorage.getItem('roleFromServer');
-// If roleFromServer was stored as a stringified object, parse it back to an object
-// const roleFromServer = JSON.parse(localStorage.getItem('roleFromServer'));
+  // If roleFromServer was stored as a stringified object, parse it back to an object
+  // const roleFromServer = JSON.parse(localStorage.getItem('roleFromServer'));
   console.log(roleFromServer);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -98,31 +100,35 @@ export default function Job_details({ params }) {
           />
           <section className="">
             <div className="container">
-              <div className="row align-items-center mb-5">
-                <div className="col-lg-8 mb-4 mb-lg-0">
-                  <div className="d-flex align-items-center">
+              <div className="flex flex-col lg:flex-row lg:items-center mb-5">
+                <div className="lg:flex-1 mb-4 lg:mb-0">
+                  <div className="flex items-center">
                     <img
-                      className="size-20 object-cover rounded-full border  d-inline-block mr-3 flex"
+                      className="w-20 h-20 object-cover rounded-full border inline-block mr-3"
                       src={data.imageURl}
                       alt="CompanyImage"
-                      width="20"
-                      height="20"
                     />
-
                     <div>
-                      <h2>{data.title}</h2>
-                      <div>
+                      <div className="flex flex-row justify-center space-x-2 space-y-2 ml-2">
+                        <h2>{data.title}</h2>
+                        {new Date(data.endedAt) < Date.now() && (
+                          <Badge className="text-red-500 rounded-full bg-red-100  justify-center text-sm font-semibold">
+                            Closed
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="mt-2">
                         <Link href={`/company-details/${data.companyUserId}`}>
-                          <span className="ml-0 mr-2 mb-2">
+                          <span className="mr-2 mb-2 inline-block">
                             <span className="icon-briefcase mr-2" />
                             {data.companyName}
                           </span>
                         </Link>
-                        <span className="m-2">
+                        <span className="m-2 inline-block">
                           <span className="icon-room mr-2" />
                           {data.location}
                         </span>
-                        <span className="m-2">
+                        <span className="m-2 inline-block">
                           <span className="icon-clock-o mr-2" />
                           <span className="text-primary">{data.jobTime}</span>
                         </span>
@@ -130,33 +136,33 @@ export default function Job_details({ params }) {
                     </div>
                   </div>
                 </div>
-                <div className="col-lg-4">
-                  <div className="row">
-                    <div className="col-6">
+                <div className="lg:w-1/3 w-full">
+                  <div className="flex space-x-2">
+                    <Link
+                      href={`/job/post/${params.id}`}
+                      className="btn btn-light btn-md w-1/2"
+                    >
+                      <span className="fa-solid fa-pen-to-square mr-2" />
+                      Edit job
+                    </Link>
+                    {roleFromServer == 'user' &&
+                    new Date(data.endedAt) > Date.now() ? (
                       <Link
-                        href={`/job/post/${params.id}`}
-                        className="btn btn-block btn-light btn-md"
+                        href={`/job/${params.id}/apply`}
+                        className="btn btn-primary btn-md w-1/2"
+                        target="_blank"
                       >
-                        <span className="fa-solid fa-pen-to-square mr-2" />
-                        Edit job
+                        Apply Now
                       </Link>
-                    </div>
-
-                    <div className="col-6">
-                      {roleFromServer== 'user' && new Date(data.endedAt) > Date.now() ? (
-                        <Link href={`/job/${params.id}/apply`} className="btn btn-block btn-primary btn-md" target="_blank">
-                            Apply Now
-                          
-                        </Link>
-                      ) : (
-                        <button className="btn btn-block btn-primary btn-md" disabled>
+                    ) : (
+                      <button className="btn btn-primary btn-md w-1/2" disabled>
                         Apply Now
                       </button>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
+
               <div className="row">
                 <div className="col-lg-8">
                   <div className="mb-5">
@@ -203,14 +209,22 @@ export default function Job_details({ params }) {
                       </Link>
                     </div>
                     <div className="col-6">
-                      {roleFromServer== 'user' && new Date(data.endedAt) > Date.now() ? (
-                        <Link href={`/job/${params.id}/apply`} className="btn btn-block btn-primary btn-md" target="_blank">
-                            Apply Now
+                      {roleFromServer == 'user' &&
+                      new Date(data.endedAt) > Date.now() ? (
+                        <Link
+                          href={`/job/${params.id}/apply`}
+                          className="btn btn-block btn-primary btn-md"
+                          target="_blank"
+                        >
+                          Apply Now
                         </Link>
                       ) : (
-                        <button className="btn btn-block btn-primary btn-md" disabled>
-                        Apply Now
-                      </button>
+                        <button
+                          className="btn btn-block btn-primary btn-md"
+                          disabled
+                        >
+                          Apply Now
+                        </button>
                       )}
                     </div>
                   </div>

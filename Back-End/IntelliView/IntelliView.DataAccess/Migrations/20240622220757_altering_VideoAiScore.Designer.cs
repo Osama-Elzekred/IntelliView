@@ -4,6 +4,7 @@ using InteliView.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntelliView.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240622220757_altering_VideoAiScore")]
+    partial class altering_VideoAiScore
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -740,11 +743,11 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<decimal?>("AnswerSimilarityScore")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<string>("AnswerText")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal?>("ComparisonScore")
                         .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("QuestionText")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("SentimentScore")
                         .HasColumnType("decimal(18, 2)");

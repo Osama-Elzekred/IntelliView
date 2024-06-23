@@ -226,7 +226,7 @@ namespace IntelliView.API.Controllers
             }
 
             var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.JobId == jobId);
-            return Ok(applications);
+            return Ok(new { job.MockId, applications });
         }
         // view one application for a job
         [HttpGet("Application/{jobId}/{userId}")]
@@ -273,7 +273,7 @@ namespace IntelliView.API.Controllers
             }
 
             jobApplication.IsApproved = true; // Update approval status
-          //  jobApplication.Status= ApplicationStatus.InterviewStage; 
+                                              //  jobApplication.Status= ApplicationStatus.InterviewStage; 
 
             //_unitOfWork.JobApplications.Update(jobApplication);
             await _unitOfWork.SaveAsync();
@@ -281,10 +281,15 @@ namespace IntelliView.API.Controllers
             return Ok("Job application approved successfully");
         }
         [Authorize(Roles = SD.ROLE_COMPANY)]
-        [HttpPatch("approveInterview/job/{jobId}/user/{userId}")]
-        public async Task<IActionResult> ApproveInterview(int jobId, string userId)
+        [HttpPatch("approveInterview/mock/{MockId}/user/{userId}")]
+        public async Task<IActionResult> ApproveInterview(int MockId, string userId)
         {
-            var jobApplication = await _unitOfWork.JobApplications.GetApplicationByIdAsync(jobId, userId);
+            var job = await _unitOfWork.Jobs.GetFirstOrDefaultAsync(j => j.MockId == MockId);
+            if (job == null)
+            {
+                return NotFound(new { message = "Job not found" });
+            }
+            var jobApplication = await _unitOfWork.JobApplications.GetApplicationByIdAsync(job.Id, userId);
 
             if (jobApplication == null)
             {
@@ -292,8 +297,8 @@ namespace IntelliView.API.Controllers
             }
 
             jobApplication.IsInterviewApproved = true; // Update approval status
-            jobApplication.Status= ApplicationStatus.Accepted;
-            
+            jobApplication.Status = ApplicationStatus.Accepted;
+
 
             _unitOfWork.JobApplications.Update(jobApplication);
             await _unitOfWork.SaveAsync();
@@ -329,13 +334,13 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound("Job not found");
             }
-            var alljobApplications = await _unitOfWork.JobApplications.GetAllAsync(j => j.JobId == jobId );
-            var jobApplications= alljobApplications.Where(j => j.IsApproved == true).ToList();
-            var rejectedApplications= alljobApplications.Where(j => j.IsApproved == false).ToList();
+            var alljobApplications = await _unitOfWork.JobApplications.GetAllAsync(j => j.JobId == jobId);
+            var jobApplications = alljobApplications.Where(j => j.IsApproved == true).ToList();
+            var rejectedApplications = alljobApplications.Where(j => j.IsApproved == false).ToList();
             foreach (var application in rejectedApplications)
             {
-                application.Status= ApplicationStatus.Rejected;
-                
+                application.Status = ApplicationStatus.Rejected;
+
             }
             await _unitOfWork.SaveAsync();
             if (jobApplications == null || !jobApplications.Any())

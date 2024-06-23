@@ -24,7 +24,7 @@ namespace IntelliView.DataAccess.Repository.Repos.InterviewRepo
         {
             return await _dbSet
                 .Include(ums => ums.Answers).ThenInclude(ans => ans.InterviewQuestion)
-                .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores)
+                .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores).ThenInclude(ums => ums.EmotionScores)
                 .SingleOrDefaultAsync(ums => ums.Id == id);
             //return await _db.UserMockSessions.FindAsync(userId, mockId);
         }

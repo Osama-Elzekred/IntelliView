@@ -1,9 +1,8 @@
-// components/AICharts.js
 import React from 'react';
 import { Line } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 
-const AICharts = ({ aiScores }) => {
+const EmotionScoresChart = ({ emotionScores }) => {
   const formatEmotionScores = (emotionScores) => {
     const labels = emotionScores.map((score) =>
       new Date(score.timestamp).toLocaleTimeString()
@@ -30,19 +29,6 @@ const AICharts = ({ aiScores }) => {
     return data;
   };
 
-  const formatSimilarityScore = (similarityScore) => {
-    return {
-      labels: ['Similarity Score'],
-      datasets: [
-        {
-          label: 'Answer Similarity Score',
-          data: [similarityScore],
-          backgroundColor: getRandomColor(),
-        },
-      ],
-    };
-  };
-
   const getRandomColor = () => {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -52,20 +38,12 @@ const AICharts = ({ aiScores }) => {
     return color;
   };
 
-  const emotionScoresData = formatEmotionScores(aiScores.emotionScores);
-  const similarityScoreData = formatSimilarityScore(
-    aiScores.answerSimilarityScore
-  );
-
   return (
     <div>
       <h2>Emotion Scores Over Time</h2>
-      <Line data={emotionScoresData} />
-
-      <h2>Answer Similarity Score</h2>
-      <Line data={similarityScoreData} />
+      <Line data={formatEmotionScores(emotionScores)} />
     </div>
   );
 };
 
-export default AICharts;
+export default EmotionScoresChart;

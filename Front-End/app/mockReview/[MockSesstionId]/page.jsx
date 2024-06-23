@@ -50,9 +50,10 @@ function MainComponent({ params }) {
           answer: answer.interviewQuestion.modelAnswer,
           VideoId: answer.interviewQuestion.videoId,
         },
-        aiRating: answer.answerAiEvaluationScore
+        similarityScore: answer.answerAiEvaluationScore
           ? answer.answerAiEvaluationScore.answerSimilarityScore
           : null,
+        aiObjects: answer.answerAiEvaluationScore,
         duration: '00:00', // You'll need to get this from somewhere
         level: 'Level 3', // You'll need to get this from somewhere
         notes: 'No notes', // You'll need to get this from somewhere
@@ -84,6 +85,7 @@ function MainComponent({ params }) {
   // Function to handle row click and display details screen
   const handleRowClick = (rowData) => {
     setSelectedRowData(rowData);
+    console.log('rowData : ', rowData);
     setDetailsVisible(true);
   };
 
@@ -112,6 +114,7 @@ function MainComponent({ params }) {
           // Transform the UserMockSessionDTO into the shape of the data object
           const data = transformData(userMockSessionDTO);
           console.log('data : ', data);
+
           setSessionData({
             mockid: userMockSessionDTO.mockId,
             jobid: userMockSessionDTO.jobId,

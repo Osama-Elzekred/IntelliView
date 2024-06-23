@@ -24,7 +24,6 @@ export default function Jobs() {
   const jobsPerPage = 5;
   const [test, setTest] = useState(false);
   const authToken = Cookies.get('authToken');
-  const [Refresh, setRefresh] = useState(false);
   const [searchForm, setSearchForm] = useState({
     title: '',
     jobType: '',
@@ -90,8 +89,23 @@ export default function Jobs() {
     }
   };
   useEffect(() => {
-    fetchJobs();
-  }, [currentPage, searchResult, Refresh]);
+    // Function to fetch jobs with a delay
+    const fetchJobsWithDelay = () => {
+      const timeoutId = setTimeout(() => {
+        fetchJobs(); // Assuming fetchJobs is the function that updates the state
+      }, 1000); // Adjust the delay as needed
+
+      // Cleanup function to clear the timeout
+      return () => clearTimeout(timeoutId);
+    };
+
+    fetchJobsWithDelay();
+
+    // Cleanup on component unmount
+    return () => {
+      // Any other cleanup code if needed
+    };
+  }, [currentPage, searchResult]); // Add dependencies as needed
 
   // const toast = useToast();
   const handleModalConfirm = () => {
@@ -101,7 +115,7 @@ export default function Jobs() {
       } else if (modalAction === 'end') {
         handleEndJob(jobIdSelected);
       }
-      open(' Job has been Altered successfully');
+      open(' Job has been Altered successfully', true);
 
       setIsModalVisible(false);
       setJobIdSelected(null);
@@ -175,8 +189,7 @@ export default function Jobs() {
         throw new Error('Failed to delete job');
       }
 
-      // fetchJobs(); // Call this function to refresh your job list or perform other updates
-      setRefresh(true);
+      fetchJobs(); // Call this function to refresh your job list or perform other updates
       // setLoading(false); // Set loading state if you have one
       // Handle success response (e.g., show a notification or update the UI)
     } catch (error) {
@@ -199,8 +212,6 @@ export default function Jobs() {
       }
 
       // fetchJobs(); // Call this function to refresh your job list or perform other updates
-      setRefresh(true);
-
       // setLoading(false); // Set loading state if you have one
       // Handle success response (e.g., show a notification or update the UI)
     } catch (error) {

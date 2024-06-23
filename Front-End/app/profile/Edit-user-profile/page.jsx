@@ -8,6 +8,7 @@ import { FileInput, Label, Badge, Button } from 'flowbite-react';
 import { Breadcrumb } from '../../components/components';
 import { redirect } from 'next/navigation';
 import Loading from '../../components/loading';
+import { useToast } from '../../components/Toast/ToastContext';
 const DOMAIN_NAME = 'localhost:7049';
 
 export default function EditProfile() {
@@ -16,6 +17,7 @@ export default function EditProfile() {
   const [click, setClick] = useState();
   const [cvName, setCvName] = useState(null);
   const [pagenum, setPagenum] = useState(1);
+  const { open } = useToast();
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -131,14 +133,16 @@ export default function EditProfile() {
         const data = await response.json();
 
         setPhotoUrl(`${data.imageURl}`);
-        console.log('Photo uploaded successfully');
+        open(' Photo uploaded successfully ', true);
+       // console.log('Photo uploaded successfully');
       } else {
-        console.log(formData);
-        console.error('Failed to upload photo');
+        open(' Failed to upload photo ', false);
+        //console.error('Failed to upload photo');
       }
       setLoading(false);
     } catch (error) {
-      console.error('Error uploading photo:', error);
+      open(' Failed to upload photo ', false);
+      //console.error('Error uploading photo:', error);
     }
   };
   localStorage.setItem('profilePhotoUrl', imageURL);
@@ -162,12 +166,15 @@ export default function EditProfile() {
         body: JSON.stringify(userData),
       });
       if (response.ok) {
+        open(' Profile updated successfully', true);
         console.log('Profile updated successfully');
       } else {
+        open(' Failed to update profile', false);
         console.error('Failed to update profile');
       }
       setLoading(false);
     } catch (error) {
+      open(' Failed to update profile', false);
       console.error('Error updating profile:', error);
     }
   };
@@ -199,15 +206,18 @@ export default function EditProfile() {
         localStorage.setItem('cvName', fileName);
         setCvName(fileName);
         setClick(true);
-        console.log('Files uploaded successfully');
+        open(' CV uploaded successfully', true);
+        //console.log('Files uploaded successfully');
         // Handle success
       } else {
-        console.error('Failed to upload files');
+        open(' Failed to upload files', false);
+        //console.error('Failed to upload files');
         // Handle failure
       }
       // setLoading(false);
     } catch (error) {
-      console.error('Error occurred while uploading files:', error);
+      open(' Failed to upload files', false);
+      //console.error('Error occurred while uploading files:', error);
       // Handle error
     }
   };
@@ -248,13 +258,16 @@ export default function EditProfile() {
         if (response.ok) {
           setColor('green');
           setMessage('Password Changed Successfully');
+          open(' Password updated successfully', true);
         } else {
           setColor('red');
           setMessage('Password Not Change');
+          open(' Failed to update Password', false);
         }
       } catch (error) {
         setColor('red');
         setMessage(error);
+        open(' Failed to update Password', false);
         console.error('error', error);
       }
     }

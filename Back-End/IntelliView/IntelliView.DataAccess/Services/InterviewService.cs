@@ -155,7 +155,6 @@ namespace IntelliView.DataAccess.Services
             // Extract AnswerText and SentimentScore from the AI response
             var AnswerText = aiResponse.TextAnalysis.ContainsKey("AnswerText") ? aiResponse.TextAnalysis["AnswerText"].ToString() : string.Empty;
             var sentimentScore = aiResponse.TextAnalysis.ContainsKey("SentimentScore") ? (decimal)aiResponse.TextAnalysis["SentimentScore"] : 0;
-
             return new VideoAiScore
             {
                 AnswerSimilarityScore = 0.9m,

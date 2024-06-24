@@ -7,9 +7,8 @@ import { Button, Tabs } from 'flowbite-react';
 import { HiUserCircle } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
 import Cookies from 'js-cookie';
-import { useToast } from '../../components/Toast/ToastContext';
+import { useToast } from '../../../components/Toast/ToastContext';
 import config from '../../../../config';
-
 
 export default function JobApplicants({ params }) {
   // const DOMAIN_NAME = '//localhost:7049/api';
@@ -106,7 +105,10 @@ export default function JobApplicants({ params }) {
 
       // Handle success response
       //alert(`${count} application(s) approved successfully based on cvScore.`);
-      open(`${count} application(s) approved successfully based on cvScore.`, true);
+      open(
+        `${count} application(s) approved successfully based on cvScore.`,
+        true
+      );
     } catch (error) {
       console.error('Error approving job applications:', error);
       //alert('Failed to approve job application(s). Please try again later.');

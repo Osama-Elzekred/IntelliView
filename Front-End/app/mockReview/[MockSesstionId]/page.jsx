@@ -123,6 +123,7 @@ function MainComponent({ params }) {
             jobid: userMockSessionDTO.jobId,
             // mockname: userMockSessionDTO.mockSessionName,
           });
+
           // Set the state
           setData(data);
         }
@@ -163,7 +164,7 @@ function MainComponent({ params }) {
               name: 'Applicants Mock Sessions',
               link: `${
                 sessionData.jobid !== null
-                  ? `/Interview/mockApplicants/${sessionData.jobid}`
+                  ? `/Interview/mockApplicants/${sessionData.mockid}`
                   : `#`
               }`,
             },

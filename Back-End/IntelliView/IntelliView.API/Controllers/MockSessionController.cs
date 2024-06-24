@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
-using IntelliView.Models.DTO;
 using IntelliView.Models.DTO.Interview;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -27,6 +26,8 @@ namespace IntelliView.API.Controllers
 
 
             var UserMockSession = await _unitOfWork.UserMockSessions.GetUserMockSessionAsync(id);
+
+
             if (UserMockSession == null)
             {
                 return BadRequest("No Mock Session Available ");

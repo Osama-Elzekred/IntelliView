@@ -4,9 +4,12 @@ import Layout from '../../components/Layout';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Loading from '../../components/loading';
+import config from '../../../config';
+
 
 function MainComponent() {
   const [fristTime, setFristTime] = useState(true);
+  const { DOMAIN_NAME } = config;
   const [questionSets, setQuestionSets] = React.useState([
     {
       icon: 'fa-star',
@@ -70,7 +73,7 @@ function MainComponent() {
   const [currentStep, setCurrentStep] = React.useState(1);
 
   const fetchTopics = async () => {
-    await fetch('https://localhost:7049/api/InterviewMock/allInterviewTopics')
+    await fetch(`https://${DOMAIN_NAME}/api/InterviewMock/allInterviewTopics`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Network response was not ok');
@@ -95,7 +98,7 @@ function MainComponent() {
   };
   const fetchMocks = (id) => {
     fetch(
-      `https://localhost:7049/api/InterviewMock/GetInterviewMocks/${parseInt(
+      `https://${DOMAIN_NAME}/api/InterviewMock/GetInterviewMocks/${parseInt(
         id
       )}`
     )

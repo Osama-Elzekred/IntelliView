@@ -13,12 +13,15 @@ import {
 } from '../../components/components';
 import Cookies from 'js-cookie';
 import Loading from '../../components/loading';
+import config from '../../../config';
+
 
 export default function Post_job(JobId) {
   const [openModal, setOpenModal] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
   const QuestionInputRef = useRef(null);
+  const { DOMAIN_NAME } = config;
   const CustQestionRef = useRef(null);
   const AnswerInputRef = useRef(null);
   const steps = ['Job info', `Custom Q&A`, 'Interview Q&A'];
@@ -223,7 +226,7 @@ export default function Post_job(JobId) {
     // //console.log(Cookies.get('authToken'));
     // Submit the form data
     try {
-      const response = await fetch(`https://localhost:7049/api/job`, {
+      const response = await fetch(`https://${DOMAIN_NAME}/api/job`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -256,7 +259,7 @@ export default function Post_job(JobId) {
     };
 
     try {
-      const response = await fetch(`https://localhost:7049/api/job/${JobId}`, {
+      const response = await fetch(`https://${DOMAIN_NAME}/api/job/${JobId}`, {
         method: 'put',
         headers: {
           'Content-Type': 'application/json',

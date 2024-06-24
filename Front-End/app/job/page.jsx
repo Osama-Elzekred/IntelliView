@@ -6,6 +6,8 @@ import Cookies from 'js-cookie';
 import CardComp from '../components/Card';
 import Loading from '../components/loading';
 import { Breadcrumb, Filterbar } from '../components/components';
+import config from '../../config';
+
 
 export default function Jobs() {
   //const imageURl = 'images/job_logo_1.jpg';
@@ -13,6 +15,7 @@ export default function Jobs() {
   const [searchResult, setSearchResult] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const { DOMAIN_NAME } = config;
   const [jobs, setJobs] = useState([]);
   const jobsPerPage = 5;
   const [test, setTest] = useState(false);
@@ -65,7 +68,7 @@ export default function Jobs() {
       const authToken = Cookies.get('authToken');
 
       try {
-        const response = await fetch('https://localhost:7049/api/Job/GetAll', {
+        const response = await fetch(`https://${DOMAIN_NAME}/api/Job/GetAll`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${authToken}`,

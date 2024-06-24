@@ -8,10 +8,13 @@ import { HiUserCircle } from 'react-icons/hi';
 import { MdDashboard } from 'react-icons/md';
 import Cookies from 'js-cookie';
 import { useToast } from '../../../components/Toast/ToastContext';
+import config from '../../../../config';
+
 
 export default function JobApplicants({ params }) {
-  const DOMAIN_NAME = '//localhost:7049/api';
+  // const DOMAIN_NAME = '//localhost:7049/api';
   const { open } = useToast();
+  // const DOMAIN_NAME = '//localhost:7049/api';
   const authToken = Cookies.get('authToken');
   const [mockId, setMockId] = useState(null);
   const [data, setData] = useState([]);
@@ -24,6 +27,7 @@ export default function JobApplicants({ params }) {
   const [approvedTotalPages, setApprovedTotalPages] = useState(0);
   const [approvedCurrentPage, setApprovedCurrentPage] = useState(1);
   const [applicationsDisplayed, setApplicationsDisplayed] = useState([]);
+  const { DOMAIN_NAME } = config;
   const [approvedApplicationsDisplayed, setApprovedApplicationsDisplayed] =
     useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +36,7 @@ export default function JobApplicants({ params }) {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        `https://${DOMAIN_NAME}/JobApplication/Applications/` + params.id,
+        `https://${DOMAIN_NAME}/api/JobApplication/Applications/` + params.id,
         {
           method: 'GET',
           headers: {
@@ -112,7 +116,7 @@ export default function JobApplicants({ params }) {
   const handleApprove = async (jobId, userId) => {
     try {
       const response = await fetch(
-        `https://${DOMAIN_NAME}/JobApplication/approve/job/${jobId}/user/${userId}`,
+        `https://${DOMAIN_NAME}/api/JobApplication/approve/job/${jobId}/user/${userId}`,
         {
           method: 'PATCH',
           headers: {
@@ -137,7 +141,7 @@ export default function JobApplicants({ params }) {
   const handleReject = async (jobId, userId) => {
     try {
       const response = await fetch(
-        `https://${DOMAIN_NAME}/JobApplication/reject/job/${jobId}/user/${userId}`,
+        `https://${DOMAIN_NAME}/api/JobApplication/reject/job/${jobId}/user/${userId}`,
         {
           method: 'PATCH',
           headers: {
@@ -165,7 +169,7 @@ export default function JobApplicants({ params }) {
   const sendInterviewEmail = async (jobId, interviewData) => {
     try {
       const response = await fetch(
-        `https://${DOMAIN_NAME}/JobApplication/interview/job/${jobId}`,
+        `https://${DOMAIN_NAME}/api/JobApplication/interview/job/${jobId}`,
         {
           method: 'POST',
           headers: {

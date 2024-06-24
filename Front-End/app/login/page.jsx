@@ -3,16 +3,19 @@ import React from 'react';
 import { Layout, Breadcrumb } from '../components/components';
 import Link from 'next/link';
 import { useState } from 'react';
+import config from '../../config';
+
 
 // import  '../public/scss/styles.scss';
 // import '../public/scss/style.scss';
 export default function login() {
-  const DOMAIN_NAME = 'localhost:7049';
+  // const DOMAIN_NAME = 'localhost:7049';
   const [isFlipped, setIsFlipped] = useState(true);
   const [loginForm, setLogin] = useState({
     Email: '',
     Password: '',
   });
+  const { DOMAIN_NAME } = config;
   const [messageOfWrong, setMessageOfWrong] = useState('');
   const [activeButton, setActiveButton] = useState('User');
 

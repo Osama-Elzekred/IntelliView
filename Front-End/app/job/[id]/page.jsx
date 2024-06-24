@@ -6,15 +6,18 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Loading from '../../components/loading';
 import { Badge } from 'flowbite-react';
+import config from '../../../config.js';
+
 
 import { Breadcrumb } from '../../components/components';
-const DOMAIN_NAME = 'localhost:7049';
+// const DOMAIN_NAME = 'localhost:7049';
 
 export default function JobDetails({ params }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [roleFromServer, setRoleFromServer] = useState(null);
   const authToken = Cookies.get('authToken');
+  const { DOMAIN_NAME } = config;
 
   useEffect(() => {
     // Access localStorage only on the client side

@@ -4,14 +4,17 @@ import React, { useState, useEffect, Suspense } from 'react';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { Loading, Breadcrumb } from '../../components/components';
+import config from 'config';
+
 
 function CompanyDetails({ params }) {
-  const DOMAIN_NAME = 'localhost:7049/api';
+  // const DOMAIN_NAME = 'localhost:7049/api';
   const authToken = Cookies.get('authToken');
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isPending, setIsPending] = useState(true);
+  const { DOMAIN_NAME } = config;
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -5,13 +5,16 @@ import Cookies from 'js-cookie';
 import { Button, Modal } from 'flowbite-react';
 import Link from 'next/link';
 import Loading from '../../../components/loading';
+import config from '../../../../config';
 
-const DOMAIN_NAME = 'localhost:7049';
+
+// const DOMAIN_NAME = 'localhost:7049';
 function MainComponent({ params }) {
   const [error, setError] = useState(false);
   const [title, setTitle] = useState('');
   const authToken = Cookies.get('authToken');
   const [loading, setLoading] = useState(true);
+  const { DOMAIN_NAME } = config;
   const fetchMockTitle = async () => {
     try {
       const response = await fetch(

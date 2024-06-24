@@ -1,1 +1,5 @@
-export const DOMAIN_NAME = "localhost:7049";
+const config = {
+    DOMAIN_NAME: 'intelliview2.azurewebsites.net',
+  };
+  
+  export default config;

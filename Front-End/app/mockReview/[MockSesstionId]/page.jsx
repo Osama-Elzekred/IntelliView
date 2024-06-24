@@ -88,7 +88,7 @@ function MainComponent({ params }) {
   // Function to handle row click and display details screen
   const handleRowClick = (rowData) => {
     setSelectedRowData(rowData);
-    console.log('rowData : ', rowData);
+    //console.log('rowData : ', rowData);
     setDetailsVisible(true);
   };
 
@@ -113,10 +113,10 @@ function MainComponent({ params }) {
         if (response.ok) {
           const userMockSessionDTO = await response.json();
 
-          console.log('userMockSessionDTO : ', userMockSessionDTO);
+          //console.log('userMockSessionDTO : ', userMockSessionDTO);
           // Transform the UserMockSessionDTO into the shape of the data object
           const data = transformData(userMockSessionDTO);
-          console.log('data : ', data);
+          //console.log('data : ', data);
 
           setSessionData({
             mockid: userMockSessionDTO.mockId,
@@ -128,7 +128,7 @@ function MainComponent({ params }) {
           setData(data);
         }
       } catch (error) {
-        console.log('error : ', error);
+        //console.log('error : ', error);
       }
       setLoading(false);
     };

@@ -43,7 +43,7 @@ export default function MainComponent({ params }) {
           setLoading(false);
         }
       } catch (error) {
-        console.log('error : ', error);
+        //console.log('error : ', error);
       }
     };
     fetchUsers();
@@ -60,7 +60,7 @@ export default function MainComponent({ params }) {
     const index = usersPreview.findIndex((user) => user.userId === userId);
     if (index === -1) return; // User not found
 
-    console.log('Approving user: ', userId);
+    //console.log('Approving user: ', userId);
     const updatedUsers = [...usersPreview];
     updatedUsers[index] = { ...updatedUsers[index], isApproved: true };
     setUsersPreview(updatedUsers); // Assuming you have a state setter for usersPreview
@@ -121,8 +121,8 @@ export default function MainComponent({ params }) {
       // }, 200);
     }
   };
-  console.log('users : ', usersPreview.length);
-  console.log('total pages : ', totalPages);
+  //console.log('users : ', usersPreview.length);
+  //console.log('total pages : ', totalPages);
   if (loading) {
     return <Loading />;
   }

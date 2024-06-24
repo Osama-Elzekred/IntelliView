@@ -49,7 +49,7 @@ export default function JobApplicants({ params }) {
       const result = await response.json();
       setData(result.applications);
       setMockId(result.mockId);
-      console.log(result);
+      //console.log(result);
       setLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);

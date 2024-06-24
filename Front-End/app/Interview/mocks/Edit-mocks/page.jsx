@@ -45,7 +45,7 @@ function MainComponent() {
       })
       .then((data) => {
         setTopics(data);
-        // console.log(data);
+        // //console.log(data);
       })
       .catch((error) =>
         console.error(

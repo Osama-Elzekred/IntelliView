@@ -48,7 +48,7 @@ export default function Job_Application_details({ params }) {
         }
         const result = await response.json();
         setApplicantDetails(result);
-        console.log(result);
+        //console.log(result);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);

@@ -49,7 +49,7 @@ export default function Header() {
 
   useEffect(() => {
     // Check if window object is defined (running in
-    console.log('profilePhotoUrl', profilePhotoUrl);
+    //console.log('profilePhotoUrl', profilePhotoUrl);
     if (typeof window !== 'undefined') {
       // Retrieve the profile photo URL from local storage
       const storedProfilePhotoUrl = localStorage.getItem('profilePhotoUrl');

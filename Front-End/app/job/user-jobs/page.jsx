@@ -34,13 +34,13 @@ export default function userJobs() {
         }
         const jobs = await response.json();
         setJobListings(jobs);
-        console.log(jobs);
+        //console.log(jobs);
         setLoading(false);
       } catch (error) {
-        console.log(authToken);
+        //console.log(authToken);
         setJobListings(jobs);
 
-        console.log('error : ', error);
+        //console.log('error : ', error);
       }
     };
     fetchJobs();

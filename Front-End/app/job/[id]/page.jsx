@@ -56,12 +56,12 @@ export default function JobDetails({ params }) {
   // }
 
   //const jobData = Object.keys(data).length > 0 ? [data] : [];
-  //console.log(jobData);
+  ////console.log(jobData);
 
   const date = new Date(data.createdAt);
   const options = { year: 'numeric', month: 'short', day: 'numeric' };
   const formattedDate = date.toLocaleDateString('en-US', options);
-  //console.log(jobData[0].createdAt);
+  ////console.log(jobData[0].createdAt);
   const date1 = new Date(data.endedAt);
   const options1 = { year: 'numeric', month: 'short', day: 'numeric' };
   const formattedDate1 = date1.toLocaleDateString('en-US', options1);
@@ -151,7 +151,7 @@ export default function JobDetails({ params }) {
                       <span className="fa-solid fa-pen-to-square mr-2" />
                       Edit job
                     </Link>
-                    {roleFromServer.toLowerCase() === 'user' &&
+                    {roleFromServer && roleFromServer.toLowerCase() === 'user' &&
                     new Date(data.endedAt) > Date.now() ? (
                       <Link
                         href={`/job/${params.id}/apply`}
@@ -215,7 +215,7 @@ export default function JobDetails({ params }) {
                       </Link>
                     </div>
                     <div className="col-6">
-                      {roleFromServer.toLowerCase() === 'user' &&
+                      {roleFromServer && roleFromServer.toLowerCase() === 'user' &&
                       new Date(data.endedAt) > Date.now() ? (
                         <Link
                           href={`/job/${params.id}/apply`}

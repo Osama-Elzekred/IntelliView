@@ -53,12 +53,12 @@ export default function JobDetails({ params }) {
   // }
 
   //const jobData = Object.keys(data).length > 0 ? [data] : [];
-  //console.log(jobData);
+  ////console.log(jobData);
 
   const date = new Date(data.createdAt);
   const options = { year: 'numeric', month: 'short', day: 'numeric' };
   const formattedDate = date.toLocaleDateString('en-US', options);
-  //console.log(jobData[0].createdAt);
+  ////console.log(jobData[0].createdAt);
   const date1 = new Date(data.endedAt);
   const options1 = { year: 'numeric', month: 'short', day: 'numeric' };
   const formattedDate1 = date1.toLocaleDateString('en-US', options1);

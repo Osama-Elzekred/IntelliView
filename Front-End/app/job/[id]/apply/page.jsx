@@ -50,7 +50,7 @@ function Apply({ params }) {
       )
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          //console.log(data);
           setQuestionslist(data);
           const initialAnswers = data.reduce(
             (acc, [id]) => ({ ...acc, [id]: '' }),
@@ -101,7 +101,7 @@ function Apply({ params }) {
       // Basic input validation for email and phone
       if (name === 'email' && !isValidEmail(value)) {
         // Handle invalid email
-        console.log('Invalid email');
+        //console.log('Invalid email');
         setAnswers((prevAnswers) => ({
           ...prevAnswers,
         }));
@@ -109,7 +109,7 @@ function Apply({ params }) {
 
       if (name === 'phone' && !isValidPhone(value)) {
         // Handle invalid phone number
-        console.log('Invalid phone number');
+        //console.log('Invalid phone number');
         setAnswers((prevAnswers) => ({
           ...prevAnswers,
         }));
@@ -134,7 +134,7 @@ function Apply({ params }) {
       });
 
       formData.append('questionsAnswers', JSON.stringify(answerslist));
-      console.log(formData);
+      //console.log(formData);
       const response = await fetch(
         `https://${DOMAIN_NAME}/JobApplication/submitAnswers`,
         {
@@ -148,10 +148,10 @@ function Apply({ params }) {
 
       if (response.ok) {
         handleNext();
-        console.log('Answers submitted successfully!');
+        //console.log('Answers submitted successfully!');
         // Optionally, handle success response from the backend
       } else {
-        console.log('Failed to submit answers');
+        //console.log('Failed to submit answers');
         // Optionally, handle error response from the backend
       }
     } catch (error) {
@@ -294,7 +294,7 @@ function Apply({ params }) {
           gradientDuoTone="greenToBlue"
           size="sm"
           onClick={() => {
-            // console.log(answers);
+            // //console.log(answers);
             setFinished(true);
             sendAnswers();
           }} // Call handleSubmit when submitting answers

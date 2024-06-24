@@ -35,9 +35,9 @@ function MainComponent({ params }) {
       }
       const data = await response.json();
       setTitle(data.title);
-      // console.log(data);
+      // //console.log(data);
     } catch (error) {
-      console.log('error : ', error);
+      //console.log('error : ', error);
     }
     setLoading(false);
   };
@@ -69,7 +69,7 @@ function MainComponent({ params }) {
       setQVideo(data.questions[0].url);
       // Initialize recordedVideos with an array of nulls based on the number of questions
       setRecordedVideos(Array(data.questions.length).fill(null));
-      console.log(data);
+      //console.log(data);
     } catch (error) {
       // TODO: Display a user-friendly error message
     }
@@ -102,7 +102,7 @@ function MainComponent({ params }) {
 
   useEffect(() => {
     fetchMockTitle();
-    console.log('fetching mock title');
+    //console.log('fetching mock title');
   }, []);
 
   React.useEffect(() => {
@@ -149,7 +149,7 @@ function MainComponent({ params }) {
           newRecordedVideos[currentIndex] = blob;
           setRecordedVideos(newRecordedVideos);
           const blobUrl = URL.createObjectURL(blob);
-          console.log(recordedVideos);
+          //console.log(recordedVideos);
         }
       };
       mediaRecorder.start();
@@ -206,7 +206,7 @@ function MainComponent({ params }) {
   useEffect(() => {
     if (recordingTime === 59) {
       handleStopRecording();
-      console.log('stop');
+      //console.log('stop');
       setRecorded(true);
       // handleNextQuestion();
     }
@@ -484,8 +484,8 @@ function MainComponent({ params }) {
   async function uploadVideo(blob, questionId, mockid, mockSessionId) {
     const formData = new FormData();
     formData.append('video', blob);
-    console.log(blob);
-    console.log(authToken);
+    //console.log(blob);
+    //console.log(authToken);
     const response = await fetch(
       `https://${DOMAIN_NAME}/api/Interview/MockSession/${mockSessionId}/mock/${mockid}/question/${questionId}`,
       {

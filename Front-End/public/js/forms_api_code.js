@@ -143,14 +143,14 @@
 // //         })
 // //         .then((data) => {
 // //           if (data.token) {
-// //             console.log('error');
+// //             //console.log('error');
 // //             document.cookie = `authToken=${data.token};path=/`;
 // //             document.cookie = `user_id=${data.id};path=/`;
 // //             localStorage.setItem('roleFromServer', data.roles);
 // //             document.cookie = `role=${data.roles[0].toLowerCase()};path=/`;
 // //             document.cookie = `userName=${data.username};path=/`;
 // //             window.location.href = `/Home`;
-// //             console.log(data);
+// //             //console.log(data);
 // //           } else if (data.message) {
 // //             messageOfWrong.textContent = `${data.message}`;
 // //             messageOfWrong.style.display = 'block';
@@ -161,7 +161,7 @@
 // //             messageOfWrong.textContent =
 // //               'Sorry ... The Server can not be reach now ... please try later ';
 // //             messageOfWrong.style.display = 'block';
-// //             console.log('Response details:', error);
+// //             //console.log('Response details:', error);
 // //           }
 // //         });
 // //     }
@@ -217,9 +217,9 @@
 // //       typeof password_confirm !== 'string'
 // //     ) {
 // //       console.error('Username and password must be strings.');
-// //       console.log(typeof username);
-// //       console.log(typeof password);
-// //       console.log(typeof password_confirm);
+// //       //console.log(typeof username);
+// //       //console.log(typeof password);
+// //       //console.log(typeof password_confirm);
 
 // //       return;
 // //     }

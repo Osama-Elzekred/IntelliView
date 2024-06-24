@@ -105,7 +105,7 @@ export default function EditProfile() {
       });
       if (response.ok) {
         open(' Profile updated successfully', true);
-        console.log('Profile updated successfully');
+        //console.log('Profile updated successfully');
       } else {
         open(' Failed to update profile', false);
         console.error('Failed to update profile');
@@ -122,7 +122,7 @@ export default function EditProfile() {
     setPasswordForm({ ...passwordForm, [field]: value });
   };
   const handlePasswordSubmit = async () => {
-    console.log('password part here ');
+    //console.log('password part here ');
     if (
       passwordForm.currentPassword === '' ||
       passwordForm.newPassword === '' ||
@@ -170,12 +170,12 @@ export default function EditProfile() {
   };
   const handleUploadPhoto = async (event) => {
     const selectedFile = event.target.files[0];
-    console.log(selectedFile);
+    //console.log(selectedFile);
     // Create a new FormData object
     const formData = new FormData();
     formData.append('file', selectedFile);
     // Send the POST request to the server
-    console.log(formData);
+    //console.log(formData);
 
     try {
       const response = await fetch(
@@ -193,7 +193,7 @@ export default function EditProfile() {
 
         setPhotoUrl(`${data.imageURl}`);
         open(' Photo uploaded successfully ', true);
-       // console.log('Photo uploaded successfully');
+       // //console.log('Photo uploaded successfully');
       } else {
         open(' Failed to upload photo ', false);
         //console.error('Failed to upload photo');

@@ -31,7 +31,7 @@ function UserMocks() {
         }
       } catch (error) {
         setMocksData(response);
-        console.log('error : ', error);
+        //console.log('error : ', error);
       }
     };
     fetchMocksData();

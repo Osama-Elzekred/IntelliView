@@ -87,7 +87,7 @@ function MainComponent() {
         // });
 
         setTopics(data);
-        console.log(data);
+        //console.log(data);
       })
       .catch((error) =>
         console.error(
@@ -139,7 +139,7 @@ function MainComponent() {
     }
   }, [currentStep, selectedTopic]); // This effect runs whenever currentStep or selectedTopic changes
   // useEffect(() => {
-  //   console.log(interviewMocks, 'interviewMocks');
+  //   //console.log(interviewMocks, 'interviewMocks');
   // }, [interviewMocks]); // This effect runs whenever interviewMocks changes
   const handleSetClick = (title) => setSelectedSet(title);
   const handleTopicClick = (id, IconClass) => {

@@ -88,7 +88,7 @@ export default function Jobs() {
       }
       setLoading(false);
     } catch (error) {
-      console.log('error : ', error);
+      //console.log('error : ', error);
     }
   };
   useEffect(() => {
@@ -209,7 +209,7 @@ export default function Jobs() {
           'Content-Type': 'application/json',
         },
       });
-      console.log('response', response);
+      //console.log('response', response);
       if (!response.ok) {
         throw new Error('Failed to end job');
       }

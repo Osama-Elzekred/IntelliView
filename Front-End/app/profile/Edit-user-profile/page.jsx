@@ -10,7 +10,8 @@ import { redirect } from 'next/navigation';
 import Loading from '../../components/loading';
 import config from '../../../config';
 
-// const DOMAIN_NAME = 'localhost:7049';
+import { useToast } from '../../components/Toast/ToastContext';
+//const DOMAIN_NAME = 'localhost:7049';
 
 export default function EditProfile() {
   let [message, setMessage] = useState('');
@@ -19,6 +20,7 @@ export default function EditProfile() {
   const [cvName, setCvName] = useState(null);
   const [pagenum, setPagenum] = useState(1);
   const { DOMAIN_NAME } = config;
+  const { open } = useToast();
   const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
@@ -71,7 +73,7 @@ export default function EditProfile() {
         setPhotoUrl(`${data.imageURl}`);
         setCvName(data.cvurl);
         setLoading(false);
-        // console.log('Profile data:', data);
+        // //console.log('Profile data:', data);
       })
       .catch((error) => {
         console.error('Error fetching profile data:', error);
@@ -98,7 +100,7 @@ export default function EditProfile() {
       value = name.target.value;
       name = name.target.name;
     }
-    // console.log('name:', name, 'value:', value);
+    // //console.log('name:', name, 'value:', value);
     setUserData({ ...userData, [name]: value });
   };
   const handleCVChange = async (event) => {
@@ -108,16 +110,16 @@ export default function EditProfile() {
 
   //  const [file, setFile] = useState(null);
   const handlePhotoChange = async (event) => {
-    // console.log('file:', event.target.files[0]);
+    // //console.log('file:', event.target.files[0]);
 
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
-    console.log('file:', selectedFile);
+    //console.log('file:', selectedFile);
     // Create a new FormData object
     const formData = new FormData();
     formData.append('file', selectedFile);
     // Send the POST request to the server
-    console.log(formData);
+    //console.log(formData);
 
     try {
       const response = await fetch(
@@ -134,14 +136,16 @@ export default function EditProfile() {
         const data = await response.json();
 
         setPhotoUrl(`${data.imageURl}`);
-        console.log('Photo uploaded successfully');
+        open(' Photo uploaded successfully ', true);
+       // //console.log('Photo uploaded successfully');
       } else {
-        console.log(formData);
-        console.error('Failed to upload photo');
+        open(' Failed to upload photo ', false);
+        //console.error('Failed to upload photo');
       }
       setLoading(false);
     } catch (error) {
-      console.error('Error uploading photo:', error);
+      open(' Failed to upload photo ', false);
+      //console.error('Error uploading photo:', error);
     }
   };
   localStorage.setItem('profilePhotoUrl', imageURL);
@@ -165,12 +169,15 @@ export default function EditProfile() {
         body: JSON.stringify(userData),
       });
       if (response.ok) {
-        console.log('Profile updated successfully');
+        open(' Profile updated successfully', true);
+        //console.log('Profile updated successfully');
       } else {
+        open(' Failed to update profile', false);
         console.error('Failed to update profile');
       }
       setLoading(false);
     } catch (error) {
+      open(' Failed to update profile', false);
       console.error('Error updating profile:', error);
     }
   };
@@ -202,15 +209,18 @@ export default function EditProfile() {
         localStorage.setItem('cvName', fileName);
         setCvName(fileName);
         setClick(true);
-        console.log('Files uploaded successfully');
+        open(' CV uploaded successfully', true);
+        ////console.log('Files uploaded successfully');
         // Handle success
       } else {
-        console.error('Failed to upload files');
+        open(' Failed to upload files', false);
+        //console.error('Failed to upload files');
         // Handle failure
       }
       // setLoading(false);
     } catch (error) {
-      console.error('Error occurred while uploading files:', error);
+      open(' Failed to upload files', false);
+      //console.error('Error occurred while uploading files:', error);
       // Handle error
     }
   };
@@ -219,7 +229,7 @@ export default function EditProfile() {
     setPasswordForm({ ...passwordForm, [field]: value });
   };
   const handlePasswordSubmit = async () => {
-    console.log('password part here ');
+    //console.log('password part here ');
     if (
       passwordForm.currentPassword === '' ||
       passwordForm.newPassword === '' ||
@@ -251,13 +261,16 @@ export default function EditProfile() {
         if (response.ok) {
           setColor('green');
           setMessage('Password Changed Successfully');
+          open(' Password updated successfully', true);
         } else {
           setColor('red');
           setMessage('Password Not Change');
+          open(' Failed to update Password', false);
         }
       } catch (error) {
         setColor('red');
         setMessage(error);
+        open(' Failed to update Password', false);
         console.error('error', error);
       }
     }

@@ -49,9 +49,9 @@ if (
         newPassword.value != '' &&
         newPasswordConfirm != ''
       ) {
-        console.log(oldPassword.value);
-        console.log(newPassword.value);
-        console.log(newPasswordConfirm.value);
+        //console.log(oldPassword.value);
+        //console.log(newPassword.value);
+        //console.log(newPasswordConfirm.value);
         if (newPassword.value === newPasswordConfirm.value) {
           fetch(`https://localhost:7049/api/Password/change-password`, {
             method: 'POST',
@@ -144,7 +144,7 @@ if (inputFile) {
         profileImage.src = `${data.imageURl}`;
       })
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
       });
   });
 }
@@ -171,7 +171,7 @@ if (CVFile) {
         // profileImage.src = `../../../Back-End/IntelliView/IntelliView.API/${data.imageURl}`;
       })
       .catch((error) => {
-        console.log(error);
+        //console.log(error);
       });
   });
 }
@@ -212,7 +212,7 @@ if (document.readyState === 'loading') {
       title.value = data.title;
       phoneInput.value = data.phoneNumber;
       profileImage.src = `${data.imageURl}`;
-      console.log('Profile data:', data.firstName);
+      //console.log('Profile data:', data.firstName);
     })
     .catch((error) => {
       // Handle any errors that occurred during the fetch operation

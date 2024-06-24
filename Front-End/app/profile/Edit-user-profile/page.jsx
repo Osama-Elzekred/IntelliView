@@ -70,7 +70,7 @@ export default function EditProfile() {
         setPhotoUrl(`${data.imageURl}`);
         setCvName(data.cvurl);
         setLoading(false);
-        // console.log('Profile data:', data);
+        // //console.log('Profile data:', data);
       })
       .catch((error) => {
         console.error('Error fetching profile data:', error);
@@ -97,7 +97,7 @@ export default function EditProfile() {
       value = name.target.value;
       name = name.target.name;
     }
-    // console.log('name:', name, 'value:', value);
+    // //console.log('name:', name, 'value:', value);
     setUserData({ ...userData, [name]: value });
   };
   const handleCVChange = async (event) => {
@@ -107,16 +107,16 @@ export default function EditProfile() {
 
   //  const [file, setFile] = useState(null);
   const handlePhotoChange = async (event) => {
-    // console.log('file:', event.target.files[0]);
+    // //console.log('file:', event.target.files[0]);
 
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
-    console.log('file:', selectedFile);
+    //console.log('file:', selectedFile);
     // Create a new FormData object
     const formData = new FormData();
     formData.append('file', selectedFile);
     // Send the POST request to the server
-    console.log(formData);
+    //console.log(formData);
 
     try {
       const response = await fetch(
@@ -134,7 +134,7 @@ export default function EditProfile() {
 
         setPhotoUrl(`${data.imageURl}`);
         open(' Photo uploaded successfully ', true);
-       // console.log('Photo uploaded successfully');
+       // //console.log('Photo uploaded successfully');
       } else {
         open(' Failed to upload photo ', false);
         //console.error('Failed to upload photo');
@@ -156,7 +156,7 @@ export default function EditProfile() {
     // }));
 
     try {
-      // console.log(userData);
+      // //console.log(userData);
       const response = await fetch('https://localhost:7049/api/Profile', {
         method: 'PUT',
         headers: {
@@ -167,7 +167,7 @@ export default function EditProfile() {
       });
       if (response.ok) {
         open(' Profile updated successfully', true);
-        console.log('Profile updated successfully');
+        //console.log('Profile updated successfully');
       } else {
         open(' Failed to update profile', false);
         console.error('Failed to update profile');
@@ -207,7 +207,7 @@ export default function EditProfile() {
         setCvName(fileName);
         setClick(true);
         open(' CV uploaded successfully', true);
-        //console.log('Files uploaded successfully');
+        ////console.log('Files uploaded successfully');
         // Handle success
       } else {
         open(' Failed to upload files', false);
@@ -226,7 +226,7 @@ export default function EditProfile() {
     setPasswordForm({ ...passwordForm, [field]: value });
   };
   const handlePasswordSubmit = async () => {
-    console.log('password part here ');
+    //console.log('password part here ');
     if (
       passwordForm.currentPassword === '' ||
       passwordForm.newPassword === '' ||

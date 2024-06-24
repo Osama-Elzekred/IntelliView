@@ -45,9 +45,9 @@ saveChanges.addEventListener("click", function (e) {
     newPassword.value != "" &&
     newPasswordConfirm != ""
   ) {
-    console.log(oldPassword.value);
-    console.log(newPassword.value);
-    console.log(newPasswordConfirm.value);
+    //console.log(oldPassword.value);
+    //console.log(newPassword.value);
+    //console.log(newPasswordConfirm.value);
     if (newPassword.value === newPasswordConfirm.value) {
       fetch(`https://${DOMAIN_NAME}/api/Password/change-password`, {
         method: "POST",
@@ -112,10 +112,10 @@ saveChanges.addEventListener("click", function (e) {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        //console.log(data);
       })
       .catch((err) => {
-        console.log(err);
+        //console.log(err);
       });
   }
 });
@@ -137,7 +137,7 @@ inputFile.addEventListener("change", function (e) {
       return response.json();
     })
     .catch((error) => {
-      console.log(error);
+      //console.log(error);
     });
 });
 

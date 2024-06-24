@@ -195,7 +195,7 @@ export default function Post_job(JobId) {
     // if (Object.keys(errors).length > 0) {
     //   // If there are errors, update the state and stop form submission
     //   setErrors(errors);
-    //   console.log(errors);
+    //   //console.log(errors);
     //   return;
     // }
     let idCounter = 0;
@@ -220,7 +220,7 @@ export default function Post_job(JobId) {
 
     const authTokenCookie = Cookies.get('authToken');
     if (!authTokenCookie) window.location.href = `/unauthorized`;
-    // console.log(Cookies.get('authToken'));
+    // //console.log(Cookies.get('authToken'));
     // Submit the form data
     try {
       const response = await fetch(`https://localhost:7049/api/job`, {

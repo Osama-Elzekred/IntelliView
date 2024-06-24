@@ -21,8 +21,8 @@ const FullScreenModal = ({ onClose, rowData }) => {
   useEffect(() => {
     // Disable scrolling on the body element when the modal is opened
     document.body.style.overflow = 'hidden';
-    // console.log(rowData, 'rowData');
-    console.log(aiObjects, 'aiObjects');
+    // //console.log(rowData, 'rowData');
+    //console.log(aiObjects, 'aiObjects');
 
     // Re-enable scrolling on the body element when the modal is closed
     return () => {

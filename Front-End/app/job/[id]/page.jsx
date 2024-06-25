@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import Loading from '../../components/loading';
 import { Badge } from 'flowbite-react';
 import config from '../../../config.js';
-
+import { useRouter } from 'next/router';
 
 import { Breadcrumb } from '../../components/components';
 // const DOMAIN_NAME = 'localhost:7049';
@@ -17,6 +17,8 @@ export default function JobDetails({ params }) {
   const [loading, setLoading] = useState(true);
   const [roleFromServer, setRoleFromServer] = useState(null);
   const authToken = Cookies.get('authToken');
+  const router = useRouter();
+  const { id } = router.query;
   const { DOMAIN_NAME } = config;
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export default function JobDetails({ params }) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://${DOMAIN_NAME}/api/job/` + params.id,
+          `https://${DOMAIN_NAME}/api/job/` + id,
           {
             method: 'GET',
             headers: {

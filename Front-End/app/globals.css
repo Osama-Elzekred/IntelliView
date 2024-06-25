@@ -31,3 +31,8 @@ body {
     text-wrap: balance;
   }
 } */
+
+input[type='checkbox']:checked {
+  border-color: #17a9c3;
+  background-color: #17a9c3;
+}

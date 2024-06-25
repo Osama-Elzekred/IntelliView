@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import config from '../../config';
 
-
 // import  '../public/scss/styles.scss';
 // import '../public/scss/style.scss';
 export default function login() {
@@ -215,28 +214,15 @@ export default function login() {
           <div className=" bg-white">
             <div className="container">
               <div className="font-[sans-serif] text-[#333]">
-                <div className="min-h-screen flex flex-col items-center justify-center">
-                  <div className="grid md:grid-cols-2 items-center gap-4 max-w-6xl w-full p-4 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
+                <div className=" flex flex-col items-center justify-center">
+                  <div className="grid  items-center gap-4 max-w-2xl w-full p-1 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
                     {isFlipped ? (
                       <form className="form2" onSubmit={handleSubmit}>
-                        <div className="w-full  p-6">
-                          <h1 className="text-4xl font-bold mb-6">Sign in</h1>
-                          <div className="mt-2">
-                            Don't have an account?{' '}
-                            <span
-                              href="#"
-                              className="text-primary"
-                              onClick={() => {
-                                setIsFlipped(!isFlipped);
-                                window.scrollTo({
-                                  top: 500,
-                                  behavior: 'smooth',
-                                });
-                              }}
-                            >
-                              Register here
-                            </span>
-                          </div>
+                        <div className="w-full  p-8">
+                          <h1 className="text-4xl text-center font-semibold mb-4">
+                            Sign in
+                          </h1>
+
                           <div className="space-y-4 mt-6">
                             <div className="w-full">
                               <label
@@ -270,11 +256,12 @@ export default function login() {
                                 className="w-full px-4 py-3 border rounded-lg text-sm"
                               />
                             </div>
+
                             <div className="flex items-center justify-between">
                               <label className="flex items-center text-sm">
                                 <input
                                   type="checkbox"
-                                  className="form-checkbox"
+                                  className="form-checkbox m-auto rounded-sm"
                                   name="remember"
                                 />
                                 <span className="ml-2">Remember me</span>
@@ -284,6 +271,22 @@ export default function login() {
                                 className="text-sm text-primary"
                               >
                                 Forgot Password?
+                              </Link>
+                            </div>
+                            <div className="mt-2">
+                              Don't have an account?{` `}
+                              <Link
+                                href="#"
+                                className="text-primary"
+                                onClick={() => {
+                                  setIsFlipped(!isFlipped);
+                                  window.scrollTo({
+                                    top: 500,
+                                    behavior: 'smooth',
+                                  });
+                                }}
+                              >
+                                Register here
                               </Link>
                             </div>
                           </div>
@@ -641,13 +644,13 @@ export default function login() {
                         </div>
                       </form>
                     )}
-                    <div className="md:h-full max-md:mt-10 bg-[#000842] rounded-xl lg:p-12 p-8">
+                    {/* <div className="md:h-full max-md:mt-10 bg-[#000842] rounded-xl lg:p-12 p-8">
                       <img
                         src="https://readymadeui.com/signin-image.webp"
                         className="w-full h-full object-contain"
                         alt="login-image"
                       />
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

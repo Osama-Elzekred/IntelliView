@@ -8,7 +8,6 @@ import Loading from '../components/loading';
 import { Breadcrumb, Filterbar } from '../components/components';
 import config from '../../config';
 
-
 export default function Jobs() {
   //const imageURl = 'images/job_logo_1.jpg';
   const [jobListings, setJobListings] = useState([]);
@@ -175,7 +174,7 @@ export default function Jobs() {
               </h1>
             </div>
             <form method="post" className="search-jobs-form">
-              <div className="row mb-5">
+              <div className="row mb-2">
                 <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
                   <input
                     type="text"
@@ -199,7 +198,7 @@ export default function Jobs() {
               </div>
             </form>
             <svg
-              className="my-7 w-full"
+              className="my-2 w-full"
               xmlns="http://www.w3.org/2000/svg"
               width={1216}
               height={2}

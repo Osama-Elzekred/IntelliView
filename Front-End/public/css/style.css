@@ -294,7 +294,10 @@
   -ms-transform: scale(1);
   transform: scale(1);
 }
-
+input[type='checkbox']:checked {
+  border-color: #17a9c3;
+  background-color: #17a9c3;
+}
 .site-mobile-menu {
   width: 300px;
   position: fixed;

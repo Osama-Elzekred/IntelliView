@@ -1,17 +1,9 @@
 'use client';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 import { UserNavitems, CompanyNavitems } from '../../constants';
 import { HiCog, HiViewGrid } from 'react-icons/hi';
-import {
-  HiArrowSmRight,
-  HiChartPie,
-  HiInbox,
-  HiShoppingBag,
-  HiTable,
-  HiUser,
-} from 'react-icons/hi';
+import { HiUser } from 'react-icons/hi';
 import {
   Button,
   Navbar,
@@ -19,21 +11,27 @@ import {
   NavbarCollapse,
   NavbarLink,
   NavbarToggle,
-  Sidebar,
   Avatar,
   Dropdown,
 } from 'flowbite-react';
 
-export default function Header() {
+const Header = () => {
   const [authToken, setAuthToken] = useState('');
   const [userName, setUserName] = useState(null);
   const [role, setRole] = useState(null);
   const [slidebarOpen, setSlidebarOpen] = useState(false);
   const [profilePhotoUrl, setProfilePhotoUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    setAuthToken(Cookies.get('authToken'));
-    setUserName(Cookies.get('userName'));
-    setRole(Cookies.get('role'));
+    const authToken = Cookies.get('authToken');
+    const userName = Cookies.get('userName');
+    const role = Cookies.get('role');
+
+    setAuthToken(authToken);
+    setUserName(userName);
+    setRole(role);
+    setIsLoading(false);
   }, []);
 
   const signOut = async () => {
@@ -48,13 +46,8 @@ export default function Header() {
   };
 
   useEffect(() => {
-    // Check if window object is defined (running in
-    //console.log('profilePhotoUrl', profilePhotoUrl);
     if (typeof window !== 'undefined') {
-      // Retrieve the profile photo URL from local storage
       const storedProfilePhotoUrl = localStorage.getItem('profilePhotoUrl');
-
-      // Update state with the retrieved profile photo URL
       setProfilePhotoUrl(storedProfilePhotoUrl || '');
       if (storedProfilePhotoUrl === null) {
         localStorage.setItem(
@@ -67,78 +60,31 @@ export default function Header() {
     }
   }, []); // Empty dependency array ensures this effect runs only once after component mounts
 
+  if (isLoading) {
+    return null; // or a loading spinner
+  }
+
   return (
-    <Navbar className="flex w-full mx-0  flex-wrap items-center justify-between p-4 md:space-x-8">
+    <Navbar className="flex w-full mx-0 flex-wrap items-center justify-between p-4 md:space-x-8">
       <div className="flex justify-start">
         <NavbarBrand href="/">
           <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-8"
+            src="/images/intelliview.png"
+            className="h-8 size-full"
             alt="Flowbite Logo"
+            sizes="(max-width: 640px) 100px, 200px"
           />
-          <span className="self-center px-1 whitespace-nowrap text-black text-xl font-semibold dark:text-white">
+          {/* <span className="self-center px-1 whitespace-nowrap text-black text-xl font-semibold dark:text-white">
             Intelliview
-          </span>
+          </span> */}
         </NavbarBrand>
       </div>
-      {role == null && (
-        <div className="order-2 hidden items-center lg:flex justify-start">
-          <a
-            href="/login"
-            className="mr-1 rounded-lg px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800 md:mr-2 md:px-5 md:py-2.5"
-          >
-            Login
-          </a>
-          <Button
-            className="bg-primary hover:bg-[#4bb6c9] text-white btn-search flex justify-content-center align-items-center"
-            href="/login"
-          >
-            Sign up
-          </Button>
-        </div>
-      )}
 
-      {role != null && (
-        <div className="flex md:order-2 flex-row-reverse">
-          <Dropdown
-            arrowIcon={false}
-            inline
-            label={
-              <Avatar
-                alt="User settings"
-                img={
-                  profilePhotoUrl
-                    ? profilePhotoUrl
-                    : 'https://flowbite.com/docs/images/people/profile-picture-5.jpg'
-                }
-                rounded
-              />
-            }
-          >
-            <Dropdown.Header>
-              <span className="block text-xl">{userName}</span>
-            </Dropdown.Header>
-
-            <Dropdown.Item
-              href={` ${
-                role === 'company' || role === 'Company'
-                  ? '/profile/Edit-company-profile'
-                  : '/profile/Edit-user-profile'
-              }`}
-            >
-              Profile
-            </Dropdown.Item>
-            <Dropdown.Divider />
-            <Dropdown.Item onClick={signOut}>Sign out</Dropdown.Item>
-          </Dropdown>
-        </div>
-      )}
       <NavbarToggle />
 
       <NavbarCollapse>
         <NavbarLink href={'/Home'}>Home</NavbarLink>
         <NavbarLink href="/service">Service</NavbarLink>
-        {/* <NavbarLink> */}
         <Dropdown
           label="Jobs"
           inline
@@ -180,12 +126,62 @@ export default function Header() {
             Add mocks
           </Dropdown.Item>
         </Dropdown>
-        {/* <Dropdown.Divider />
-          <Dropdown.Item icon={HiLogout}>Sign out</Dropdown.Item> */}
-        {/* </NavbarLink> */}
-        {/* <NavbarLink href="#">Features</NavbarLink> */}
         <NavbarLink href="/contact">Contact</NavbarLink>
+        <span>
+          {role == null ? (
+            <div className="order-2 flex items-center justify-start">
+              <a
+                href="/login"
+                className="mr-1 rounded-lg px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800 md:mr-2 md:px-5 md:py-2.5"
+              >
+                Login
+              </a>
+              <Button
+                className="bg-primary hover:bg-[#4bb6c9] text-white btn-search flex justify-content-center align-items-center"
+                href="/login"
+              >
+                Sign up
+              </Button>
+            </div>
+          ) : (
+            <div className="flex md:order-2 flex-row-reverse">
+              <Dropdown
+                arrowIcon={false}
+                inline
+                label={
+                  <Avatar
+                    alt="User settings"
+                    img={
+                      profilePhotoUrl
+                        ? profilePhotoUrl
+                        : 'https://flowbite.com/docs/images/people/profile-picture-5.jpg'
+                    }
+                    rounded
+                  />
+                }
+              >
+                <Dropdown.Header>
+                  <span className="block text-xl">{userName}</span>
+                </Dropdown.Header>
+
+                <Dropdown.Item
+                  href={` ${
+                    role === 'company' || role === 'Company'
+                      ? '/profile/Edit-company-profile'
+                      : '/profile/Edit-user-profile'
+                  }`}
+                >
+                  Profile
+                </Dropdown.Item>
+                <Dropdown.Divider />
+                <Dropdown.Item onClick={signOut}>Sign out</Dropdown.Item>
+              </Dropdown>
+            </div>
+          )}
+        </span>
       </NavbarCollapse>
     </Navbar>
   );
-}
+};
+
+export default React.memo(Header);

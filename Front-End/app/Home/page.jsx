@@ -421,11 +421,12 @@ export default function IndexPage() {
                     </a>
                   </p>
                 </div>
-                <div className="col-md-6 ml-auto align-self-end">
+                <div className="flex justify-center items-center w-full md:w-1/2 p-2">
                   <img
-                    src="/images/apps.png"
+                    src="/images/PhoneMock.png"
                     alt="Free Website Template by Free-Template.co"
-                    className="img-fluid"
+                    className="max-w-xs w-full"
+                    sizes="(max-width: 600px) 100vw, (max-width: 1690px) 400px, 600px"
                   />
                 </div>
               </div>

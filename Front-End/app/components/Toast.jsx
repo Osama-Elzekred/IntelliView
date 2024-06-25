@@ -1,7 +1,7 @@
 import { Toast, ToastToggle } from 'flowbite-react';
 import { HiCheck, HiExclamation } from 'react-icons/hi';
 
-function Toastitem({ key, value, onAbort, IsDone, className = '' }) {
+function Toastitem({ key, value, onAbort, IsDone = true, className = '' }) {
   return (
     <div key={key} className={` flex flex-col w-full gap-4 ${className}`}>
       <Toast className="max-w-[100%] p-[0.5rem]">

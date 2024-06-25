@@ -17,7 +17,7 @@ export default function EditProfile() {
   const { DOMAIN_NAME } = config;
   const [pagenum, setPagenum] = useState(1);
   const { open } = useToast();
-  
+
   const [formData, setFormData] = useState({
     companyName: '',
     companyType: '',
@@ -73,7 +73,6 @@ export default function EditProfile() {
           } else {
             console.error('Failed to fetch user data');
           }
-          open(' Company Data Saved Successfully', true);
         }
         setLoading(false);
       } catch (error) {
@@ -196,7 +195,7 @@ export default function EditProfile() {
 
         setPhotoUrl(`${data.imageURl}`);
         open(' Photo uploaded successfully ', true);
-       // //console.log('Photo uploaded successfully');
+        // //console.log('Photo uploaded successfully');
       } else {
         open(' Failed to upload photo ', false);
         //console.error('Failed to upload photo');

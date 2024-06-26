@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { Loading, Breadcrumb } from '../../components/components';
-import config from 'config';
+import config from '../../../config';
 
 
 function CompanyDetails({ params }) {
@@ -19,7 +19,7 @@ function CompanyDetails({ params }) {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://${DOMAIN_NAME}/Job/CompanyDetails/` + params.id,
+          `https://${DOMAIN_NAME}/api/Job/CompanyDetails/` + params.id,
           {
             method: 'GET',
             headers: {

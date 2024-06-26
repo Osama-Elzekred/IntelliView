@@ -157,35 +157,34 @@ namespace IntelliView.API.Controllers
             await _unitOfWork.JobApplications.AddAsync(jobApplication);
             await _unitOfWork.SaveAsync();
 
-            //// Call the model to get the score
-            //var score = string.Empty; // Default score
-            //decimal scoreValue = 0; // Default score value
-            //if (!string.IsNullOrEmpty(jobApplication.CVURL))
-            //{
-            //    score = await _aiModelApiService.GetCVmatch(model.CV, job.Title + "  " + job.Description + "  " + job.Requirements);
-            //    decimal.TryParse(score, out scoreValue);
-            //}
-            //// Update the application status based on the score
-            //jobApplication.CVScore = scoreValue;
-            //jobApplication.IsApproved = scoreValue >= 50;
-            //await _unitOfWork.SaveAsync();
-
-            // Offload CV scoring to a background task
-            _ = Task.Run(async () =>
+            // Call the model to get the score
+            var score = string.Empty; // Default score
+            decimal scoreValue = 0; // Default score value
+            if (!string.IsNullOrEmpty(jobApplication.CVURL))
             {
-                if (!string.IsNullOrEmpty(jobApplication.CVURL))
-                {
-                    var score = await _aiModelApiService.GetCVmatch(model.CV, job.Title + "  " + job.Description + "  " + job.Requirements);
-                    decimal.TryParse(score, out decimal scoreValue);
-                    jobApplication.CVScore = scoreValue;
-                    jobApplication.IsApproved = scoreValue >= 50;
-                    await _unitOfWork.SaveAsync();
-                }
-            });
+                score = await _aiModelApiService.GetCVmatch(model.CV, job.Title + "  " + job.Description + "  " + job.Requirements);
+                decimal.TryParse(score, out scoreValue);
+            }
+            // Update the application status based on the score
+            jobApplication.CVScore = scoreValue;
+            jobApplication.IsApproved = scoreValue >= 50;
+            await _unitOfWork.SaveAsync();
+
+            //// Offload CV scoring to a background task
+            //_ = Task.Run(async () =>
+            //{
+            //    if (!string.IsNullOrEmpty(jobApplication.CVURL))
+            //    {
+            //        var score = await _aiModelApiService.GetCVmatch(model.CV, job.Title + "  " + job.Description + "  " + job.Requirements);
+            //        decimal.TryParse(score, out decimal scoreValue);
+            //        jobApplication.CVScore = scoreValue;
+            //        jobApplication.IsApproved = scoreValue >= 50;
+            //        await _unitOfWork.SaveAsync();
+            //    }
+            //});
 
             return Ok("Application submitted");
         }
-
         //delete job application by id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteJobApplication(int id)

@@ -323,14 +323,14 @@ export default function Post_job(JobId) {
                           Preview
                         </Link> */}
                       </div>
-                      <div className="col-6">
+                      {/* <div className="col-6">
                         <Link
                           href="#"
                           className="btn btn-block btn-primary btn-md"
                         >
                           Save Job
                         </Link>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </div>

@@ -8,7 +8,7 @@ import Loading from '../../components/loading';
 import { Breadcrumb } from '../../components/components';
 import {Badge} from 'flowbite-react';
 import config from '../../../config';
-import config from '../../../config';
+//import config from '../../../config';
 
 const { DOMAIN_NAME } = config;
 export default function userJobs() {

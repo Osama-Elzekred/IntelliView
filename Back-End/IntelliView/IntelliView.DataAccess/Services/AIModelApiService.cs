@@ -80,5 +80,17 @@ namespace IntelliView.DataAccess.Services
             var result = await SendRequestAsync(content, "https://inteliview.pythonanywhere.com/faceDetection", apiKey!);
             return result;
         }
+
+        public async Task<string> GetAnalyseVideoData(string videoLink)
+        {
+            // get api key from appsettings
+            var apiKey = _configuration.GetSection("cvMatchAPIKey").Value;
+
+            var content = new MultipartFormDataContent();
+            content.Add(new StringContent(videoLink), "videolink");
+
+            var result = await SendRequestAsync(content, "https://inteliview2.pythonanywhere.com/api/analyse", apiKey!);
+            return result;
+        }
     }
 }

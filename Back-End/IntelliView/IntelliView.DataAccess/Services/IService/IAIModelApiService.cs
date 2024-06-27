@@ -8,5 +8,7 @@ namespace IntelliView.DataAccess.Services.IService
         Task<string> GetCVmatch(IFormFile? resumePath, string jd);
 
         Task<string> GetFaceDetectionInfo(string videoLink);
+
+        Task<string> GetAnalyseVideoData(string videoLink);
     }
 }

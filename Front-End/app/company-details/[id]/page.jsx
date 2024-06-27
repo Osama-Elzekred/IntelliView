@@ -64,84 +64,88 @@ function CompanyDetails({ params }) {
         <link rel="stylesheet" href="/css/style.css" />
         <link rel="stylesheet" href="/css/edit-profile.css" />
 
-        {/* <div className="loader">
-      <div className="spinner-border text-primary" role="status">
-        <span className="sr-only">Loading...</span>
-      </div>
-    </div> */}
         <div className="site-wrap">
-          <div className="site-mobile-menu site-navbar-target">
-            <div className="site-mobile-menu-header">
-              <div className="site-mobile-menu-close mt-3">
-                <span className="icon-close2 js-menu-toggle"></span>
+          {/* Breadcrumb Navigation */}
+          <Breadcrumb links={[{ name: 'Company Details', link: '/company-details' }]} />
+
+          <div className="flex flex-col w-full items-center font-arial">
+            <div className="w-full h-[200px] bg-[#0a2c5e] relative flex items-center justify-center">
+              <img
+                src="\Images\Intelliview2.png"
+                alt="Intilliview logo"
+                className="w-full h-full object-cover opacity-40"
+              />
+              <img
+                src={data.imageURl}
+                alt={`${data.companyName} logo`}
+                className="w-[100px] h-[100px] rounded-full absolute left-[20px] bottom-[-50px]"
+              />
+            </div>
+            <div className="w-full flex justify-center py-4">
+              <div className="w-[600px] text-center sm:text-left">
+                <div className="flex justify-center sm:justify-start">
+                </div>
+                <div className="sm:flex sm:items-center sm:justify-between">
+                  <h1 className="text-2xl font-bold mb-2">
+                    {data.companyName}
+                  </h1>
+                  <a href="#" className="text-blue-500 hidden sm:block">
+                    <i className="fa fa-share-alt"></i> Share Company Page
+                  </a>
+                </div>
+                <p className="text-sm text-gray-600">
+                  {data.companyType} • {data.companySize} employees
+                </p>
+                <div className="flex space-x-4 mt-4 justify-center sm:justify-start">
+                  <a href="#company-profile" className="px-4 py-2 bg-[#4bb6c9] text-white rounded-md">
+                    Company Profile
+                  </a>
+                  <button className="px-4 py-2 bg-white text-blue-500 border border-blue-500 rounded-md">
+                    Jobs
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="site-mobile-menu-body"></div>
-          </div>{' '}
-          {/* .site-mobile-menu */}
-          {/* NAVBAR */}
-          {/* HOME */}
-          <Breadcrumb
-            links={[{ name: 'Company Details', link: '/company-details' }]}
-          />
-          <div className="container light-style flex-grow-1 container-p-y">
-            <div className="card border-success rounded-4 mt-5 overflow-hidden border-width-2 background-color=" />
-            <div className="card-body p-0">
-              <div className="row">
-                <div className="col-md-8 d-flex flex-column justify-content-between">
-                  <div className="card-body">
-                    <div className="form-company">
-                      <h1 className="card-title" htmlFor="company-name">
-                        {data.companyName}
-                      </h1>
-
-                      <div className="Type">
-                        <label htmlFor="company-type">Type</label>
-                        <br />
-                        <span id="company-overview">{data.companyType}</span>
-                      </div>
-                      {/* Company overview */}
-                      <div className="overview">
-                        <label htmlFor="company-overview">Overview</label>
-                        <br />
-                        <span id="company-overview">
-                          {data.companyOverview}.
-                        </span>
-                      </div>
-                      {/* Company website */}
-                      <div className="website">
-                        <label htmlFor="company-website">Website</label>
-                        <br />
-                        <Link href="company-details" id="company-website">
-                          {data.companyWebsite}
-                        </Link>
-                      </div>
-                      {/* Company phone number */}
-                      <div className="phone">
-                        <label htmlFor="company-phone">Phone</label>
-                        <br />
-                        <span id="company-phone">{data.phoneNumber}</span>
-                      </div>
-                      {/* Company size and founded date */}
-                      <div className="size">
-                        <label htmlFor="company-size">Size</label>
-                        <br />
-                        <span id="company-size">{data.companySize}</span>
-                      </div>
-                      <div className="founded">
-                        <label htmlFor="company-founded">Founded</label>
-                        <br />
-                        <span id="company-founded">{data.companyFounded}</span>
-                      </div>
-                    </div>
-                  </div>
+            <div id="company-profile" className="w-full flex justify-center py-4">
+              <div className="w-[800px] flex flex-col sm:flex-row">
+                <div className="w-full sm:w-[550px] p-4 border rounded-md mb-4 sm:mb-0">
+                  <h2 className="text-lg font-bold mb-4">Company Profile</h2>
+                  <p>
+                    <span className="font-bold">Location:</span> Cairo, Egypt
+                  </p>
+                  <p>
+                    <span className="font-bold">Type:</span> {data.companyType}
+                  </p>
+                  <p>
+                    <span className="font-bold">Founded:</span> {data.companyFounded}
+                  </p>
+                  <p>
+                    <span className="font-bold">Company Size:</span> {data.companySize} employees
+                  </p>
+                  <p className="mt-4">
+                    {data.companyOverview}
+                  </p>
+                  <p className="mt-4">
+                    <span className="font-bold">Website:</span>
+                    <a href={data.companyWebsite} className="text-blue-500 ml-1">
+                      {data.companyWebsite}
+                    </a>
+                  </p>
                 </div>
-                <div className="col-md-4 d-flex justify-content-center pt-4 overflow-hidden">
-                  <img
-                    src="/images/company-profile-photo.jpg"
-                    alt=""
-                    className="d-block ui-w-80"
-                  />
+                <div className="w-full sm:w-[200px] p-4 border rounded-md">
+                  <h2 className="text-md font-bold mb-2">
+                    Explore jobs tailored to you!
+                  </h2>
+                  <p className="text-sm mb-2">
+                    Explore more jobs recommended for you and tailored to your career interests.
+                  </p>
+                  <Link href="/job"
+                    className="text-blue-500">
+                      Explore Jobs
+                  </Link>
+                  {/* <button className="w-full px-4 py-2 bg-blue-500 text-white rounded-md">
+                    Explore Jobs
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -150,6 +154,7 @@ function CompanyDetails({ params }) {
       </>
     </Layout>
   );
-}
+};
+
 
 export default CompanyDetails;

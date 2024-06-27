@@ -149,9 +149,9 @@ export default function userJobs() {
 
   
 
-  if (loading) {
-    return <Loading />; // Display loading indicator while data is being fetched
-  }
+  // if (loading) {
+  //   return <Loading />; // Display loading indicator while data is being fetched
+  // }
 
   return (
     <Layout>

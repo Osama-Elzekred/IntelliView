@@ -65,24 +65,80 @@ const Header = () => {
   }
 
   return (
-    <Navbar className="flex w-full mx-0 flex-wrap items-center justify-between p-4 md:space-x-8">
-      <div className="flex justify-start">
-        <NavbarBrand href="/">
-          <img
-            src="/images/intelliview.png"
-            className="h-8 size-full"
-            alt="Flowbite Logo"
-            sizes="(max-width: 640px) 100px, 200px"
-          />
-          {/* <span className="self-center px-1 whitespace-nowrap text-black text-xl font-semibold dark:text-white">
-            Intelliview
-          </span> */}
-        </NavbarBrand>
-      </div>
+    <Navbar
+      rounded
+      className="flex w-full mx-0 flex-row flex-wrap items-center justify-between p-4 md:space-x-8"
+    >
+      {/* Adjusted the container of the NavbarBrand to use flex and items-center to align it vertically */}
+      <NavbarBrand href="/" className="flex">
+        <img
+          src="/images/intelliview.png"
+          className="h-8"
+          alt="Flowbite Logo"
+          sizes="(max-width: 640px) 100px, 200px"
+        />
+        {/* Uncommented and adjusted the span for additional brand text, ensuring it aligns properly */}
+        {/* <span className="self-center px-1 whitespace-nowrap text-black text-xl font-semibold dark:text-white">
+        Intelliview
+      </span> */}
+      </NavbarBrand>
+      <div className="flex"></div>
+      {role != null && (
+        <div className="flex md:order-2">
+          {' '}
+          {/* Added items-center to align dropdown vertically */}
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar
+                alt="User settings"
+                img={
+                  profilePhotoUrl
+                    ? profilePhotoUrl
+                    : 'https://flowbite.com/docs/images/people/profile-picture-5.jpg'
+                }
+                rounded
+              />
+            }
+          >
+            <Dropdown.Header>
+              <span className="block text-xl">{userName}</span>
+            </Dropdown.Header>
 
+            <Dropdown.Item
+              href={` ${
+                role === 'company' || role === 'Company'
+                  ? '/profile/Edit-company-profile'
+                  : '/profile/Edit-user-profile'
+              }`}
+            >
+              Profile
+            </Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={signOut}>Sign out</Dropdown.Item>
+          </Dropdown>
+        </div>
+      )}
       <NavbarToggle />
 
       <NavbarCollapse>
+        {role == null && (
+          <div className="order-2 items-center flex flex-col sm:flex-row justify-start space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-4">
+            <a
+              href="/login"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800 transition-colors duration-200 w-full sm:w-auto text-center"
+            >
+              Login
+            </a>
+            <a
+              href="/signup"
+              className="bg-primary hover:bg-[#4bb6c9] text-white rounded-lg px-3 py-2 text-sm font-medium flex justify-center items-center transition-colors duration-200 w-full sm:w-auto text-center"
+            >
+              Sign up
+            </a>
+          </div>
+        )}
         <NavbarLink href={'/Home'}>Home</NavbarLink>
         <NavbarLink href="/service">Service</NavbarLink>
         <Dropdown
@@ -127,58 +183,6 @@ const Header = () => {
           </Dropdown.Item>
         </Dropdown>
         <NavbarLink href="/contact">Contact</NavbarLink>
-        <span>
-          {role == null ? (
-            <div className="order-2 flex items-center justify-start">
-              <a
-                href="/login"
-                className="mr-1 rounded-lg px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800 md:mr-2 md:px-5 md:py-2.5"
-              >
-                Login
-              </a>
-              <Button
-                className="bg-primary hover:bg-[#4bb6c9] text-white btn-search flex justify-content-center align-items-center"
-                href="/login"
-              >
-                Sign up
-              </Button>
-            </div>
-          ) : (
-            <div className="flex md:order-2 flex-row-reverse">
-              <Dropdown
-                arrowIcon={false}
-                inline
-                label={
-                  <Avatar
-                    alt="User settings"
-                    img={
-                      profilePhotoUrl
-                        ? profilePhotoUrl
-                        : 'https://flowbite.com/docs/images/people/profile-picture-5.jpg'
-                    }
-                    rounded
-                  />
-                }
-              >
-                <Dropdown.Header>
-                  <span className="block text-xl">{userName}</span>
-                </Dropdown.Header>
-
-                <Dropdown.Item
-                  href={` ${
-                    role === 'company' || role === 'Company'
-                      ? '/profile/Edit-company-profile'
-                      : '/profile/Edit-user-profile'
-                  }`}
-                >
-                  Profile
-                </Dropdown.Item>
-                <Dropdown.Divider />
-                <Dropdown.Item onClick={signOut}>Sign out</Dropdown.Item>
-              </Dropdown>
-            </div>
-          )}
-        </span>
       </NavbarCollapse>
     </Navbar>
   );

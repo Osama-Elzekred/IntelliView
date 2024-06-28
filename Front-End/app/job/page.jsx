@@ -61,6 +61,14 @@ export default function Jobs() {
       .getElementById('job-listings')
       .scrollIntoView({ behavior: 'smooth' });
   };
+  const resetFilters = () => {
+    setSearchForm({
+      title: '',
+      jobType: '',
+      jobTime: '',
+    });
+    handleSearch();
+  };
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -220,7 +228,7 @@ export default function Jobs() {
             </div>
             <div className="flex flex-col-reverse md:flex-row md:space-x-4 space-y-2 md:space-y-0">
               <div className="w-full md:w-1/4 ">
-                <Filterbar />
+              <Filterbar searchForm={searchForm} handleChange={handleChange} resetFilters={resetFilters}/>
               </div>
               <ul className="m-2 space-y-2 py-2 flex-grow flex-1 bg-white shadow-md p-4">
                 {jobs.map((job, index) => (

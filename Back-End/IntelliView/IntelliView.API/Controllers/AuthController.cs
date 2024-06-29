@@ -9,9 +9,13 @@ namespace IntelliView.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly IVerifyService _verifyService;
+        private readonly IEmailSender _emailSender;
+        public AuthController(IAuthService authService, IVerifyService verifyService, IEmailSender emailSender)
         {
             _authService = authService;
+            _verifyService = verifyService;
+            _emailSender = emailSender;
         }
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterDTO model)
@@ -29,18 +33,18 @@ namespace IntelliView.API.Controllers
             if (!result.IsAuthenticated)
                 return BadRequest(new { result.Message });
 
-            //SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
+            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
-            //string token = await _verifyService.CreateVerfiyTokenAsync(result.Id!);
-            //result.VerficationToken = token;
+            string token = await _verifyService.CreateVerfiyTokenAsync(result.Id!);
+            result.VerficationToken = token;
 
-            //await _emailSender.SendEmailAsync(new EmailDTO
-            //{
-            //    To = result.Email!,
-            //    Subject = "Verify your email",
-            //    Body = $"Please verify your email by clicking this link: <a href='https://localhost:7049/api/verify/{result.Id}/{result.VerficationToken}'>Verify</a> " +
-            //    $"This Link Expire in 20 minutes"
-            //});
+            await _emailSender.SendEmailAsync(new EmailDTO
+            {
+                To = result.Email!,
+                Subject = "Verify your email",
+                Body = $"Please verify your email by clicking this link: <a href='https://localhost:7049/api/verify/{result.Id}/{result.VerficationToken}'>Verify</a> " +
+                $"This Link Expire in 20 minutes"
+            });
             return Ok(result);
         }
 

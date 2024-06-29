@@ -22,6 +22,8 @@ export default function Jobs() {
     title: '',
     jobType: '',
     jobTime: '',
+    location: '',
+    categories: '',
   });
   const [authToken, setAuthToken] = useState(Cookies.get('authToken'));
   const handleChange = async (field, value) => {
@@ -53,6 +55,23 @@ export default function Jobs() {
       ) {
         return false;
       }
+      //filter by location
+      if (
+        searchForm.location &&
+        !job.location.toLowerCase().includes(searchForm.location.toLowerCase())
+      ) {
+        return false;
+      }
+      //filter by jobInterestedTopic
+      if (
+        searchForm.categories &&
+        !job.jobInterestedTopic
+          .join(' ')
+          .toLowerCase()
+          .includes(searchForm.categories.toLowerCase())
+      ) {
+        return false;
+      }
       return true;
     });
     setSearchResult(filteredJobs);
@@ -66,6 +85,8 @@ export default function Jobs() {
       title: '',
       jobType: '',
       jobTime: '',
+      location: '',
+      categories: '',
     });
     handleSearch();
   };

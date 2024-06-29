@@ -19,6 +19,7 @@ const Filterbar = ({ searchForm, handleChange, resetFilters }) => {
                   RESET
                 </p>
               </div>
+              
               <p className="font-medium text-sm leading-6 text-black mb-3">
                 Job Type
               </p>
@@ -41,6 +42,7 @@ const Filterbar = ({ searchForm, handleChange, resetFilters }) => {
                   </div>
                 ))}
               </div>
+              
               <p className="font-medium text-sm leading-6 text-black mb-3 mt-3">
                 Job Time
               </p>
@@ -63,6 +65,33 @@ const Filterbar = ({ searchForm, handleChange, resetFilters }) => {
                   </div>
                 ))}
               </div>
+
+              <p className="font-medium text-sm leading-6 text-black mb-3 mt-3">
+                Location
+              </p>
+              <div className="box flex flex-col gap-2">
+                <input
+                  type="text"
+                  value={searchForm.location}
+                  onChange={(e) => handleChange('location', e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  placeholder="Enter location"
+                />
+              </div>
+
+              <p className="font-medium text-sm leading-6 text-black mb-3 mt-3">
+                Categories
+              </p>
+              <div className="box flex flex-col gap-2">
+                <input
+                  type="text"
+                  value={searchForm.categories}
+                  onChange={(e) => handleChange('categories', e.target.value)}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  placeholder="Enter categories"
+                />
+              </div>
+
             </div>
           </div>
           <div />

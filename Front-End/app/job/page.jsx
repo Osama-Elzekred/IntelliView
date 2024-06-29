@@ -22,6 +22,8 @@ export default function Jobs() {
     title: '',
     jobType: '',
     jobTime: '',
+    location: '',
+    categories: '',
   });
   const [authToken, setAuthToken] = useState(Cookies.get('authToken'));
   const handleChange = async (field, value) => {
@@ -53,6 +55,23 @@ export default function Jobs() {
       ) {
         return false;
       }
+      //filter by location
+      if (
+        searchForm.location &&
+        !job.location.toLowerCase().includes(searchForm.location.toLowerCase())
+      ) {
+        return false;
+      }
+      //filter by jobInterestedTopic
+      if (
+        searchForm.categories &&
+        !job.jobInterestedTopic
+          .join(' ')
+          .toLowerCase()
+          .includes(searchForm.categories.toLowerCase())
+      ) {
+        return false;
+      }
       return true;
     });
     setSearchResult(filteredJobs);
@@ -60,6 +79,16 @@ export default function Jobs() {
     document
       .getElementById('job-listings')
       .scrollIntoView({ behavior: 'smooth' });
+  };
+  const resetFilters = () => {
+    setSearchForm({
+      title: '',
+      jobType: '',
+      jobTime: '',
+      location: '',
+      categories: '',
+    });
+    handleSearch();
   };
 
   useEffect(() => {
@@ -220,7 +249,7 @@ export default function Jobs() {
             </div>
             <div className="flex flex-col-reverse md:flex-row md:space-x-4 space-y-2 md:space-y-0">
               <div className="w-full md:w-1/4 ">
-                <Filterbar />
+              <Filterbar searchForm={searchForm} handleChange={handleChange} resetFilters={resetFilters}/>
               </div>
               <ul className="m-2 space-y-2 py-2 flex-grow flex-1 bg-white shadow-md p-4">
                 {jobs.map((job, index) => (

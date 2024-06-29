@@ -117,7 +117,7 @@ export default function JobDetails({ params }) {
                       alt="CompanyImage"
                     />
                     <div>
-                      <div className="flex flex-row justify-center space-x-2 space-y-2 ml-2">
+                      <div className="flex flex-row justify-start space-x-2 space-y-2 ml-2">
                         <h2>{data.title}</h2>
                         {new Date(data.endedAt) < Date.now() && (
                           <Badge className="text-red-500 rounded-full bg-red-100  justify-center text-sm font-semibold">
@@ -173,7 +173,7 @@ export default function JobDetails({ params }) {
 
               <div className="row">
                 <div className="col-lg-8">
-                  <div className="mb-5">
+                  <div className="mb-3">
                     <figure className="mb-5">
                       <img
                         src="/images/job_single_img_1.jpg"
@@ -181,26 +181,36 @@ export default function JobDetails({ params }) {
                         className="img-fluid rounded"
                       />
                     </figure>
-                    <h3 className="h5 d-flex align-items-center mb-4 text-primary">
+                    <h3 className="h5 d-flex align-items-center mb-2 text-primary">
                       <span className="icon-align-left mr-3" />
                       Job Description
                     </h3>
-                    {/* {data.map((item) => ( */}
-                    <span>{data.description}</span>
-                    {/* ))} */}
+                    <ul className="list-unstyled m-0 p-0">
+                      {data?.description
+                        ?.split(/[\.\n](?=\S)/)
+                        .map((description, index) => (
+                          <li
+                            key={index}
+                            className="d-flex align-items-baseline"
+                          >
+                            <span className="icon-check_circle mr-2 text-muted" />
+                            <span className="pb-1">{description.trim()}</span>
+                          </li>
+                        ))}
+                    </ul>
                   </div>
                   <div className="mb-5">
-                    <h3 className="h5 d-flex align-items-center mb-4 text-primary">
+                    <h3 className="h5 d-flex align-items-center mb-3 text-primary">
                       <span className="icon-book mr-3" />
                       Requirements
                     </h3>
                     <ul className="list-unstyled m-0 p-0">
                       {data?.requirements
-                        ?.split(/\.(?=\S)/)
+                        ?.split(/[\.\n](?=\S)/)
                         .map((requirement, index) => (
                           <li
                             key={index}
-                            className="d-flex align-items-baseline mb-2"
+                            className="d-flex align-items-baseline "
                           >
                             <span className="icon-check_circle mr-2 text-muted" />
                             <span className="pb-1">{requirement.trim()}</span>

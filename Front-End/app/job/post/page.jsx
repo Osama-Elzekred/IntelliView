@@ -160,11 +160,17 @@ export default function Post_job(JobId) {
   function handleClose() {
     setShowComponent(false);
   }
-
+  const formatText = (text) => {
+    return text
+      .split('.')
+      .filter(sentence => sentence.trim() !== '') // Remove empty sentences
+      .map(sentence => sentence.trim() + '.')
+      .join('\n');
+  };
   const handleChange = (event) => {
     const value = event.target ? event.target.value : event;
     const name = event.target ? event.target.name : event;
-
+  
     setJobInfo({
       ...jobInfo,
       [name]: value,
@@ -175,6 +181,8 @@ export default function Post_job(JobId) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const formattedJobRequirements = formatText(jobInfo.JobRequirements);
+    const formattedJobDescription = formatText(jobInfo.JobDescription);
     // Validation
     let errors = {};
     if (!jobInfo.Email) errors.Email = 'Email is required';
@@ -208,8 +216,8 @@ export default function Post_job(JobId) {
       JobTime: jobInfo.JobTime,
       Location: jobInfo.Location,
       MinimumExperience: jobInfo.Experiance,
-      Description: jobInfo.JobDescription,
-      Requirements: jobInfo.JobRequirements,
+      Description: formattedJobRequirements,
+      Requirements: formattedJobDescription,
       // Add other mappings...
       // Add arrays to the DTO
       Questionitems: Questionitems,
@@ -253,10 +261,10 @@ export default function Post_job(JobId) {
     const authTokenCookie = Cookies.get('authToken');
     if (!authTokenCookie) window.location.href = `/unauthorized`;
 
-    const addJobDto = {
-      // Map jobInfo state to DTO
-      // ...
-    };
+    // const addJobDto = {
+    //   // Map jobInfo state to DTO
+    //   // ...
+    // };
 
     try {
       const response = await fetch(`https://${DOMAIN_NAME}/api/job/${JobId}`, {
@@ -502,35 +510,26 @@ export default function Post_job(JobId) {
                             </div>
                           </div>
                           <div className="form-group">
-                            <Label
-                              htmlFor="job-description"
-                              value="Job Requirements"
-                            />
-                            <Textarea
-                              placeholder="Job Requirements"
-                              name="JobRequirements"
-                              value={jobInfo?.JobRequirements}
-                              onChange={handleChange} // Replace with your actual handler function
-                            />
-                          </div>
-                          <div className="form-group">
-                            <div>
-                              <div className="mb-2 block">
-                                <Label
-                                  htmlFor="Answer"
-                                  value="Job Description"
-                                />
-                              </div>
-                              <Textarea
-                                id="job-description"
-                                name="JobDescription"
-                                value={jobInfo?.JobDescription}
-                                onChange={handleChange}
-                                placeholder="Write Job Description!"
-                                required
-                              />
-                            </div>
-                          </div>
+              <Label htmlFor="job-requirements" value="Job Requirements" />
+              <Textarea
+                placeholder="Job Requirements"
+                name="JobRequirements"
+                value={jobInfo?.JobRequirements}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group">
+              <Label htmlFor="job-description" value="Job Description" />
+              <Textarea
+                id="job-description"
+                name="JobDescription"
+                value={jobInfo?.JobDescription}
+                onChange={handleChange}
+                placeholder="Write Job Description!"
+                required
+              />
+            </div>
+                          
                         </>
                       ) : //condition for step 2
                       currentStep == 2 ? (

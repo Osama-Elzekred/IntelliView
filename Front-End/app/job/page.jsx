@@ -208,7 +208,7 @@ export default function Jobs() {
                   <input
                     type="text"
                     className="form-control form-control-lg"
-                    placeholder="Job title, Company..."
+                    placeholder="Job title ..."
                     onChange={(e) => {
                       handleChange('title', e.target.value);
                     }}

@@ -14,17 +14,17 @@ namespace IntelliView.DataAccess.Services
 {
     public class EmailSender : IEmailSender
     {
-        private readonly IConfiguration Configuration;
+        private readonly IConfiguration _configuration;
         public EmailSender(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
-        Task IEmailSender.SendEmailAsync(EmailDTO req)
+        public Task SendEmailDevAsync(EmailDTO req)
         {
-            var mailUsername = Configuration.GetSection("EmailUsernamedev").Value;
+            var mailUsername = _configuration.GetSection("EmailUsernamedev").Value;
             var mailFrom = "intelliview@intelliview.com";
-            var password = Configuration.GetSection("EmailPassworddev").Value;
-            var client = new SmtpClient(Configuration.GetSection("EmailHostdev").Value , 587)
+            var password = _configuration.GetSection("EmailPassworddev").Value;
+            var client = new SmtpClient(_configuration.GetSection("EmailHostdev").Value , 587)
             {
                 Credentials = new NetworkCredential(mailUsername, password),
                 EnableSsl = true
@@ -32,7 +32,28 @@ namespace IntelliView.DataAccess.Services
             return client.SendMailAsync(
                                new MailMessage(mailFrom, req.To, req.Subject, req.Body) { IsBodyHtml = true }
                                           );
-            
+        }
+        public Task SendEmailAsync(EmailDTO req)
+        {
+            var emailSettings = _configuration.GetSection("EmailSettings");
+            var mailUsername = emailSettings["Username"];
+            var mailFrom = emailSettings["FromEmail"];
+            var password = emailSettings["Password"];
+            var host = emailSettings["Host"];
+            var port = int.Parse(emailSettings["Port"]!);
+
+            var client = new SmtpClient(host, port)
+            {
+                Credentials = new NetworkCredential(mailUsername, password),
+                EnableSsl = true
+            };
+
+            var mailMessage = new MailMessage(mailFrom!, req.To, req.Subject, req.Body)
+            {
+                IsBodyHtml = true
+            };
+
+            return client.SendMailAsync(mailMessage);
         }
     }
 }

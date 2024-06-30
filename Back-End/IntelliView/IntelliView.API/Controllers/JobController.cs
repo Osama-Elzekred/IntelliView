@@ -168,6 +168,13 @@ namespace IntelliView.API.Controllers
             return jobQuestion;
         }
 
+        [HttpGet("CompJobs/{userId}")]
+        public async Task<ActionResult<IEnumerable<Job>>> GetCompany_Jobs(string userId)
+        {
+            var jobs = await _unitOfWork.Jobs.GetAllAsync(j => j.CompanyUserId == userId);
+            var activeJobs = jobs.Where(j => j.IsActive == true);
+            return Ok(activeJobs);
+        }
         #region Company
 
         [HttpGet("CompanyJob/{id}")]

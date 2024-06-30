@@ -20,9 +20,10 @@ namespace IntelliView.API.Controllers
         private readonly IAvatarService _avatarService;
         private readonly IAIModelApiService _aiModelApiService;
         private readonly IUploadFilesToCloud _uploadFilesToCloud;
+        private readonly IEmailSender _emailSender;
         public TestController(IConfiguration configuration, IAiSearchService aiBasedSearchService,
              IWebHostEnvironment webHostEnvironment, IAvatarService avatarService, IAIModelApiService aIModelApiService,
-             IUploadFilesToCloud uploadFilesToCloud)
+             IUploadFilesToCloud uploadFilesToCloud,IEmailSender emailSender)
         {
             Configuration = configuration;
             _aiBasedSearchService = aiBasedSearchService;
@@ -30,6 +31,7 @@ namespace IntelliView.API.Controllers
             _avatarService = avatarService;
             _aiModelApiService = aIModelApiService;
             _uploadFilesToCloud = uploadFilesToCloud;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -229,6 +231,21 @@ namespace IntelliView.API.Controllers
         //    Console.WriteLine(data);
         //    return Task.FromResult<IActionResult>(Ok(data));
         //}
+
+        // Test sending email
+        [HttpPost("send-email")]
+        public async Task<IActionResult> SendEmail(EmailDTO email)
+        {
+            try
+            {
+                await _emailSender.SendEmailAsync(email);
+                return Ok("Email sent successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
+        }
         
     }
 }

@@ -85,7 +85,7 @@ namespace IntelliView.API.Services
             var Role = model.Role;
             await _userManager.AddToRoleAsync(user, Role);
 
-            var jwtSecurityToken = await CreateJwtToken(user);
+            //var jwtSecurityToken = await CreateJwtToken(user);
 
             var refreshToken = JwtToken.GenerateRefreshToken();
             user.RefreshTokens?.Add(refreshToken);
@@ -94,10 +94,10 @@ namespace IntelliView.API.Services
             return new AuthModel
             {
                 Email = user.Email,
-                ExpiresOn = jwtSecurityToken.ValidTo,
+                //ExpiresOn = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
                 Roles = new List<string> { Role },
-                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                //Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Username = user.UserName,
                 RefreshToken = refreshToken.Token,
                 RefreshTokenExpiration = refreshToken.ExpiresOn,

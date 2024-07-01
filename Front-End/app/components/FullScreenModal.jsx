@@ -1,7 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import AIcharts from '../components/AiCharts/AIcharts';
-import { Button, Card } from 'flowbite-react';
+import { Rating, Card } from 'flowbite-react';
 
 const FullScreenModal = ({ onClose, rowData }) => {
   // Mock video URL
@@ -31,8 +31,8 @@ const FullScreenModal = ({ onClose, rowData }) => {
   }, []);
 
   return (
-    <div className="fixed top-[64px] right-0 w-3/4  bg-black bg-opacity-50 z-50  h-full ">
-      <div className="bg-slate-50 rounded-lg p-8  h-full overflow-y-auto  pb-60">
+    <div className="fixed top-[64px] right-0 w-4/5 bg-black bg-opacity-50 z-50 h-full">
+      <div className="bg-slate-50 rounded-lg p-8 h-full overflow-y-auto overflow-x-auto pb-60">
         <div className="flex justify-end">
           <div className="h-5 w-5 cursor-pointer m-1" onClick={onClose}>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
@@ -42,10 +42,11 @@ const FullScreenModal = ({ onClose, rowData }) => {
         </div>
         <h2 className="text-xl font-semibold mb-4">{title}</h2>
         <div className="">
-          <AIcharts aiScores={aiObjects} />
+          <AIcharts aiScores={aiObjects} />{' '}
         </div>
         <div className="flex flex-col md:flex-row m-2 ">
           {/* Video Element */}
+          {/* {console.log('Video Url ', videoUrl)} */}
           <div className="flex-1 flex justify-center items-center md:mr-4">
             <video
               src={videoUrl}
@@ -59,21 +60,30 @@ const FullScreenModal = ({ onClose, rowData }) => {
           </div>
           {/* Video Details */}
           <div className="flex-1 mt-4 md:mt-0">
-            <p className="text-lg font-semibold mb-2">AI Score: {aiRating}</p>
+            <Card className=" inline-block my-3">
+              <Rating>
+                <Rating.Star />
+                <p className="ml-2 text-sm font-bold text-gray-900 dark:text-white">
+                  Total AI Score: {aiObjects.totalScore?.toFixed(2) ?? 'N/A'}
+                </p>
+              </Rating>
+            </Card>
+            {/* <p className="text-lg font-semibold mb-2"></p> */}
             <p className="text-lg font-semibold mb-2">
-              Comments(notes) :{notes}
+              Comments (notes): {notes}
             </p>
             <p className="text-lg font-semibold mb-2">Recorded Date: {date}</p>
             <p className="text-lg font-semibold mb-2">
               Question: {InterviewQuestion?.Question}
             </p>
             <p className="text-lg font-semibold mb-2">
+              Video Answer: {InterviewQuestion?.answerText}
+            </p>
+            <p className="text-lg font-semibold mb-2">
               Model Answer: {InterviewQuestion?.answer}
             </p>
           </div>
         </div>
-
-        {/* Close Button */}
       </div>
     </div>
   );

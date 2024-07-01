@@ -3,7 +3,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import config from '../../../config';
 
-
 const Forget_password = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -20,6 +19,9 @@ const Forget_password = () => {
         `https://${DOMAIN_NAME}/api/Password/forget-password`,
         {
           method: 'POST',
+          headers: {
+            'Content-Type': 'application/json', // Specify the content type as JSON
+          },
           body: JSON.stringify({
             email: email,
           }),
@@ -29,7 +31,7 @@ const Forget_password = () => {
         setMessage('Check your inbox to reset your password.');
         setShowResetForm(true); // Display the reset form
         setIsPending(false);
-          setError(null);
+        setError(null);
       } else {
         setError('An error occurred. Please try again.');
       }
@@ -42,7 +44,7 @@ const Forget_password = () => {
 
   return (
     <>
-      {error &&<div>{alert}</div>}
+      {error && <div>{alert}</div>}
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Forgot Password</title>

@@ -1,78 +1,128 @@
+import React from 'react';
 import { Line } from 'react-chartjs-2';
-import 'chart.js/auto';
-import 'chartjs-adapter-date-fns'; // Import the date adapter
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import AnnotationPlugin from 'chartjs-plugin-annotation';
 
-const EmotionScoresChart = ({ data }) => {
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  AnnotationPlugin // Register Annotation
+);
+
+const emotionWeights = {
+  neutral: 1,
+  happy: 1.5,
+  fear: -1,
+  sad: -0.5,
+};
+
+const processData = (data) => {
+  return data.map((d) => {
+    const timestamp = d.time;
+    const weightedScore = Object.keys(d.scores).reduce((sum, emotion) => {
+      return sum + d.scores[emotion] * (emotionWeights[emotion] || 1);
+    }, 0);
+
+    return { timestamp, weightedScore };
+  });
+};
+
+const EmotionChart = ({ data }) => {
+  const chartData = processData(data);
+  const timestamps = chartData.map((d) => d.timestamp);
+  const scores = chartData.map((d) => d.weightedScore);
+
+  const dataConfig = {
+    labels: timestamps,
+    datasets: [
+      {
+        label: 'Emotion Score Over Time',
+        data: scores,
+        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: 'rgba(75,192,192,0.2)',
+        pointRadius: 5,
+        pointHoverRadius: 10,
+      },
+    ],
+  };
+
   const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Emotion Scores Over Time',
+      },
+      annotation: {
+        annotations: {
+          box1: {
+            type: 'box',
+            xMin: 0,
+            xMax: 120,
+            yMin: -1,
+            yMax: 0,
+            backgroundColor: 'rgba(255, 99, 132, 0.25)',
+            borderWidth: 0,
+          },
+          box2: {
+            type: 'box',
+            xMin: 0,
+            xMax: 120,
+            yMin: 0,
+            yMax: 1,
+            backgroundColor: 'rgba(54, 162, 235, 0.25)',
+            borderWidth: 0,
+          },
+          box3: {
+            type: 'box',
+            xMin: 0,
+            xMax: 120,
+            yMin: 1,
+            yMax: 1.5,
+            backgroundColor: 'rgba(75, 192, 192, 0.25)',
+            borderWidth: 0,
+          },
+        },
+      },
+    },
     scales: {
       x: {
-        type: 'time',
-        time: {
-          parser: "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS", // Correct format with date-fns
-          tooltipFormat: 'MM/dd/yyyy HH:mm',
-        },
         title: {
           display: true,
-          text: 'Time',
+          text: 'Seconds',
         },
       },
       y: {
-        beginAtZero: true,
         title: {
           display: true,
-          text: 'Score',
+          text: 'Fear <--    Neutral    --> Happy',
         },
       },
     },
   };
 
-  const formattedData = {
-    labels: data.map((entry) => entry.timestamp),
-    datasets: [
-      {
-        label: 'Neutral',
-        data: data
-          .filter((entry) => entry.scores.neutral !== undefined)
-          .map((entry) => ({ x: entry.timestamp, y: entry.scores.neutral })),
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        fill: false,
-        tension: 0.1,
-      },
-      {
-        label: 'Happy',
-        data: data
-          .filter((entry) => entry.scores.happy !== undefined)
-          .map((entry) => ({ x: entry.timestamp, y: entry.scores.happy })),
-        borderColor: 'rgba(255, 206, 86, 1)',
-        backgroundColor: 'rgba(255, 206, 86, 0.2)',
-        fill: false,
-        tension: 0.1,
-      },
-      {
-        label: 'Fear',
-        data: data
-          .filter((entry) => entry.scores.fear !== undefined)
-          .map((entry) => ({ x: entry.timestamp, y: entry.scores.fear })),
-        borderColor: 'rgba(153, 102, 255, 1)',
-        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-        fill: false,
-        tension: 0.1,
-      },
-      {
-        label: 'Sad',
-        data: data
-          .filter((entry) => entry.scores.sad !== undefined)
-          .map((entry) => ({ x: entry.timestamp, y: entry.scores.sad })),
-        borderColor: 'rgba(255, 99, 132, 1)',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        fill: false,
-        tension: 0.1,
-      },
-    ],
-  };
-
-  return <Line className="" data={formattedData} options={options} />;
+  return (
+    <div className="chart-container">
+      <Line data={dataConfig} options={options} />
+    </div>
+  );
 };
 
-export default EmotionScoresChart;
+export default EmotionChart;

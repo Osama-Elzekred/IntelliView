@@ -30,8 +30,8 @@ function UserMocks() {
           setLoading(false);
         }
       } catch (error) {
-        setMocksData(response);
-        //console.log('error : ', error);
+        // setMocksData(response);
+        console.log('error : ', error);
       }
     };
     fetchMocksData();

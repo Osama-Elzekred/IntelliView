@@ -89,23 +89,22 @@ builder.Services.AddAuthentication(options =>
             ClockSkew = TimeSpan.Zero
         };
     });
-
+builder.Services.AddHttpClient<IAIModelApiService, AIModelApiClient>();
+builder.Services.AddHttpClient<IAiSearchService, AiSearchService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IVerifyService, VerifyService>();
 builder.Services.AddScoped<IPasswordService, PasswordService>();
-builder.Services.AddScoped<IAiSearchService, AiSearchService>();
-builder.Services.AddScoped<HttpClient, HttpClient>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 builder.Services.AddScoped<IAvatarService, AvatarService>();
-builder.Services.AddScoped<IAIModelApiService, AIModelApiClient>();
 builder.Services.AddLogging();
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);
 builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -116,6 +115,7 @@ builder.Services.AddSwaggerGen(options =>
     });
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
+
 
 
 builder.Services.AddAuthorization(options =>

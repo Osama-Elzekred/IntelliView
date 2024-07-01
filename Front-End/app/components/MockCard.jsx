@@ -39,7 +39,9 @@ export default function MockCard({
       <h6 className="font-normal text-gray-700 dark:text-gray-400">
         {category}
       </h6>
-      <p className="font-normal text-[#393a3a]  text-lg">{description}</p>
+      <p className="font-normal text-[#393a3a] text-lg line-clamp-2">
+        {description}
+      </p>{' '}
       {/* <span className="icon-star flex justify-end font-bold text-lg text-black">  {overallScore} </span> */}
     </Card>
   );

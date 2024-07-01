@@ -26,16 +26,16 @@ namespace IntelliView.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var result = await _passwordService.CheckEmailAsync(email.Email!);
+            var result = await _passwordService.CheckEmailAsync(email.email!);
 
             if (result == string.Empty)
                 return BadRequest("Invalid Email");
 
-            string body = await _passwordService.CreateResetLink(email.Email!);
+            string body = await _passwordService.CreateResetLink(email.email!);
 
             await _emailSender.SendEmailAsync(new EmailDTO
             {
-                To = email.Email!,
+                To = email.email!,
                 Subject = "Reset your Password",
                 Body = body
 
@@ -45,7 +45,7 @@ namespace IntelliView.API.Controllers
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPasswordAsync( [FromBody] ResetPasswordDTO model)
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordDTO model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

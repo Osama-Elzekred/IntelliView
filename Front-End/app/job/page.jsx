@@ -109,7 +109,7 @@ export default function Jobs() {
         }
         setLoading(false);
       } catch (error) {
-        //console.log('error : ', error);
+        console.error('error : ', error);
       }
     };
     fetchJobs();

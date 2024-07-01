@@ -62,9 +62,9 @@ function Apply({ params }) {
           );
           setQuesionsAnswers(initialAnswers);
         });
-      // if (!response.ok) {
-      //   throw new Error('Failed to fetch questions');
-      // }
+      if (!response.ok) {
+        throw new Error('Failed to fetch questions');
+      }
     } catch (error) {
       console.error('Error fetching questions:', error.message);
       // Handle the error appropriately, e.g., display an error message to the user

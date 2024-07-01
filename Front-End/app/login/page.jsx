@@ -71,6 +71,7 @@ export default function login() {
         setMessageOfWrong(
           'Sorry ... The Server can not be reach now ... please try later'
         );
+        console.error('Error:', error);
       }
     }
   };
@@ -172,6 +173,7 @@ export default function login() {
         }
       } catch (error) {
         setMessageFromServer('Connection Error ... Please Try Later');
+        console.error('Error:', error);
       }
     }
   };

@@ -40,7 +40,7 @@ export default function userJobs() {
         //console.log(authToken);
         setJobListings(jobs);
 
-        //console.log('error : ', error);
+        console.error('error : ', error);
       }
     };
     fetchJobs();

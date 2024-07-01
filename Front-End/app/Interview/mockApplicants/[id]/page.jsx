@@ -43,7 +43,7 @@ export default function MainComponent({ params }) {
           setLoading(false);
         }
       } catch (error) {
-        //console.log('error : ', error);
+        console.error('error : ', error);
       }
     };
     fetchUsers();

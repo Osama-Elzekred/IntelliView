@@ -59,7 +59,7 @@ function CompanyDetails({ params }) {
         setLoading(false);
         setError(null);
       } catch (error) {
-        console.log('Fetch error:', error);
+        console.error('Fetch error:', error);
         setError(error.message);
         setLoading(false);
       }

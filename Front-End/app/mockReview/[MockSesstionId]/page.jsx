@@ -132,7 +132,7 @@ function MainComponent({ params }) {
           setData(data);
         }
       } catch (error) {
-        //console.log('error : ', error);
+        console.error('error : ', error);
       }
       setLoading(false);
     };

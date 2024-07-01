@@ -52,6 +52,7 @@ function MainComponent({ params }) {
           Question: answer.interviewQuestion.question,
           answer: answer.interviewQuestion.modelAnswer,
           VideoId: answer.interviewQuestion.videoId,
+          answerText: answer.answerAiEvaluationScore.answerText,
         },
         similarityScore: answer.answerAiEvaluationScore
           ? answer.answerAiEvaluationScore.answerSimilarityScore
@@ -71,15 +72,18 @@ function MainComponent({ params }) {
       )
     );
   // get avreage score
+
   const getAverage = () => {
-    var sum = 0;
+    let sum = 0;
+    // console.log('dataaaaaa : ', data);
     for (let i = 0; i < data.length; i++) {
-      if (data[i].aiRating) {
-        sum = data[i].aiRating + sum;
+      if (data[i].aiObjects?.totalScore) {
+        sum += data[i].aiObjects?.totalScore; // Add the number directly
       }
     }
     let average = sum / data.length;
-    return average;
+    // console.log('average : ', average.toFixed(2)); // Convert to string here if needed
+    return average.toFixed(2);
   };
   const [detailsVisible, setDetailsVisible] = useState(false);
   const [sessionData, setSessionData] = useState({}); // Add sessionData state
@@ -91,7 +95,7 @@ function MainComponent({ params }) {
     //console.log('rowData : ', rowData);
     setDetailsVisible(true);
   };
-
+  // console.log(data[0]?.aiObjects);
   // Function to close the details screen
   const closeDetailsScreen = () => {
     setSelectedRowData(null);
@@ -116,7 +120,7 @@ function MainComponent({ params }) {
           //console.log('userMockSessionDTO : ', userMockSessionDTO);
           // Transform the UserMockSessionDTO into the shape of the data object
           const data = transformData(userMockSessionDTO);
-          //console.log('data : ', data);
+          // console.log('data : ', data);
 
           setSessionData({
             mockid: userMockSessionDTO.mockId,
@@ -161,11 +165,15 @@ function MainComponent({ params }) {
         <Breadcrumb
           links={[
             {
-              name: 'Applicants Mock Sessions',
+              name: `${
+                sessionData.jobid !== null
+                  ? `Applicants Mock Sessions`
+                  : `My Mocks`
+              }`,
               link: `${
                 sessionData.jobid !== null
                   ? `/Interview/mockApplicants/${sessionData.mockid}`
-                  : `#`
+                  : `/Interview/mocks/user-mocks`
               }`,
             },
             {
@@ -192,8 +200,10 @@ function MainComponent({ params }) {
                   </svg>
                 </div>
                 <div className="flex flex-col flex-grow ml-4">
-                  <div className="text-sm text-gray-500">videos</div>
-                  <div className="font-bold text-lg">{data.length}</div>
+                  <div className="text-sm text-gray-900">videos</div>
+                  <div className="font-bold text-lg text-gray-900">
+                    {data.length}
+                  </div>
                 </div>
               </div>
 
@@ -212,8 +222,8 @@ function MainComponent({ params }) {
                     </svg>
                   </div>
                   <div className="flex flex-col flex-grow ml-4">
-                    <div className="text-sm text-gray-500">Average Score</div>
-                    <div className="font-bold text-lg">
+                    <div className="text-sm text-gray-900">Average Score</div>
+                    <div className="font-bold text-lg text-gray-900">
                       {data.length > 0 && getAverage()}
                     </div>
                   </div>
@@ -232,7 +242,15 @@ function MainComponent({ params }) {
               workmapScores={55}
               key={1}
             /> */}
-            <VideoTable Data={data} handleRowClick={handleRowClick} />
+            <VideoTable
+              Data={data}
+              handleRowClick={handleRowClick}
+              IsAnalysing={
+                data.length > 0 && data[0]?.aiObjects === undefined
+                  ? true
+                  : false
+              }
+            />
             {/* <style jsx global>{`
               input[type='checkbox']:checked + label {
                 border-color: #17a9c3;

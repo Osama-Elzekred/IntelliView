@@ -4,6 +4,7 @@ using InteliView.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntelliView.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240630233346_add_videoAiscoreDB")]
+    partial class add_videoAiscoreDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -737,8 +740,8 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<int>("MockVideoAnswerId")
                         .HasColumnType("int");
 
-                    b.Property<double?>("AnswerSimilarityScore")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("AnswerSimilarityScore")
+                        .HasColumnType("decimal(8, 2)");
 
                     b.Property<string>("AnswerText")
                         .HasColumnType("nvarchar(max)");
@@ -746,11 +749,8 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<string>("RecommendationText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("SentimentScore")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("TotalScore")
-                        .HasColumnType("float");
+                    b.Property<decimal?>("SentimentScore")
+                        .HasColumnType("decimal(8, 2)");
 
                     b.HasKey("MockVideoAnswerId");
 

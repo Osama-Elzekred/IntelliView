@@ -29,6 +29,7 @@ namespace InteliView.DataAccess.Data
         public DbSet<InterviewMockTopic> InterviewMockTopics { get; set; }
         public DbSet<MockVideoAnswer> MockVideoAnswers { get; set; }
         public DbSet<UserMockSession> UserMockSessions { get; set; }
+        public DbSet<VideoAiScore> VideoAiScores { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

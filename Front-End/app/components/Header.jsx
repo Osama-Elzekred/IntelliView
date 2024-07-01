@@ -132,7 +132,7 @@ const Header = () => {
               Login
             </a>
             <a
-              href="/signup"
+              href="/login"
               className="bg-primary hover:bg-[#4bb6c9] text-white rounded-lg px-3 py-2 text-sm font-medium flex justify-center items-center transition-colors duration-200 w-full sm:w-auto text-center"
             >
               Sign up

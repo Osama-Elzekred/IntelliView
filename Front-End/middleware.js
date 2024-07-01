@@ -24,7 +24,7 @@ export function middleware(request) {
     /^\/profile\/Edit-company-profile/,
     /^\/job\/job-company(?:\/[^\/]+)?/,
     /^\/job\/job-company(?:\/[^\/]+)?\/job-application(?:\/[^\/]+)?/,
-    /^\/Interview\/review/,
+    // /^\/Interview\/review/,
     /^\/Interview\/mockApplicants(?:\/[^\/]+)?/,
     // /^\/mockReview(?:\/[^\/]+)?/
   ];

@@ -57,7 +57,7 @@ namespace IntelliView.API.Controllers
         {
             string res = await _uploadFilesToCloud.UploadVideo(formFile, formFile.FileName);
 
-            return Ok(res );
+            return Ok(res);
         }
 
         [HttpPost("DeleteCloudinary")]
@@ -217,10 +217,10 @@ namespace IntelliView.API.Controllers
                 " required MVC .Net Core and Blazor knowledge would be beneficial");
             return Ok(result);
         }
-        [HttpPost("getAnalizeData") ]
+        [HttpPost("getAnalizeData")]
         public async Task<IActionResult> GetAnalizeData(string videoLink)
         {
-            var result = await _aiModelApiService.GetAnalyseVideoData(videoLink);
+            var result = await _aiModelApiService.FetchVideoAnalysisData(videoLink);
             return Ok(result);
         }
         //[HttpPost("revciveData")]
@@ -229,6 +229,6 @@ namespace IntelliView.API.Controllers
         //    Console.WriteLine(data);
         //    return Task.FromResult<IActionResult>(Ok(data));
         //}
-        
+
     }
 }

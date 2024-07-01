@@ -1,12 +1,14 @@
 ﻿using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.DataAccess.Services.IService;
-using IntelliView.Models.DTO;
 using IntelliView.Models.Models;
+using IntelliView.Models.Models.Interview;
 using IntelliView.Models.Models.job;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace IntelliView.DataAccess.Services
 {
@@ -22,8 +24,8 @@ namespace IntelliView.DataAccess.Services
         private readonly ILogger<InterviewService> _logger;
         //private ApplicationDbContext _db;
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
-
-        public InterviewService(IUnitOfWork unitOfWork, IAvatarService avatarService, IUploadFilesToCloud uploadFilesToCloud, IConfiguration configuration, ILogger<InterviewService> logger, IDbContextFactory<ApplicationDbContext> contextFactory)
+        private readonly IAIModelApiService _aiModelApiService;
+        public InterviewService(IUnitOfWork unitOfWork, IAIModelApiService aiSearchService, IAvatarService avatarService, IUploadFilesToCloud uploadFilesToCloud, IConfiguration configuration, ILogger<InterviewService> logger, IDbContextFactory<ApplicationDbContext> contextFactory)
         {
             _unitOfWork = unitOfWork;
             _interviewSessions = new Dictionary<string, List<InterviewQuestion>>();
@@ -33,57 +35,7 @@ namespace IntelliView.DataAccess.Services
             Configuration = configuration;
             _logger = logger;
             _contextFactory = contextFactory;
-        }
-        public bool SessionExists(string sessionId)
-        {
-            return _interviewSessions.ContainsKey(sessionId);
-        }
-        public InterviewQuestion? GetMockNextQuestion(string sessionId)
-        {
-            var sessionQuestions = _interviewSessions[sessionId];
-
-            if (sessionQuestions.Count > 0)
-            {
-
-                var nextQuestion = sessionQuestions[0];
-                sessionQuestions.RemoveAt(0);
-                return nextQuestion;
-            }
-            else
-            {
-                return null;
-            }
-
-        }
-
-        public InterviewQuestion? ProcessAnswer(InterviewAnswerDto answerDto)
-        {
-            if (_interviewSessions.ContainsKey(answerDto.SessionId))
-            {
-                // Here you can implement logic to process the answer,
-                // such as saving it to a database or performing validation.
-                // For this example, let's just return the next question.
-
-                return GetMockNextQuestion(answerDto.SessionId);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<string?> StartInterviewMock(int MockID)
-        {
-            var sessionId = Guid.NewGuid().ToString();
-            var mock = await _unitOfWork.InterviewMocks.GetFirstOrDefaultAsync(mk => mk.Id == MockID, properties: m => m.InterviewQuestions);
-            if (mock == null)
-            {
-                return null;
-            }
-            _interviewSessions[sessionId] = mock.InterviewQuestions.ToList();
-            _interviewMocks[sessionId] = mock;
-
-            return sessionId;
+            _aiModelApiService = aiSearchService;
         }
 
         // function that call the azure avatar api to create a video avatar for each question on the mock then
@@ -119,53 +71,119 @@ namespace IntelliView.DataAccess.Services
             await context.SaveChangesAsync();
         }
         // get the ai score of the answer video from the Ai models
-        public async Task<VideoAiScore> GetAiVideoScores(string answerVideoLink, string modelAnswer)
+        public async Task<int> GetAiVideoScores(string answerVideoLink, string modelAnswer, MockVideoAnswer mockVideoAnswer)
         {
-            // Simulate an AI API call delay
-            await Task.Delay(1000);
+            using var context = _contextFactory.CreateDbContext();
+            int Counter = 0;
+            _logger.LogInformation("Starting GetAiVideoScores for video link: {AnswerVideoLink}", answerVideoLink);
 
-            // Assuming you get a response from the AI API which contains TextAnalysis data.
-            // This is a mock example of the AI response.
-            var aiResponse = new
+            string AiJsonResponse;
+            VideoAnalysisDTO? aiResponse = null;
+
+            try
             {
-                TextAnalysis = new Dictionary<string, dynamic>
-        {
-            { "AnswerText"," this is my answer for ur question"},
-            { "SentimentScore", -0.2 }
-        },
-                EmotionScores = new List<EmotionScore>
+                do
+                {
+                    AiJsonResponse = await _aiModelApiService.FetchVideoAnalysisData(answerVideoLink);
+                    Counter++;
+                    _logger.LogInformation("Attempt {Counter}: AI response: {AiJsonResponse}", Counter, AiJsonResponse);
+
+                    // Check if the response contains an error
+                    if (AiJsonResponse.Contains("\"status\":\"failed\""))
                     {
-                        new EmotionScore { Timestamp = DateTime.Now, Scores = new Dictionary<string, double> { { "neutral", 0.58 } } },
-                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(1), Scores = new Dictionary<string, double> { { "happy", 0.74 } } },
-                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(2), Scores = new Dictionary<string, double> { { "neutral", 0.6 } } },
-                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(3), Scores = new Dictionary<string, double> { { "neutral", 0.57 } } },
-                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(4), Scores = new Dictionary<string, double> { { "fear", 0.28 } } },
-                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(5), Scores = new Dictionary<string, double> { { "sad", 0.57 } } },
-                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(6), Scores = new Dictionary<string, double> { { "neutral", 0.61 } } },
-                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(7), Scores = new Dictionary<string, double> { { "happy", 0.74 } } },
-                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(8), Scores = new Dictionary<string, double> { { "happy", 0.6 } } },
-                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(9), Scores = new Dictionary<string, double> { { "neutral", 0.5 } } },
-                        new EmotionScore { Timestamp = DateTime.Now.AddSeconds(10), Scores = new Dictionary<string, double> { { "neutral", 0.57 } } }
+                        _logger.LogWarning("AI response indicates failure: {AiJsonResponse}", AiJsonResponse);
+                        return 1;
                     }
 
+                    // Unescape the JSON response
+                    string unescapedJsonResponse = Regex.Unescape(AiJsonResponse).Trim('"');
 
+                    // Attempt to deserialize the response
+                    try
+                    {
+                        aiResponse = JsonConvert.DeserializeObject<VideoAnalysisDTO>(unescapedJsonResponse);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, "Deserialization error for video link: {AnswerVideoLink}, JSON: {AiJsonResponse}", answerVideoLink, AiJsonResponse);
+                        return 1;
+                    }
 
-            };
-
-            // Extract AnswerText and SentimentScore from the AI response
-            var AnswerText = aiResponse.TextAnalysis.ContainsKey("AnswerText") ? aiResponse.TextAnalysis["AnswerText"].ToString() : string.Empty;
-            var sentimentScore = aiResponse.TextAnalysis.ContainsKey("SentimentScore") ? (decimal)aiResponse.TextAnalysis["SentimentScore"] : 0;
-            return new VideoAiScore
+                } while (aiResponse is null || aiResponse.Status != "success" && Counter < 5);
+            }
+            catch (Exception ex)
             {
-                AnswerSimilarityScore = 0.9m,
-                AnswerText = AnswerText,
-                SentimentScore = sentimentScore,
-                EmotionScores = aiResponse.EmotionScores,
-                ComparisonScore = 0.8m,
+                _logger.LogError(ex, "Error fetching video analysis data for video link: {AnswerVideoLink}", answerVideoLink);
+                return 1;
+            }
 
+            if (aiResponse is null || aiResponse.Status != "success")
+            {
+                _logger.LogWarning("Failed to get a successful AI response after {Counter} attempts for video link: {AnswerVideoLink}", Counter, answerVideoLink);
+                return 1;
+            }
+
+            var emotionScores = aiResponse.VideoAnalysis.Select(kv => new EmotionScore
+            {
+                Time = decimal.Parse(kv.Key),
+                Scores = kv.Value
+            }).ToList();
+
+
+            double? AnswerSimilarity;
+            string? RecommendationText;
+            string question = mockVideoAnswer?.InterviewQuestion?.Question ?? "Unavailable";
+            try
+            {
+                do
+                {
+                    var similarityTask = _aiModelApiService.FetchModelAnswerSimilarityFromGemeini(aiResponse.Text, modelAnswer);
+                    var recommendationTask = _aiModelApiService.FetchRecommendationFromGemeini(aiResponse.Text, modelAnswer, question);
+
+                    await Task.WhenAll(similarityTask, recommendationTask);
+
+                    AnswerSimilarity = await similarityTask;
+                    RecommendationText = await recommendationTask;
+                    _logger.LogInformation("Attempt {Counter}: Answer similarity: {AnswerSimilarity}, Recommendation: {RecommendationText}", Counter, AnswerSimilarity, RecommendationText);
+
+                    Counter++;
+                } while (AnswerSimilarity is null && Counter < 5);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching similarity and recommendation for video link: {AnswerVideoLink}", answerVideoLink);
+                return 1;
+            }
+
+            var videoAiScore = new VideoAiScore
+            {
+                MockVideoAnswerId = mockVideoAnswer.Id,
+                AnswerText = aiResponse.Text,
+                SentimentScore = aiResponse.TextAnalysis,
+                EmotionScores = emotionScores,
+                AnswerSimilarityScore = AnswerSimilarity,
+                RecommendationText = RecommendationText
             };
-        }
+            // Calculate the total score
+            videoAiScore.UpdateTotalScore();
 
+            context.VideoAiScores.Add(videoAiScore);
+
+            // Ensure EmotionScores are tracked by the context
+            foreach (var emotionScore in emotionScores)
+            {
+                context.Entry(emotionScore).State = EntityState.Added;
+            }
+
+            // Update the MockVideoAnswer entity
+            mockVideoAnswer.AnswerAiEvaluationScores = videoAiScore;
+            context.Entry(mockVideoAnswer).State = EntityState.Modified;
+
+            await context.SaveChangesAsync();
+            _logger.LogInformation("Completed GetAiVideoScores for video link: {AnswerVideoLink}", answerVideoLink);
+
+            return 0;
+        }
     }
 }
 

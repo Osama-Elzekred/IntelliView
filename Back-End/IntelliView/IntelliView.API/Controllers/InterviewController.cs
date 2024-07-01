@@ -145,22 +145,13 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound("Question not found");
             }
-            // mocks without job or jobApplication
+            //mocks without job or jobApplication
             //var AnswerVideoLink = await _uploadFilesToCloud.UploadVideo(video, $"{userId}_{mockId}_{question.Id}");
-            var AnswerVideoLink = "https://res.cloudinary.com/djvcgnkbn/video/upload/v1714341443/cddda85e-d5df-4d46-9442-4e44281720b8_1_1.mkv";
-
+            var AnswerVideoLink = "https://res.cloudinary.com/djvcgnkbn/video/upload/v1719708138/b01c9098-59f2-4802-9630-3f4e24a09530_3_5.mp4";
             if (AnswerVideoLink == string.Empty)
             {
                 return BadRequest("Error while uploading the video");
             }
-            var AnswersEvaluationScores = await _interviewService.GetAiVideoScores(AnswerVideoLink, question.ModelAnswer);
-
-            if (AnswersEvaluationScores is null)
-            {
-                return BadRequest("Error while calculating the similarity score");
-            }
-
-
             var userMockInterviewSession = await _unitOfWork.UserMockSessions
                    .GetUserMockSessionAsync(MockSessionId);
 
@@ -168,25 +159,31 @@ namespace IntelliView.API.Controllers
             {
                 return BadRequest("No Mock Session Available ");
             }
-
             if (userMockInterviewSession.Answers.Any(a => a.InterviewQuestionId == questionId))
             {
                 // Handle duplicate answer scenario (throw error, log warning, etc.)
                 return BadRequest("An answer for this question already exists in the session.");
             }
-            // Update the existing UserMockSession by adding a new answer
-            await _unitOfWork.MockVideoAnswers.AddAsync(new MockVideoAnswer
+            var mockVideoAnswer = new MockVideoAnswer
             {
                 InterviewQuestionId = question.Id, // Assuming InterviewQuestion has a navigation property for InterviewQuestionId
                 AnswerText = "",
                 UserMockSessionId = MockSessionId,
                 AnswerVideoURL = AnswerVideoLink,
-                AnswerAiEvaluationScores = AnswersEvaluationScores,
+                //AnswerAiEvaluationScores = AnswersEvaluationScores,
                 AnsweredAt = DateTime.Now,
-            });
+            };
+            await _unitOfWork.MockVideoAnswers.AddAsync(mockVideoAnswer);
 
-            // Save changes
             await _unitOfWork.SaveAsync();
+            _interviewService.GetAiVideoScores(AnswerVideoLink, question.ModelAnswer, mockVideoAnswer);
+
+            //if (AnswersEvaluationScores is null)
+            //{
+            //    return BadRequest("Error while calculating the similarity score");
+            //}
+
+            // Update the existing UserMockSession by adding a new answer
 
             return Ok("Upload successful");
         }

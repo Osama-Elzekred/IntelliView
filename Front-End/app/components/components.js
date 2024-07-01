@@ -15,7 +15,9 @@ import Filterbar from './Filterbar';
 import Loading from './loading';
 import VideoReview from './VideoReview';
 import Modal from './Modal';
+import Alert from './Alert';
 export {
+  Alert,
   Card,
   StartInterview,
   PhoneInputGfg,

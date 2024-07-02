@@ -288,9 +288,9 @@ export default function Post_job(JobId) {
     }
   };
 
-  // if (loading) {
-  //   return <Loading />; // Display loading indicator while data is being fetched
-  // }
+ if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
 
   return (
     <>

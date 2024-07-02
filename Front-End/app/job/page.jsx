@@ -9,7 +9,6 @@ import { Breadcrumb, Filterbar } from '../components/components';
 import config from '../../config';
 
 export default function Jobs() {
-  //const imageURl = 'images/job_logo_1.jpg';
   const [jobListings, setJobListings] = useState([]);
   const [searchResult, setSearchResult] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -169,9 +168,9 @@ export default function Jobs() {
     }
   };
 
-  // if (loading) {
-  //   return <Loading />; // Display loading indicator while data is being fetched
-  // }
+ if (loading) {
+    return <Loading />; // Display loading indicator while data is being fetched
+  }
 
   return (
     <Layout>

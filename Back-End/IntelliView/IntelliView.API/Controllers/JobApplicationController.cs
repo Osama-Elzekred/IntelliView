@@ -76,7 +76,7 @@ namespace IntelliView.API.Controllers
                 return NotFound(new { Message = "User not found" });
             }
             var existingApplication = await _unitOfWork.JobApplications
-           .GetByIdAsync(job.Id, userId);
+                .GetByIdAsync(job.Id, userId);
 
             if (existingApplication != null)
             {

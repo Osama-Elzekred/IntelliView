@@ -73,6 +73,7 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
                     {
                         Id = ua.Job.Id,
                         Title = ua.Job.Title,
+                        ImageURl = ua.Job.ImageURl,
                         JobTime = ua.Job.JobTime,
                         MinimumExperience = ua.Job.MinimumExperience,
                         Requirements = ua.Job.Requirements,

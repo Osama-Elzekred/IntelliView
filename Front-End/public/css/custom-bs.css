@@ -363,6 +363,8 @@ h6 {
 .lead {
   font-size: 1.25rem;
   font-weight: 300;
+  color: white;
+  font-style: italic;
 }
 .display-1 {
   font-size: 6rem;

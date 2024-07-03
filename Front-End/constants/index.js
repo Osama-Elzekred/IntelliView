@@ -48,10 +48,6 @@ const CompanyNavitems = [
     title: 'Jobs of Company',
     href: '/job/job-company',
   },
-  {
-    title: 'Interviews List',
-    href: '/Interview/UserList',
-  },
 ];
 const UserNavitems = [
   {

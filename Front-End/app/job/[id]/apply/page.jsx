@@ -25,21 +25,55 @@ function Apply({ params }) {
 
   const { DOMAIN_NAME } = config;
   function handleNext() {
-    setCurrentStep((prevStep) => prevStep + 1);
+    if (currentStep === 1) {
+      if (validateStepOne()) {
+        setCurrentStep((prevStep) => prevStep + 1);
+      }
+    }
+    if (currentStep === 2) {
+      setCurrentStep((prevStep) => prevStep + 1);
+    }
   }
 
   function handleBack() {
     setCurrentStep((prevStep) => prevStep - 1);
   }
-  // Add basic input validation for email and phone
+  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState({});
+  const validateStepOne = () => {
+    let validationErrors = {};
+
+    if (!answers.fullName) {
+      validationErrors.fullName = 'Full name is required';
+    }
+
+    if (!answers.email || !isValidEmail(answers.email)) {
+      validationErrors.email = 'Valid email is required';
+    }
+
+    if (!answers.phone || !isValidPhone(answers.phone)) {
+      validationErrors.phone = 'Valid phone number is required';
+    }
+
+    if (!answers.gender) {
+      validationErrors.gender = 'Gender is required';
+    }
+
+    if (!answers.CV) {
+      validationErrors.CV = 'CV is required';
+    }
+
+    setErrors(validationErrors);
+    return Object.keys(validationErrors).length === 0;
+  };
+
   const isValidEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
   const isValidPhone = (phone) => {
-    return /^[0-9]$/.test(phone);
+    return /^[0-9]{12}$/.test(phone);
   };
-  const [error, setError] = useState(null);
   const fetchQuestions = async () => {
     const authToken = Cookies.get('authToken');
     try {
@@ -196,7 +230,9 @@ function Apply({ params }) {
           value={answers.fullName}
           onChange={handleChange}
           required // Add required attribute for input validation
-        />
+        />{errors.fullName && (
+          <div className="text-red-500 mb-4">{errors.fullName}</div>
+        )}
         <input
           name="email"
           className="w-full p-2 mb-4 border rounded"
@@ -205,16 +241,9 @@ function Apply({ params }) {
           value={answers.email}
           onChange={handleChange}
           required // Add required attribute for input validation
-        />
-        {/* <input
-          name="phone"
-          className="w-full p-2 mb-4 border rounded"
-          placeholder="Phone"
-          type="tel"
-          value={answers.phone}
-          onChange={handleChange}
-          required // Add required attribute for input validation
-        /> */}
+        />{errors.email && (
+          <div className="text-red-500 mb-4">{errors.email}</div>
+        )}
         <div className="m-2">
           <PhoneInputGfg
             name="phone"
@@ -224,7 +253,9 @@ function Apply({ params }) {
             handlePhoneChange={(phone) =>
               handleChange({ target: { name: 'phone', value: phone } })
             }
-          />
+          />{errors.phone && (
+            <div className="text-red-500 mb-4">{errors.phone}</div>
+          )}
         </div>
         <div className="mb-4">
           <label className="mr-4">Gender: </label>
@@ -253,6 +284,9 @@ function Apply({ params }) {
           />
           <label htmlFor="genderFemale">Female</label>
         </div>
+        {errors.gender && (
+          <div className="text-red-500 mb-4">{errors.gender}</div>
+        )}
         <div className="mb-4">
           <label>Upload CV (File accepted: .pdf - Max file size: 5MB)</label>
           <input
@@ -264,6 +298,9 @@ function Apply({ params }) {
             required // Add required attribute for input validation
           />
         </div>
+        {errors.CV && (
+          <div className="text-red-500 mb-4">{errors.CV}</div>
+        )}
         <div className="flex justify-end">
           <button
             type="button"

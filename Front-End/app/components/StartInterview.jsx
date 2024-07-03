@@ -49,27 +49,34 @@ function StartInterview({
 
 function StoryComponent() {
   const initiateConversation = async () => {
-    const response = await fetch(
-      'https://www.create.xyz/integrations/chat-gpt/conversationgpt4',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages: [
-            {
-              role: 'user',
-              content: 'Starting Virtual Interview',
-            },
-          ],
-          system_prompt: 'Prepare for Virtual Interview',
-        }),
+    try {
+      const response = await fetch(
+        'https://www.create.xyz/integrations/chat-gpt/conversationgpt4',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            messages: [
+              {
+                role: 'user',
+                content: 'Starting Virtual Interview',
+              },
+            ],
+            system_prompt: 'Prepare for Virtual Interview',
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Failed to initiate conversation');
       }
-    );
-
-    const data = await response.json();
-    return data.result;
+      const data = await response.json();
+      return data.result;
+    } catch (error) {
+      console.error('Error initiating conversation:', error);
+      // Handle the error here
+    }
   };
 
   return (

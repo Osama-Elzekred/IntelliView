@@ -3,7 +3,7 @@ import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
 
 const SentimentScoreChart = ({ sentimentScore }) => {
-  // sentimentScore = -1;
+  // sentimentScore = 0.6;
   // Convert sentimentScore to a percentage for visualization
   const positiveScore = sentimentScore > 0 ? sentimentScore * 100 : 0;
   const negativeScore = sentimentScore < 0 ? Math.abs(sentimentScore) * 100 : 0;
@@ -53,7 +53,7 @@ const SentimentScoreChart = ({ sentimentScore }) => {
     },
   };
 
-  return <Bar data={data} options={options} />;
+  return <Bar key={sentimentScore} data={data} options={options} />;
 };
 
 export default SentimentScoreChart;

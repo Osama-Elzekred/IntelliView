@@ -20,57 +20,64 @@ export default function IndexPage() {
                     Welcome to Intelliview
                   </p> */}
                   <h1 className=" tracking-tighter font-icomoon mt-4 text-4xl font-bold text-black lg:mt-8 sm:text-6xl xl:text-8xl">
-                    The Easiest &amp; Way To Get Your Dream Job
+                    The Easiest Way To Get Your Dream Job Now
                   </h1>
 
                   <p className="mt-4 text-base text-black lg:mt-8 sm:text-xl tracking-tighter">
                     Find your dream jobs in our powerful AI-driven platform.
                   </p>
-                  <div className="flex flex-row space-x-3">
-                    <a
-                      href="/login"
-                      title=""
-                      className="inline-flex items-center px-4 py-3  mt-8 font-semibold text-white transition-all duration-200 bg-black rounded-full lg:mt-16 hover:bg-black focus:bg-black"
-                      role="button"
-                    >
-                      Practise mocks Now
-                      <svg
-                        className="w-6 h-6 ml-8 -mr-2"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                  <div className="flex flex-row space-x-1">
+                    <div className="inline-flex items-center px-2 py-3 font-semibold text-dark transition-all duration-200 bg-white rounded-full hover:bg-white focus:bg-white">
+                      <div className="relative inline-flex group">
+                        <div className="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#000] via-[#17a9c3] to-[#FF675E] rounded-full blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
+                        <a
+                          href="/login"
+                          title="Get quote now"
+                          className="relative inline-flex items-center justify-center px-4 py-3 text-lg font-bold text-white transition-all duration-200 bg-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                          role="button"
+                        >
+                          Join as a candidate
+                          <svg
+                            className="w-6 h-6 ml-8 -mr-2"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="1.5"
+                              d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                    <div className="inline-flex items-center px-4 py-3 font-semibold text-dark transition-all duration-200 bg-white rounded-full hover:bg-white focus:bg-white">
+                      <a
+                        href="/login"
+                        title="Sign as a company"
+                        className="flex w-full items-center justify-center px-4 py-3 text-lg font-bold text-dark transition-all duration-200 bg-white rounded-full shadow hover:shadow-lg focus:bg-white"
+                        role="button"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1.5"
-                          d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    </a>
-                    <a
-                      href="/login"
-                      title=""
-                      className="inline-flex items-center px-4 py-3 mt-8 font-semibold text-dark transition-all duration-200 bg-white rounded-full lg:mt-16 hover:bg-white focus:bg-white"
-                      role="button"
-                    >
-                      Sign as a company
-                      <svg
-                        className="w-6 h-6 ml-8 -mr-2"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1.5"
-                          d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    </a>
+                        <span className="flex-grow">Sign as a company</span>
+                        <svg
+                          className="w-6 h-6 ml-2 -mr-2"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </a>
+                    </div>
                   </div>
 
                   <p className="mt-5 text-gray-600">

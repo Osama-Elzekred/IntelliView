@@ -72,8 +72,8 @@ const Header = () => {
       {/* Adjusted the container of the NavbarBrand to use flex and items-center to align it vertically */}
       <NavbarBrand href="/" className="flex">
         <img
-          src="/images/intelliview.png"
-          className="h-8"
+          src="/images/logo1.ico"
+          className="h-14"
           alt="Flowbite Logo"
           sizes="(max-width: 640px) 100px, 200px"
         />
@@ -124,16 +124,18 @@ const Header = () => {
 
       <NavbarCollapse>
         {role == null && (
-          <div className="order-2 items-center flex flex-col sm:flex-row justify-start space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-4">
+          <div className="mx-4 order-2 items-center flex flex-col sm:flex-row justify-start space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-2">
             <a
               href="/login"
-              className="rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800 transition-colors duration-200 w-full sm:w-auto text-center"
+              className="rounded-lg px-3 py-2 text-base font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800  w-full sm:w-auto text-center
+              
+              items-center justify-center bg-whitetext-sm  shadow-sm ring-1 ring-inset ring-gray-300 transition-all duration-150  sm:inline-flex "
             >
               Login
             </a>
             <a
               href="/login"
-              className="bg-primary hover:bg-[#4bb6c9] text-white rounded-lg px-3 py-2 text-sm font-medium flex justify-center items-center transition-colors duration-200 w-full sm:w-auto text-center"
+              className="bg-primary hover:bg-[#17a9c3] text-white rounded-lg px-4 py-2 text-base font-medium flex justify-center items-center transition-colors duration-200 w-full sm:w-auto text-center"
             >
               Sign up
             </a>
@@ -141,11 +143,11 @@ const Header = () => {
         )}
         <NavbarLink href={'/Home'}>Home</NavbarLink>
         <NavbarLink href="/service">Service</NavbarLink>
+        <NavbarLink href="/contact">Contact</NavbarLink>
         <Dropdown
-          label="Jobs"
+          label={<span style={{ fontFamily: 'Roboto, sans-serif' }}>Jobs</span>}
           inline
           dismissOnClick={true}
-          className="text-bold"
         >
           <Dropdown.Item href="/job/" icon={HiViewGrid}>
             Jobs
@@ -165,10 +167,11 @@ const Header = () => {
             ))}
         </Dropdown>
         <Dropdown
-          label="Mocks"
+          label={
+            <span style={{ fontFamily: 'Roboto, sans-serif' }}>Mocks</span>
+          }
           inline
           dismissOnClick={true}
-          className="text-bold"
         >
           <Dropdown.Item href="/Interview/mocks" icon={HiViewGrid}>
             Mocks
@@ -178,11 +181,12 @@ const Header = () => {
               My Mocks
             </Dropdown.Item>
           )}
-          <Dropdown.Item href="/Interview/mocks/Edit-mocks" icon={HiCog}>
-            Add mocks
-          </Dropdown.Item>
+          {role === 'admin' && (
+            <Dropdown.Item href="/Interview/mocks/Edit-mocks" icon={HiCog}>
+              Add mocks
+            </Dropdown.Item>
+          )}
         </Dropdown>
-        <NavbarLink href="/contact">Contact</NavbarLink>
       </NavbarCollapse>
     </Navbar>
   );

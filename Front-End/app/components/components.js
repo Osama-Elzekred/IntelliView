@@ -16,6 +16,7 @@ import Loading from './loading';
 import VideoReview from './VideoReview';
 import Modal from './Modal';
 import Alert from './Alert';
+import Searchbar from './Searchbar';
 export {
   Alert,
   Card,
@@ -33,4 +34,5 @@ export {
   Loading,
   VideoReview,
   Modal,
+  Searchbar,
 };

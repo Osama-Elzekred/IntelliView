@@ -74,7 +74,12 @@ function SelectMulti({
         >
           &times;
         </button> */}
-
+        <button
+          className="absolute top-3 right-3 text-3xl text-gray-600"
+          onClick={onClose}
+        >
+          &times;
+        </button>
         <h3 className="text-2xl text-gray-800 mb-2">Edit Skills</h3>
         <p className="text-sm text-gray-500 mb-4">
           Click a skill if you'd like to remove it.

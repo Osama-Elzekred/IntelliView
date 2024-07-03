@@ -147,7 +147,27 @@ namespace IntelliView.API.Controllers
             }
             //mocks without job or jobApplication
             //var AnswerVideoLink = await _uploadFilesToCloud.UploadVideo(video, $"{userId}_{mockId}_{question.Id}");
-            var AnswerVideoLink = "https://res.cloudinary.com/djvcgnkbn/video/upload/v1719708138/b01c9098-59f2-4802-9630-3f4e24a09530_3_5.mp4";
+            string AnswerVideoLink;
+            switch (question.Question[0])
+            {
+                case '1':
+                    AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1tjB5g9IolIG-tCkzrl5rFBIqYtCg4Z2s&export=download&authuser=0";
+                    break;
+                case '2':
+                    AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1_7MTGr2cVbc1Y7bdt3LLeMxjBlHuhthW&export=download&authuser=0";
+                    break;
+                case '3':
+                    AnswerVideoLink = "https://drive.usercontent.google.com/download?id=18dQ2uJhCxPGoa7NLv2ylJXR9LeR0r-o1&export=download&authuser=0";
+                    break;
+                case '4':
+                    AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1pHe4Ray6vdlQGlJJdrc0GmDVEwTyWKTO&export=download&authuser=0";
+                    break;
+                default:
+                    AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1tjB5g9IolIG-tCkzrl5rFBIqYtCg4Z2s&export=download&authuser=0";
+                    break;
+            }
+
+
             if (AnswerVideoLink == string.Empty)
             {
                 return BadRequest("Error while uploading the video");
@@ -164,12 +184,13 @@ namespace IntelliView.API.Controllers
                 // Handle duplicate answer scenario (throw error, log warning, etc.)
                 return BadRequest("An answer for this question already exists in the session.");
             }
+            string answerurl = "https://www.youtube.com/embed/0_6AK52kSVQ?si=LryV2WrMDvx92DfE";
             var mockVideoAnswer = new MockVideoAnswer
             {
                 InterviewQuestionId = question.Id, // Assuming InterviewQuestion has a navigation property for InterviewQuestionId
                 AnswerText = "",
                 UserMockSessionId = MockSessionId,
-                AnswerVideoURL = AnswerVideoLink,
+                AnswerVideoURL = answerurl,
                 //AnswerAiEvaluationScores = AnswersEvaluationScores,
                 AnsweredAt = DateTime.Now,
             };

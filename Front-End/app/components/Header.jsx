@@ -72,8 +72,8 @@ const Header = () => {
       {/* Adjusted the container of the NavbarBrand to use flex and items-center to align it vertically */}
       <NavbarBrand href="/" className="flex">
         <img
-          src="/images/intelliview.png"
-          className="h-8"
+          src="/images/logo1.ico"
+          className="h-14"
           alt="Flowbite Logo"
           sizes="(max-width: 640px) 100px, 200px"
         />

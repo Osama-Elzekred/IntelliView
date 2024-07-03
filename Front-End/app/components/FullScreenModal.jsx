@@ -58,6 +58,12 @@ const FullScreenModal = ({ onClose, rowData }) => {
               className="rounded-md"
             ></video>
           </div>
+          {/* <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/0_6AK52kSVQ?si=LryV2WrMDvx92DfE"
+          ></iframe> */}
+
           {/* Video Details */}
           <div className="flex-1 mt-4 md:mt-0">
             <Card className=" inline-block my-3">

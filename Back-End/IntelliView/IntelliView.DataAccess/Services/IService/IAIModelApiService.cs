@@ -10,7 +10,7 @@ namespace IntelliView.DataAccess.Services.IService
         Task<string> GetFaceDetectionInfo(string videoLink);
 
         Task<string> FetchVideoAnalysisData(string videoLink);
-        Task<double?> FetchModelAnswerSimilarityFromGemeini(string answerVideotext, string modelAnswer);
-        Task<string?> FetchRecommendationFromGemeini(string answerVideotext, string modelAnswer, string Question = "Unavailable");
+        Task<double?> FetchModelAnswerSimilarityAI(string answerVideotext, string modelAnswer);
+        Task<string?> FetchRecommendationAI(string answerVideotext, string modelAnswer, string Question = "Unavailable");
     }
 }

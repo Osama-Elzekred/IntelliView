@@ -222,7 +222,7 @@ export default function IndexPage() {
               <div className="flex flex-wrap items-center -mx-4">
                 <div className="w-full px-4 lg:w-1/2">
                   <span className="block mb-4 text-base font-medium text-white">
-                    Find Your Next Dream Job
+                  Explore Intelliview's Excellence.
                   </span>
                   <h2 className="mb-6 text-3xl font-bold leading-tight text-white sm:mb-8 sm:text-[40px]/[48px] lg:mb-0">
                     <span className="xs:block"> Get started with </span>
@@ -323,11 +323,8 @@ export default function IndexPage() {
                       <h2 className="section-title mb-2">
                         Company We've Helped
                       </h2>
-                      <p className="lead">
-                        Porro error reiciendis commodi beatae omnipy-5 bg-image
-                        overlay-primary fixed overlays similique voluptate rerum
-                        ipsam fugit mollitia ipsum facilis expedita tempora
-                        suscipit iste
+                      <p className="leads">
+                      At Intelliview, we've empowered numerous companies to streamline their hiring processes, finding the perfect candidates with unprecedented efficiency and accuracy.
                       </p>
                     </div>
                   </div>
@@ -399,10 +396,9 @@ export default function IndexPage() {
             <div className="container">
               <div className="row">
                 <div className="col-md-6 align-self-center text-center text-md-left mb-5 mb-md-0">
-                  <h2 className="text-white">Get The Mobile Apps</h2>
-                  <p className="mb-5 lead text-white">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit
-                    tempora adipisci impedit.
+                  <h2 className="text-white ">Get The Mobile Apps</h2>
+                  <p className="mb-5 lead ">
+                  Explore Intelliview’s mobile apps for a seamless job search and efficient hiring experience wherever you are.
                   </p>
                   <p className="mb-0">
                     <a

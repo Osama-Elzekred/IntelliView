@@ -271,7 +271,7 @@ const UserFooter = () => {
         <hr className="my-10 border-gray-200" />
 
         <p className="text-sm font-normal text-center text-gray-600">
-          © 2023. All rights reserved.
+          © 2024. All rights reserved.
         </p>
       </div>
     </section>

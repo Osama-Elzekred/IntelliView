@@ -177,10 +177,10 @@ const Header = () => {
             <Dropdown.Item href="/Interview/mocks/user-mocks" icon={HiUser}>
               My Mocks
             </Dropdown.Item>
-          )}
+          )}{role === 'admin' && (
           <Dropdown.Item href="/Interview/mocks/Edit-mocks" icon={HiCog}>
             Add mocks
-          </Dropdown.Item>
+          </Dropdown.Item>)}
         </Dropdown>
         <NavbarLink href="/contact">Contact</NavbarLink>
       </NavbarCollapse>

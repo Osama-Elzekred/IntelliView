@@ -28,7 +28,7 @@ export default function IndexPage() {
                   </p>
                   <div className="flex flex-row space-x-3">
                     <a
-                      href="/login"
+                      href="/Interview/mocks"
                       title=""
                       className="inline-flex items-center px-4 py-3  mt-8 font-semibold text-white transition-all duration-200 bg-black rounded-full lg:mt-16 hover:bg-black focus:bg-black"
                       role="button"

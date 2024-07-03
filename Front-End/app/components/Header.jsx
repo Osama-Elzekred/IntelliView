@@ -133,7 +133,7 @@ const Header = () => {
             </a>
             <a
               href="/login"
-              className="bg-primary hover:bg-[#4bb6c9] text-white rounded-lg px-3 py-2 text-sm font-medium flex justify-center items-center transition-colors duration-200 w-full sm:w-auto text-center"
+              className="bg-primary hover:bg-[#17a9c3] text-white rounded-lg px-3 py-2 text-sm font-medium flex justify-center items-center transition-colors duration-200 w-full sm:w-auto text-center"
             >
               Sign up
             </a>
@@ -141,12 +141,12 @@ const Header = () => {
         )}
         <NavbarLink href={'/Home'}>Home</NavbarLink>
         <NavbarLink href="/service">Service</NavbarLink>
+        <NavbarLink href="/contact">Contact</NavbarLink>
         <Dropdown
-          label="Jobs"
-          inline
-          dismissOnClick={true}
-          className="text-bold"
-        >
+            label={<span style={{ fontFamily: 'Roboto, sans-serif' }}>Jobs</span>}
+            inline
+            dismissOnClick={true}
+>
           <Dropdown.Item href="/job/" icon={HiViewGrid}>
             Jobs
           </Dropdown.Item>
@@ -165,11 +165,10 @@ const Header = () => {
             ))}
         </Dropdown>
         <Dropdown
-          label="Mocks"
-          inline
-          dismissOnClick={true}
-          className="text-bold"
-        >
+            label={<span style={{ fontFamily: 'Roboto, sans-serif' }}>Mocks</span>}
+            inline
+            dismissOnClick={true}
+          >
           <Dropdown.Item href="/Interview/mocks" icon={HiViewGrid}>
             Mocks
           </Dropdown.Item>
@@ -177,12 +176,11 @@ const Header = () => {
             <Dropdown.Item href="/Interview/mocks/user-mocks" icon={HiUser}>
               My Mocks
             </Dropdown.Item>
-          )}
+          )}{role === 'admin' && (
           <Dropdown.Item href="/Interview/mocks/Edit-mocks" icon={HiCog}>
             Add mocks
-          </Dropdown.Item>
+          </Dropdown.Item>)}
         </Dropdown>
-        <NavbarLink href="/contact">Contact</NavbarLink>
       </NavbarCollapse>
     </Navbar>
   );

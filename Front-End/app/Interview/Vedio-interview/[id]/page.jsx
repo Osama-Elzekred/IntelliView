@@ -40,7 +40,7 @@ function MainComponent({ params }) {
       setTitle(data.title);
       // //console.log(data);
     } catch (error) {
-      //console.log('error : ', error);
+      console.error('error : ', error);
     }
     setLoading(false);
   };
@@ -72,7 +72,7 @@ function MainComponent({ params }) {
       setQVideo(data.questions[0].url);
       // Initialize recordedVideos with an array of nulls based on the number of questions
       setRecordedVideos(Array(data.questions.length).fill(null));
-      //console.log(data);
+      console.error(data);
     } catch (error) {
       // TODO: Display a user-friendly error message
     }
@@ -489,16 +489,23 @@ function MainComponent({ params }) {
     formData.append('video', blob);
     //console.log(blob);
     //console.log(authToken);
-    const response = await fetch(
-      `https://${DOMAIN_NAME}/api/Interview/MockSession/${mockSessionId}/mock/${mockid}/question/${questionId}`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: formData,
+    try {
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/api/Interview/MockSession/${mockSessionId}/mock/${mockid}/question/${questionId}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData,
+        }
+      );
+      if (!response.ok) {
+        throw new Error('Upload failed');
       }
-    );
+    } catch (error) {
+      console.error(error);
+    }
     if (currentIndex === fullQuestionList.length - 1) {
       setOpenModal(true);
     }

@@ -215,7 +215,7 @@ export default function login() {
             <div className="container">
               <div className="font-[sans-serif] text-[#333]">
                 <div className=" flex flex-col items-center justify-center">
-                  <div className="grid  items-center gap-4 max-w-2xl w-full p-1 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
+                  <div className="grid  items-center gap-4 max-w-xl w-full p-1 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
                     {isFlipped ? (
                       <form className="form2" onSubmit={handleSubmit}>
                         <div className="w-full  p-8">

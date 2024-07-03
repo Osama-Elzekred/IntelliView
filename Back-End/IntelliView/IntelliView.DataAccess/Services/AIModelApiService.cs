@@ -1,7 +1,9 @@
 ﻿using IntelliView.DataAccess.Services.IService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace IntelliView.DataAccess.Services
 {
@@ -11,11 +13,13 @@ namespace IntelliView.DataAccess.Services
         private readonly JsonSerializerOptions _jsonSerializerOptions;
         private readonly IConfiguration _configuration;
         private readonly IAiSearchService _aiBasedSearchService;
+        private readonly ILogger<AIModelApiClient> _logger;
 
-        public AIModelApiClient(IConfiguration configuration, IAiSearchService aiBasedSearchService, HttpClient httpClient)
+        public AIModelApiClient(IConfiguration configuration, IAiSearchService aiBasedSearchService, HttpClient httpClient, ILogger<AIModelApiClient> logger)
         {
             _configuration = configuration;
             _httpClient = httpClient;
+            _logger = logger;
 
             // Configure JSON serializer options
             _jsonSerializerOptions = new JsonSerializerOptions
@@ -106,38 +110,48 @@ namespace IntelliView.DataAccess.Services
 
             return result;
         }
-        public async Task<double?> FetchModelAnswerSimilarityFromGemeini(string answerVideotext, string modelAnswer)
+        public async Task<double?> FetchModelAnswerSimilarityAI(string answerVideotext, string modelAnswer)
         {
             // Construct the prompt for the Gemini AI model
-            string prompt = $"Compare the following answer with the model answer and provide a similarity score between -1 and 1. " +
-                            $"The output should be a single number \n\n" +
+            string prompt = $"Compare the following answer with the model answer and provide a similarity score between 0 and 1. " +
+                            $"The output MUST be a single number \n\n" +
                             $"Answer: {answerVideotext}\n\n" +
                             $"Model Answer: {modelAnswer}";
 
             // Call the AI search service to get the similarity score
             var result = await _aiBasedSearchService.GeminiAiApi(prompt);
-
+            double similarityScore = 0.29d;
+            var match = Regex.Match(result, @"\d+(\.\d+)?");
             // Assuming the result is a JSON string containing the similarity score
-            double similarityScore;
+
             try
             {
-                similarityScore = JsonSerializer.Deserialize<double>(result);
+                if (match.Success)
+                {
+                    similarityScore = double.Parse(match.Value);
+                }
+                else
+                {
+                    similarityScore = JsonSerializer.Deserialize<double>(result);
+                }
             }
             catch (Exception)
             {
-                similarityScore = 0; // or handle the error as needed
+                similarityScore = 0.29d; // or handle the error as needed
+                _logger.LogError("Error deserializing the similarity score from the AI response: {Result}", result);
             }
 
 
             // Ensure the score is within the range [-1, 1]
-            if (similarityScore < -1 || similarityScore > 1)
+            if (similarityScore < 0 || similarityScore > 1)
             {
+                _logger.LogError("Error deserializing the similarity score from the AI response: {Result}", result);
                 return null;
             }
 
             return similarityScore;
         }
-        public async Task<string?> FetchRecommendationFromGemeini(string answerVideotext, string modelAnswer, string Question = "Unavailable")
+        public async Task<string?> FetchRecommendationAI(string answerVideotext, string modelAnswer, string Question = "Unavailable")
         {
             // Construct the prompt for the Gemini AI model
             string prompt = $"Analyze the following answer and provide a recommendation or tip to improve it. " +

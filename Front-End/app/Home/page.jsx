@@ -20,7 +20,7 @@ export default function IndexPage() {
                     Welcome to Intelliview
                   </p> */}
                   <h1 className=" tracking-tighter font-icomoon mt-4 text-4xl font-bold text-black lg:mt-8 sm:text-6xl xl:text-8xl">
-                    The Easiest &amp; Way To Get Your Dream Job
+                    The Easiest Way To Get Your Dream Job Now
                   </h1>
 
                   <p className="mt-4 text-base text-black lg:mt-8 sm:text-xl tracking-tighter">

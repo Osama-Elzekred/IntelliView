@@ -102,7 +102,7 @@ export default function IndexPage() {
             </div>
           </section>
         </div>
-
+{/* 
         <section className="py-10 bg-white sm:py-16 lg:py-24">
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div className="text-center">
@@ -219,7 +219,7 @@ export default function IndexPage() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         <Features />
         {/* ====== Call To Action Section Start */}

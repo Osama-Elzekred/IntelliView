@@ -124,16 +124,18 @@ const Header = () => {
 
       <NavbarCollapse>
         {role == null && (
-          <div className="order-2 items-center flex flex-col sm:flex-row justify-start space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-4">
+          <div className="mx-4 order-2 items-center flex flex-col sm:flex-row justify-start space-y-2 sm:space-y-0 sm:space-x-2 md:space-x-2">
             <a
               href="/login"
-              className="rounded-lg px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800 transition-colors duration-200 w-full sm:w-auto text-center"
+              className="rounded-lg px-3 py-2 text-base font-medium text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-gray-300 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800  w-full sm:w-auto text-center
+              
+              items-center justify-center bg-whitetext-sm  shadow-sm ring-1 ring-inset ring-gray-300 transition-all duration-150  sm:inline-flex "
             >
               Login
             </a>
             <a
               href="/login"
-              className="bg-primary hover:bg-[#17a9c3] text-white rounded-lg px-3 py-2 text-sm font-medium flex justify-center items-center transition-colors duration-200 w-full sm:w-auto text-center"
+              className="bg-primary hover:bg-[#17a9c3] text-white rounded-lg px-4 py-2 text-base font-medium flex justify-center items-center transition-colors duration-200 w-full sm:w-auto text-center"
             >
               Sign up
             </a>
@@ -143,10 +145,10 @@ const Header = () => {
         <NavbarLink href="/service">Service</NavbarLink>
         <NavbarLink href="/contact">Contact</NavbarLink>
         <Dropdown
-            label={<span style={{ fontFamily: 'Roboto, sans-serif' }}>Jobs</span>}
-            inline
-            dismissOnClick={true}
->
+          label={<span style={{ fontFamily: 'Roboto, sans-serif' }}>Jobs</span>}
+          inline
+          dismissOnClick={true}
+        >
           <Dropdown.Item href="/job/" icon={HiViewGrid}>
             Jobs
           </Dropdown.Item>
@@ -165,10 +167,12 @@ const Header = () => {
             ))}
         </Dropdown>
         <Dropdown
-            label={<span style={{ fontFamily: 'Roboto, sans-serif' }}>Mocks</span>}
-            inline
-            dismissOnClick={true}
-          >
+          label={
+            <span style={{ fontFamily: 'Roboto, sans-serif' }}>Mocks</span>
+          }
+          inline
+          dismissOnClick={true}
+        >
           <Dropdown.Item href="/Interview/mocks" icon={HiViewGrid}>
             Mocks
           </Dropdown.Item>
@@ -176,10 +180,12 @@ const Header = () => {
             <Dropdown.Item href="/Interview/mocks/user-mocks" icon={HiUser}>
               My Mocks
             </Dropdown.Item>
-          )}{role === 'admin' && (
-          <Dropdown.Item href="/Interview/mocks/Edit-mocks" icon={HiCog}>
-            Add mocks
-          </Dropdown.Item>)}
+          )}
+          {role === 'admin' && (
+            <Dropdown.Item href="/Interview/mocks/Edit-mocks" icon={HiCog}>
+              Add mocks
+            </Dropdown.Item>
+          )}
         </Dropdown>
       </NavbarCollapse>
     </Navbar>

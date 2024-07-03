@@ -129,18 +129,15 @@ function CardComp({
           </div>
         )}
       </div>
+
       <div className="flex flex-wrap gap-1">
-        {' '}
         <div className="flex flex-wrap gap-1">
-          {' '}
-          <div className="flex flex-wrap gap-1">
-            {categories.map((category, index) => (
-              <span key={index} className=" py-1 text-sm ">
-                {category.trim()}
-                {index < categories.length - 1 ? ',' : ''}
-              </span>
-            ))}
-          </div>
+          {categories.slice(0, 12).map((category, index) => (
+            <span key={index} className="py-1 text-sm line-clamp-2">
+              {category.trim()}
+              {index < 11 ? ',' : ''}
+            </span>
+          ))}
         </div>
       </div>
       {/* {IsCompany && (

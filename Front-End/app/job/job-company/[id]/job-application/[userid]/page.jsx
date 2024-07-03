@@ -7,14 +7,14 @@ import React, { useState, useEffect } from 'react';
 import Loading from '../../../../../components/loading';
 import config from '../../../../../../config';
 
-/**
- * Renders the details of a job application.
- *
- * @param {Object} params - The parameters for the job application.
- * @param {string} params.id - The ID of the job.
- * @param {string} params.userid - The ID of the user.
- * @returns {JSX.Element} The JSX element representing the job application details.
- */
+// /**
+//  * Renders the details of a job application.
+//  *
+//  * @param {Object} params - The parameters for the job application.
+//  * @param {string} params.id - The ID of the job.
+//  * @param {string} params.userid - The ID of the user.
+//  * @returns {JSX.Element} The JSX element representing the job application details.
+//  */
 export default function Job_Application_details({ params }) {
   const [applicantDetails, setApplicantDetails] = useState();
   const [loading, setLoading] = useState(true);

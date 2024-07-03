@@ -8,11 +8,10 @@ import {
   Loading,
   Breadcrumb,
   Modal,
-  Toastitem,
+  Searchbar,
 } from '../../components/components';
 import { useToast } from '../../components/Toast/ToastContext';
 import config from '../../../config';
-
 
 export default function Jobs() {
   // const imageURl = 'images/job_logo_1.jpg';
@@ -75,12 +74,15 @@ export default function Jobs() {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch(`https://${DOMAIN_NAME}/api/Job/CompanyJobs`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/api/Job/CompanyJobs`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
       if (response.ok) {
         const jobs = await response.json();
         const filteredJobs = jobs.filter((job) => !job.isDeleted).reverse();
@@ -202,13 +204,16 @@ export default function Jobs() {
 
   const handleEndJob = async (jobId) => {
     try {
-      const response = await fetch(`https://${DOMAIN_NAME}/api/Job/${jobId}/end`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `https://${DOMAIN_NAME}/api/Job/${jobId}/end`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       //console.log('response', response);
       if (!response.ok) {
         throw new Error('Failed to end job');
@@ -251,29 +256,12 @@ export default function Jobs() {
           <div className="container">
             <div className="row align-items-center justify-content-center">
               <div className="col-md-12">
-                <form method="post" className="search-jobs-form">
-                  <div className="row mb-5">
-                    <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                      <input
-                        type="text"
-                        className="form-control form-control-lg"
-                        placeholder="Job title, Company..."
-                        onChange={(e) => {
-                          handleChange('title', e.target.value);
-                        }}
-                      />
-                    </div>
-                    <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                      <button
-                        type="button"
-                        onClick={handleSearch}
-                        className="btn btn-primary btn-lg btn-block text-white btn-search"
-                      >
-                        <span className="icon-search icon mr-2" />
-                        Search Job
-                      </button>
-                    </div>
-                  </div>
+                <div className="search-jobs-form">
+                  <Searchbar
+                    handleChange={(e) => handleChange('title', e.target.value)}
+                    handleSearch={() => handleSearch()}
+                  />
+
                   <div className="row">
                     <div className="col-md-12 popular-keywords">
                       <h3>Trending Keywords:</h3>
@@ -296,7 +284,7 @@ export default function Jobs() {
                       </ul>
                     </div>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>

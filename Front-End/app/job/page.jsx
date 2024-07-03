@@ -114,26 +114,27 @@ export default function Jobs() {
     fetchJobs();
   }, [currentPage, searchResult]);
 
-  // setTime out to make delay until the data come from server to store it in jobs . #hossam
-  setTimeout(() => {
-    if (
-      searchResult.length > 0 ||
-      (searchResult.length === 0 && test === true)
-    ) {
-      setTotalPages(Math.ceil(searchResult.length / jobsPerPage)); // Update total pages based on search result
-      setJobs(
-        searchResult.slice(
-          (currentPage - 1) * jobsPerPage,
-          currentPage * jobsPerPage
-        )
-      );
-    } else {
-      setTotalPages(Math.ceil(jobListings.length / jobsPerPage)); // Update total pages based on original job data
-      const startIndex = (currentPage - 1) * jobsPerPage;
-      const endIndex = Math.min(startIndex + jobsPerPage, jobListings.length);
-      setJobs(jobListings.slice(startIndex, endIndex));
-    }
-  }, 1);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchResult.length > 0 || (searchResult.length === 0 && test === true)) {
+        setTotalPages(Math.ceil(searchResult.length / jobsPerPage)); // Update total pages based on search result
+        setJobs(
+          searchResult.slice(
+            (currentPage - 1) * jobsPerPage,
+            currentPage * jobsPerPage
+          )
+        );
+      } else {
+        setTotalPages(Math.ceil(jobListings.length / jobsPerPage)); // Update total pages based on original job data
+        const startIndex = (currentPage - 1) * jobsPerPage;
+        const endIndex = Math.min(startIndex + jobsPerPage, jobListings.length);
+        setJobs(jobListings.slice(startIndex, endIndex));
+      }
+    }, 1);
+  
+    // Cleanup function to clear the timeout when the component unmounts
+    return () => clearTimeout(timer);
+  }, [searchResult, test, currentPage, jobListings, jobsPerPage]); // Add dependencies that, when changed, should re-trigger this effect
 
   const changePage = (page) => {
     setCurrentPage(page);
@@ -168,9 +169,9 @@ export default function Jobs() {
     }
   };
 
- if (loading) {
-    return <Loading />; // Display loading indicator while data is being fetched
-  }
+//  if (loading) {
+//     return <Loading />; // Display loading indicator while data is being fetched
+//   }
 
   return (
     <Layout>

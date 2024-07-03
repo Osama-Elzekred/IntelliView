@@ -89,13 +89,6 @@ export default function EditProfile() {
   };
 
   const handleDataSubmit = async () => {
-    // to make the post of form user data
-    // // const phoneNumber = getPhoneNumberValue();
-    // setFormData((FormData) => ({
-    //   ...FormData,
-    //   phoneNumber: phoneNumber,
-    // }));
-
     try {
       const response = await fetch(`https://${DOMAIN_NAME}/api/Profile`, {
         method: 'PUT',
@@ -207,7 +200,13 @@ export default function EditProfile() {
     }
   };
   const profilePhotoUrl = imageURL;
-  localStorage.setItem('profilePhotoUrl', profilePhotoUrl);
+  useEffect(() => {
+    if (profilePhotoUrl) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('profilePhotoUrl', profilePhotoUrl);
+      }
+    }
+  }, [profilePhotoUrl]);
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
   }
@@ -312,7 +311,7 @@ export default function EditProfile() {
                               Reset
                             </button>
                             <div className="text-light small mt-1">
-                              Allowed JPG or PNG. Max size of 800K
+                              Allowed JPG,JPEG or PNG. Max size of 5MB
                             </div>
                           </div>
                         </div>

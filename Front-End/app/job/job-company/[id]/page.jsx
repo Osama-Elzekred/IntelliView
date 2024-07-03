@@ -314,7 +314,7 @@ export default function JobApplicants({ params }) {
             ]}
           />
           <section className="" id="next">
-            <div className="container" id="scroll">
+            <div className="" id="scroll">
               <div className="row align-items-center justify-content-center">
                 <div className="col-md-12">
                   <div className="mb-2 text-center">
@@ -508,7 +508,7 @@ export default function JobApplicants({ params }) {
                 <div className="">
                   <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                      <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                           <th scope="col" className="px-6 py-3">
                             Name

@@ -9,9 +9,7 @@ import { Breadcrumb } from '../../components/components';
 import { redirect } from 'next/navigation';
 import Loading from '../../components/loading';
 import config from '../../../config';
-
 import { useToast } from '../../components/Toast/ToastContext';
-//const DOMAIN_NAME = 'localhost:7049';
 
 export default function EditProfile() {
   let [message, setMessage] = useState('');
@@ -40,11 +38,8 @@ export default function EditProfile() {
   const [loading, setLoading] = useState(true);
   const [authToken, setAuthToken] = useState(Cookies.get('authToken'));
 
-  // Function to retrieve the phone number value
   useEffect(() => {
     const role = Cookies.get('role');
-    // const [userId ,setUserId] = useState("")
-
     if (!authToken || role != 'user') {
       redirect('/');
     }
@@ -68,21 +63,17 @@ export default function EditProfile() {
           lastName: data.lastName,
           title: data.title,
           phoneNumber: data.phoneNumber,
-          // Add any other fields from the response here
         });
         setPhotoUrl(`${data.imageURl}`);
         setCvName(data.cvurl);
         setLoading(false);
-        // //console.log('Profile data:', data);
       })
       .catch((error) => {
         console.error('Error fetching profile data:', error);
       });
   }, []);
+
   useEffect(() => {
-    // if (!authToken || (role != 'user' && role != 'User')) {
-    //   redirect('/');
-    // }
     if (typeof window != 'undefined') {
       const storedCvName = localStorage.getItem('cvName');
       if (storedCvName) {
@@ -91,35 +82,29 @@ export default function EditProfile() {
       }
     }
   }, []);
+
   const handleDisplay = async () => {
     setClick(false);
   };
+
   const handleChange = (name, value) => {
     if (typeof name === 'object' && name.target) {
-      // If name is an event object, extract name and value from the event
       value = name.target.value;
       name = name.target.name;
     }
-    // //console.log('name:', name, 'value:', value);
     setUserData({ ...userData, [name]: value });
   };
+
   const handleCVChange = async (event) => {
-    // setSelectedFiles(event.target.files);
     await handleUpload(event.target.files);
   };
 
-  //  const [file, setFile] = useState(null);
   const handlePhotoChange = async (event) => {
-    // //console.log('file:', event.target.files[0]);
-
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
-    //console.log('file:', selectedFile);
-    // Create a new FormData object
+
     const formData = new FormData();
     formData.append('file', selectedFile);
-    // Send the POST request to the server
-    //console.log(formData);
 
     try {
       const response = await fetch(
@@ -134,32 +119,20 @@ export default function EditProfile() {
       );
       if (response.ok) {
         const data = await response.json();
-
         setPhotoUrl(`${data.imageURl}`);
-        open(' Photo uploaded successfully ', true);
-       // //console.log('Photo uploaded successfully');
+        open('Photo uploaded successfully', true);
       } else {
-        open(' Failed to upload photo ', false);
-        //console.error('Failed to upload photo');
+        open('Failed to upload photo', false);
       }
       setLoading(false);
     } catch (error) {
-      open(' Failed to upload photo ', false);
-      //console.error('Error uploading photo:', error);
+      open('Failed to upload photo', false);
+      console.error('Error uploading photo:', error);
     }
   };
-  localStorage.setItem('profilePhotoUrl', imageURL);
 
   const handleDataSubmit = async () => {
-    // to make the post of form user data
-    // const phoneNumber = getPhoneNumberValue();
-    // setUserData((FormData) => ({
-    //   ...FormData,
-    //   phoneNumber: phoneNumber,
-    // }));
-
     try {
-      // console.log(userData);
       const response = await fetch(`https://${DOMAIN_NAME}/api/Profile`, {
         method: 'PUT',
         headers: {
@@ -169,15 +142,14 @@ export default function EditProfile() {
         body: JSON.stringify(userData),
       });
       if (response.ok) {
-        open(' Profile updated successfully', true);
-        //console.log('Profile updated successfully');
+        open('Profile updated successfully', true);
       } else {
-        open(' Failed to update profile', false);
+        open('Failed to update profile', false);
         console.error('Failed to update profile');
       }
       setLoading(false);
     } catch (error) {
-      open(' Failed to update profile', false);
+      open('Failed to update profile', false);
       console.error('Error updating profile:', error);
     }
   };
@@ -209,27 +181,22 @@ export default function EditProfile() {
         localStorage.setItem('cvName', fileName);
         setCvName(fileName);
         setClick(true);
-        open(' CV uploaded successfully', true);
-        ////console.log('Files uploaded successfully');
-        // Handle success
+        open('CV uploaded successfully', true);
       } else {
-        open(' Failed to upload files', false);
-        //console.error('Failed to upload files');
-        // Handle failure
+        open('Failed to upload files', false);
+        console.error('Failed to upload files');
       }
-      // setLoading(false);
     } catch (error) {
-      open(' Failed to upload files', false);
-      //console.error('Error occurred while uploading files:', error);
-      // Handle error
+      open('Failed to upload files', false);
+      console.error('Error occurred while uploading files:', error);
     }
   };
-  //change password here
+
   const handlePasswordChange = (field, value) => {
     setPasswordForm({ ...passwordForm, [field]: value });
   };
+
   const handlePasswordSubmit = async () => {
-    //console.log('password part here ');
     if (
       passwordForm.currentPassword === '' ||
       passwordForm.newPassword === '' ||
@@ -248,7 +215,7 @@ export default function EditProfile() {
           {
             method: 'POST',
             headers: {
-              Authoriazation: `Bearer ${authToken}`,
+              Authorization: `Bearer ${authToken}`,
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -261,24 +228,32 @@ export default function EditProfile() {
         if (response.ok) {
           setColor('green');
           setMessage('Password Changed Successfully');
-          open(' Password updated successfully', true);
+          open('Password updated successfully', true);
         } else {
           setColor('red');
           setMessage('Password Not Change');
-          open(' Failed to update Password', false);
+          open('Failed to update Password', false);
         }
       } catch (error) {
         setColor('red');
         setMessage(error);
-        open(' Failed to update Password', false);
+        open('Failed to update Password', false);
         console.error('error', error);
       }
     }
   };
+
   const [file, setFile] = useState(null);
 
   const profilePhotoUrl = imageURL;
-  localStorage.setItem('profilePhotoUrl', profilePhotoUrl);
+  useEffect(() => {
+    if (profilePhotoUrl) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('profilePhotoUrl', profilePhotoUrl);
+      }
+    }
+  }, [profilePhotoUrl]);
+
   if (loading) {
     return <Loading />; // Display loading indicator while data is being fetched
   }
@@ -386,7 +361,7 @@ export default function EditProfile() {
                               Reset
                             </button>
                             <div className="text-light small mt-1">
-                              Allowed JPG or PNG. Max size of 800K
+                              Allowed JPG , JPEG or PNG. Max size of 5MB
                             </div>
                           </div>
                         </div>
@@ -434,28 +409,23 @@ export default function EditProfile() {
                                     className="flex items-center  "
                                   >
                                     <Badge
-                                      className="bg-blue-500 text-white mr-3"
+                                      className="bg-blue-500 text-white mr-3 inline-block whitespace-nowrap"
                                       style={{
                                         backgroundColor: '#17a9c3',
                                         color: 'white',
                                       }}
                                       size=""
                                     >
-                                      CV Name : {'Upload Cv'}
+                                      Resume Uploaded
                                     </Badge>
-                                    <Button
-                                      className="ml-2 hover:bg-green-100"
-                                      style={{
-                                        backgroundColor: '#17a9c3',
-                                        color: 'white',
-                                        fontFamily: 'arial',
-                                        fontWeight: 'semibold',
-                                      }}
-                                      size="sm"
+
+                                    <button
+                                      type="button"
+                                      className="btn btn-default md-btn-flat inline-block whitespace-nowrap"
                                       onClick={handleDisplay}
                                     >
                                       Change Cv
-                                    </Button>
+                                    </button>
                                   </div>
                                 ) : (
                                   <div id="uploadCv" className="w-[100%]">

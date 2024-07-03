@@ -5,7 +5,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import CardComp from '../components/Card';
 import Loading from '../components/loading';
-import { Breadcrumb, Filterbar } from '../components/components';
+import { Breadcrumb, Filterbar, Searchbar } from '../components/components';
 import config from '../../config';
 
 export default function Jobs() {
@@ -114,26 +114,30 @@ export default function Jobs() {
     fetchJobs();
   }, [currentPage, searchResult]);
 
-  // setTime out to make delay until the data come from server to store it in jobs . #hossam
-  setTimeout(() => {
-    if (
-      searchResult.length > 0 ||
-      (searchResult.length === 0 && test === true)
-    ) {
-      setTotalPages(Math.ceil(searchResult.length / jobsPerPage)); // Update total pages based on search result
-      setJobs(
-        searchResult.slice(
-          (currentPage - 1) * jobsPerPage,
-          currentPage * jobsPerPage
-        )
-      );
-    } else {
-      setTotalPages(Math.ceil(jobListings.length / jobsPerPage)); // Update total pages based on original job data
-      const startIndex = (currentPage - 1) * jobsPerPage;
-      const endIndex = Math.min(startIndex + jobsPerPage, jobListings.length);
-      setJobs(jobListings.slice(startIndex, endIndex));
-    }
-  }, 1);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (
+        searchResult.length > 0 ||
+        (searchResult.length === 0 && test === true)
+      ) {
+        setTotalPages(Math.ceil(searchResult.length / jobsPerPage)); // Update total pages based on search result
+        setJobs(
+          searchResult.slice(
+            (currentPage - 1) * jobsPerPage,
+            currentPage * jobsPerPage
+          )
+        );
+      } else {
+        setTotalPages(Math.ceil(jobListings.length / jobsPerPage)); // Update total pages based on original job data
+        const startIndex = (currentPage - 1) * jobsPerPage;
+        const endIndex = Math.min(startIndex + jobsPerPage, jobListings.length);
+        setJobs(jobListings.slice(startIndex, endIndex));
+      }
+    }, 1);
+
+    // Cleanup function to clear the timeout when the component unmounts
+    return () => clearTimeout(timer);
+  }, [searchResult, test, currentPage, jobListings, jobsPerPage]); // Add dependencies that, when changed, should re-trigger this effect
 
   const changePage = (page) => {
     setCurrentPage(page);
@@ -168,9 +172,9 @@ export default function Jobs() {
     }
   };
 
- if (loading) {
-    return <Loading />; // Display loading indicator while data is being fetched
-  }
+  //  if (loading) {
+  //     return <Loading />; // Display loading indicator while data is being fetched
+  //   }
 
   return (
     <Layout>
@@ -201,30 +205,14 @@ export default function Jobs() {
                 </span>
               </h1>
             </div>
-            <form method="post" className="search-jobs-form">
-              <div className="row mb-2">
-                <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                  <input
-                    type="text"
-                    className="form-control form-control-lg"
-                    placeholder="Job title ..."
-                    onChange={(e) => {
-                      handleChange('title', e.target.value);
-                    }}
-                  />
-                </div>
-                <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0 flex justify-center align-items-center">
-                  <button
-                    type="button"
-                    onClick={handleSearch}
-                    className="btn btn-primary btn-lg btn-block text-white btn-search"
-                  >
-                    <span className="icon-search icon mr-2" />
-                    Search Job
-                  </button>
-                </div>
+            <div className="search-jobs-form p-2">
+              <div className="search-jobs-form">
+                <Searchbar
+                  handleChange={(e) => handleChange('title', e.target.value)}
+                  handleSearch={() => handleSearch()}
+                />
               </div>
-            </form>
+            </div>
             <svg
               className="my-2 w-full"
               xmlns="http://www.w3.org/2000/svg"
@@ -248,7 +236,12 @@ export default function Jobs() {
             </div>
             <div className="flex flex-col-reverse md:flex-row md:space-x-4 space-y-2 md:space-y-0">
               <div className="w-full md:w-1/4 ">
-              <Filterbar searchForm={searchForm} handleChange={handleChange} resetFilters={resetFilters}/>
+                <Filterbar
+                  searchForm={searchForm}
+                  handleChange={handleChange}
+                  resetFilters={resetFilters}
+                  handleSearch={handleSearch}
+                />
               </div>
               <ul className="m-2 space-y-2 py-2 flex-grow flex-1 bg-white shadow-md p-4">
                 {jobs.map((job, index) => (

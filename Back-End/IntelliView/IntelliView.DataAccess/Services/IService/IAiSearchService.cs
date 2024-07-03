@@ -4,5 +4,7 @@
     {
         Task<string> GetAiBasedResult(string searchText);
         Task<string> GeminiAiApi(string text);
+        Task<string> AimLapAiApi(string text, string System = "you are an Interview expert");
     }
+
 }

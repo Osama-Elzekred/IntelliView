@@ -20,15 +20,15 @@ export default function Post_job(JobId) {
   const [openModal, setOpenModal] = useState(false);
   const [openModal2, setOpenModal2] = useState(false);
   const [showComponent, setShowComponent] = useState(false);
-  const QuestionInputRef = useRef(null);
+  const QuestionInputRef = useRef("");
   const { DOMAIN_NAME } = config;
-  const CustQestionRef = useRef(null);
-  const AnswerInputRef = useRef(null);
+  const CustQestionRef = useRef("");
+  const AnswerInputRef = useRef("");
   const steps = ['Job info', `Custom Q&A`, 'Interview Q&A'];
   const [currentStep, setCurrentStep] = useState(1);
   const [Questionitems, setItems] = useState([]);
   const [CustQuestions, setQuestions] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState("");
   const authTokenCookie = Cookies.get('authToken');
   const role = Cookies.get('role');
   const [loading, setLoading] = useState(true);
@@ -36,16 +36,172 @@ export default function Post_job(JobId) {
   //   redirect('/');
   // }
   const categories = [
-    'Data Structures & Algorithms',
-    'C/C++',
-    'Git',
-    'HTML/CSS',
+    // Programming Languages
+    'JavaScript',
+    'TypeScript',
     'Python',
+    'Java',
+    'C',
+    'C++',
+    'C#',
+    'Ruby',
+    'PHP',
+    'Swift',
+    'Kotlin',
+    'Go',
+    'Rust',
     'MATLAB',
-    'Adobe Creative Suite',
-    'Adobe Illustrator',
+    'R',
+    'Perl',
+    'Scala',
+    'Haskell',
+    'Objective-C',
+  
+    // Web Development
+    'HTML',
+    'CSS',
+    'Sass',
+    'Less',
+    'Bootstrap',
+    'Tailwind CSS',
+    'React',
+    'Angular',
+    'Vue.js',
+    'Next.js',
+    'Nuxt.js',
+    'Gatsby',
+    'Svelte',
+  
+    // Backend Development
+    'Node.js',
+    'Express.js',
+    'Django',
+    'Flask',
+    'Ruby on Rails',
+    'Spring Boot',
+    'ASP.NET',
+    'Laravel',
+    'Symfony',
+    'Koa.js',
+    'NestJS',
+  
+    // Databases
+    'MySQL',
+    'PostgreSQL',
+    'MongoDB',
+    'SQLite',
+    'Redis',
+    'Firebase',
+    'Elasticsearch',
+    'Cassandra',
+    'Oracle Database',
+    'Microsoft SQL Server',
+  
+    // DevOps & Cloud
+    'Docker',
+    'Kubernetes',
+    'AWS',
+    'Azure',
+    'Google Cloud Platform',
+    'Terraform',
+    'Ansible',
+    'Jenkins',
+    'Travis CI',
+    'CircleCI',
+    'GitLab CI',
+    'GitHub Actions',
+    'OpenShift',
+    'Vagrant',
+  
+    // Tools & Utilities
+    'Git',
+    'GitHub',
+    'GitLab',
+    'Bitbucket',
+    'Jira',
+    'Trello',
+    'Visual Studio Code',
+    'Sublime Text',
+    'Atom',
+    'IntelliJ IDEA',
+    'PyCharm',
+    'Eclipse',
+    'NetBeans',
+    'Vim',
+    'Emacs',
+  
+    // Testing
+    'JUnit',
+    'Mocha',
+    'Chai',
+    'Jest',
+    'Cypress',
+    'Selenium',
+    'Puppeteer',
+    'Postman',
+    'SoapUI',
+  
+    // Data Science & Machine Learning
+    'TensorFlow',
+    'Keras',
+    'PyTorch',
+    'scikit-learn',
+    'pandas',
+    'NumPy',
+    'Matplotlib',
+    'Seaborn',
+    'Jupyter',
+    'Apache Spark',
+    'Hadoop',
+  
+    // Mobile Development
+    'React Native',
+    'Flutter',
+    'Xamarin',
+    'Ionic',
+    'Swift (iOS)',
+    'Kotlin (Android)',
+  
+    // Game Development
+    'Unity',
+    'Unreal Engine',
+    'Godot',
+    'Cocos2d-x',
+  
+    // Cybersecurity
+    'Wireshark',
+    'Nmap',
+    'Metasploit',
+    'Burp Suite',
+    'OWASP ZAP',
+    'Kali Linux',
+  
+    // Design & Multimedia
     'Adobe Photoshop',
+    'Adobe Illustrator',
+    'Adobe XD',
+    'Figma',
+    'Sketch',
+    'Blender',
+    'AutoCAD',
+    '3ds Max',
+  
+    // Miscellaneous
+    'Data Structures & Algorithms',
+    'Agile Methodologies',
+    'Scrum',
+    'Kanban',
+    'CI/CD',
+    'RESTful APIs',
+    'GraphQL',
+    'WebSockets',
+    'OAuth',
+    'JSON',
+    'XML',
+    'Markdown',
+    'LaTeX',
   ];
+  
   const [selectedCategories, setSelectedCategories] = useState([]);
   // Submit Form
   const [jobInfo, setJobInfo] = useState({
@@ -288,9 +444,9 @@ export default function Post_job(JobId) {
     }
   };
 
- if (loading) {
-    return <Loading />; // Display loading indicator while data is being fetched
-  }
+//  if (loading) {
+//     return <Loading />; // Display loading indicator while data is being fetched
+//   }
 
   return (
     <>

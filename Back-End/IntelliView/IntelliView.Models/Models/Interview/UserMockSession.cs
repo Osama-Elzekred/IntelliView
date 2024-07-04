@@ -32,5 +32,6 @@ namespace IntelliView.Models.Models.Interview
 
         // Collection of answers given during the mock interview
         public virtual List<MockVideoAnswer> Answers { get; set; } = new List<MockVideoAnswer>();
+        public double? TotalInterviewScore { get; set; } = null;
     }
 }

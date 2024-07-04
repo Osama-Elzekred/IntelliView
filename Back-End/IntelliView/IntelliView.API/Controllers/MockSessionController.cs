@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using IntelliView.DataAccess.Repository.IRepository;
 using IntelliView.Models.DTO.Interview;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -21,11 +22,20 @@ namespace IntelliView.API.Controllers
         }
 
         [HttpGet("UserMockSession/{id}")]
+        [Authorize(Policy = "UserOrCompany")]
         public async Task<ActionResult<UserMockSessionDTO>> UserMockSession(int id)
         {
 
 
             var UserMockSession = await _unitOfWork.UserMockSessions.GetUserMockSessionAsync(id);
+
+            var userRole = User.FindFirstValue(ClaimTypes.Role);
+            if (userRole == "user" && UserMockSession?.JobId is not null)
+            {
+                return Unauthorized();
+            }
+
+
 
 
             if (UserMockSession == null)
@@ -77,7 +87,7 @@ namespace IntelliView.API.Controllers
             return Ok();
         }
 
-        // get user applied mocks with their total score
+        // get user applied mocks with their total CvScore
         [HttpGet("userAppliedMocks")]
 
         public async Task<ActionResult<IEnumerable<UserAppliedMocksDto>>> UserAppliedMocks()
@@ -87,7 +97,8 @@ namespace IntelliView.API.Controllers
             {
                 return Unauthorized();
             }
-            var UserAppliedMocks = await _unitOfWork.UserMockSessions.GetUserMocksWithMock(a => a.UserId == userId);
+
+            var UserAppliedMocks = await _unitOfWork.UserMockSessions.GetUserMocksWithMock(a => a.UserId == userId && a.JobId == null);
             if (UserAppliedMocks == null)
             {
                 return BadRequest("No Mock Session Available ");
@@ -96,8 +107,7 @@ namespace IntelliView.API.Controllers
             {
                 Id = a.Id,
                 Mock = _mapper.Map<DisplayInterviewMockDto>(a.InterviewMock),
-                //TotalScore= a.Answers.Sum(a => a.AnswerAiEvaluationScores?.AnswerSimilarityScore)
-                TotalScore = 3.7m
+                TotalScore = a.TotalInterviewScore != null ? Math.Round(a.TotalInterviewScore.Value, 2) : null
 
             }
             );

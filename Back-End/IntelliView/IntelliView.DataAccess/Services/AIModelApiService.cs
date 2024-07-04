@@ -118,11 +118,11 @@ namespace IntelliView.DataAccess.Services
                             $"Answer: {answerVideotext}\n\n" +
                             $"Model Answer: {modelAnswer}";
 
-            // Call the AI search service to get the similarity score
+            // Call the AI search service to get the similarity CvScore
             var result = await _aiBasedSearchService.GeminiAiApi(prompt);
             double similarityScore = 0.29d;
             var match = Regex.Match(result, @"\d+(\.\d+)?");
-            // Assuming the result is a JSON string containing the similarity score
+            // Assuming the result is a JSON string containing the similarity CvScore
 
             try
             {
@@ -142,7 +142,7 @@ namespace IntelliView.DataAccess.Services
             }
 
 
-            // Ensure the score is within the range [-1, 1]
+            // Ensure the CvScore is within the range [-1, 1]
             if (similarityScore < 0 || similarityScore > 1)
             {
                 _logger.LogError("Error deserializing the similarity score from the AI response: {Result}", result);

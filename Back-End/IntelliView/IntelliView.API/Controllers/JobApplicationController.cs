@@ -157,15 +157,15 @@ namespace IntelliView.API.Controllers
             await _unitOfWork.JobApplications.AddAsync(jobApplication);
             await _unitOfWork.SaveAsync();
 
-            // Call the model to get the score
-            var score = string.Empty; // Default score
-            decimal scoreValue = 0; // Default score value
+            // Call the model to get the CvScore
+            var score = string.Empty; // Default CvScore
+            decimal scoreValue = 0; // Default CvScore value
             if (!string.IsNullOrEmpty(jobApplication.CVURL))
             {
                 score = await _aiModelApiService.GetCVmatch(model.CV, job.Title + "  " + job.Description + "  " + job.Requirements);
                 decimal.TryParse(score, out scoreValue);
             }
-            // Update the application status based on the score
+            // Update the application status based on the CvScore
             jobApplication.CVScore = scoreValue;
             jobApplication.IsApproved = scoreValue >= 50;
             await _unitOfWork.SaveAsync();
@@ -175,9 +175,9 @@ namespace IntelliView.API.Controllers
             //{
             //    if (!string.IsNullOrEmpty(jobApplication.CVURL))
             //    {
-            //        var score = await _aiModelApiService.GetCVmatch(model.CV, job.Title + "  " + job.Description + "  " + job.Requirements);
-            //        decimal.TryParse(score, out decimal scoreValue);
-            //        jobApplication.CVScore = scoreValue;
+            //        var CvScore = await _aiModelApiService.GetCVmatch(model.CV, job.Title + "  " + job.Description + "  " + job.Requirements);
+            //        decimal.TryParse(CvScore, out decimal scoreValue);
+            //        jobApplication.CvScore = scoreValue;
             //        jobApplication.IsApproved = scoreValue >= 50;
             //        await _unitOfWork.SaveAsync();
             //    }

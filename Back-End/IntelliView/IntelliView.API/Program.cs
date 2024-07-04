@@ -89,6 +89,20 @@ builder.Services.AddAuthentication(options =>
             ClockSkew = TimeSpan.Zero
         };
     });
+builder.Services.AddLogging(loggingBuilder =>
+{
+    // Set a default filter for all categories to Warning
+    loggingBuilder.AddFilter("Microsoft", LogLevel.Warning)
+                  .AddFilter("System", LogLevel.Warning)
+                  .AddFilter("Microsoft.AspNetCore", LogLevel.Warning);
+
+    // Specific configuration for Entity Framework Core to emphasize it's already set to Warning
+    loggingBuilder.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+
+    // If you have other categories you want to adjust, you can do so here
+    // Example: loggingBuilder.AddFilter("YourApplicationNamespace", LogLevel.Information);
+});
+
 builder.Services.AddHttpClient<IAIModelApiService, AIModelApiClient>();
 builder.Services.AddHttpClient<IAiSearchService, AiSearchService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
@@ -98,7 +112,6 @@ builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IInterviewService, InterviewService>();
 builder.Services.AddScoped<IJwtToken, JwtToken>();
 builder.Services.AddScoped<IAvatarService, AvatarService>();
-builder.Services.AddLogging();
 builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(IAuthService).Assembly);
 builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

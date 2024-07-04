@@ -50,27 +50,30 @@ namespace IntelliView.DataAccess.Services
             {
                 if (question!.Url is null)
                 {
-                    //var result = await _avatarService.SubmitSynthesis(voice: Voice, inputText: question.Question);
-                    //if (result.video is null) continue;
-                    //var downloadUrl = result.video.Value.downloadUrl;
-                    //var VideoId = result.video.Value.VideoId;
+                    var result = await _avatarService.SubmitSynthesis(voice: Voice, inputText: question.Question);
+                    _logger.LogInformation($" Creating the mock Avatar video response :   {result.message}");
+                    if (result.video is null) continue;
+                    var downloadUrl = result.video.Value.downloadUrl;
+                    var VideoId = result.video.Value.VideoId;
 
                     // Download the video
-                    //var uploadResult = await _uploadFilesService.UploadVideo(downloadUrl, VideoId).ConfigureAwait(false);
-                    //if (uploadResult is null || uploadResult.SecureUri is null) continue;
-                    //question.Url = uploadResult.SecureUri.ToString();
-                    //question.VideoId = VideoId;
-                    string url = "https://res.cloudinary.com/djvcgnkbn/video/upload/f_auto:video,q_auto/36d203fb-eb46-4920-b8f2-ebc9cd339f98";
-                    question.Url = url;
-                    question.VideoId = "d1f4220d-38d7-4df1-9a51-8865e5eef17f";
+                    var uploadResult = await _uploadFilesService.UploadVideo(downloadUrl, VideoId).ConfigureAwait(false);
+                    if (uploadResult is null || uploadResult.SecureUri is null) continue;
+                    question.Url = uploadResult.SecureUri.ToString();
+                    question.VideoId = VideoId;
 
+                    // for testing
+                    //string url = "https://res.cloudinary.com/djvcgnkbn/video/upload/f_auto:video,q_auto/36d203fb-eb46-4920-b8f2-ebc9cd339f98";
+                    //question.Url = url;
+                    //question.VideoId = "d1f4220d-38d7-4df1-9a51-8865e5eef17f";
 
                     context.Entry(question).State = EntityState.Modified;
                 }
             }
             await context.SaveChangesAsync();
+            _logger.LogInformation("Interview videos added successfully.");
         }
-        // get the ai score of the answer video from the Ai models
+        // get the ai CvScore of the answer video from the Ai models
         public async Task<int> GetAiVideoScores(string answerVideoLink, string modelAnswer, MockVideoAnswer mockVideoAnswer)
         {
             using var context = _contextFactory.CreateDbContext();
@@ -88,7 +91,14 @@ namespace IntelliView.DataAccess.Services
                     Counter++;
                     _logger.LogInformation("Attempt {Counter}: AI response: {AiJsonResponse}", Counter, AiJsonResponse);
 
-                    // Check if the response contains an error
+                    // Check if the response is likely to be an error message rather than JSON
+                    if (!AiJsonResponse.TrimStart().StartsWith("{"))
+                    {
+                        _logger.LogWarning("AI response does not appear to be valid JSON: {AiJsonResponse}", AiJsonResponse);
+                        return 1;
+                    }
+
+                    // Check if the response contains an error status
                     if (AiJsonResponse.Contains("\"status\":\"failed\""))
                     {
                         _logger.LogWarning("AI response indicates failure: {AiJsonResponse}", AiJsonResponse);
@@ -164,7 +174,7 @@ namespace IntelliView.DataAccess.Services
                 AnswerSimilarityScore = AnswerSimilarity,
                 RecommendationText = RecommendationText
             };
-            // Calculate the total score
+            // Calculate the total CvScore
             videoAiScore.UpdateTotalScore();
 
             context.VideoAiScores.Add(videoAiScore);
@@ -177,7 +187,42 @@ namespace IntelliView.DataAccess.Services
 
             // Update the MockVideoAnswer entity
             mockVideoAnswer.AnswerAiEvaluationScores = videoAiScore;
+
+
+            // Ensure that UserMockSession and InterviewMock are not null
+            if (mockVideoAnswer.UserMockSession?.InterviewMock != null)
+            {
+                var interviewQuestionsCount = mockVideoAnswer.UserMockSession.InterviewMock.InterviewQuestions.Count;
+
+                // Check to ensure there are interview questions to avoid division by zero
+                if (interviewQuestionsCount > 0)
+                {
+                    // Initialize TotalInterviewScore to 0 if it's null
+                    mockVideoAnswer.UserMockSession.TotalInterviewScore ??= 0;
+
+                    // Calculate the score to add, dividing the TotalScore by the number of interview questions
+                    var scoreToAdd = videoAiScore.TotalScore / interviewQuestionsCount;
+
+                    // Add the calculated score to TotalInterviewScore
+                    mockVideoAnswer.UserMockSession.TotalInterviewScore += scoreToAdd;
+
+                    // Mark UserMockSession as modified if it has been changed
+                    context.Entry(mockVideoAnswer.UserMockSession).State = EntityState.Modified;
+                }
+                else
+                {
+                    // Handle the case where there are no interview questions (e.g., log a warning)
+                }
+            }
+            else
+            {
+                // Handle the case where UserMockSession or InterviewMock is unexpectedly null (e.g., log an error)
+            }
+
+            // Assuming mockVideoAnswer itself has been modified, mark it as modified
             context.Entry(mockVideoAnswer).State = EntityState.Modified;
+
+            // get the number of interview questions
 
             await context.SaveChangesAsync();
             _logger.LogInformation("Completed GetAiVideoScores for video link: {AnswerVideoLink}", answerVideoLink);

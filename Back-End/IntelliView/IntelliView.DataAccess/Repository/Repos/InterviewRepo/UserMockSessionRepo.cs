@@ -46,7 +46,7 @@ namespace IntelliView.DataAccess.Repository.Repos.InterviewRepo
         public async Task<IEnumerable<UserMockSession>> GetSessionsWithJobApplicationAsync(int mockId)
         {
             return await _dbSet
-                .Include(ums => ums.UserApplication)
+                .Include(ums => ums.UserApplication).ThenInclude(ua => ua.User)
                 .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores)
                 .Where(ums => ums.MockId == mockId).AsNoTracking().ToListAsync();
         }

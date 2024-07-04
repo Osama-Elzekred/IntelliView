@@ -15,7 +15,7 @@
     {
         public int Id { get; set; }
         public DisplayInterviewMockDto Mock { get; set; }
-        public decimal? TotalScore { get; set; }
+        public double? TotalScore { get; set; }
     }
 
 }

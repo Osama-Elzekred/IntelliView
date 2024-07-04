@@ -146,26 +146,26 @@ namespace IntelliView.API.Controllers
                 return NotFound("Question not found");
             }
             //mocks without job or jobApplication
-            //var AnswerVideoLink = await _uploadFilesToCloud.UploadVideo(video, $"{userId}_{mockId}_{question.Id}");
-            string AnswerVideoLink;
-            switch (question.Question[0])
-            {
-                case '1':
-                    AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1tjB5g9IolIG-tCkzrl5rFBIqYtCg4Z2s&export=download&authuser=0";
-                    break;
-                case '2':
-                    AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1_7MTGr2cVbc1Y7bdt3LLeMxjBlHuhthW&export=download&authuser=0";
-                    break;
-                case '3':
-                    AnswerVideoLink = "https://drive.usercontent.google.com/download?id=18dQ2uJhCxPGoa7NLv2ylJXR9LeR0r-o1&export=download&authuser=0";
-                    break;
-                case '4':
-                    AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1pHe4Ray6vdlQGlJJdrc0GmDVEwTyWKTO&export=download&authuser=0";
-                    break;
-                default:
-                    AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1tjB5g9IolIG-tCkzrl5rFBIqYtCg4Z2s&export=download&authuser=0";
-                    break;
-            }
+            var AnswerVideoLink = await _uploadFilesToCloud.UploadVideo(video, $"{userId}_{mockId}_{question.Id}");
+            //string AnswerVideoLink;
+            //switch (question.Question[0])
+            //{
+            //    case '1':
+            //        AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1tjB5g9IolIG-tCkzrl5rFBIqYtCg4Z2s&export=download&authuser=0";
+            //        break;
+            //    case '2':
+            //        AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1_7MTGr2cVbc1Y7bdt3LLeMxjBlHuhthW&export=download&authuser=0";
+            //        break;
+            //    case '3':
+            //        AnswerVideoLink = "https://drive.usercontent.google.com/download?id=18dQ2uJhCxPGoa7NLv2ylJXR9LeR0r-o1&export=download&authuser=0";
+            //        break;
+            //    case '4':
+            //        AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1pHe4Ray6vdlQGlJJdrc0GmDVEwTyWKTO&export=download&authuser=0";
+            //        break;
+            //    default:
+            //        AnswerVideoLink = "https://drive.usercontent.google.com/download?id=1tjB5g9IolIG-tCkzrl5rFBIqYtCg4Z2s&export=download&authuser=0";
+            //        break;
+            //}
 
 
             if (AnswerVideoLink == string.Empty)
@@ -184,13 +184,13 @@ namespace IntelliView.API.Controllers
                 // Handle duplicate answer scenario (throw error, log warning, etc.)
                 return BadRequest("An answer for this question already exists in the session.");
             }
-            string answerurl = "https://www.youtube.com/embed/0_6AK52kSVQ?si=LryV2WrMDvx92DfE";
+            //string answerurl = "https://www.youtube.com/embed/0_6AK52kSVQ?si=LryV2WrMDvx92DfE";
             var mockVideoAnswer = new MockVideoAnswer
             {
                 InterviewQuestionId = question.Id, // Assuming InterviewQuestion has a navigation property for InterviewQuestionId
                 AnswerText = "",
                 UserMockSessionId = MockSessionId,
-                AnswerVideoURL = answerurl,
+                AnswerVideoURL = AnswerVideoLink,
                 //AnswerAiEvaluationScores = AnswersEvaluationScores,
                 AnsweredAt = DateTime.Now,
             };
@@ -201,7 +201,7 @@ namespace IntelliView.API.Controllers
 
             //if (AnswersEvaluationScores is null)
             //{
-            //    return BadRequest("Error while calculating the similarity score");
+            //    return BadRequest("Error while calculating the similarity CvScore");
             //}
 
             // Update the existing UserMockSession by adding a new answer
@@ -247,8 +247,10 @@ namespace IntelliView.API.Controllers
                 Email = a.UserApplication?.Email ?? "",
                 Name = a.UserApplication?.FullName ?? "",
                 PhoneNumber = a.UserApplication?.Phone ?? "",
-                score = 0,
+                ImageURL = a.UserApplication?.User.ImageURl ?? "",
+                CvScore = a.UserApplication.CVScore,
                 IsApproved = a.UserApplication?.IsInterviewApproved ?? false,
+                TotalInterviewScore = a.TotalInterviewScore,
             });
             return Ok(users);
         }

@@ -9,6 +9,6 @@ namespace IntelliView.DataAccess.Services.IService
         Task<string> UploadFile(IFormFile file, string fileName);
         Task<string> UploadVideo(IFormFile video, string fileName);
         Task<bool> DeleteFile(string publicId);
-        //Task<VideoUploadResult?> UploadVideo(string downloadUrl, dynamic VideoId);
+        Task<VideoUploadResult?> UploadVideo(string downloadUrl, dynamic VideoId);
     }
 }

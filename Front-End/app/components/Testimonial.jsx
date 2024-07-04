@@ -31,16 +31,14 @@ const Testimonial = () => {
                 </div>
                 <blockquote className="mt-7">
                   <p className="text-lg text-black">
-                    “Amet minim mollit non deserunt ullam co est sit aliqua
-                    dolor do amet sint. Velit officia consequat duis enim velit
-                    mollit. Exercitation veniam consequat”
+                  Intelliview has completely transformed our hiring process. The AI-driven assessments and video interviews save us countless hours, and we’re able to find the perfect candidates faster than ever.
                   </p>
                 </blockquote>
                 <p className="text-base font-semibold tex-tblack mt-9">
                   Jenny Wilson
                 </p>
                 <p className="mt-1 text-base text-gray-600">
-                  Project Manager at Microsoft
+                Hiring Manager
                 </p>
               </div>
             </div>
@@ -65,16 +63,14 @@ const Testimonial = () => {
                 </div>
                 <blockquote className="mt-7">
                   <p className="text-lg text-black">
-                    “Amet minim mollit non deserunt ullam co est sit aliqua
-                    dolor do amet sint. Velit officia consequat duis enim velit
-                    mollit. Exercitation veniam consequat”
+                  Since integrating Intelliview, our recruitment has become more streamlined and effective. We’ve significantly reduced bias in hiring and consistently found top-tier talent that aligns with our company’s goals.
                   </p>
                 </blockquote>
                 <p className="text-base font-semibold tex-tblack mt-9">
                   Robert Fox
                 </p>
                 <p className="mt-1 text-base text-gray-600">
-                  Founder at Brain.co
+                Company CEO
                 </p>
               </div>
             </div>
@@ -99,16 +95,14 @@ const Testimonial = () => {
                 </div>
                 <blockquote className="mt-7">
                   <p className="text-lg text-black">
-                    “Amet minim mollit non deserunt ullam co est sit aliqua
-                    dolor do amet sint. Velit officia consequat duis enim velit
-                    mollit. Exercitation veniam consequat”
+                  Intelliview made my job search experience exceptional. The platform’s AI-driven tools helped me showcase my skills and prepare for interviews, ultimately landing me my dream job.
                   </p>
                 </blockquote>
                 <p className="text-base font-semibold tex-tblack mt-9">
                   Kristin Watson
                 </p>
                 <p className="mt-1 text-base text-gray-600">
-                  UX Designer at Google
+                Job Seeker
                 </p>
               </div>
             </div>

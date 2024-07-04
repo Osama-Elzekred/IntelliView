@@ -9,7 +9,8 @@
         public string Email { get; set; } = string.Empty;
         public string Location { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
-        public int score { get; set; }
+        public decimal CvScore { get; set; }
+        public double? TotalInterviewScore { get; set; }
         public bool IsApproved { get; set; }
     }
 }

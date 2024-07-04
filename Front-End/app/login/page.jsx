@@ -166,10 +166,6 @@ export default function login() {
           } else {
             window.location.href = `/profile/Edit-user-profile`;
           }
-        } else if (data.message) {
-          setMessageFromServer(data.message);
-        } else {
-          setMessageFromServer('An error occurred');
         }
       } catch (error) {
         setMessageFromServer('Connection Error ... Please Try Later');
@@ -198,11 +194,6 @@ export default function login() {
           {/* NAVBAR */}
           {/* HOME */}
           <section
-            // className="section-hero overlay inner-page bg-image"
-            // style={{
-            //   backgroundImage:
-            //     'url("/images/ai-background-business-technology-digital-transformation.jpg")',
-            // }}
             id="home-section"
           >
             <div className="container ">
@@ -217,7 +208,7 @@ export default function login() {
             <div className="container">
               <div className="font-[sans-serif] text-[#333]">
                 <div className=" flex flex-col items-center justify-center">
-                  <div className="grid  items-center gap-4 max-w-2xl w-full p-1 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
+                  <div className="grid  items-center gap-4 max-w-xl w-full p-1 m-4 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.3)] rounded-md">
                     {isFlipped ? (
                       <form className="form2" onSubmit={handleSubmit}>
                         <div className="w-full  p-8">
@@ -646,13 +637,7 @@ export default function login() {
                         </div>
                       </form>
                     )}
-                    {/* <div className="md:h-full max-md:mt-10 bg-[#000842] rounded-xl lg:p-12 p-8">
-                      <img
-                        src="https://readymadeui.com/signin-image.webp"
-                        className="w-full h-full object-contain"
-                        alt="login-image"
-                      />
-                    </div> */}
+                    
                   </div>
                 </div>
               </div>
@@ -660,7 +645,6 @@ export default function login() {
           </div>
         </div>
       </Layout>
-      {/* <Script src="/js/forms_api_code.js"></Script> */}
     </>
   );
 }

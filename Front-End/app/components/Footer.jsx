@@ -27,8 +27,8 @@ const UserFooter = () => {
         <div className="grid grid-cols-2 md:col-span-3 lg:grid-cols-6 gap-y-16 gap-x-12">
           <div className="col-span-2 md:col-span-3 lg:col-span-2 lg:pr-8">
             <img
-              className="w-auto h-9"
-              src="https://cdn.rareblocks.xyz/collection/celebration/images/logo.svg"
+              className="w-auto h-12"
+              src="/Images/Logo1.png"
               alt=""
             />
             <p className="text-base leading-relaxed text-gray-600 mt-7">
@@ -116,7 +116,7 @@ const UserFooter = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/service"
                   title=""
                   className="flex text-base font-normal text-gray-600 transition-all duration-200 hover:text-gray-800 focus:text-gray-800"
                 >
@@ -213,9 +213,9 @@ const UserFooter = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/contact"
                   title=""
-                  className="flex text-base font-normal text-gray-600 transition-all duration-200 hover:text-gray-800 focus:text-gray-800"
+                  className="flex text-base font-normal text-gray-600 transition-all duration-200 hover:text-gray-800 focus:text-gray-800" 
                 >
                   Contact
                 </a>
@@ -271,7 +271,7 @@ const UserFooter = () => {
         <hr className="my-10 border-gray-200" />
 
         <p className="text-sm font-normal text-center text-gray-600">
-          © 2023. All rights reserved.
+          © 2024. All rights reserved.
         </p>
       </div>
     </section>

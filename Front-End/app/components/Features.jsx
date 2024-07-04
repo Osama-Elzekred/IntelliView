@@ -21,15 +21,16 @@ const Features = () => {
               <h2 className="mb-3 text-3xl font-bold leading-[1.2] text-dark dark:text-white sm:text-4xl md:text-[40px]">
                 What We Offer
               </h2>
-              <p className="text-base text-body-color dark:text-dark-6">
-                There are many variations of passages of Lorem Ipsum available
-                but the majority have suffered alteration in some form.
+              <p className="text-base text-body-color dark:text-dark-6 "  >
+             
+
+"Discover the power of Intelliview, where AI revolutionizes recruitment, making the path to your dream job both thrilling and effortless."
               </p>
             </div>
           </div>
         </div>
 
-        <div className="-mx-4 flex flex-wrap">
+        <div className="-mx-4 flex flex-wrap"  >
           {topFeatures.map((feature, index) => (
             <ServiceCard
               key={index}
@@ -65,3 +66,4 @@ const ServiceCard = ({ icon, title, details }) => {
     </>
   );
 };
+

@@ -120,7 +120,7 @@ const EmotionChart = ({ data }) => {
 
   return (
     <div className="chart-container">
-      <Line data={dataConfig} options={options} />
+      <Line key={Math.random()} data={dataConfig} options={options} />
     </div>
   );
 };

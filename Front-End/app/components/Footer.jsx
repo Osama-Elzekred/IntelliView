@@ -116,7 +116,7 @@ const UserFooter = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/service"
                   title=""
                   className="flex text-base font-normal text-gray-600 transition-all duration-200 hover:text-gray-800 focus:text-gray-800"
                 >
@@ -213,9 +213,9 @@ const UserFooter = () => {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="/contact"
                   title=""
-                  className="flex text-base font-normal text-gray-600 transition-all duration-200 hover:text-gray-800 focus:text-gray-800"
+                  className="flex text-base font-normal text-gray-600 transition-all duration-200 hover:text-gray-800 focus:text-gray-800" 
                 >
                   Contact
                 </a>

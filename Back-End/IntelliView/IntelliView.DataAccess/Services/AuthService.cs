@@ -173,12 +173,12 @@ namespace IntelliView.API.Services
                 return authModel;
             }
             // email verification
-            if (user.Verified == false)
-            {
-                authModel.Message = "Email is not verified!";
-                authModel.IsAuthenticated = false;
-                return authModel;
-            }
+            //if (user.Verified == false)
+            //{
+            //    authModel.Message = "Email is not verified!";
+            //    authModel.IsAuthenticated = false;
+            //    return authModel;
+            //}
 
             var jwtSecurityToken = await CreateJwtToken(user);
             var rolesList = await _userManager.GetRolesAsync(user);

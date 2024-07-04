@@ -166,10 +166,6 @@ export default function login() {
           } else {
             window.location.href = `/profile/Edit-user-profile`;
           }
-        } else if (data.message) {
-          setMessageFromServer(data.message);
-        } else {
-          setMessageFromServer('An error occurred');
         }
       } catch (error) {
         setMessageFromServer('Connection Error ... Please Try Later');
@@ -198,11 +194,6 @@ export default function login() {
           {/* NAVBAR */}
           {/* HOME */}
           <section
-            // className="section-hero overlay inner-page bg-image"
-            // style={{
-            //   backgroundImage:
-            //     'url("/images/ai-background-business-technology-digital-transformation.jpg")',
-            // }}
             id="home-section"
           >
             <div className="container ">
@@ -646,13 +637,7 @@ export default function login() {
                         </div>
                       </form>
                     )}
-                    {/* <div className="md:h-full max-md:mt-10 bg-[#000842] rounded-xl lg:p-12 p-8">
-                      <img
-                        src="https://readymadeui.com/signin-image.webp"
-                        className="w-full h-full object-contain"
-                        alt="login-image"
-                      />
-                    </div> */}
+                    
                   </div>
                 </div>
               </div>
@@ -660,7 +645,6 @@ export default function login() {
           </div>
         </div>
       </Layout>
-      {/* <Script src="/js/forms_api_code.js"></Script> */}
     </>
   );
 }

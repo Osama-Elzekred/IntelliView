@@ -1,7 +1,21 @@
+'use client';
 import Layout from '../components/Layout';
 import Link from 'next/link';
 import { Features, Testimonial } from '../components/components';
+import { useEffect, useState } from 'react';
+
 export default function IndexPage() {
+  const [roleFromServer, setRoleFromServer] = useState(null);
+
+  useEffect(() => {
+    // This code runs only on the client side
+    const role = localStorage.getItem('roleFromServer');
+    setRoleFromServer(role);
+  }, []);
+
+  // Optional: Render a loading state or similar until roleFromServer is determined
+  // if (roleFromServer === null) return <div>Loading...</div>;
+
   return (
     <>
       <Layout>
@@ -31,12 +45,12 @@ export default function IndexPage() {
                       <div className="relative inline-flex group">
                         <div className="absolute transition-all duration-1000 opacity-70 -inset-px bg-gradient-to-r from-[#000] via-[#17a9c3] to-[#FF675E] rounded-full blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
                         <a
-                          href="/login"
+                          href="/Interview/mocks"
                           title="Get quote now"
                           className="relative inline-flex items-center justify-center px-4 py-3 text-lg font-bold text-white transition-all duration-200 bg-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
                           role="button"
                         >
-                          Join as a candidate
+                          Practise mocks Now
                           <svg
                             className="w-6 h-6 ml-8 -mr-2"
                             xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +69,30 @@ export default function IndexPage() {
                       </div>
                     </div>
                     <div className="inline-flex items-center px-4 py-3 font-semibold text-dark transition-all duration-200 bg-white rounded-full hover:bg-white focus:bg-white">
-                      <a
+                      {roleFromServer === 'company' ? (
+                      <Link
+                        href="/job/post"
+                        title="Sign as a company"
+                        className="flex w-full items-center justify-center px-4 py-3 text-lg font-bold text-dark transition-all duration-200 bg-white rounded-full shadow hover:shadow-lg focus:bg-white"
+                        role="button"
+                      ><span className="flex-grow">Post a Job</span>
+                      <svg
+                        className="w-6 h-6 ml-2 -mr-2"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                          d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </Link>
+                        ):(
+                        <Link
                         href="/login"
                         title="Sign as a company"
                         className="flex w-full items-center justify-center px-4 py-3 text-lg font-bold text-dark transition-all duration-200 bg-white rounded-full shadow hover:shadow-lg focus:bg-white"
@@ -76,7 +113,7 @@ export default function IndexPage() {
                             d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                      </a>
+                      </Link>)}
                     </div>
                   </div>
 
@@ -102,12 +139,12 @@ export default function IndexPage() {
             </div>
           </section>
         </div>
-
+{/* 
         <section className="py-10 bg-white sm:py-16 lg:py-24">
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div className="text-center">
               <h4 className="text-xl font-medium text-gray-900">
-                Numbers tell the hard works we’ve done in last 6 years
+                Numbers tell the hard works we’ve done in last year
               </h4>
             </div>
             <div className="grid grid-cols-1 gap-6 px-6 mt-8 sm:px-0 lg:mt-16 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-12">
@@ -129,7 +166,7 @@ export default function IndexPage() {
                       />
                     </svg>
                     <div className="ml-4">
-                      <h4 className="text-4xl font-bold text-gray-900">6+</h4>
+                      <h4 className="text-4xl font-bold text-gray-900">1+</h4>
                       <p className="mt-1.5 text-lg font-medium leading-tight text-gray-500">
                         Years in business
                       </p>
@@ -155,7 +192,7 @@ export default function IndexPage() {
                       />
                     </svg>
                     <div className="ml-4">
-                      <h4 className="text-4xl font-bold text-gray-900">37+</h4>
+                      <h4 className="text-4xl font-bold text-gray-900">10+</h4>
                       <p className="mt-1.5 text-lg font-medium leading-tight text-gray-500">
                         Team members
                       </p>
@@ -219,7 +256,7 @@ export default function IndexPage() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         <Features />
         {/* ====== Call To Action Section Start */}
@@ -229,7 +266,7 @@ export default function IndexPage() {
               <div className="flex flex-wrap items-center -mx-4">
                 <div className="w-full px-4 lg:w-1/2">
                   <span className="block mb-4 text-base font-medium text-white">
-                    Find Your Next Dream Job
+                  Explore Intelliview's Excellence.
                   </span>
                   <h2 className="mb-6 text-3xl font-bold leading-tight text-white sm:mb-8 sm:text-[40px]/[48px] lg:mb-0">
                     <span className="xs:block"> Get started with </span>
@@ -330,11 +367,8 @@ export default function IndexPage() {
                       <h2 className="section-title mb-2">
                         Company We've Helped
                       </h2>
-                      <p className="lead">
-                        Porro error reiciendis commodi beatae omnipy-5 bg-image
-                        overlay-primary fixed overlays similique voluptate rerum
-                        ipsam fugit mollitia ipsum facilis expedita tempora
-                        suscipit iste
+                      <p className="leads">
+                      At Intelliview, we've empowered numerous companies to streamline their hiring processes, finding the perfect candidates with unprecedented efficiency and accuracy.
                       </p>
                     </div>
                   </div>
@@ -406,10 +440,9 @@ export default function IndexPage() {
             <div className="container">
               <div className="row">
                 <div className="col-md-6 align-self-center text-center text-md-left mb-5 mb-md-0">
-                  <h2 className="text-white">Get The Mobile Apps</h2>
-                  <p className="mb-5 lead text-white">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit
-                    tempora adipisci impedit.
+                  <h2 className="text-white ">Get The Mobile Apps</h2>
+                  <p className="mb-5 lead ">
+                  Explore Intelliview’s mobile apps for a seamless job search and efficient hiring experience wherever you are.
                   </p>
                   <p className="mb-0">
                     <a

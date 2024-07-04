@@ -35,36 +35,36 @@ namespace IntelliView.API.Controllers
             if (!result.IsAuthenticated)
                 return BadRequest(new { result.Message });
 
-            //SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
+            SetRefreshTokenInCookie(result.RefreshToken, result.RefreshTokenExpiration);
 
-            string token = await _verifyService.CreateVerfiyTokenAsync(result.Id!);
-            result.VerficationToken = token;
+            //string token = await _verifyService.CreateVerfiyTokenAsync(result.Id!);
+            //result.VerficationToken = token;
 
-            await _emailSender.SendEmailAsync(new EmailDTO
-            {
-                To = result.Email!,
-                Subject = "Verify Your Email Address for IntelliView",
-                Body = $"""
-                    <div class='container'>
-                <div class='header'>
-                <img src='https://example.com/logo.png' alt='IntelliView Logo'>
-                </div>
-                <div class='content'>
-                <h2>Email Verification</h2>
-                <p>Hello,</p>
-                <p>Thank you for registering with IntelliView. Please verify your email address by clicking the button below:</p>
-                <p style='text-align: center;'>
-                <a href='{_configuration.GetSection("Backendserver").Value}/api/verify/{result.Id}/{result.VerficationToken}' class='button'>Verify Your Email</a>
-                </p>
-                <p>This verification link will expire in 20 minutes.</p>
-                <p>If you did not register for an IntelliView account, please ignore this email.</p>
-                </div>
-                <div class='footer'>
-                <p>© 2024 IntelliView. All rights reserved.</p>
-                </div>
-                </div>
-                """
-            });
+            //await _emailSender.SendEmailAsync(new EmailDTO
+            //{
+            //    To = result.Email!,
+            //    Subject = "Verify Your Email Address for IntelliView",
+            //    Body = $"""
+            //        <div class='container'>
+            //    <div class='header'>
+            //    <img src='https://example.com/logo.png' alt='IntelliView Logo'>
+            //    </div>
+            //    <div class='content'>
+            //    <h2>Email Verification</h2>
+            //    <p>Hello,</p>
+            //    <p>Thank you for registering with IntelliView. Please verify your email address by clicking the button below:</p>
+            //    <p style='text-align: center;'>
+            //    <a href='{_configuration.GetSection("Backendserver").Value}/api/verify/{result.Id}/{result.VerficationToken}' class='button'>Verify Your Email</a>
+            //    </p>
+            //    <p>This verification link will expire in 20 minutes.</p>
+            //    <p>If you did not register for an IntelliView account, please ignore this email.</p>
+            //    </div>
+            //    <div class='footer'>
+            //    <p>© 2024 IntelliView. All rights reserved.</p>
+            //    </div>
+            //    </div>
+            //    """
+            //});
             return Ok(result);
         }
 

@@ -26,7 +26,7 @@ namespace IntelliView.DataAccess.Services
         public async Task<bool> ChangePasswordAsync(ChangePasswordDTO model)
         {
 
-            var user = await _userManager.FindByIdAsync("Ay 7aga now");
+            var user = await _userManager.FindByIdAsync(model.UserId);
 
             if (user == null)return false;
 

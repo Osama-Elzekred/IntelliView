@@ -143,6 +143,7 @@ app.UseHttpsRedirection();
 
 
 //app.UseExceptionHandler();
+//app.UseMiddleware<HashIdMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();

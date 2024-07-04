@@ -2225,3 +2225,6 @@ footer {
   font-size: 22px;
   opacity: 0.6;
 }
+.text-white{
+  font-weight: bold;
+}

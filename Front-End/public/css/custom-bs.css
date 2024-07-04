@@ -153,7 +153,7 @@ a {
   background-color: transparent;
 }
 a:hover {
-  color: #57760e;
+  color: #17a9c3;
   text-decoration: underline;
 }
 a:not([href]):not([tabindex]) {
@@ -363,6 +363,8 @@ h6 {
 .lead {
   font-size: 1.25rem;
   font-weight: 300;
+  color: white;
+  font-style: italic;
 }
 .display-1 {
   font-size: 6rem;
@@ -3025,7 +3027,7 @@ fieldset:disabled a.btn {
   text-decoration: none;
 }
 .btn-link:hover {
-  color: #57760e;
+  color: #17a9c3;
   text-decoration: underline;
 }
 .btn-link.focus,
@@ -4846,7 +4848,7 @@ input[type='submit'].btn-block {
 }
 .page-link:hover {
   z-index: 2;
-  color: #57760e;
+  color: #17a9c3;
   text-decoration: none;
   background-color: #e9ecef;
   border-color: #dee2e6;
@@ -9656,7 +9658,7 @@ button.bg-dark:hover {
 }
 a.text-primary:focus,
 a.text-primary:hover {
-  color: #57760e !important;
+  color: #17a9c3 !important;
 }
 .text-secondary {
   color: #6c757d !important;
@@ -9670,7 +9672,7 @@ a.text-secondary:hover {
 }
 a.text-success:focus,
 a.text-success:hover {
-  color: #57760e !important;
+  color: #17a9c3 !important;
 }
 .text-info {
   color: #17a2b8 !important;

@@ -23,7 +23,7 @@ namespace IntelliView.API.Controllers
         private readonly IEmailSender _emailSender;
         public TestController(IConfiguration configuration, IAiSearchService aiBasedSearchService,
              IWebHostEnvironment webHostEnvironment, IAvatarService avatarService, IAIModelApiService aIModelApiService,
-             IUploadFilesToCloud uploadFilesToCloud,IEmailSender emailSender)
+             IUploadFilesToCloud uploadFilesToCloud, IEmailSender emailSender)
         {
             Configuration = configuration;
             _aiBasedSearchService = aiBasedSearchService;
@@ -84,6 +84,12 @@ namespace IntelliView.API.Controllers
             }
         }
 
+        [HttpGet("AimLapAI")]
+        public async Task<IActionResult> AimLapAI(string text, string system = "you are an Interview expert")
+        {
+            var result = await _aiBasedSearchService.AimLapAiApi(text, system);
+            return Ok(result);
+        }
         #region Gemini AI
         [HttpGet("GeminiAI")]
         public async Task<IActionResult> GeminiAI(string category, string level, int numberOfQuestions)
@@ -246,6 +252,6 @@ namespace IntelliView.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
             }
         }
-        
+
     }
 }

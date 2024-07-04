@@ -17,10 +17,7 @@ const Contact = () => {
                     GET IN TOUCH WITH US
                   </h2>
                   <p className="mb-9 text-base leading-relaxed text-body-color dark:text-dark-6">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eius tempor incididunt ut labore e dolore magna aliqua.
-                    Ut enim adiqua minim veniam quis nostrud exercitation
-                    ullamco
+                  Contact us for assistance and see how Intelliview can revolutionize your hiring experience
                   </p>
                   <div className="mb-8 flex w-full max-w-[370px]">
                     <div className="mr-6 flex h-[60px] w-full max-w-[60px] items-center justify-center overflow-hidden rounded bg-primary/5 text-primary sm:h-[70px] sm:max-w-[70px]">
@@ -42,7 +39,7 @@ const Contact = () => {
                         Our Location
                       </h4>
                       <p className="text-base text-body-color dark:text-dark-6">
-                        99 S.t Jomblo Park Pekanbaru 28292. Indonesia
+                      Dakahlia governorate , Mansoura
                       </p>
                     </div>
                   </div>
@@ -82,7 +79,7 @@ const Contact = () => {
                         Phone Number
                       </h4>
                       <p className="text-base text-body-color dark:text-dark-6">
-                        (+62)81 414 257 9980
+                        (+20) 01143605865
                       </p>
                     </div>
                   </div>
@@ -107,7 +104,7 @@ const Contact = () => {
                         Email Address
                       </h4>
                       <p className="text-base text-body-color dark:text-dark-6">
-                        info@yourdomain.com
+                        Intelliview10@gmail.com
                       </p>
                     </div>
                   </div>

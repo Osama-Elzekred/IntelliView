@@ -68,11 +68,11 @@ namespace IntelliView.API.Services
         public async Task<AuthModel> RegisterAsync(RegisterDTO model)
         {
             await CreateRolesAsync();
-            if (await _userManager.FindByEmailAsync(model.Email) is not null)
-                return new AuthModel { Message = "Email is already registered!" };
-
             if (await _userManager.FindByNameAsync(model.Username) is not null)
                 return new AuthModel { Message = "Username is already registered!" };
+
+            if (await _userManager.FindByEmailAsync(model.Email) is not null)
+                return new AuthModel { Message = "Email is already registered!" };
 
             ApplicationUser user = CreateUserObject(model);
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -85,7 +85,7 @@ namespace IntelliView.API.Services
             var Role = model.Role;
             await _userManager.AddToRoleAsync(user, Role);
 
-            //var jwtSecurityToken = await CreateJwtToken(user);
+            var jwtSecurityToken = await CreateJwtToken(user);
 
             var refreshToken = JwtToken.GenerateRefreshToken();
             user.RefreshTokens?.Add(refreshToken);
@@ -97,7 +97,7 @@ namespace IntelliView.API.Services
                 //ExpiresOn = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
                 Roles = new List<string> { Role },
-                //Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Username = user.UserName,
                 RefreshToken = refreshToken.Token,
                 RefreshTokenExpiration = refreshToken.ExpiresOn,

@@ -48,11 +48,11 @@ namespace IntelliView.API.Controllers
             {
                 To = email,
                 Subject = "Verify your email",
-                Body = $"Please verify your email by clicking this link: <a href='https://localhost:7049/api/verify/{userId}/{token}'>Verify</a> " +
+                Body = $"Please verify your email by clicking this link: <a href='https://intelliview1.azurewebsites.net/api/verify/{userId}/{token}'>Verify</a> " +
                 $"This Link Expire in 20 minutes"
             });
 
-            return Ok("Email senet successfully");
+            return Ok("Email sent successfully");
         }
     }
 }

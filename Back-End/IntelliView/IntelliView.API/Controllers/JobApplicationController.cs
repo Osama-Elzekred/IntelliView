@@ -323,7 +323,7 @@ namespace IntelliView.API.Controllers
             var user = await _unitOfWork.IndividualUsers.GetFirstOrDefaultAsync(u => u.Id == userId);
             var application = await _unitOfWork.JobApplications.GetFirstOrDefaultAsync(j => j.JobId == job.Id && j.UserId == userId);
             if (user != null)
-             {
+            {
                 var email = application.Email.Trim('"');
                 var subject = "Interview Invitation";
                 var body = $@"
@@ -338,7 +338,7 @@ namespace IntelliView.API.Controllers
                 };
 
                 _emailSender.SendEmailAsync(emailDto);
-             }
+            }
 
             return Ok("Job application approved successfully");
         }
@@ -384,7 +384,7 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound("No job applications found");
             }
-            interview.InterviewLink = "http://inteliview.me/Interview/Vedio-interview/" + job.MockId;
+            interview.InterviewLink = "http://inteliview.me/Interview/Video-interview/" + job.MockId;
             foreach (var application in jobApplications)
             {
                 var user = await _unitOfWork.IndividualUsers.GetByIdAsync(application.UserId);

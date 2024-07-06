@@ -31,9 +31,9 @@ namespace IntelliView.DataAccess.Repository.Repos
             // Apply the filter and use ToListAsync directly
             if (filter is null)
             {
-                return await query.AsNoTracking().ToListAsync();
+                return await query.AsNoTracking().AsSplitQuery().ToListAsync();
             }
-            return await _dbSet.Where(filter).AsNoTracking().ToListAsync();
+            return await _dbSet.Where(filter).AsSplitQuery().AsNoTracking().ToListAsync();
         }
         public async Task<T?> GetByIdAsync(params object[] keyValues)
         {

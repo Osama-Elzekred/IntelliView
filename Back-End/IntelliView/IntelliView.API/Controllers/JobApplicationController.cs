@@ -14,7 +14,7 @@ namespace IntelliView.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(policy: "UserOrCompany")]
+    //[Authorize(policy: "UserOrCompany")]
     public class JobApplicationController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -167,7 +167,7 @@ namespace IntelliView.API.Controllers
             }
             // Update the application status based on the CvScore
             jobApplication.CVScore = scoreValue;
-            jobApplication.IsApproved = scoreValue >= 50;
+            //jobApplication.IsApproved = scoreValue >= 50;
             await _unitOfWork.SaveAsync();
 
             //// Offload CV scoring to a background task
@@ -238,8 +238,8 @@ namespace IntelliView.API.Controllers
                 return Unauthorized();
             }
 
-            var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.JobId == jobId);
-            return Ok(new { job.MockId, applications });
+            var applications = await _unitOfWork.JobApplications.GetJobApplications(jobId);
+            return Ok(new { job.MockId, job.Title, applications });
         }
         // view one application for a job
         [HttpGet("Application/{jobId}/{userId}")]
@@ -259,6 +259,7 @@ namespace IntelliView.API.Controllers
                 Phone = application.Phone,
                 Gender = application.Gender,
                 CVURL = application.CVURL,
+                CVScore = application.CVScore,
                 QuestionsAndAnswers = application.UserAnswers
                 .Select(a => new QuestionsAndAnswersDTO { Question = a.CustQuestion.Question, Answer = a.Answer })
                 .ToList()
@@ -327,7 +328,7 @@ namespace IntelliView.API.Controllers
                 var email = application.Email.Trim('"');
                 var subject = "Interview Invitation";
                 var body = $@"
-                    <p>You have been approved for the job: 
+                    <p>Congrats! You have been approved for the job: 
                     <a href=""#"">{job.Title}</a></p>";
 
                 var emailDto = new EmailDTO
@@ -363,8 +364,8 @@ namespace IntelliView.API.Controllers
         }
         // send email for interview to all job applicants for a job
         [Authorize(Roles = SD.ROLE_COMPANY)]
-        [HttpPost("interview/job/{jobId}")]
-        public async Task<IActionResult> SendInterviewEmail(int jobId, [FromBody] InterviewEmailDTO interview)
+        [HttpPost("sendMails/job/{jobId}")]
+        public async Task<IActionResult> SendInterviewEmail(int jobId, InterviewEmailDTO interview)
         {
             var job = await _unitOfWork.Jobs.GetByIdAsync(jobId);
             if (job == null)
@@ -380,7 +381,7 @@ namespace IntelliView.API.Controllers
 
             }
             await _unitOfWork.SaveAsync();
-            if (jobApplications == null || !jobApplications.Any())
+            if (jobApplications == null)
             {
                 return NotFound("No job applications found");
             }

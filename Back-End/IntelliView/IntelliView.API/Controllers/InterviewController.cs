@@ -233,26 +233,7 @@ namespace IntelliView.API.Controllers
             var applicants = await _unitOfWork.UserMockSessions.GetSessionsWithJobApplicationAsync(mockId);
             if (applicants == null)
                 return NotFound();
-            // Extract UserId values from the applicants collection
-            //var userIds = applicants.Select(u => u.UserId).ToList();
-
-            //// Query JobApplications based on userIds
-            //var applications = await _unitOfWork.JobApplications.GetAllAsync(j => userIds.Contains(j.UserId));
-
-            //var applications = await _unitOfWork.JobApplications.GetAllAsync(j => j.UserId == applicants.select(u => u.UserId));
-            var users = applicants.Select(a => new UserListDTO
-            {
-                userMockSessionId = a.Id,
-                UserId = a.UserId,
-                Email = a.UserApplication?.Email ?? "",
-                Name = a.UserApplication?.FullName ?? "",
-                PhoneNumber = a.UserApplication?.Phone ?? "",
-                ImageURL = a.UserApplication?.User.ImageURl ?? "",
-                CvScore = a.UserApplication.CVScore,
-                IsApproved = a.UserApplication?.IsInterviewApproved ?? false,
-                TotalInterviewScore = a.TotalInterviewScore,
-            });
-            return Ok(users);
+            return Ok(applicants);
         }
     }
 }

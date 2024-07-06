@@ -47,7 +47,7 @@ namespace IntelliView.API.Controllers
             //    Body = $"""
             //        <div class='container'>
             //    <div class='header'>
-            //    <img src='https://example.com/logo.png' alt='IntelliView Logo'>
+            //    <img src='https://res.cloudinary.com/djvcgnkbn/image/upload/v1720217560/image-473b08fd-f2cd-4a02-96dc-217cee619512.png' alt='IntelliView Logo'>
             //    </div>
             //    <div class='content'>
             //    <h2>Email Verification</h2>

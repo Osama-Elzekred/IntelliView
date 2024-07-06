@@ -172,7 +172,7 @@ namespace IntelliView.API.Services
                 authModel.IsAuthenticated = false;
                 return authModel;
             }
-            // email verification
+            //email verification
             //if (user.Verified == false)
             //{
             //    authModel.Message = "Email is not verified!";

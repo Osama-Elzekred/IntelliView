@@ -97,10 +97,10 @@ namespace IntelliView.API.Services
                 //ExpiresOn = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
                 Roles = new List<string> { Role },
-                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                //Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                 Username = user.UserName,
-                RefreshToken = refreshToken.Token,
-                RefreshTokenExpiration = refreshToken.ExpiresOn,
+                //RefreshToken = refreshToken.Token,
+                //RefreshTokenExpiration = refreshToken.ExpiresOn,
                 Id = user.Id
             };
         }
@@ -173,12 +173,12 @@ namespace IntelliView.API.Services
                 return authModel;
             }
             //email verification
-            //if (user.Verified == false)
-            //{
-            //    authModel.Message = "Email is not verified!";
-            //    authModel.IsAuthenticated = false;
-            //    return authModel;
-            //}
+            if (user.Verified == false)
+            {
+                authModel.Message = "Email is not verified!";
+                authModel.IsAuthenticated = false;
+                return authModel;
+            }
 
             var jwtSecurityToken = await CreateJwtToken(user);
             var rolesList = await _userManager.GetRolesAsync(user);

@@ -302,6 +302,10 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound(new { message = "Job not found" });
             }
+            if (userId == null)
+            {
+                return NotFound(new { message = "User not found" });
+            }
             var jobApplication = await _unitOfWork.JobApplications.GetApplicationByIdAsync(job.Id, userId);
 
             if (jobApplication == null)
@@ -315,6 +319,26 @@ namespace IntelliView.API.Controllers
 
             _unitOfWork.JobApplications.Update(jobApplication);
             await _unitOfWork.SaveAsync();
+
+            var user = await _unitOfWork.IndividualUsers.GetFirstOrDefaultAsync(u => u.Id == userId);
+            var application = await _unitOfWork.JobApplications.GetFirstOrDefaultAsync(j => j.JobId == job.Id && j.UserId == userId);
+            if (user != null)
+             {
+                var email = application.Email.Trim('"');
+                var subject = "Interview Invitation";
+                var body = $@"
+                    <p>You have been approved for the job: 
+                    <a href=""#"">{job.Title}</a></p>";
+
+                var emailDto = new EmailDTO
+                {
+                    To = email,
+                    Subject = subject,
+                    Body = body
+                };
+
+                _emailSender.SendEmailAsync(emailDto);
+             }
 
             return Ok("Job application approved successfully");
         }
@@ -360,7 +384,7 @@ namespace IntelliView.API.Controllers
             {
                 return NotFound("No job applications found");
             }
-            interview.InterviewLink = "http://localhost:3000/Interview/Vedio-interview/" + job.MockId;
+            interview.InterviewLink = "http://inteliview.me/Interview/Vedio-interview/" + job.MockId;
             foreach (var application in jobApplications)
             {
                 var user = await _unitOfWork.IndividualUsers.GetByIdAsync(application.UserId);

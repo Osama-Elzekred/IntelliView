@@ -32,20 +32,5 @@ namespace IntelliView.DataAccess.Services
                 new MailMessage(mailFrom, req.To, req.Subject, req.Body) { IsBodyHtml = true }
             );
         }
-        public async Task SendApproveEmailAsync(EmailDTO req)
-        {
-            var mailUsername = Configuration.GetSection("EmailUsernamedev").Value;
-            var mailFrom = "intelliview@intelliview.com";
-            var password = Configuration.GetSection("EmailPassworddev").Value;
-            var client = new SmtpClient(Configuration.GetSection("EmailHostdev").Value, 587)
-            {
-                Credentials = new NetworkCredential(mailUsername, password),
-                EnableSsl = true
-            };
-
-            await client.SendMailAsync(
-                new MailMessage(mailFrom, req.To, req.Subject, req.Body) { IsBodyHtml = true }
-            );
-        }
     }
 }

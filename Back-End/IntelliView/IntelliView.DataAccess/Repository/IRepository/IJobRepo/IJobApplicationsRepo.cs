@@ -17,7 +17,9 @@ namespace IntelliView.DataAccess.Repository.IRepository.IJobRepos
         Task RemoveUserApplicationAsync(int jobId, string userId);
         Task<IEnumerable<GetAppliedJobsDTO>> GetAppliedJobsAsync(string userId);
         Task<JobApplication> GetApplicationByIdAsync(int jobId, string userId);
-        
+        Task<IEnumerable<JobApplicationDto>> GetJobApplications(int jobId);
+
+
     }
 
 }

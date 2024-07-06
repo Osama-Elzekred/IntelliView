@@ -103,7 +103,25 @@ namespace IntelliView.DataAccess.Repository.Repos.JobRepos
         //        .SingleOrDefaultAsync(ua => ua.JobId == jobId && ua.UserId == userId);
 
         //}
-
+        // retrive JobApplication with its userImages 
+        public async Task<IEnumerable<JobApplicationDto>> GetJobApplications(int jobId)
+        {
+            return await _db.JobApplications
+                .Where(ua => ua.JobId == jobId)
+                .Select(ua => new JobApplicationDto
+                {
+                    JobId = ua.JobId,
+                    UserId = ua.UserId,
+                    Email = ua.Email,
+                    FullName = ua.FullName,
+                    Phone = ua.Phone,
+                    CVScore = ua.CVScore,
+                    ImageUrl = ua.User.ImageURl,
+                    IsApproved = ua.IsApproved,
+                    IsInterviewApproved = ua.IsInterviewApproved,
+                    MockSessionId = ua.MockSessionId,
+                }).ToListAsync();
+        }
 
         //public async Task<JobApplication> GetApplicationWithJobQuestionAnswersAsync(int jobId, string userId)
         //{

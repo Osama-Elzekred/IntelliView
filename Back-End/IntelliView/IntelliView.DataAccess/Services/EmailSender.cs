@@ -19,21 +19,7 @@ namespace IntelliView.DataAccess.Services
         {
             _configuration = configuration;
         }
-        public Task SendEmailDevAsync(EmailDTO req)
-        {
-            var mailUsername = _configuration.GetSection("EmailUsernamedev").Value;
-            var mailFrom = "intelliview@intelliview.com";
-            var password = _configuration.GetSection("EmailPassworddev").Value;
-            var client = new SmtpClient(_configuration.GetSection("EmailHostdev").Value , 587)
-            {
-                Credentials = new NetworkCredential(mailUsername, password),
-                EnableSsl = true
-            };
-            return client.SendMailAsync(
-                               new MailMessage(mailFrom, req.To, req.Subject, req.Body) { IsBodyHtml = true }
-                                          );
-        }
-        public Task SendEmailAsync(EmailDTO req)
+         public Task SendEmailAsync(EmailDTO req)
         {
             var emailSettings = _configuration.GetSection("EmailSettings");
             var mailUsername = emailSettings["Username"];

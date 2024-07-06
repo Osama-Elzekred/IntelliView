@@ -54,14 +54,13 @@ namespace IntelliView.DataAccess.Services
 
             return $"Your reset password code is : {token} ";
         }
-
         public async Task<bool> ResetPasswordAsync(ResetPasswordDTO model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email!);
             if(user == null || user.ResetPassExpiredAt < DateTime.UtcNow || user.ResetPassToken != model.Token)
                  return false;
 
-            user.ResetPassToken = null!;
+            user.ResetPassToken = "";
             user.ResetPassExpiredAt = DateTime.UtcNow;
             user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.NewPassword!);
             await _userManager.UpdateAsync(user);

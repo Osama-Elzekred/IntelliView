@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IntelliView.Models.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace IntelliView.DataAccess.Services.IService
 {
@@ -9,7 +10,7 @@ namespace IntelliView.DataAccess.Services.IService
 
         Task<string> GetFaceDetectionInfo(string videoLink);
 
-        Task<string> FetchVideoAnalysisData(string videoLink);
+        Task<string> FetchVideoAnalysisData(string videoLink, MockLang lang = MockLang.English);
         Task<double?> FetchModelAnswerSimilarityAI(string answerVideotext, string modelAnswer);
         Task<string?> FetchRecommendationAI(string answerVideotext, string modelAnswer, string Question = "Unavailable");
     }

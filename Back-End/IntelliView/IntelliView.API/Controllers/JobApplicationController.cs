@@ -288,7 +288,7 @@ namespace IntelliView.API.Controllers
 
             jobApplication.IsApproved = true; // Update approval status
                                               //  jobApplication.Status= ApplicationStatus.InterviewStage; 
-
+            jobApplication.Status = ApplicationStatus.InterviewStage;
             //_unitOfWork.JobApplications.Update(jobApplication);
             await _unitOfWork.SaveAsync();
 

@@ -266,6 +266,7 @@ namespace IntelliView.API.Controllers
                 Title = jobDto.Title,
                 Description = jobDto.Description,
                 Level = InterviewLevel.None,
+                Language = jobDto.MockLanguage,
             };
             job.InterviewMock = interviewMock;
 

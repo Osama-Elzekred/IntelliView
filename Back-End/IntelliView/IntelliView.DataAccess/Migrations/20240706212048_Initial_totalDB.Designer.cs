@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IntelliView.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240514170234_addingUserMockSession_Job")]
-    partial class addingUserMockSession_Job
+    [Migration("20240706212048_Initial_totalDB")]
+    partial class Initial_totalDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,29 +25,29 @@ namespace IntelliView.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("IntelliView.Models.DTO.VideoAiScore", b =>
+            modelBuilder.Entity("EmotionScore", b =>
                 {
-                    b.Property<int>("InterviewQuestionAnswerId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<decimal>("AnswerSimilarityScore")
-                        .HasColumnType("decimal(18, 2)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AudioInfo")
+                    b.Property<string>("SerializedScores")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TextInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("Time")
+                        .HasColumnType("decimal(8, 2)");
 
-                    b.Property<string>("VideoInfo")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("VideoAiScoreMockVideoAnswerId")
+                        .HasColumnType("int");
 
-                    b.HasKey("InterviewQuestionAnswerId");
+                    b.HasKey("Id");
 
-                    b.ToTable("VideoAiScore");
+                    b.HasIndex("VideoAiScoreMockVideoAnswerId");
+
+                    b.ToTable("EmotionScore");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.ApplicationUser", b =>
@@ -213,14 +213,14 @@ namespace IntelliView.DataAccess.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("JobApplicationId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("JobId")
                         .HasColumnType("int");
 
                     b.Property<int>("MockId")
                         .HasColumnType("int");
+
+                    b.Property<double?>("TotalInterviewScore")
+                        .HasColumnType("float");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -738,6 +738,31 @@ namespace IntelliView.DataAccess.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("VideoAiScore", b =>
+                {
+                    b.Property<int>("MockVideoAnswerId")
+                        .HasColumnType("int");
+
+                    b.Property<double?>("AnswerSimilarityScore")
+                        .HasColumnType("float");
+
+                    b.Property<string>("AnswerText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecommendationText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("SentimentScore")
+                        .HasColumnType("float");
+
+                    b.Property<double?>("TotalScore")
+                        .HasColumnType("float");
+
+                    b.HasKey("MockVideoAnswerId");
+
+                    b.ToTable("VideoAiScores");
+                });
+
             modelBuilder.Entity("IntelliView.Models.Models.CompanyUser", b =>
                 {
                     b.HasBaseType("IntelliView.Models.Models.ApplicationUser");
@@ -798,15 +823,11 @@ namespace IntelliView.DataAccess.Migrations
                     b.HasDiscriminator().HasValue("IndividualUser");
                 });
 
-            modelBuilder.Entity("IntelliView.Models.DTO.VideoAiScore", b =>
+            modelBuilder.Entity("EmotionScore", b =>
                 {
-                    b.HasOne("IntelliView.Models.Models.Interview.MockVideoAnswer", "InterviewQuestionAnswer")
-                        .WithOne("AnswerAiEvaluationScores")
-                        .HasForeignKey("IntelliView.Models.DTO.VideoAiScore", "InterviewQuestionAnswerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("InterviewQuestionAnswer");
+                    b.HasOne("VideoAiScore", null)
+                        .WithMany("EmotionScores")
+                        .HasForeignKey("VideoAiScoreMockVideoAnswerId");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.ApplicationUser", b =>
@@ -1096,6 +1117,17 @@ namespace IntelliView.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("VideoAiScore", b =>
+                {
+                    b.HasOne("IntelliView.Models.Models.Interview.MockVideoAnswer", "MockVideoAnswer")
+                        .WithOne("AnswerAiEvaluationScores")
+                        .HasForeignKey("VideoAiScore", "MockVideoAnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MockVideoAnswer");
+                });
+
             modelBuilder.Entity("IntelliView.Models.Models.InterestedTopic", b =>
                 {
                     b.Navigation("JobInterestedTopics");
@@ -1145,6 +1177,11 @@ namespace IntelliView.DataAccess.Migrations
             modelBuilder.Entity("IntelliView.Models.Models.job.CustQuestion", b =>
                 {
                     b.Navigation("UserJobAnswers");
+                });
+
+            modelBuilder.Entity("VideoAiScore", b =>
+                {
+                    b.Navigation("EmotionScores");
                 });
 
             modelBuilder.Entity("IntelliView.Models.Models.IndividualUser", b =>

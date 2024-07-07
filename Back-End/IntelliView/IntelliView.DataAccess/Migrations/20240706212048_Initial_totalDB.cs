@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IntelliView.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class fristMigration : Migration
+    public partial class Initial_totalDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -266,6 +266,21 @@ namespace IntelliView.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmotionScore",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Time = table.Column<decimal>(type: "decimal(8,2)", nullable: false),
+                    SerializedScores = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    VideoAiScoreMockVideoAnswerId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmotionScore", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "InterviewMocks",
                 columns: table => new
                 {
@@ -275,6 +290,7 @@ namespace IntelliView.DataAccess.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Level = table.Column<int>(type: "int", nullable: false),
                     Language = table.Column<int>(type: "int", nullable: false),
+                    Icon = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     JobId = table.Column<int>(type: "int", nullable: true),
                     InterviewTopicId = table.Column<int>(type: "int", nullable: true),
                     InterviewMockTopicId = table.Column<int>(type: "int", nullable: true)
@@ -356,27 +372,6 @@ namespace IntelliView.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserMockSessions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MockId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserMockSessions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserMockSessions_InterviewMocks_MockId",
-                        column: x => x.MockId,
-                        principalTable: "InterviewMocks",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "JobInterestedTopics",
                 columns: table => new
                 {
@@ -422,72 +417,6 @@ namespace IntelliView.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "JobApplication",
-                columns: table => new
-                {
-                    JobId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CVURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MockSessionId = table.Column<int>(type: "int", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
-                    CVScore = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_JobApplication", x => new { x.JobId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_JobApplication_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_JobApplication_Jobs_JobId",
-                        column: x => x.JobId,
-                        principalTable: "Jobs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_JobApplication_UserMockSessions_MockSessionId",
-                        column: x => x.MockSessionId,
-                        principalTable: "UserMockSessions",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MockVideoAnswers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserMockSessionId = table.Column<int>(type: "int", nullable: false),
-                    InterviewQuestionId = table.Column<int>(type: "int", nullable: false),
-                    AnswerVideoURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AnswerText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AnsweredAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MockVideoAnswers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MockVideoAnswers_InterviewQuestions_InterviewQuestionId",
-                        column: x => x.InterviewQuestionId,
-                        principalTable: "InterviewQuestions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_MockVideoAnswers_UserMockSessions_UserMockSessionId",
-                        column: x => x.UserMockSessionId,
-                        principalTable: "UserMockSessions",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MCQOptions",
                 columns: table => new
                 {
@@ -505,6 +434,40 @@ namespace IntelliView.DataAccess.Migrations
                         principalTable: "JobQuestions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JobApplication",
+                columns: table => new
+                {
+                    JobId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CVURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MockSessionId = table.Column<int>(type: "int", nullable: true),
+                    Status = table.Column<int>(type: "int", nullable: false),
+                    IsApproved = table.Column<bool>(type: "bit", nullable: false),
+                    IsInterviewApproved = table.Column<bool>(type: "bit", nullable: false),
+                    CVScore = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JobApplication", x => new { x.JobId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_JobApplication_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JobApplication_Jobs_JobId",
+                        column: x => x.JobId,
+                        principalTable: "Jobs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -537,21 +500,83 @@ namespace IntelliView.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "VideoAiScore",
+                name: "UserMockSessions",
                 columns: table => new
                 {
-                    InterviewQuestionAnswerId = table.Column<int>(type: "int", nullable: false),
-                    AnswerSimilarityScore = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    VideoInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AudioInfo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TextInfo = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MockId = table.Column<int>(type: "int", nullable: false),
+                    JobId = table.Column<int>(type: "int", nullable: true),
+                    TotalInterviewScore = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_VideoAiScore", x => x.InterviewQuestionAnswerId);
+                    table.PrimaryKey("PK_UserMockSessions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_VideoAiScore_MockVideoAnswers_InterviewQuestionAnswerId",
-                        column: x => x.InterviewQuestionAnswerId,
+                        name: "FK_UserMockSessions_InterviewMocks_MockId",
+                        column: x => x.MockId,
+                        principalTable: "InterviewMocks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserMockSessions_JobApplication_JobId_UserId",
+                        columns: x => new { x.JobId, x.UserId },
+                        principalTable: "JobApplication",
+                        principalColumns: new[] { "JobId", "UserId" });
+                    table.ForeignKey(
+                        name: "FK_UserMockSessions_Jobs_JobId",
+                        column: x => x.JobId,
+                        principalTable: "Jobs",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MockVideoAnswers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserMockSessionId = table.Column<int>(type: "int", nullable: false),
+                    InterviewQuestionId = table.Column<int>(type: "int", nullable: false),
+                    AnswerVideoURL = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AnswerText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AnsweredAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MockVideoAnswers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MockVideoAnswers_InterviewQuestions_InterviewQuestionId",
+                        column: x => x.InterviewQuestionId,
+                        principalTable: "InterviewQuestions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MockVideoAnswers_UserMockSessions_UserMockSessionId",
+                        column: x => x.UserMockSessionId,
+                        principalTable: "UserMockSessions",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "VideoAiScores",
+                columns: table => new
+                {
+                    MockVideoAnswerId = table.Column<int>(type: "int", nullable: false),
+                    AnswerSimilarityScore = table.Column<double>(type: "float", nullable: true),
+                    AnswerText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SentimentScore = table.Column<double>(type: "float", nullable: true),
+                    RecommendationText = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TotalScore = table.Column<double>(type: "float", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_VideoAiScores", x => x.MockVideoAnswerId);
+                    table.ForeignKey(
+                        name: "FK_VideoAiScores_MockVideoAnswers_MockVideoAnswerId",
+                        column: x => x.MockVideoAnswerId,
                         principalTable: "MockVideoAnswers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -602,6 +627,11 @@ namespace IntelliView.DataAccess.Migrations
                 column: "JobId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmotionScore_VideoAiScoreMockVideoAnswerId",
+                table: "EmotionScore",
+                column: "VideoAiScoreMockVideoAnswerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_InterviewMocks_InterviewMockTopicId",
                 table: "InterviewMocks",
                 column: "InterviewMockTopicId");
@@ -619,9 +649,7 @@ namespace IntelliView.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_JobApplication_MockSessionId",
                 table: "JobApplication",
-                column: "MockSessionId",
-                unique: true,
-                filter: "[MockSessionId] IS NOT NULL");
+                column: "MockSessionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_JobApplication_UserId",
@@ -676,8 +704,12 @@ namespace IntelliView.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UserJobAnswer_QuestionId",
                 table: "UserJobAnswer",
-                column: "QuestionId",
-                unique: true);
+                column: "QuestionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserMockSessions_JobId_UserId",
+                table: "UserMockSessions",
+                columns: new[] { "JobId", "UserId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserMockSessions_MockId",
@@ -693,10 +725,24 @@ namespace IntelliView.DataAccess.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
+                name: "FK_EmotionScore_VideoAiScores_VideoAiScoreMockVideoAnswerId",
+                table: "EmotionScore",
+                column: "VideoAiScoreMockVideoAnswerId",
+                principalTable: "VideoAiScores",
+                principalColumn: "MockVideoAnswerId");
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_InterviewMocks_Jobs_JobId",
                 table: "InterviewMocks",
                 column: "JobId",
                 principalTable: "Jobs",
+                principalColumn: "Id");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_JobApplication_UserMockSessions_MockSessionId",
+                table: "JobApplication",
+                column: "MockSessionId",
+                principalTable: "UserMockSessions",
                 principalColumn: "Id");
         }
 
@@ -704,12 +750,36 @@ namespace IntelliView.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
+                name: "FK_JobApplication_AspNetUsers_UserId",
+                table: "JobApplication");
+
+            migrationBuilder.DropForeignKey(
                 name: "FK_Jobs_AspNetUsers_CompanyUserId",
                 table: "Jobs");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_InterviewMocks_Jobs_JobId",
                 table: "InterviewMocks");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_JobApplication_Jobs_JobId",
+                table: "JobApplication");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_UserMockSessions_Jobs_JobId",
+                table: "UserMockSessions");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_InterviewMocks_InterviewMockTopic_InterviewMockTopicId",
+                table: "InterviewMocks");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_UserMockSessions_InterviewMocks_MockId",
+                table: "UserMockSessions");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_JobApplication_UserMockSessions_MockSessionId",
+                table: "JobApplication");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -727,6 +797,9 @@ namespace IntelliView.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "EmotionScore");
+
+            migrationBuilder.DropTable(
                 name: "JobInterestedTopics");
 
             migrationBuilder.DropTable(
@@ -742,10 +815,10 @@ namespace IntelliView.DataAccess.Migrations
                 name: "UserJobAnswer");
 
             migrationBuilder.DropTable(
-                name: "VideoAiScore");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "VideoAiScores");
 
             migrationBuilder.DropTable(
                 name: "JobQuestions");
@@ -757,16 +830,10 @@ namespace IntelliView.DataAccess.Migrations
                 name: "CustQuestion");
 
             migrationBuilder.DropTable(
-                name: "JobApplication");
-
-            migrationBuilder.DropTable(
                 name: "MockVideoAnswers");
 
             migrationBuilder.DropTable(
                 name: "InterviewQuestions");
-
-            migrationBuilder.DropTable(
-                name: "UserMockSessions");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
@@ -775,10 +842,16 @@ namespace IntelliView.DataAccess.Migrations
                 name: "Jobs");
 
             migrationBuilder.DropTable(
+                name: "InterviewMockTopic");
+
+            migrationBuilder.DropTable(
                 name: "InterviewMocks");
 
             migrationBuilder.DropTable(
-                name: "InterviewMockTopic");
+                name: "UserMockSessions");
+
+            migrationBuilder.DropTable(
+                name: "JobApplication");
         }
     }
 }

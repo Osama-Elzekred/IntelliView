@@ -46,6 +46,8 @@ namespace IntelliView.API.Controllers
         public async Task<ActionResult<InterviewMock>> AddInterviewMock(AddInterviewMockDTO interviewMockDto)
         {
             var interviewMock = _mapper.Map<InterviewMock>(interviewMockDto);
+            interviewMock.Language = interviewMockDto.MockLanguage;
+
             await _unitOfWork.InterviewMocks.AddAsync(interviewMock);
             await _unitOfWork.SaveAsync();
             _ = Task.Run(() => _interviewService.AddInterviewVideos(interviewMock));

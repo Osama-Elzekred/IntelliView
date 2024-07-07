@@ -35,6 +35,8 @@ var builder = WebApplication.CreateBuilder(args);
 //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
       options.UseSqlServer(builder.Configuration.GetConnectionString("MonsterASPConnection")));
+//options.UseSqlServer(builder.Configuration.GetConnectionString("MonsterASPConnection_new")));
+
 
 
 // for database in memory

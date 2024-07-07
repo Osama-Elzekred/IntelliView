@@ -29,17 +29,17 @@ namespace IntelliView.DataAccess.Services
             {
                 contents = new[]
                 {
-                new
+            new
+            {
+                parts = new[]
                 {
-                    parts = new[]
+                    new
                     {
-                        new
-                        {
-                            text = text
-                        }
+                        text = text
                     }
                 }
             }
+        }
             };
 
             var jsonPayload = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
@@ -71,6 +71,7 @@ namespace IntelliView.DataAccess.Services
                 throw;
             }
         }
+
 
         public async Task<string> AimLapAiApi(string text, string system = "you are an Interview expert")
         {

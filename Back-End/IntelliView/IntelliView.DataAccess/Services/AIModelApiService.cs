@@ -1,4 +1,5 @@
 ﻿using IntelliView.DataAccess.Services.IService;
+using IntelliView.Models.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -92,8 +93,15 @@ namespace IntelliView.DataAccess.Services
             return result;
         }
 
-        public async Task<string> FetchVideoAnalysisData(string videoLink)
+        public async Task<string> FetchVideoAnalysisData(string videoLink, MockLang lang)
         {
+            var Lang = lang switch
+            {
+                MockLang.English => "en-US",
+                MockLang.Arabic => "ar-EG",
+                _ => "en-US"
+            };
+
             // get api key from appsettings
             var apiKey = _configuration.GetSection("cvMatchAPIKey").Value;
 
@@ -105,10 +113,15 @@ namespace IntelliView.DataAccess.Services
 
             var content = new MultipartFormDataContent();
             content.Add(new StringContent(videoLink), "videolink");
+            content.Add(new StringContent(Lang), "Lang");
 
             var result = await SendRequestAsync(httpClient, content, "https://inteliview2.pythonanywhere.com/api/analyse", apiKey!);
 
             return result;
+        }
+        private string DecodeUnicodeEscapeSequences(string input)
+        {
+            return Regex.Unescape(input);
         }
         public async Task<double?> FetchModelAnswerSimilarityAI(string answerVideotext, string modelAnswer)
         {

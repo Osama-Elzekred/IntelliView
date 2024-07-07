@@ -1,5 +1,6 @@
 ﻿using InteliView.DataAccess.Data;
 using IntelliView.DataAccess.Repository.IRepository.IInterviewRepo;
+using IntelliView.Models.DTO.Interview;
 using IntelliView.Models.Models.Interview;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -43,13 +44,26 @@ namespace IntelliView.DataAccess.Repository.Repos.InterviewRepo
                 .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores)
                 .Where(ums => ums.MockId == mockId).AsNoTracking().ToListAsync();
         }
-        public async Task<IEnumerable<UserMockSession>> GetSessionsWithJobApplicationAsync(int mockId)
+        public async Task<IEnumerable<UserListDTO>> GetSessionsWithJobApplicationAsync(int mockId)
         {
             return await _dbSet
-                .Include(ums => ums.UserApplication).ThenInclude(ua => ua.User)
-                .Include(ums => ums.Answers).ThenInclude(ums => ums.AnswerAiEvaluationScores)
-                .Where(ums => ums.MockId == mockId).AsNoTracking().ToListAsync();
+                .Where(ums => ums.MockId == mockId)
+                .Select(ums => new UserListDTO
+                {
+                    userMockSessionId = ums.Id,
+                    UserId = ums.UserId,
+                    Email = ums.UserApplication.Email,
+                    Name = ums.UserApplication.FullName,
+                    PhoneNumber = ums.UserApplication.Phone,
+                    ImageURL = ums.UserApplication.User.ImageURl,
+                    CvScore = ums.UserApplication.CVScore,
+                    IsApproved = ums.UserApplication.IsInterviewApproved,
+                    TotalInterviewScore = ums.TotalInterviewScore
+                })
+                .AsNoTracking()
+                .ToListAsync();
         }
+
         //get all user for one mock
         //public async Task<IEnumerable<UserMockSession>> GetAllUserMockSessionAsync(int mockId)
         //{

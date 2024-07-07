@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using IntelliView.Models.Models;
+using System.Text.Json.Serialization;
 
 namespace IntelliView.Models.DTO
 {
@@ -11,6 +12,7 @@ namespace IntelliView.Models.DTO
         public string MinimumExperience { get; set; }
         public string Description { get; set; }
         public string Requirements { get; set; }
+        public MockLang MockLanguage { get; set; } = MockLang.English;
         public List<QuestionItemDto>? QuestionItems { get; set; }
         public List<CustQuestionDto>? CustQuestions { get; set; }
         public List<JobInterestedTopicDto>? JobInterestedTopics { get; set; }

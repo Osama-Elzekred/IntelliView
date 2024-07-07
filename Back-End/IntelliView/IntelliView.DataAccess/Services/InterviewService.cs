@@ -73,6 +73,10 @@ namespace IntelliView.DataAccess.Services
             await context.SaveChangesAsync();
             _logger.LogInformation("Interview videos added successfully.");
         }
+        private string DecodeUnicodeEscapeSequences(string input)
+        {
+            return Regex.Unescape(input);
+        }
         // get the ai CvScore of the answer video from the Ai models
         public async Task<int> GetAiVideoScores(string answerVideoLink, string modelAnswer, MockVideoAnswer mockVideoAnswer)
         {
@@ -87,7 +91,7 @@ namespace IntelliView.DataAccess.Services
             {
                 do
                 {
-                    AiJsonResponse = await _aiModelApiService.FetchVideoAnalysisData(answerVideoLink);
+                    AiJsonResponse = await _aiModelApiService.FetchVideoAnalysisData(answerVideoLink, mockVideoAnswer.UserMockSession.InterviewMock.Language);
                     Counter++;
                     _logger.LogInformation("Attempt {Counter}: AI response: {AiJsonResponse}", Counter, AiJsonResponse);
 
@@ -131,6 +135,10 @@ namespace IntelliView.DataAccess.Services
             {
                 _logger.LogWarning("Failed to get a successful AI response after {Counter} attempts for video link: {AnswerVideoLink}", Counter, answerVideoLink);
                 return 1;
+            }
+            if (mockVideoAnswer.UserMockSession.InterviewMock.Language == MockLang.Arabic)
+            {
+                aiResponse.Text = DecodeUnicodeEscapeSequences(aiResponse.Text);
             }
 
             var emotionScores = aiResponse.VideoAnalysis.Select(kv => new EmotionScore

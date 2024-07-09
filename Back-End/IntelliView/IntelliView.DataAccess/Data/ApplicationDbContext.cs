@@ -52,6 +52,15 @@ namespace InteliView.DataAccess.Data
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            modelBuilder.Entity<ApplicationUser>()
+           .HasIndex(u => u.UserName)
+           .HasDatabaseName("IX_Users_Username")
+           .IsUnique();
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasIndex(u => u.Email)
+                .HasDatabaseName("IX_Users_Email")
+                .IsUnique();
 
             modelBuilder.Entity<UserInterestedTopic>()
                 .HasKey(ui => new { ui.UserId, ui.InterestedTopicId });

@@ -67,7 +67,7 @@ namespace IntelliView.API.Services
 
         public async Task<AuthModel> RegisterAsync(RegisterDTO model)
         {
-            await CreateRolesAsync();
+            //await CreateRolesAsync();
             if (await _userManager.FindByNameAsync(model.Username) is not null)
                 return new AuthModel { Message = "Username is already registered!" };
 

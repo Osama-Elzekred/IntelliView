@@ -12,7 +12,7 @@ namespace IntelliView.API.Controllers
         private readonly IVerifyService _verifyService;
         private readonly IEmailSender _emailSender;
         private readonly IConfiguration _configuration;
-        public AuthController(IAuthService authService, IVerifyService verifyService, IEmailSender emailSender,IConfiguration configuration)
+        public AuthController(IAuthService authService, IVerifyService verifyService, IEmailSender emailSender, IConfiguration configuration)
         {
             _authService = authService;
             _verifyService = verifyService;

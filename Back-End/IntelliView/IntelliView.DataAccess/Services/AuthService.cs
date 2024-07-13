@@ -67,42 +67,90 @@ namespace IntelliView.API.Services
 
         public async Task<AuthModel> RegisterAsync(RegisterDTO model)
         {
-            //await CreateRolesAsync();
+            #region  Validation
+            // Check for null or empty values
+            if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Email) || string.IsNullOrWhiteSpace(model.Password))
+            {
+                return new AuthModel { Message = "Username, Email, and Password are required." };
+            }
+
+            // Validate email format
+            if (!IsValidEmail(model.Email))
+            {
+                return new AuthModel { Message = "Invalid email format." };
+            }
+
+            // Check if the password contains any white spaces
+            if (model.Password.Contains(" "))
+            {
+                return new AuthModel { Message = "Password cannot contain white spaces." };
+            }
+
+            // Ensure password meets complexity requirements (example: at least 8 characters)
+            if (model.Password.Length < 8)
+            {
+                return new AuthModel { Message = "Password must be at least 8 characters long." };
+            }
+
+            // Check if the username is already registered
             if (await _userManager.FindByNameAsync(model.Username) is not null)
+            {
                 return new AuthModel { Message = "Username is already registered!" };
+            }
 
+            // Check if the email is already registered
             if (await _userManager.FindByEmailAsync(model.Email) is not null)
+            {
                 return new AuthModel { Message = "Email is already registered!" };
+            }
 
+            #endregion
+            // Create the user object
             ApplicationUser user = CreateUserObject(model);
             var result = await _userManager.CreateAsync(user, model.Password);
 
+            // Check if the user creation succeeded
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(error => error.Description));
                 return new AuthModel { Message = errors };
             }
-            var Role = model.Role;
-            await _userManager.AddToRoleAsync(user, Role);
 
+            // Assign role to the user
+            var role = model.Role;
+            await _userManager.AddToRoleAsync(user, role);
+
+            // Create JWT token
             var jwtSecurityToken = await CreateJwtToken(user);
 
+            // Generate and add refresh token
             var refreshToken = JwtToken.GenerateRefreshToken();
             user.RefreshTokens?.Add(refreshToken);
             await _userManager.UpdateAsync(user);
 
+            // Return the authentication model
             return new AuthModel
             {
                 Email = user.Email,
-                //ExpiresOn = jwtSecurityToken.ValidTo,
                 IsAuthenticated = true,
-                Roles = new List<string> { Role },
-                //Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                Roles = new List<string> { role },
                 Username = user.UserName,
-                //RefreshToken = refreshToken.Token,
-                //RefreshTokenExpiration = refreshToken.ExpiresOn,
                 Id = user.Id
             };
+        }
+
+        // Helper method to validate email format
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser user)

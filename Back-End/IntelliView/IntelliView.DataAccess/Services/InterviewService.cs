@@ -68,10 +68,10 @@ namespace IntelliView.DataAccess.Services
                     //question.VideoId = "d1f4220d-38d7-4df1-9a51-8865e5eef17f";
 
                     context.Entry(question).State = EntityState.Modified;
+                    _logger.LogInformation("Interview videos added successfully.");
                 }
             }
             await context.SaveChangesAsync();
-            _logger.LogInformation("Interview videos added successfully.");
         }
         private string DecodeUnicodeEscapeSequences(string input)
         {

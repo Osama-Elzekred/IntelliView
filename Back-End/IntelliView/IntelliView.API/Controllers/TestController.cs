@@ -91,11 +91,19 @@ namespace IntelliView.API.Controllers
             return Ok(result);
         }
         #region Gemini AI
+
+        [HttpGet("TestSimilarityAnswer")]
+        public async Task<IActionResult> TestSimilarityAnswer(string answerVideotext, string modelAnswer, string question)
+        {
+            var result = await _aiModelApiService.FetchModelAnswerSimilarityAI(answerVideotext, modelAnswer, question);
+            return Ok(result);
+        }
+
         [HttpGet("GeminiAI")]
-        public async Task<IActionResult> GeminiAI(string category, string level, int numberOfQuestions)
+        public async Task<IActionResult> GeminiAI(string prompt)
         {
             // Construct the prompt based on the category and level
-            string prompt = $"Generate a {numberOfQuestions} text interview question with model answers in the {category} category and {level} level. Format: {{Question}}; {{Answer}}";
+            //string prompt = $"Generate a {numberOfQuestions} text interview question with model answers in the {category} category and {level} level. Format: {{Question}}; {{Answer}}";
 
             // Call the AI service with the constructed prompt
             var result = await _aiBasedSearchService.GeminiAiApi(prompt);

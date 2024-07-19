@@ -53,7 +53,7 @@ public class VideoAiScore
         // Calculate weighted components
         double similarityComponent = (double)(AnswerSimilarityScore ?? 0) * similarityWeight;
         double sentimentComponent = (double)(SentimentScore ?? 0) * sentimentWeight;
-
+        sentimentComponent = sentimentComponent > 0 ? sentimentComponent : 0;
         // Calculate emotion component as weighted average CvScore
         double emotionComponent = 0;
         if (EmotionScores != null && EmotionScores.Any())

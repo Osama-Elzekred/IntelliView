@@ -123,17 +123,29 @@ namespace IntelliView.DataAccess.Services
         {
             return Regex.Unescape(input);
         }
-        public async Task<double?> FetchModelAnswerSimilarityAI(string answerVideotext, string modelAnswer)
+        public async Task<double?> FetchModelAnswerSimilarityAI(string answerVideotext, string modelAnswer, string Question = "Unavailable")
         {
-            // Construct the prompt for the Gemini AI model
-            string prompt = $"Compare the following answer with the model answer and provide a similarity score between 0 and 1. " +
-                            $"The output MUST be a single number \n\n" +
-                            $"Answer: {answerVideotext}\n\n" +
-                            $"Model Answer: {modelAnswer}";
+            //Construct the prompt for the Gemini AI model
+
+            //string prompt = $"Compare the following answer with the model answer and provide a similarity score between 0 and 1. " +
+            //                $"The output MUST be a single number \n\n" +
+            //                $"Answer: {answerVideotext}\n\n" +
+            //                $"Model Answer: {modelAnswer}";
+
+            string prompt =
+                    $"Compare the following interviewee's answer with the provided model answer and return a similarity score between 0 and 1. " +
+                    $"Consider that the answer comes from an audio-to-text API and may contain errors in speech detection. " +
+                    $"Please focus on the overall meaning and ignore minor transcription errors.\n\n" +
+                    $"Question: {Question}\n\n" +
+                    $"Interviewee Answer: {answerVideotext}\n\n" +
+                    $"Model Answer: {modelAnswer}\n\n" +
+                     "The output MUST be a single number.";
+
+
 
             // Call the AI search service to get the similarity CvScore
             var result = await _aiBasedSearchService.GeminiAiApi(prompt);
-            double similarityScore = 0.29d;
+            double similarityScore = 0.01d;
             var match = Regex.Match(result, @"\d+(\.\d+)?");
             // Assuming the result is a JSON string containing the similarity CvScore
 
@@ -150,7 +162,8 @@ namespace IntelliView.DataAccess.Services
             }
             catch (Exception)
             {
-                similarityScore = 0.29d; // or handle the error as needed
+                // error happened during deserialization should return null in the future 
+                similarityScore = 0.01d; // or handle the error as needed
                 _logger.LogError("Error deserializing the similarity score from the AI response: {Result}", result);
             }
 
@@ -167,8 +180,8 @@ namespace IntelliView.DataAccess.Services
         public async Task<string?> FetchRecommendationAI(string answerVideotext, string modelAnswer, string Question = "Unavailable")
         {
             // Construct the prompt for the Gemini AI model
-            string prompt = $"Analyze the following answer and provide a recommendation or tip to improve it. " +
-                $"The output should be a single text string without any prefixes like 'Recommendation:'.\n\n" +
+            string prompt = $"Analyze the following answer and provide a feedback or tip to improve it. " +
+                $"The output MUST be a single text starting without any prefixes like 'feedback:'.\n\n" +
                 $"Question: {Question}\n\n" +
                 $"Answer: {answerVideotext}\n\n" +
                 $"Model Answer: {modelAnswer}";

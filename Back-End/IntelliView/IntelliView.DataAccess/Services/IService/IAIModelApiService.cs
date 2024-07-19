@@ -11,7 +11,7 @@ namespace IntelliView.DataAccess.Services.IService
         Task<string> GetFaceDetectionInfo(string videoLink);
 
         Task<string> FetchVideoAnalysisData(string videoLink, MockLang lang = MockLang.English);
-        Task<double?> FetchModelAnswerSimilarityAI(string answerVideotext, string modelAnswer);
+        Task<double?> FetchModelAnswerSimilarityAI(string answerVideotext, string modelAnswer, string question);
         Task<string?> FetchRecommendationAI(string answerVideotext, string modelAnswer, string Question = "Unavailable");
     }
 }

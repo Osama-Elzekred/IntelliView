@@ -155,7 +155,7 @@ namespace IntelliView.DataAccess.Services
             {
                 do
                 {
-                    var similarityTask = _aiModelApiService.FetchModelAnswerSimilarityAI(aiResponse.Text, modelAnswer);
+                    var similarityTask = _aiModelApiService.FetchModelAnswerSimilarityAI(aiResponse.Text, modelAnswer, question);
                     var recommendationTask = _aiModelApiService.FetchRecommendationAI(aiResponse.Text, modelAnswer, question);
 
                     await Task.WhenAll(similarityTask, recommendationTask);

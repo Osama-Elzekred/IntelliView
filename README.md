@@ -1,51 +1,127 @@
-# IntelliView 
+# Intelliview
 
 ## Overview
 
-IntelliView is an innovative web application designed to revolutionize the interview process using artificial intelligence. It provides a comprehensive platform for recruiters and candidates, leveraging AI-driven assessments to enhance the recruitment experience.
+Intelliview is a powerful AI-driven platform designed to enhance the recruitment process for companies and help job seekers prepare for interviews through mock interview sessions. The platform supports both Arabic and English languages, making it versatile and accessible for a diverse user base.
 
 ## Features
 
-- **AI-Enhanced Interviews:** IntelliView API employs cutting-edge AI algorithms to assess interview responses, providing valuable insights for both recruiters and candidates.
+### For Recruiters
+- **Post Jobs**: Companies can post job listings with detailed descriptions and requirements.
+- **Interview Questions**: Attach specific interview questions to job postings.
+- **CV Scoring**: Automatically score and filter candidates based on their CVs.
+- **AI Analysis**: Utilize AI to analyze candidates' answers from mock interviews.
+- **Bilingual Support**: Conduct interviews in both Arabic and English.
 
-- **User Authentication:** A secure and user-friendly authentication system allowing users to create accounts and access personalized features.
+### For Job Seekers
+- **Mock Interviews**: Practice for interviews with pre-set or custom mock interview sessions.
+- **AI Feedback**: Receive AI-generated feedback on interview performance.
+- **Upload CVs**: Post CVs to be reviewed and commented on by peers and recruiters.
+- **Bilingual Support**: Practice mock interviews in both Arabic and English.
 
-- **Interview Scheduler:** Streamlined scheduling of virtual interviews with integrated calendar functionality.
+## Technologies Used
 
-- **Reporting and Analytics:** Robust reporting tools and analytics for recruiters to evaluate candidate performance.
+### Frontend
+- **Next.js**: A React framework for building user interfaces.
+- **Formidable**: A Node.js module for parsing form data, especially file uploads.
+- **React**: A JavaScript library for building user interfaces.
 
-## Getting Started
+### Backend
+- **.NET Core**: A cross-platform framework for building modern, cloud-based, Internet-connected applications.
+- **Entity Framework Core**: An object-database mapper for .NET.
+- **Azure Services**: Used for text-to-avatar conversion.
+- **Google Gemini API**: Used for analyzing and providing feedback on interview answers.
+
+## Setup and Installation
 
 ### Prerequisites
 
-- [.NET Core SDK](https://dotnet.microsoft.com/download)
-- [Visual Studio](https://visualstudio.microsoft.com/) or [Visual Studio Code](https://code.visualstudio.com/)
+- **Node.js**: Ensure you have Node.js installed.
+- **.NET Core SDK**: Ensure you have .NET Core SDK installed.
+- **SQL Server**: Ensure you have a SQL Server instance running.
 
-### Installation
+### Frontend Setup
 
 1. Clone the repository:
+
    ```bash
-   git clone https://github.com/your-username/IntelliView.API.git
-   cd IntelliView.API
-### Build the project:
-   ```bash
-dotnet build
+   git clone https://github.com/Osama-Elzekred/IntelliView.git
+   cd IntelliView/frontend
    ```
-Run the API:
-```csharp
-dotnet run
-```
-The API will be available at http://localhost:5000.
 
-### Usage
-Create an account as a recruiter or candidate.
-Explore the intuitive dashboard.
-Schedule and conduct virtual interviews.
-Review AI-generated feedback and analytics.
-Contributing
-We welcome contributions from the community! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
+2. Install dependencies:
 
-### License
-This project is licensed under the MIT License.
+   ```bash
+   npm install
+   ```
 
-IntelliView API - Elevating the Interview Experience with AI
+3. Run the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+### Backend Setup
+
+1. Navigate to the backend directory:
+
+   ```bash
+   cd ../backend
+   ```
+
+2. Update the `appsettings.json` with your database connection string and other configurations.
+
+3. Restore .NET packages:
+
+   ```bash
+   dotnet restore
+   ```
+
+4. Apply database migrations:
+
+   ```bash
+   dotnet ef database update
+   ```
+
+5. Run the backend server:
+
+   ```bash
+   dotnet run
+   ```
+## Usage
+
+### Posting a Job (Recruiter)
+1. Log in to the recruiter dashboard.
+2. Navigate to the "Post a Job" section.
+3. Fill in the job details and attach interview questions.
+4. Publish the job.
+
+### Practicing a Mock Interview (Job Seeker)
+1. Log in to the job seeker dashboard.
+2. Navigate to the "Mock Interviews" section.
+3. Select a mock interview to practice.
+4. Record and upload your answers.
+5. Receive AI-generated feedback.
+
+## Contributing
+
+We welcome contributions to improve Intelliview. Please follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature-name`).
+3. Make your changes.
+4. Commit your changes (`git commit -m 'Add some feature'`).
+5. Push to the branch (`git push origin feature/your-feature-name`).
+6. Create a new Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgements
+
+Special thanks to our amazing team and mentors who contributed to the success of this project.
+
+---
+
+Feel free to explore and contribute to Intelliview. For any questions or issues, please contact us at [intelliviewApp@gmail.com](mailto:intelliviewApp@gmail.com).

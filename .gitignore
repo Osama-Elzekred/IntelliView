@@ -7,6 +7,8 @@
 # remove appsettings.json
 appsettings.Development.json
 appsettings.json
+configrationInteliviewAzure.txt
+.env
 
 
 # User-specific files

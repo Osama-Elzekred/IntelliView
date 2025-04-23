@@ -36,6 +36,20 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "publishAllPorts": true,
+      "useSSL": true,
+      "sslPort": 8081,
+      "httpPort": 8080,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://+:8080;https://+:8081"
+      },
+      "dockerfileRunArguments": "--env-file .env -v \"${ProjectDir}appsettings.json:/app/appsettings.json\""
     }
   }
 }

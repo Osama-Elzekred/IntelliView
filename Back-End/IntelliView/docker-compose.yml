@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080;https://+:8081
+    volumes:
+      - ./IntelliView.API/appsettings.json:/app/appsettings.json
+      - ./IntelliView.API/.env:/app/.env
+    restart: unless-stopped
